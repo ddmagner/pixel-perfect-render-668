@@ -51,17 +51,15 @@ export const TabNavigation: React.FC<TabNavigationProps> = ({ activeTab, onTabCh
         onClick={() => onTabChange('enter-time')}
         aria-label="Enter Time"
       >
-        <div className="flex flex-col justify-center items-start gap-0.5">
-          <div className="flex items-center gap-0.5">
-            <div className="w-[26px] h-[26px]">
-              <div
-                dangerouslySetInnerHTML={{
-                  __html: `<svg width="27" height="26" viewBox="0 0 27 26" fill="none" xmlns="http://www.w3.org/2000/svg" class="timer-icon" style="display: flex; width: 26px; height: 26px; justify-content: center; align-items: center; flex-shrink: 0; fill: ${activeTab === 'enter-time' ? settings.accentColor : '#BFBFBF'}"> <g clip-path="url(#clip0_551_26125)"> <path d="M19.2527 6.46501L20.8268 4.89092L22.3586 6.42276L20.7845 7.99684C22.3399 9.94377 23.0909 12.4124 22.883 14.8957C22.6752 17.3789 21.5244 19.6884 19.6671 21.3497C17.8097 23.011 15.3867 23.8981 12.8957 23.8288C10.4047 23.7594 8.03479 22.7389 6.2727 20.9768C4.51062 19.2147 3.49012 16.8449 3.42077 14.3539C3.35143 11.8629 4.23851 9.43986 5.89983 7.58248C7.56115 5.72509 9.87061 4.57432 12.3539 4.3665C14.8372 4.15868 17.3058 4.90959 19.2527 6.46501V6.46501ZM13.1665 21.6663C14.1624 21.6663 15.1485 21.4702 16.0685 21.0891C16.9886 20.708 17.8246 20.1494 18.5288 19.4452C19.2329 18.7411 19.7915 17.9051 20.1726 16.985C20.5537 16.065 20.7499 15.0789 20.7499 14.083C20.7499 13.0871 20.5537 12.101 20.1726 11.181C19.7915 10.2609 19.2329 9.42496 18.5288 8.72078C17.8246 8.0166 16.9886 7.45802 16.0685 7.07692C15.1485 6.69582 14.1624 6.49967 13.1665 6.49967C11.1553 6.49967 9.22645 7.29863 7.8043 8.72078C6.38215 10.1429 5.58319 12.0718 5.58319 14.083C5.58319 16.0942 6.38215 18.0231 7.8043 19.4452C9.22645 20.8674 11.1553 21.6663 13.1665 21.6663V21.6663ZM12.0832 8.66634H14.2499V15.1663H12.0832V8.66634ZM8.83319 1.08301H17.4999V3.24967H8.83319V1.08301Z" fill="${activeTab === 'enter-time' ? settings.accentColor : '#BFBFBF'}"></path> </g> <defs> <clipPath id="clip0_551_26125"> <rect width="26" height="26" fill="white" transform="translate(0.166992)"></rect> </clipPath> </defs> </svg>`,
-                }}
-              />
-            </div>
-            <span className={`text-sm font-bold leading-4 ${activeTab === 'enter-time' ? '' : 'text-[#BFBFBF]'}`} style={{ color: activeTab === 'enter-time' ? settings.accentColor : '#BFBFBF' }}>Enter Time</span>
+        <div className="flex h-[26px] items-center gap-0.5 shrink-0">
+          <div className="w-[26px] h-[26px]">
+            <div
+              dangerouslySetInnerHTML={{
+                __html: `<svg width="27" height="26" viewBox="0 0 27 26" fill="none" xmlns="http://www.w3.org/2000/svg" class="timer-icon" style="display: flex; width: 26px; height: 26px; justify-content: center; align-items: center; flex-shrink: 0; fill: ${activeTab === 'enter-time' ? settings.accentColor : '#BFBFBF'}"> <g clip-path="url(#clip0_551_26125)"> <path d="M19.2527 6.46501L20.8268 4.89092L22.3586 6.42276L20.7845 7.99684C22.3399 9.94377 23.0909 12.4124 22.883 14.8957C22.6752 17.3789 21.5244 19.6884 19.6671 21.3497C17.8097 23.011 15.3867 23.8981 12.8957 23.8288C10.4047 23.7594 8.03479 22.7389 6.2727 20.9768C4.51062 19.2147 3.49012 16.8449 3.42077 14.3539C3.35143 11.8629 4.23851 9.43986 5.89983 7.58248C7.56115 5.72509 9.87061 4.57432 12.3539 4.3665C14.8372 4.15868 17.3058 4.90959 19.2527 6.46501V6.46501ZM13.1665 21.6663C14.1624 21.6663 15.1485 21.4702 16.0685 21.0891C16.9886 20.708 17.8246 20.1494 18.5288 19.4452C19.2329 18.7411 19.7915 17.9051 20.1726 16.985C20.5537 16.065 20.7499 15.0789 20.7499 14.083C20.7499 13.0871 20.5537 12.101 20.1726 11.181C19.7915 10.2609 19.2329 9.42496 18.5288 8.72078C17.8246 8.0166 16.9886 7.45802 16.0685 7.07692C15.1485 6.69582 14.1624 6.49967 13.1665 6.49967C11.1553 6.49967 9.22645 7.29863 7.8043 8.72078C6.38215 10.1429 5.58319 12.0718 5.58319 14.083C5.58319 16.0942 6.38215 18.0231 7.8043 19.4452C9.22645 20.8674 11.1553 21.6663 13.1665 21.6663V21.6663ZM12.0832 8.66634H14.2499V15.1663H12.0832V8.66634ZM8.83319 1.08301H17.4999V3.24967H8.83319V1.08301Z" fill="${activeTab === 'enter-time' ? settings.accentColor : '#BFBFBF'}"></path> </g> <defs> <clipPath id="clip0_551_26125"> <rect width="26" height="26" fill="white" transform="translate(0.166992)"></rect> </clipPath> </defs> </svg>`,
+              }}
+            />
           </div>
+          <span className="text-sm font-bold leading-4" style={{ color: activeTab === 'enter-time' ? settings.accentColor : '#BFBFBF' }}>Enter Time</span>
         </div>
         {activeTab === 'enter-time' && (
           <div className="h-0.5 self-stretch" style={{ backgroundColor: settings.accentColor }} />
@@ -76,10 +74,10 @@ export const TabNavigation: React.FC<TabNavigationProps> = ({ activeTab, onTabCh
         aria-label="Time Tally"
       >
         <div className="flex h-[26px] items-center gap-0.5 shrink-0">
-          <div className="w-[25px] h-[25px]">
+          <div className="w-[26px] h-[26px]">
             <div
               dangerouslySetInnerHTML={{
-                __html: `<svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg" class="todo-icon" style="display: flex; width: 25px; height: 25px; justify-content: center; align-items: center; flex-shrink: 0; fill: ${activeTab === 'time-tally' ? settings.accentColor : '#BFBFBF'}"> <g clip-path="url(#clip0_551_26133)"> <path d="M18.2083 2.58333H21.3333C21.6096 2.58333 21.8746 2.69308 22.0699 2.88843C22.2653 3.08378 22.375 3.34873 22.375 3.625V22.375C22.375 22.6513 22.2653 22.9162 22.0699 23.1116C21.8746 23.3069 21.6096 23.4167 21.3333 23.4167H4.66667C4.3904 23.4167 4.12545 23.3069 3.9301 23.1116C3.73475 22.9162 3.625 22.6513 3.625 22.375V3.625C3.625 3.34873 3.73475 3.08378 3.9301 2.88843C4.12545 2.69308 4.3904 2.58333 4.66667 2.58333H7.79167V0.5H9.875V2.58333H16.125V0.5H18.2083V2.58333ZM18.2083 4.66667V6.75H16.125V4.66667H9.875V6.75H7.79167V4.66667H5.70833V21.3333H20.2917V4.66667H18.2083ZM7.79167 8.83333H18.2083V10.9167H7.79167V8.83333ZM7.79167 13H18.2083V15.0833H7.79167V13Z" fill="${activeTab === 'time-tally' ? settings.accentColor : '#BFBFBF'}"></path> </g> <defs> <clipPath id="clip0_551_26133"> <rect width="25" height="25" fill="white" transform="translate(0.5 0.5)"></rect> </clipPath> </defs> </svg>`,
+                __html: `<svg width="26" height="26" viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg" class="todo-icon" style="display: flex; width: 26px; height: 26px; justify-content: center; align-items: center; flex-shrink: 0; fill: ${activeTab === 'time-tally' ? settings.accentColor : '#BFBFBF'}"> <g clip-path="url(#clip0_551_26133)"> <path d="M18.2083 2.58333H21.3333C21.6096 2.58333 21.8746 2.69308 22.0699 2.88843C22.2653 3.08378 22.375 3.34873 22.375 3.625V22.375C22.375 22.6513 22.2653 22.9162 22.0699 23.1116C21.8746 23.3069 21.6096 23.4167 21.3333 23.4167H4.66667C4.3904 23.4167 4.12545 23.3069 3.9301 23.1116C3.73475 22.9162 3.625 22.6513 3.625 22.375V3.625C3.625 3.34873 3.73475 3.08378 3.9301 2.88843C4.12545 2.69308 4.3904 2.58333 4.66667 2.58333H7.79167V0.5H9.875V2.58333H16.125V0.5H18.2083V2.58333ZM18.2083 4.66667V6.75H16.125V4.66667H9.875V6.75H7.79167V4.66667H5.70833V21.3333H20.2917V4.66667H18.2083ZM7.79167 8.83333H18.2083V10.9167H7.79167V8.83333ZM7.79167 13H18.2083V15.0833H7.79167V13Z" fill="${activeTab === 'time-tally' ? settings.accentColor : '#BFBFBF'}"></path> </g> <defs> <clipPath id="clip0_551_26133"> <rect width="26" height="26" fill="white" transform="translate(0.5 0.5)"></rect> </clipPath> </defs> </svg>`,
               }}
             />
           </div>
@@ -97,7 +95,7 @@ export const TabNavigation: React.FC<TabNavigationProps> = ({ activeTab, onTabCh
         onClick={() => onTabChange('settings')}
         aria-label="Settings"
       >
-        <div className="flex items-center gap-0.5">
+        <div className="flex h-[26px] items-center gap-0.5 shrink-0">
           <div className="w-[26px] h-[26px]">
             <div
               dangerouslySetInnerHTML={{
