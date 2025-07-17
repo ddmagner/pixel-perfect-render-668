@@ -137,7 +137,7 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({ onSubmit, transcri
           </div>
         </div>
 
-        <div className="p-5">
+        <div className="w-full px-5 py-5">
           <button
             type="submit"
             className="w-full text-white py-4 rounded-lg font-bold text-[15px] transition-colors"
