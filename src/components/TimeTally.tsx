@@ -5,6 +5,10 @@ import { format } from 'date-fns';
 import { Share } from '@capacitor/share';
 import { generatePDF } from '@/utils/pdfGenerator';
 
+interface GroupedEntries {
+  [projectName: string]: TimeEntry[];
+}
+
 export const TimeTally: React.FC = () => {
   const { timeEntries, sortOption, setSortOption, viewMode, setViewMode, settings } = useApp();
   const [selectedClient, setSelectedClient] = useState<string>('all');
@@ -40,6 +44,18 @@ export const TimeTally: React.FC = () => {
     });
   }, [timeEntries, sortOption, selectedClient, settings.projects]);
 
+  // Group entries by project
+  const groupedEntries = useMemo(() => {
+    const grouped: GroupedEntries = {};
+    sortedEntries.forEach(entry => {
+      if (!grouped[entry.project]) {
+        grouped[entry.project] = [];
+      }
+      grouped[entry.project].push(entry);
+    });
+    return grouped;
+  }, [sortedEntries]);
+
   // Calculate totals
   const totalHours = useMemo(() => {
     return sortedEntries.reduce((sum, entry) => sum + entry.duration, 0);
@@ -53,6 +69,10 @@ export const TimeTally: React.FC = () => {
       return sum + (entry.duration * rate);
     }, 0);
   }, [sortedEntries, viewMode, settings.taskTypes]);
+
+  const getProjectSubtotal = (entries: TimeEntry[]) => {
+    return entries.reduce((sum, entry) => sum + entry.duration, 0);
+  };
 
   const handleExport = async () => {
     try {
@@ -84,119 +104,127 @@ export const TimeTally: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col items-start flex-1 self-stretch px-5 py-5">
-      {/* Header */}
-      <header className="flex justify-between items-center w-full mb-6">
-        <h1 className="text-[#09121F] text-[28px] font-bold leading-8 tracking-[-0.56px]">
-          Time Tally
-        </h1>
-        
-        {/* Mode Toggle */}
-        <div className="flex bg-gray-100 rounded-lg p-1">
+    <div className="flex flex-col h-full">
+      {/* Mode Toggle */}
+      <div className="flex justify-center items-center px-5 py-4 border-b">
+        <div className="flex items-center gap-4">
+          <span className={`text-[15px] font-medium ${viewMode === 'timecard' ? 'text-[#09121F]' : 'text-[#BFBFBF]'}`}>
+            Time Card Mode
+          </span>
           <button
-            className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
-              viewMode === 'timecard' 
-                ? 'bg-[#09121F] text-white' 
-                : 'text-[#09121F] hover:bg-gray-200'
+            onClick={() => setViewMode(viewMode === 'timecard' ? 'invoice' : 'timecard')}
+            className={`w-12 h-6 rounded-full transition-colors ${
+              viewMode === 'invoice' ? 'bg-[#09121F]' : 'bg-[#BFBFBF]'
             }`}
-            onClick={() => setViewMode('timecard')}
           >
-            Time Card
+            <div
+              className={`w-5 h-5 bg-white rounded-full transition-transform ${
+                viewMode === 'invoice' ? 'translate-x-6' : 'translate-x-0.5'
+              }`}
+            />
           </button>
-          <button
-            className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
-              viewMode === 'invoice' 
-                ? 'bg-[#09121F] text-white' 
-                : 'text-[#09121F] hover:bg-gray-200'
-            }`}
-            onClick={() => setViewMode('invoice')}
-          >
-            Invoice
-          </button>
+          <span className={`text-[15px] font-medium ${viewMode === 'invoice' ? 'text-[#09121F]' : 'text-[#BFBFBF]'}`}>
+            Invoice Mode
+          </span>
         </div>
-      </header>
+      </div>
 
-      {/* Controls */}
-      <div className="flex flex-wrap gap-3 w-full mb-4">
-        {/* Sort Options */}
-        <select
-          value={sortOption}
-          onChange={(e) => setSortOption(e.target.value as SortOption)}
-          className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#09121F]"
-        >
-          <option value="date">Sort by Date</option>
-          <option value="project">Sort by Project</option>
-          <option value="task">Sort by Task</option>
-          <option value="client">Sort by Client</option>
-        </select>
-
-        {/* Client Filter */}
-        <select
-          value={selectedClient}
-          onChange={(e) => setSelectedClient(e.target.value)}
-          className="px-3 py-2 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-[#09121F]"
-        >
-          <option value="all">All Clients</option>
-          {settings.clients.map(client => (
-            <option key={client.id} value={client.id}>{client.name}</option>
-          ))}
-        </select>
-
-        {/* Export Button */}
+      {/* Header */}
+      <div className="flex items-center justify-between px-5 py-6">
+        <h1 className="text-[#09121F] text-[28px] font-bold leading-8">
+          Where time went.
+        </h1>
         <button
-          onClick={handleExport}
-          className="px-4 py-2 bg-[#09121F] text-white rounded-md text-sm font-medium hover:bg-[#1a1a1a] transition-colors"
+          onClick={() => setSortOption('project')}
+          className="text-[#09121F] text-[15px] font-medium underline"
         >
-          Export PDF
+          By Project
         </button>
       </div>
 
-      {/* Summary */}
-      <div className="w-full bg-gray-50 rounded-lg p-4 mb-4">
-        <div className="flex justify-between items-center">
-          <span className="text-[#09121F] font-medium">Total Hours:</span>
-          <span className="text-[#09121F] font-bold">{totalHours.toFixed(2)}</span>
+      {/* Table Header */}
+      <div className="px-5 pb-2">
+        <div className="grid grid-cols-3 gap-4 pb-2 border-b border-[#09121F]">
+          <span className="text-[#09121F] text-[15px] font-bold">Date/Time</span>
+          <span className="text-[#09121F] text-[15px] font-bold">Task</span>
+          <span className="text-[#09121F] text-[15px] font-bold text-right">Hours</span>
         </div>
-        {viewMode === 'invoice' && (
-          <div className="flex justify-between items-center mt-2">
-            <span className="text-[#09121F] font-medium">Total Amount:</span>
-            <span className="text-[#09121F] font-bold">${totalAmount.toFixed(2)}</span>
-          </div>
-        )}
       </div>
 
-      {/* Entries List */}
-      <div className="flex-1 w-full">
-        {sortedEntries.length === 0 ? (
+      {/* Content */}
+      <div className="flex-1 overflow-y-auto px-5">
+        {Object.keys(groupedEntries).length === 0 ? (
           <div className="text-center py-8">
             <p className="text-[#BFBFBF] text-lg">No time entries found</p>
           </div>
         ) : (
-          <div className="space-y-3">
-            {sortedEntries.map((entry) => (
-              <div key={entry.id} className="bg-white border border-gray-200 rounded-lg p-4 shadow-sm">
-                <div className="flex justify-between items-start mb-2">
-                  <div className="flex-1">
-                    <h3 className="text-[#09121F] font-medium text-lg">{entry.task}</h3>
-                    <p className="text-gray-600 text-sm">{entry.project}</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="text-[#09121F] font-bold text-lg">{entry.duration}h</p>
-                    {viewMode === 'invoice' && (
-                      <p className="text-gray-600 text-sm">
-                        ${((settings.taskTypes.find(t => t.name === entry.task)?.hourlyRate || 0) * entry.duration).toFixed(2)}
-                      </p>
-                    )}
-                  </div>
+          <div className="space-y-6">
+            {Object.entries(groupedEntries).map(([projectName, entries]) => (
+              <div key={projectName}>
+                {/* Project Name */}
+                <h3 className="text-[#09121F] text-[18px] font-bold py-3">
+                  {projectName}
+                </h3>
+                
+                {/* Project Entries */}
+                <div className="space-y-2">
+                  {entries.map((entry) => (
+                    <div key={entry.id} className="grid grid-cols-3 gap-4 py-2">
+                      <div className="text-[#BFBFBF] text-[15px]">
+                        {format(new Date(entry.date), 'MM/dd')} {format(new Date(entry.submittedAt), 'HH:mm')}
+                      </div>
+                      <div className="text-[#09121F] text-[15px]">
+                        /{entry.task}/
+                      </div>
+                      <div className="text-[#09121F] text-[15px] text-right">
+                        /{entry.duration.toFixed(1)}h/
+                      </div>
+                    </div>
+                  ))}
                 </div>
-                <div className="flex justify-between items-center text-sm text-gray-500">
-                  <span>{format(new Date(entry.date), 'MMM d, yyyy')}</span>
-                  <span>{format(new Date(entry.submittedAt), 'h:mm a')}</span>
+
+                {/* Project Subtotal */}
+                <div className="grid grid-cols-3 gap-4 py-2 border-t border-gray-300 mt-2">
+                  <div></div>
+                  <div className="text-[#09121F] text-[15px] font-bold">
+                    Sub-total
+                  </div>
+                  <div className="text-[#09121F] text-[15px] font-bold text-right">
+                    /{getProjectSubtotal(entries).toFixed(1)}h/
+                  </div>
                 </div>
               </div>
             ))}
+
+            {/* Total */}
+            <div className="border-t-2 border-[#09121F] pt-4">
+              <div className="grid grid-cols-3 gap-4 py-2">
+                <div></div>
+                <div className="text-[#09121F] text-[18px] font-bold">
+                  TOTAL
+                </div>
+                <div className="text-[#09121F] text-[18px] font-bold text-right">
+                  /{totalHours.toFixed(1)}h/
+                </div>
+              </div>
+              <div className="flex justify-end mt-2">
+                <button className="text-[#09121F] text-[15px] underline">
+                  +/-/Edit
+                </button>
+              </div>
+            </div>
           </div>
         )}
+      </div>
+
+      {/* Export Button */}
+      <div className="p-5">
+        <button
+          onClick={handleExport}
+          className="w-full bg-[#09121F] text-white py-4 rounded-lg font-bold text-[15px] hover:bg-[#1a1a1a] transition-colors"
+        >
+          Export/Share/Print
+        </button>
       </div>
     </div>
   );
