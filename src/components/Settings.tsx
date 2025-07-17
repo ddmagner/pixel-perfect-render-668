@@ -43,7 +43,7 @@ export const Settings: React.FC = () => {
       </div>
 
       {/* Divider */}
-      <div className="h-px bg-[#E5E5E5] mx-5 mb-6" />
+      <div className="h-px bg-[#E5E5E5] w-full" />
 
       {/* Settings Content */}
       <div className="flex-1 overflow-y-auto">
