@@ -21,7 +21,7 @@ export const ColorCustomization: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full max-w-[440px] mx-auto w-full">
       <div className="px-5 py-4">
         <h3 className="text-2xl font-bold mb-1">Coloring time</h3>
         <p className="text-muted-foreground">Choose your flava.</p>
