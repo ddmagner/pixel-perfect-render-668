@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { parseTimeEntryFromSpeech } from '@/utils/speechParser';
 
 interface TimeEntryData {
   duration: string;
@@ -8,14 +9,27 @@ interface TimeEntryData {
 
 interface TimeEntryFormProps {
   onSubmit: (data: TimeEntryData) => void;
+  transcript?: string;
 }
 
-export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({ onSubmit }) => {
+export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({ onSubmit, transcript }) => {
   const [formData, setFormData] = useState<TimeEntryData>({
     duration: '',
     task: '',
     project: ''
   });
+
+  // Parse transcript and update form data
+  useEffect(() => {
+    if (transcript) {
+      const parsed = parseTimeEntryFromSpeech(transcript);
+      setFormData(prev => ({
+        duration: parsed.duration ? parsed.duration.toString() : prev.duration,
+        task: parsed.task || prev.task,
+        project: parsed.project || prev.project,
+      }));
+    }
+  }, [transcript]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

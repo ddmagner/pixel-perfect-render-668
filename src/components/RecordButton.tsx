@@ -1,36 +1,61 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSpeechRecognition } from '@/hooks/useSpeechRecognition';
+import { useApp } from '@/context/AppContext';
 
 interface RecordButtonProps {
   onRecordStart: () => void;
   onRecordStop: () => void;
   isRecording: boolean;
+  onTranscript: (transcript: string) => void;
 }
 
 export const RecordButton: React.FC<RecordButtonProps> = ({ 
   onRecordStart, 
   onRecordStop, 
-  isRecording 
+  isRecording,
+  onTranscript 
 }) => {
   const [isPressed, setIsPressed] = useState(false);
+  const { transcript, startListening, stopListening, resetTranscript, isSupported } = useSpeechRecognition();
+
+  useEffect(() => {
+    if (transcript) {
+      onTranscript(transcript);
+    }
+  }, [transcript, onTranscript]);
 
   const handleMouseDown = () => {
     setIsPressed(true);
     onRecordStart();
+    if (isSupported) {
+      resetTranscript();
+      startListening();
+    }
   };
 
   const handleMouseUp = () => {
     setIsPressed(false);
     onRecordStop();
+    if (isSupported) {
+      stopListening();
+    }
   };
 
   const handleTouchStart = () => {
     setIsPressed(true);
     onRecordStart();
+    if (isSupported) {
+      resetTranscript();
+      startListening();
+    }
   };
 
   const handleTouchEnd = () => {
     setIsPressed(false);
     onRecordStop();
+    if (isSupported) {
+      stopListening();
+    }
   };
 
   return (

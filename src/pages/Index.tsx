@@ -4,17 +4,14 @@ import { Navigation, TabNavigation } from '@/components/Navigation';
 import { Divider } from '@/components/Divider';
 import { RecordButton } from '@/components/RecordButton';
 import { TimeEntryForm } from '@/components/TimeEntryForm';
-
-interface TimeEntryData {
-  duration: string;
-  task: string;
-  project: string;
-}
+import { TimeTally } from '@/components/TimeTally';
+import { useApp } from '@/context/AppContext';
 
 const Index = () => {
   const [activeTab, setActiveTab] = useState('enter-time');
   const [isRecording, setIsRecording] = useState(false);
-  const [timeEntries, setTimeEntries] = useState<TimeEntryData[]>([]);
+  const [currentTranscript, setCurrentTranscript] = useState('');
+  const { timeEntries, addTimeEntry } = useApp();
 
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
@@ -30,8 +27,17 @@ const Index = () => {
     console.log('Recording stopped');
   };
 
-  const handleTimeEntrySubmit = (data: TimeEntryData) => {
-    setTimeEntries(prev => [...prev, data]);
+  const handleTranscript = (transcript: string) => {
+    setCurrentTranscript(transcript);
+  };
+
+  const handleTimeEntrySubmit = (data: { duration: string; task: string; project: string }) => {
+    addTimeEntry({
+      duration: parseFloat(data.duration) || 0,
+      task: data.task,
+      project: data.project,
+      date: new Date().toISOString().split('T')[0],
+    });
     console.log('Time entry submitted:', data);
   };
 
@@ -59,33 +65,17 @@ const Index = () => {
               onRecordStart={handleRecordStart}
               onRecordStop={handleRecordStop}
               isRecording={isRecording}
+              onTranscript={handleTranscript}
             />
             
             <Divider />
             
-            <TimeEntryForm onSubmit={handleTimeEntrySubmit} />
+            <TimeEntryForm onSubmit={handleTimeEntrySubmit} transcript={currentTranscript} />
           </>
         )}
 
         {activeTab === 'time-tally' && (
-          <main className="flex flex-col items-center justify-center flex-1 self-stretch px-5 py-10">
-            <h2 className="text-[#09121F] text-2xl font-bold mb-4">Time Tally</h2>
-            <p className="text-[#BFBFBF] text-center">
-              View your recorded time entries and daily summaries here.
-            </p>
-            {timeEntries.length > 0 && (
-              <div className="mt-6 w-full">
-                <h3 className="text-[#09121F] text-lg font-bold mb-3">Recent Entries:</h3>
-                {timeEntries.map((entry, index) => (
-                  <div key={index} className="bg-gray-50 p-3 mb-2 rounded">
-                    <p><strong>Duration:</strong> {entry.duration} hours</p>
-                    <p><strong>Task:</strong> {entry.task}</p>
-                    <p><strong>Project:</strong> {entry.project}</p>
-                  </div>
-                ))}
-              </div>
-            )}
-          </main>
+          <TimeTally />
         )}
 
         {activeTab === 'settings' && (
