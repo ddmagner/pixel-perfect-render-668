@@ -45,7 +45,7 @@ export const TabNavigation: React.FC<TabNavigationProps> = ({ activeTab, onTabCh
   return (
     <nav className="flex items-start self-stretch px-5 py-0">
       <button
-        className={`flex h-12 flex-col justify-end items-center gap-[7px] flex-[1_0_0] px-0 py-[9px] ${
+        className={`flex h-12 flex-col justify-between items-center flex-[1_0_0] px-0 py-[9px] ${
           activeTab === 'enter-time' ? '' : 'opacity-60'
         }`}
         onClick={() => onTabChange('enter-time')}
@@ -61,13 +61,11 @@ export const TabNavigation: React.FC<TabNavigationProps> = ({ activeTab, onTabCh
           </div>
           <span className="text-sm font-bold leading-4" style={{ color: activeTab === 'enter-time' ? settings.accentColor : '#BFBFBF' }}>Enter Time</span>
         </div>
-        {activeTab === 'enter-time' && (
-          <div className="h-0.5 self-stretch" style={{ backgroundColor: settings.accentColor }} />
-        )}
+        <div className="h-0.5 self-stretch" style={{ backgroundColor: activeTab === 'enter-time' ? settings.accentColor : 'transparent' }} />
       </button>
 
       <button
-        className={`flex h-12 flex-col justify-end items-center gap-[7px] flex-[1_0_0] px-0 py-[9px] ${
+        className={`flex h-12 flex-col justify-between items-center flex-[1_0_0] px-0 py-[9px] ${
           activeTab === 'time-tally' ? '' : 'opacity-60'
         }`}
         onClick={() => onTabChange('time-tally')}
@@ -83,13 +81,11 @@ export const TabNavigation: React.FC<TabNavigationProps> = ({ activeTab, onTabCh
           </div>
           <span className="text-sm font-bold leading-4" style={{ color: activeTab === 'time-tally' ? settings.accentColor : '#BFBFBF' }}>Time Tally</span>
         </div>
-        {activeTab === 'time-tally' && (
-          <div className="h-0.5 self-stretch" style={{ backgroundColor: settings.accentColor }} />
-        )}
+        <div className="h-0.5 self-stretch" style={{ backgroundColor: activeTab === 'time-tally' ? settings.accentColor : 'transparent' }} />
       </button>
 
       <button
-        className={`flex h-12 flex-col justify-end items-center gap-[7px] flex-[1_0_0] px-0 py-[9px] ${
+        className={`flex h-12 flex-col justify-between items-center flex-[1_0_0] px-0 py-[9px] ${
           activeTab === 'settings' ? '' : 'opacity-60'
         }`}
         onClick={() => onTabChange('settings')}
@@ -105,9 +101,7 @@ export const TabNavigation: React.FC<TabNavigationProps> = ({ activeTab, onTabCh
           </div>
           <span className="text-sm font-bold leading-4" style={{ color: activeTab === 'settings' ? settings.accentColor : '#BFBFBF' }}>Settings</span>
         </div>
-        {activeTab === 'settings' && (
-          <div className="h-0.5 self-stretch" style={{ backgroundColor: settings.accentColor }} />
-        )}
+        <div className="h-0.5 self-stretch" style={{ backgroundColor: activeTab === 'settings' ? settings.accentColor : 'transparent' }} />
       </button>
     </nav>
   );
