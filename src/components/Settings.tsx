@@ -43,7 +43,7 @@ export const Settings: React.FC = () => {
       </div>
 
       {/* Divider */}
-      <div className="h-[1px] bg-[#E5E5E5] mx-5 mb-6" />
+      <div className="h-[1px] bg-[#09121F] mx-5 mb-6" />
 
       {/* Settings Content */}
       <div className="flex-1 overflow-y-auto">
@@ -52,7 +52,7 @@ export const Settings: React.FC = () => {
         
         {/* Coloring Time Section */}
         <div className="px-5 pt-6">
-          <div className="h-[1px] bg-[#E5E5E5] mb-6" />
+          <div className="h-[1px] bg-[#09121F] mb-6" />
           <button
             onClick={() => setShowColorOverlay(true)}
             className="flex items-center gap-4 w-full py-4"
