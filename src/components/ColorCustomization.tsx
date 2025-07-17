@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useApp } from '@/context/AppContext';
+import { syncWidgetData } from '@/utils/widgetSync';
 
 const colorOptions = [
   '#09121F', // Default dark
@@ -26,6 +27,9 @@ export const ColorCustomization: React.FC = () => {
     
     // Update CSS custom properties for immediate visual feedback
     document.documentElement.style.setProperty('--accent-color', color);
+    
+    // Sync widget data for iOS widget
+    syncWidgetData({ accentColor: color });
   };
 
   return (
