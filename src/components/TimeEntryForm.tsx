@@ -137,19 +137,15 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({ onSubmit, transcri
           </div>
         </div>
 
-        <div className="flex flex-col items-start self-stretch pt-[9px]">
-          <div className="flex h-14 flex-col items-start gap-2.5 self-stretch px-5 py-[7px] max-md:px-4 max-md:py-[5px] max-sm:px-3 max-sm:py-1">
-            <button
-              type="submit"
-              className="flex items-start flex-[1_0_0] self-stretch px-2 py-1 transition-colors"
-              style={{ backgroundColor: settings.accentColor }}
-              aria-label="Add time entry"
-            >
-              <span className="flex-[1_0_0] self-stretch text-white text-center text-[15px] font-bold leading-5 tracking-[0.1px]">
-                Add Time Entry
-              </span>
-            </button>
-          </div>
+        <div className="p-5">
+          <button
+            type="submit"
+            className="w-full text-white py-4 rounded-lg font-bold text-[15px] transition-colors"
+            style={{ backgroundColor: settings.accentColor }}
+            aria-label="Add time entry"
+          >
+            Add Time Entry
+          </button>
         </div>
       </form>
 
