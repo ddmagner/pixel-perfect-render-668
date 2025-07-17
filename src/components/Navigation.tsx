@@ -43,7 +43,7 @@ interface TabNavigationProps {
 export const TabNavigation: React.FC<TabNavigationProps> = ({ activeTab, onTabChange }) => {
   const { settings } = useApp();
   return (
-    <nav className="flex items-start self-stretch px-5 py-0">
+    <nav className="flex items-start self-stretch px-5 py-0 pb-0">
       <button
         className={`flex h-12 flex-col justify-between items-center flex-[1_0_0] px-0 py-[9px] ${
           activeTab === 'enter-time' ? '' : 'opacity-60'
