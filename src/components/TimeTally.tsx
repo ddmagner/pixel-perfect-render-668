@@ -143,8 +143,8 @@ export const TimeTally: React.FC = () => {
       </div>
 
       {/* Table Header */}
-      <div className="px-5 pb-2 w-full">
-        <div className="grid grid-cols-3 gap-4 pb-2 border-b border-[#09121F] mx-[20px]">
+      <div className="w-full pb-2">
+        <div className="grid grid-cols-3 gap-4 pb-2 border-b border-[#09121F] mx-5">
           <span className="text-[#09121F] text-[15px] font-bold">Date/Time</span>
           <span className="text-[#09121F] text-[15px] font-bold">Task</span>
           <span className="text-[#09121F] text-[15px] font-bold text-right">Hours</span>
@@ -152,22 +152,22 @@ export const TimeTally: React.FC = () => {
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-y-auto px-5 w-full">
+      <div className="flex-1 overflow-y-auto w-full">
         {Object.keys(groupedEntries).length === 0 ? (
           <div className="text-center py-8">
             <p className="text-[#BFBFBF] text-lg">No time entries found</p>
           </div>
         ) : (
-          <div className="space-y-6">
+          <div className="space-y-6 mx-5">
             {Object.entries(groupedEntries).map(([projectName, entries]) => (
               <div key={projectName}>
                 {/* Project Name */}
-                <h3 className="text-[#09121F] text-[18px] font-bold py-3 mx-[20px]">
+                <h3 className="text-[#09121F] text-[18px] font-bold py-3 w-full">
                   {projectName}
                 </h3>
                 
                 {/* Project Entries */}
-                <div className="space-y-2 mx-[20px]">
+                <div className="space-y-2 w-full">
                   {entries.map((entry) => (
                     <div key={entry.id} className="grid grid-cols-3 gap-4 py-2">
                       <div className="text-[#BFBFBF] text-[15px]">
@@ -184,7 +184,7 @@ export const TimeTally: React.FC = () => {
                 </div>
 
                 {/* Project Subtotal */}
-                <div className="grid grid-cols-3 gap-4 py-2 border-t border-gray-300 mt-2 mx-[20px]">
+                <div className="grid grid-cols-3 gap-4 py-2 border-t border-gray-300 mt-2 w-full">
                   <div></div>
                   <div className="text-[#09121F] text-[15px] font-bold">
                     Sub-total
@@ -197,7 +197,7 @@ export const TimeTally: React.FC = () => {
             ))}
 
             {/* Total */}
-            <div className="border-t-2 border-[#09121F] pt-4 mx-[20px]">
+            <div className="border-t-2 border-[#09121F] pt-4 w-full">
               <div className="grid grid-cols-3 gap-4 py-2">
                 <div></div>
                 <div className="text-[#09121F] text-[18px] font-bold">
