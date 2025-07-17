@@ -52,7 +52,7 @@ export const Settings: React.FC = () => {
         
         {/* Coloring Time Section */}
         <div className="px-5 pt-6">
-          <div className="h-px bg-[#09121F] mb-6" />
+          <div className="h-px bg-[#09121F] mx-5 mb-6" />
           <button
             onClick={() => setShowColorOverlay(true)}
             className="flex items-center gap-4 w-full py-4"
