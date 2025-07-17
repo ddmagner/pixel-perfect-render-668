@@ -221,7 +221,8 @@ export const TimeTally: React.FC = () => {
       <div className="p-5">
         <button
           onClick={handleExport}
-          className="w-full bg-[#09121F] text-white py-4 rounded-lg font-bold text-[15px] hover:bg-[#1a1a1a] transition-colors"
+          className="w-full text-white py-4 rounded-lg font-bold text-[15px] transition-colors"
+          style={{ backgroundColor: settings.accentColor }}
         >
           Export/Share/Print
         </button>

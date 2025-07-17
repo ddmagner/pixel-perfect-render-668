@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { parseTimeEntryFromSpeech } from '@/utils/speechParser';
+import { useApp } from '@/context/AppContext';
 
 interface TimeEntryData {
   duration: string;
@@ -13,6 +14,7 @@ interface TimeEntryFormProps {
 }
 
 export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({ onSubmit, transcript }) => {
+  const { settings } = useApp();
   const [formData, setFormData] = useState<TimeEntryData>({
     duration: '',
     task: '',
@@ -139,7 +141,8 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({ onSubmit, transcri
           <div className="flex h-14 flex-col items-start gap-2.5 self-stretch px-5 py-[7px] max-md:px-4 max-md:py-[5px] max-sm:px-3 max-sm:py-1">
             <button
               type="submit"
-              className="flex items-start flex-[1_0_0] self-stretch bg-[#09121F] px-2 py-1 hover:bg-[#1a1a1a] transition-colors"
+              className="flex items-start flex-[1_0_0] self-stretch px-2 py-1 transition-colors"
+              style={{ backgroundColor: settings.accentColor }}
               aria-label="Add time entry"
             >
               <span className="flex-[1_0_0] self-stretch text-white text-center text-[15px] font-bold leading-5 tracking-[0.1px]">
