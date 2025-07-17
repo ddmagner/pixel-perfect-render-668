@@ -104,9 +104,9 @@ export const TimeTally: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full w-full">
       {/* Mode Toggle */}
-      <div className="flex justify-center items-center px-5 py-4 border-b">
+      <div className="flex justify-center items-center w-full px-5 py-4 border-b">
         <div className="flex items-center gap-4">
           <span className={`text-[15px] font-medium ${viewMode === 'timecard' ? 'text-[#09121F]' : 'text-[#BFBFBF]'}`}>
             Time Card Mode
@@ -218,7 +218,7 @@ export const TimeTally: React.FC = () => {
       </div>
 
       {/* Export Button */}
-      <div className="p-5">
+      <div className="w-full px-5 py-5">
         <button
           onClick={handleExport}
           className="w-full text-white py-4 rounded-lg font-bold text-[15px] transition-colors"
