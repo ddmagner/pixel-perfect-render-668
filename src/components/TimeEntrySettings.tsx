@@ -85,34 +85,9 @@ export const TimeEntrySettings: React.FC = () => {
     });
   };
 
-  const toggleInvoiceMode = () => {
-    updateSettings({
-      invoiceMode: !settings.invoiceMode,
-    });
-  };
 
   return (
     <div className="px-5 py-4 space-y-6">
-      {/* Invoice Mode Toggle */}
-      <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-        <div>
-          <h3 className="text-[#09121F] text-[15px] font-bold">Invoice Mode</h3>
-          <p className="text-[#BFBFBF] text-sm">Enable hourly rates and cost calculations</p>
-        </div>
-        <button
-          onClick={toggleInvoiceMode}
-          className={`w-12 h-6 rounded-full transition-colors ${
-            settings.invoiceMode ? 'bg-[#09121F]' : 'bg-gray-300'
-          }`}
-        >
-          <div
-            className={`w-5 h-5 bg-white rounded-full transition-transform ${
-              settings.invoiceMode ? 'translate-x-6' : 'translate-x-0.5'
-            }`}
-          />
-        </button>
-      </div>
-
       {/* Task Types */}
       <section>
         <h3 className="text-[#09121F] text-[18px] font-bold mb-3">Task Types</h3>
