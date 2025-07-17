@@ -106,7 +106,7 @@ export const TimeTally: React.FC = () => {
   return (
     <div className="flex flex-col h-full w-full">
       {/* Mode Toggle */}
-      <div className="flex justify-center items-center w-full px-5 py-4 border-b">
+      <div className="flex justify-center items-center w-full px-5 py-4">
         <div className="flex items-center gap-4">
           <span className={`text-[15px] font-medium ${viewMode === 'timecard' ? 'text-[#09121F]' : 'text-[#BFBFBF]'}`}>
             Time Card Mode
@@ -129,6 +129,9 @@ export const TimeTally: React.FC = () => {
         </div>
       </div>
 
+      {/* Divider */}
+      <div className="h-px bg-[#09121F] mx-5 mb-6" />
+
       {/* Header */}
       <div className="flex items-center justify-between w-full min-w-full px-5 py-6">
         <h1 className="text-[#09121F] text-[28px] font-bold leading-8">
@@ -142,13 +145,17 @@ export const TimeTally: React.FC = () => {
         </button>
       </div>
 
+      {/* Divider */}
+      <div className="h-px bg-[#09121F] mx-5 mb-6" />
+
       {/* Table Header */}
       <div className="w-full pb-2">
-        <div className="grid grid-cols-3 gap-4 pb-2 border-b border-[#09121F] mx-5">
+        <div className="grid grid-cols-3 gap-4 pb-2 mx-5">
           <span className="text-[#09121F] text-[15px] font-bold">Date/Time</span>
           <span className="text-[#09121F] text-[15px] font-bold">Task</span>
           <span className="text-[#09121F] text-[15px] font-bold text-right">Hours</span>
         </div>
+        <div className="h-px bg-[#09121F] mx-5 mt-2 mb-4" />
       </div>
 
       {/* Content */}
@@ -184,7 +191,8 @@ export const TimeTally: React.FC = () => {
                 </div>
 
                 {/* Project Subtotal */}
-                <div className="grid grid-cols-3 gap-4 py-2 border-t border-gray-300 mt-2 w-full">
+                <div className="grid grid-cols-3 gap-4 py-2 mt-2 w-full">
+                  <div className="h-px bg-[#09121F] col-span-3 mb-2" />
                   <div></div>
                   <div className="text-[#09121F] text-[15px] font-bold">
                     Sub-total
@@ -197,7 +205,8 @@ export const TimeTally: React.FC = () => {
             ))}
 
             {/* Total */}
-            <div className="border-t-2 border-[#09121F] pt-4 w-full">
+            <div className="pt-4 w-full">
+              <div className="h-px bg-[#09121F] w-full mb-4" />
               <div className="grid grid-cols-3 gap-4 py-2">
                 <div></div>
                 <div className="text-[#09121F] text-[18px] font-bold">
