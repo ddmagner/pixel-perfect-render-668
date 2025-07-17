@@ -5,6 +5,7 @@ import { Divider } from '@/components/Divider';
 import { RecordButton } from '@/components/RecordButton';
 import { TimeEntryForm } from '@/components/TimeEntryForm';
 import { TimeTally } from '@/components/TimeTally';
+import { Settings } from '@/components/Settings';
 import { useApp } from '@/context/AppContext';
 
 const Index = () => {
@@ -79,12 +80,7 @@ const Index = () => {
         )}
 
         {activeTab === 'settings' && (
-          <main className="flex flex-col items-center justify-center flex-1 self-stretch px-5 py-10">
-            <h2 className="text-[#09121F] text-2xl font-bold mb-4">Settings</h2>
-            <p className="text-[#BFBFBF] text-center">
-              Configure your time tracking preferences and account settings.
-            </p>
-          </main>
+          <Settings />
         )}
       </div>
     </>
