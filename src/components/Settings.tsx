@@ -16,27 +16,26 @@ export const Settings: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full w-full">
       {/* Mode Toggle */}
-      <div className="px-5 pt-4 pb-6">
-        <div className="flex items-center justify-center gap-4">
-          <span className={`text-[15px] font-bold ${!settings.invoiceMode ? 'text-[#09121F]' : 'text-[#BFBFBF]'}`}>
+      <div className="flex justify-center items-center w-full px-5 py-4">
+        <div className="flex items-center gap-4">
+          <span className={`text-[15px] font-medium ${!settings.invoiceMode ? 'text-[#09121F]' : 'text-[#BFBFBF]'}`}>
             Time Card Mode
           </span>
           <button
             onClick={handleModeToggle}
-            className="relative w-12 h-6 bg-[#E5E5E5] rounded-full transition-colors"
-            style={{
-              backgroundColor: settings.invoiceMode ? '#09121F' : '#E5E5E5',
-            }}
+            className={`w-12 h-6 rounded-full transition-colors ${
+              settings.invoiceMode ? 'bg-[#09121F]' : 'bg-[#BFBFBF]'
+            }`}
           >
             <div
-              className={`absolute top-0.5 w-5 h-5 bg-white rounded-full transition-transform ${
+              className={`w-5 h-5 bg-white rounded-full transition-transform ${
                 settings.invoiceMode ? 'translate-x-6' : 'translate-x-0.5'
               }`}
             />
           </button>
-          <span className={`text-[15px] font-bold ${settings.invoiceMode ? 'text-[#09121F]' : 'text-[#BFBFBF]'}`}>
+          <span className={`text-[15px] font-medium ${settings.invoiceMode ? 'text-[#09121F]' : 'text-[#BFBFBF]'}`}>
             Invoice Mode
           </span>
         </div>
