@@ -2,18 +2,6 @@ import React, { useState } from 'react';
 import { useApp } from '@/context/AppContext';
 import { syncWidgetData } from '@/utils/widgetSync';
 
-const colorOptions = [
-  '#09121F', // Default dark
-  '#1E40AF', // Blue
-  '#7C3AED', // Purple
-  '#DC2626', // Red
-  '#059669', // Green
-  '#D97706', // Orange
-  '#DB2777', // Pink
-  '#0891B2', // Cyan
-  '#4338CA', // Indigo
-  '#65A30D', // Lime
-];
 
 export const ColorCustomization: React.FC = () => {
   const { settings, updateSettings } = useApp();
@@ -33,81 +21,42 @@ export const ColorCustomization: React.FC = () => {
   };
 
   return (
-    <div className="px-5 py-4">
-      <div className="space-y-6">
-        <div>
-          <h3 className="text-[#09121F] text-[18px] font-bold mb-3">Choose Accent Color</h3>
-          <p className="text-[#BFBFBF] text-sm mb-4">
-            Select a color to customize the app's appearance
-          </p>
-        </div>
+    <div className="flex flex-col h-full">
+      <div className="px-5 py-4">
+        <h3 className="text-2xl font-bold mb-1">Coloring time</h3>
+        <p className="text-muted-foreground">Choose your flava.</p>
+      </div>
 
-        {/* Color Preview */}
-        <div className="p-6 rounded-lg border-2 border-gray-200">
-          <div className="flex items-center gap-4">
-            <div
-              className="w-12 h-12 rounded-full border-2 border-white shadow-lg"
-              style={{ backgroundColor: selectedColor }}
-            />
-            <div>
-              <p className="text-[#09121F] font-bold">Preview</p>
-              <p className="text-[#BFBFBF] text-sm">{selectedColor}</p>
-            </div>
-          </div>
+      {/* Color Grid */}
+      <div className="grow px-5">
+        <div className="grid grid-cols-10 gap-0 w-full aspect-[2/1.2] mb-6">
+          {Array.from({ length: 100 }).map((_, i) => {
+            const col = i % 10;
+            const row = Math.floor(i / 10);
+            const hue = (col * 36) % 360; // 360/10 colors = 36° per column
+            const lightness = 100 - (row * 100) / 9; // 10 rows of decreasing lightness
+            const color = `hsl(${hue} 100% ${lightness}%)`; 
+            
+            return (
+              <button
+                key={i}
+                onClick={() => handleColorSelect(color)}
+                className="w-full h-full transition-transform hover:scale-110 hover:z-10"
+                style={{ backgroundColor: color }}
+                aria-label={`Select color ${color}`}
+              />
+            );
+          })}
         </div>
+      </div>
 
-        {/* Color Grid */}
-        <div className="grid grid-cols-5 gap-4">
-          {colorOptions.map((color) => (
-            <button
-              key={color}
-              onClick={() => handleColorSelect(color)}
-              className={`w-12 h-12 rounded-full border-4 transition-all ${
-                selectedColor === color
-                  ? 'border-gray-800 scale-110'
-                  : 'border-gray-300 hover:border-gray-400'
-              }`}
-              style={{ backgroundColor: color }}
-              aria-label={`Select color ${color}`}
-            />
-          ))}
-        </div>
-
-        {/* Custom Color Input */}
-        <div>
-          <label className="block text-[#09121F] text-[15px] font-bold mb-2">
-            Custom Color (Hex)
-          </label>
-          <div className="flex gap-2">
-            <input
-              type="text"
-              value={selectedColor}
-              onChange={(e) => {
-                if (e.target.value.match(/^#[0-9A-Fa-f]{0,6}$/)) {
-                  setSelectedColor(e.target.value);
-                }
-              }}
-              onBlur={() => {
-                if (selectedColor.match(/^#[0-9A-Fa-f]{6}$/)) {
-                  handleColorSelect(selectedColor);
-                }
-              }}
-              placeholder="#000000"
-              className="flex-1 p-3 border border-gray-300 rounded-lg text-[#09121F] placeholder:text-[#BFBFBF]"
-            />
-            <div
-              className="w-12 h-12 rounded border border-gray-300"
-              style={{ backgroundColor: selectedColor }}
-            />
-          </div>
-        </div>
-
-        {/* Reset Button */}
+      {/* Save Button */}
+      <div className="p-5">
         <button
-          onClick={() => handleColorSelect('#09121F')}
-          className="w-full bg-gray-100 text-[#09121F] py-3 px-4 rounded-lg font-bold text-[15px] hover:bg-gray-200 transition-colors"
+          onClick={() => handleColorSelect(selectedColor)}
+          className="w-full bg-background text-foreground py-4 px-4 rounded-lg font-bold text-xl hover:bg-accent transition-colors"
         >
-          Reset to Default
+          Save
         </button>
       </div>
     </div>
