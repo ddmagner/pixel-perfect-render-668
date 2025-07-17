@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { StatusBar } from '@/components/StatusBar';
 import { Navigation, TabNavigation } from '@/components/Navigation';
 import { Divider } from '@/components/Divider';
 import { RecordButton } from '@/components/RecordButton';
@@ -52,8 +51,6 @@ const Index = () => {
         className="flex w-full max-w-[440px] min-h-[956px] flex-col items-start relative bg-white mx-auto my-0"
         style={{ fontFamily: 'Gilroy, sans-serif' }}
       >
-        <StatusBar />
-        
         <Navigation activeTab={activeTab} onTabChange={handleTabChange} />
         
         <TabNavigation activeTab={activeTab} onTabChange={handleTabChange} />
