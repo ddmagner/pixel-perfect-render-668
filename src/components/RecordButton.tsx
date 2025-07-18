@@ -63,6 +63,13 @@ export const RecordButton: React.FC<RecordButtonProps> = ({
     <section className="flex w-full justify-center items-center gap-2.5 px-0 py-[50px]">
       <div className="flex w-[220px] flex-col items-center gap-5 shrink-0 max-sm:w-[180px]">
         <div className="h-[220px] self-stretch relative max-sm:h-[180px]">
+          <div>
+            <div
+              dangerouslySetInnerHTML={{
+                __html: `<svg width="220" height="221" viewBox="0 0 220 221" fill="none" xmlns="http://www.w3.org/2000/svg" class="record-button-bg" style="width: 220px; height: 220px; flex-shrink: 0; position: absolute; left: 0; top: 0;"> <circle cx="110" cy="110.5" r="88" fill="#FF4015"></circle> </svg>`,
+              }}
+            />
+          </div>
           <button
             className={`w-[220px] h-[220px] shrink-0 absolute left-0 top-0 max-sm:w-[180px] max-sm:h-[180px] transition-transform ${
               isPressed ? 'scale-95' : 'scale-100'
