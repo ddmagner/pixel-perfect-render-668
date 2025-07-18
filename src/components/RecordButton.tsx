@@ -66,7 +66,7 @@ export const RecordButton: React.FC<RecordButtonProps> = ({
           <div>
             <div
               dangerouslySetInnerHTML={{
-                __html: `<svg width="220" height="221" viewBox="0 0 220 221" fill="none" xmlns="http://www.w3.org/2000/svg" class="record-button-bg" style="width: 220px; height: 220px; flex-shrink: 0; position: absolute; left: 0; top: 0;"> <circle cx="110" cy="110.5" r="88" fill="#FF4015"></circle> </svg>`,
+                __html: `<svg width="220" height="221" viewBox="0 0 220 221" fill="none" xmlns="http://www.w3.org/2000/svg" class="record-button-bg" style="width: 220px; height: 220px; flex-shrink: 0; position: absolute; left: 0; top: 0;"> <path d="M110 22.5C158.598 22.5 198 61.902 198 110.5C198 159.098 158.598 198.5 110 198.5C95.315 198.5 81.213 194.925 68.585 188.171L36.19 159.12C25.586 139.298 22 125.185 22 110.5C22 61.902 61.402 22.5 110 22.5Z" fill="#FF4015"></path> </svg>`,
               }}
             />
           </div>
