@@ -54,7 +54,7 @@ export const ColorCustomization: React.FC = () => {
       <div className="p-5">
         <button
           onClick={() => handleColorSelect(selectedColor)}
-          className="w-full bg-background text-foreground py-4 px-4 rounded-lg font-bold text-xl hover:bg-accent transition-colors"
+          className="w-full bg-primary text-primary-foreground py-4 px-4 font-bold text-xl hover:bg-primary/90 transition-colors"
         >
           Save
         </button>
