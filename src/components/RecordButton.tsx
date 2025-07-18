@@ -61,7 +61,7 @@ export const RecordButton: React.FC<RecordButtonProps> = ({
 
   return (
     <section className="flex w-full justify-center items-center gap-2.5 px-0 py-[50px]">
-      <div className="flex flex-col items-center gap-5 shrink-0">
+      <div className="flex flex-col items-center gap-10 shrink-0">
         <div className="h-[220px] w-[220px] relative max-sm:h-[180px] max-sm:w-[180px]">
           <div>
             <div
