@@ -68,9 +68,7 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({ onSubmit, transcri
           <div className="flex items-start gap-2.5 self-stretch px-5 py-1.5">
             <input
               id="duration"
-              type="number"
-              step="0.25"
-              min="0"
+              type="text"
               placeholder="How long?"
               value={formData.duration}
               onChange={(e) => handleInputChange('duration', e.target.value)}
