@@ -70,7 +70,7 @@ export const Settings: React.FC = () => {
       {/* Color Overlay */}
       {showColorOverlay && (
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-end">
-          <div className="bg-white w-full rounded-t-2xl animate-slide-in-right">
+          <div className="bg-white w-[390px] max-w-full mx-auto rounded-t-2xl animate-slide-in-right">
             <div className="flex items-center justify-between p-5 border-b border-gray-200">
               <h2 className="text-[#09121F] text-[18px] font-bold">Coloring time</h2>
               <button
