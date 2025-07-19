@@ -356,7 +356,7 @@ export const TimeTally: React.FC = () => {
                       </div>
                     ))}
                     
-                    <div className={`grid ${gridCols} gap-4 py-1 ml-4 border-t border-[#09121F] mt-2 pt-2`}>
+                    <div className={`grid ${gridCols} gap-4 py-1 border-t border-[#09121F] mt-2 pt-2`}>
                       <div></div>
                       <div className="text-[#09121F] text-[15px] font-bold">Sub-total</div>
                       <div className="text-[#09121F] text-[15px] font-bold text-right">
@@ -390,7 +390,7 @@ export const TimeTally: React.FC = () => {
                       </div>
                     ))}
                     
-                    <div className={`grid ${gridCols} gap-4 py-1 ml-4 border-t border-[#09121F] mt-2 pt-2`}>
+                    <div className={`grid ${gridCols} gap-4 py-1 border-t border-[#09121F] mt-2 pt-2`}>
                       <div></div>
                       <div className="text-[#09121F] text-[15px] font-bold">Sub-total</div>
                       <div className="text-[#09121F] text-[15px] font-bold text-right">
