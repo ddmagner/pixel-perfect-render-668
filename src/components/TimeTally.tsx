@@ -299,7 +299,7 @@ export const TimeTally: React.FC = () => {
                       </div>
                       
                       {project.entries.map((entry: TimeEntry) => (
-                        <div key={entry.id} className={`grid ${gridCols} gap-4 py-1 ml-8`}>
+                        <div key={entry.id} className={`grid ${gridCols} gap-4 py-1`}>
                           <div className="text-[#BFBFBF] text-[15px]">
                             {format(new Date(entry.date), 'MM/dd')}
                           </div>
