@@ -226,13 +226,13 @@ export const TimeTally: React.FC = () => {
       <div className="h-px bg-[#09121F] mx-5 mb-6" />
 
       {/* Header */}
-      <div className="flex items-center justify-between px-5 py-6">
+      <div className="flex items-baseline justify-between px-5 py-6">
         <h1 className="text-[#09121F] text-[28px] font-bold leading-8">
           Where time went
         </h1>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <button className="flex items-center gap-2 text-[15px] font-medium text-[#09121F] bg-white border border-[#09121F] rounded-lg px-4 py-2 hover:bg-gray-50">
+            <button className="flex items-center gap-2 text-[15px] font-medium text-[#09121F] hover:bg-gray-50">
               {getSortOptionText()}
               <ChevronDown className="h-4 w-4" />
             </button>
