@@ -29,7 +29,7 @@ export const ColorCustomization: React.FC = () => {
 
       {/* Color Grid */}
       <div className="grow px-5">
-        <div className="grid grid-cols-10 gap-0 w-full aspect-square mb-6">
+        <div className="grid grid-cols-10 gap-0 w-full aspect-square mb-5">
           {Array.from({
           length: 100
         }).map((_, i) => {
