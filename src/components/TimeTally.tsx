@@ -299,32 +299,32 @@ export const TimeTally: React.FC = () => {
                       </div>
                       
                       {project.entries.map((entry: TimeEntry) => (
-                        <div key={entry.id} className={`grid ${gridCols} gap-4 py-1`}>
-                          <div className="text-[#BFBFBF] text-sm">
+                        <div key={entry.id} className={`grid ${gridCols} gap-4 h-[30px] items-center`}>
+                          <div className="text-[#BFBFBF] text-sm flex items-center">
                             {format(new Date(entry.date), 'MM/dd')}
                           </div>
-                          <div className="text-[#09121F] text-sm">
+                          <div className="text-[#09121F] text-sm flex items-center">
                             {entry.task}
                           </div>
-                          <div className="text-[#09121F] text-sm text-right">
+                          <div className="text-[#09121F] text-sm text-right flex items-center justify-end">
                             {formatHours(entry.duration)}
                           </div>
                           {viewMode === 'invoice' && (
-                            <div className="text-[#09121F] text-sm text-right">
+                            <div className="text-[#09121F] text-sm text-right flex items-center justify-end">
                               ${calculateFee(entry).toFixed(2)}
                             </div>
                           )}
                         </div>
                       ))}
                       
-                      <div className={`grid ${gridCols} gap-4 py-1 border-t border-[#09121F] mt-2 pt-2`}>
+                      <div className={`grid ${gridCols} gap-4 h-[30px] border-t border-[#09121F] mt-2 pt-2 items-center`}>
                         <div className="flex items-center"></div>
                         <div className="text-[#09121F] text-sm font-bold flex items-center">Sub-total</div>
                         <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
                           {formatHours(project.subtotal.hours)}
                         </div>
                         {viewMode === 'invoice' && (
-                          <div className="text-[#09121F] text-sm font-bold text-right">
+                          <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
                             ${project.subtotal.fee.toFixed(2)}
                           </div>
                         )}
@@ -336,18 +336,18 @@ export const TimeTally: React.FC = () => {
                     {group.projects.map((project: any, projectIndex: number) => (
                       <div key={`date-project-${project.name}-${projectIndex}`}>
                         {project.entries.map((entry: TimeEntry) => (
-                          <div key={entry.id} className={`grid ${gridCols} gap-4 py-1 ml-4`}>
-                            <div className="text-[#09121F] text-sm">
+                          <div key={entry.id} className={`grid ${gridCols} gap-4 h-[30px] ml-4 items-center`}>
+                            <div className="text-[#09121F] text-sm flex items-center">
                               {entry.project}
                             </div>
-                            <div className="text-[#09121F] text-sm">
+                            <div className="text-[#09121F] text-sm flex items-center">
                               {entry.task}
                             </div>
-                            <div className="text-[#09121F] text-sm text-right">
+                            <div className="text-[#09121F] text-sm text-right flex items-center justify-end">
                               {formatHours(entry.duration)}
                             </div>
                             {viewMode === 'invoice' && (
-                              <div className="text-[#09121F] text-sm text-right">
+                              <div className="text-[#09121F] text-sm text-right flex items-center justify-end">
                                 ${calculateFee(entry).toFixed(2)}
                               </div>
                             )}
@@ -356,14 +356,14 @@ export const TimeTally: React.FC = () => {
                       </div>
                     ))}
                     
-                    <div className={`grid ${gridCols} gap-4 py-1 border-t border-[#09121F] mt-2 pt-2`}>
-                      <div></div>
-                      <div className="text-[#09121F] text-sm font-bold">Sub-total</div>
-                      <div className="text-[#09121F] text-sm font-bold text-right">
+                    <div className={`grid ${gridCols} gap-4 h-[30px] border-t border-[#09121F] mt-2 pt-2 items-center`}>
+                      <div className="flex items-center"></div>
+                      <div className="text-[#09121F] text-sm font-bold flex items-center">Sub-total</div>
+                      <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
                         {formatHours(group.subtotal.hours)}
                       </div>
                       {viewMode === 'invoice' && (
-                        <div className="text-[#09121F] text-sm font-bold text-right">
+                        <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
                           ${group.subtotal.fee.toFixed(2)}
                         </div>
                       )}
@@ -372,32 +372,32 @@ export const TimeTally: React.FC = () => {
                 ) : sortOption === 'task' && group.entries ? (
                   <div>
                     {group.entries.map((entry: TimeEntry) => (
-                      <div key={entry.id} className={`grid ${gridCols} gap-4 py-1 ml-4`}>
-                        <div className="text-[#BFBFBF] text-sm">
-                          {format(new Date(entry.date), 'MM/dd')}
-                        </div>
-                        <div className="text-[#09121F] text-sm">
-                          {entry.project}
-                        </div>
-                        <div className="text-[#09121F] text-sm text-right">
-                          {formatHours(entry.duration)}
-                        </div>
-                        {viewMode === 'invoice' && (
-                          <div className="text-[#09121F] text-sm text-right">
-                            ${calculateFee(entry).toFixed(2)}
+                        <div key={entry.id} className={`grid ${gridCols} gap-4 h-[30px] ml-4 items-center`}>
+                          <div className="text-[#BFBFBF] text-sm flex items-center">
+                            {format(new Date(entry.date), 'MM/dd')}
                           </div>
-                        )}
-                      </div>
+                          <div className="text-[#09121F] text-sm flex items-center">
+                            {entry.project}
+                          </div>
+                          <div className="text-[#09121F] text-sm text-right flex items-center justify-end">
+                            {formatHours(entry.duration)}
+                          </div>
+                          {viewMode === 'invoice' && (
+                            <div className="text-[#09121F] text-sm text-right flex items-center justify-end">
+                              ${calculateFee(entry).toFixed(2)}
+                            </div>
+                          )}
+                        </div>
                     ))}
                     
-                    <div className={`grid ${gridCols} gap-4 py-1 border-t border-[#09121F] mt-2 pt-2`}>
-                      <div></div>
-                      <div className="text-[#09121F] text-sm font-bold">Sub-total</div>
-                      <div className="text-[#09121F] text-sm font-bold text-right">
+                    <div className={`grid ${gridCols} gap-4 h-[30px] border-t border-[#09121F] mt-2 pt-2 items-center`}>
+                      <div className="flex items-center"></div>
+                      <div className="text-[#09121F] text-sm font-bold flex items-center">Sub-total</div>
+                      <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
                         {formatHours(group.subtotal.hours)}
                       </div>
                       {viewMode === 'invoice' && (
-                        <div className="text-[#09121F] text-sm font-bold text-right">
+                        <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
                           ${group.subtotal.fee.toFixed(2)}
                         </div>
                       )}
@@ -409,14 +409,14 @@ export const TimeTally: React.FC = () => {
 
             {/* Total */}
             <div className="pt-4 w-full border-t border-[#09121F] mt-6">
-              <div className={`grid ${gridCols} gap-4 py-2`}>
-                <div></div>
-                <div className="text-[#09121F] text-sm font-bold">TOTAL</div>
-                <div className="text-[#09121F] text-sm font-bold text-right">
+              <div className={`grid ${gridCols} gap-4 h-[30px] items-center`}>
+                <div className="flex items-center"></div>
+                <div className="text-[#09121F] text-sm font-bold flex items-center">TOTAL</div>
+                <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
                   {formatHours(organizedData.total.hours)}
                 </div>
                 {viewMode === 'invoice' && (
-                  <div className="text-[#09121F] text-sm font-bold text-right">
+                  <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
                     ${organizedData.total.fee.toFixed(2)}
                   </div>
                 )}
