@@ -1,88 +1,145 @@
-import React, { useState, useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { useApp } from '@/context/AppContext';
-import { TimeEntry, SortOption, ViewMode } from '@/types';
+import { TimeEntry } from '@/types';
 import { format } from 'date-fns';
 import { Share } from '@capacitor/share';
 import { generatePDF } from '@/utils/pdfGenerator';
 
-interface GroupedEntries {
-  [projectName: string]: TimeEntry[];
-}
-
 export const TimeTally: React.FC = () => {
   const { timeEntries, sortOption, setSortOption, viewMode, setViewMode, settings } = useApp();
-  const [selectedClient, setSelectedClient] = useState<string>('all');
 
-  // Sort and filter time entries
-  const sortedEntries = useMemo(() => {
-    let filtered = timeEntries;
+  // Format hours as MM:SS
+  const formatHours = (hours: number): string => {
+    const totalMinutes = Math.round(hours * 60);
+    const mins = Math.floor(totalMinutes / 60);
+    const secs = totalMinutes % 60;
+    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+  };
 
-    // Filter by client if selected
-    if (selectedClient !== 'all') {
-      filtered = timeEntries.filter(entry => {
-        const project = settings.projects.find(p => p.name === entry.project);
-        return project?.clientId === selectedClient;
+  // Get client name by project
+  const getClientByProject = (projectName: string): string => {
+    const project = settings.projects.find(p => p.name === projectName);
+    if (project?.clientId) {
+      const client = settings.clients.find(c => c.id === project.clientId);
+      return client?.name || '';
+    }
+    return '';
+  };
+
+  // Get task rate for invoice mode
+  const getTaskRate = (taskName: string): number => {
+    const taskType = settings.taskTypes.find(t => t.name === taskName);
+    return taskType?.hourlyRate || 0;
+  };
+
+  // Calculate fee for an entry
+  const calculateFee = (entry: TimeEntry): number => {
+    if (viewMode !== 'invoice') return 0;
+    return entry.duration * getTaskRate(entry.task);
+  };
+
+  // Group and sort entries based on sort option
+  const organizedData = useMemo(() => {
+    if (timeEntries.length === 0) return { groups: [], total: { hours: 0, fee: 0 } };
+
+    let groups: any[] = [];
+    let totalHours = 0;
+    let totalFee = 0;
+
+    timeEntries.forEach(entry => {
+      totalHours += entry.duration;
+      totalFee += calculateFee(entry);
+    });
+
+    if (sortOption === 'project') {
+      // Group by Client > Project > Individual entries
+      const clientGroups: { [key: string]: { [key: string]: TimeEntry[] } } = {};
+      
+      timeEntries.forEach(entry => {
+        const clientName = getClientByProject(entry.project) || 'No Client';
+        const projectName = entry.project;
+        
+        if (!clientGroups[clientName]) clientGroups[clientName] = {};
+        if (!clientGroups[clientName][projectName]) clientGroups[clientName][projectName] = [];
+        clientGroups[clientName][projectName].push(entry);
       });
+
+      groups = Object.entries(clientGroups).map(([clientName, projects]) => ({
+        type: 'client',
+        name: clientName,
+        projects: Object.entries(projects).map(([projectName, entries]) => ({
+          type: 'project',
+          name: projectName,
+          entries: entries.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()),
+          subtotal: {
+            hours: entries.reduce((sum, e) => sum + e.duration, 0),
+            fee: entries.reduce((sum, e) => sum + calculateFee(e), 0)
+          }
+        }))
+      }));
+    } else if (sortOption === 'date') {
+      // Group by Date > Project > Task
+      const dateGroups: { [key: string]: { [key: string]: TimeEntry[] } } = {};
+      
+      timeEntries.forEach(entry => {
+        const dateKey = format(new Date(entry.date), 'MM/dd');
+        const projectKey = entry.project;
+        
+        if (!dateGroups[dateKey]) dateGroups[dateKey] = {};
+        if (!dateGroups[dateKey][projectKey]) dateGroups[dateKey][projectKey] = [];
+        dateGroups[dateKey][projectKey].push(entry);
+      });
+
+      groups = Object.entries(dateGroups)
+        .sort(([a], [b]) => a.localeCompare(b))
+        .map(([date, projects]) => ({
+          type: 'date',
+          name: date,
+          projects: Object.entries(projects).map(([projectName, entries]) => ({
+            type: 'project',
+            name: projectName,
+            entries: entries,
+            subtotal: {
+              hours: entries.reduce((sum, e) => sum + e.duration, 0),
+              fee: entries.reduce((sum, e) => sum + calculateFee(e), 0)
+            }
+          })),
+          subtotal: {
+            hours: Object.values(projects).flat().reduce((sum, e) => sum + e.duration, 0),
+            fee: Object.values(projects).flat().reduce((sum, e) => sum + calculateFee(e), 0)
+          }
+        }));
+    } else if (sortOption === 'task') {
+      // Group by Task > Date + Project combinations
+      const taskGroups: { [key: string]: TimeEntry[] } = {};
+      
+      timeEntries.forEach(entry => {
+        const taskName = entry.task;
+        if (!taskGroups[taskName]) taskGroups[taskName] = [];
+        taskGroups[taskName].push(entry);
+      });
+
+      groups = Object.entries(taskGroups).map(([taskName, entries]) => ({
+        type: 'task',
+        name: taskName,
+        entries: entries.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()),
+        subtotal: {
+          hours: entries.reduce((sum, e) => sum + e.duration, 0),
+          fee: entries.reduce((sum, e) => sum + calculateFee(e), 0)
+        }
+      }));
     }
 
-    // Sort entries
-    return filtered.sort((a, b) => {
-      switch (sortOption) {
-        case 'date':
-          return new Date(b.date).getTime() - new Date(a.date).getTime();
-        case 'project':
-          return a.project.localeCompare(b.project);
-        case 'task':
-          return a.task.localeCompare(b.task);
-        case 'client':
-          const aClient = settings.projects.find(p => p.name === a.project)?.clientId || '';
-          const bClient = settings.projects.find(p => p.name === b.project)?.clientId || '';
-          return aClient.localeCompare(bClient);
-        default:
-          return 0;
-      }
-    });
-  }, [timeEntries, sortOption, selectedClient, settings.projects]);
-
-  // Group entries by project
-  const groupedEntries = useMemo(() => {
-    const grouped: GroupedEntries = {};
-    sortedEntries.forEach(entry => {
-      if (!grouped[entry.project]) {
-        grouped[entry.project] = [];
-      }
-      grouped[entry.project].push(entry);
-    });
-    return grouped;
-  }, [sortedEntries]);
-
-  // Calculate totals
-  const totalHours = useMemo(() => {
-    return sortedEntries.reduce((sum, entry) => sum + entry.duration, 0);
-  }, [sortedEntries]);
-
-  const totalAmount = useMemo(() => {
-    if (viewMode !== 'invoice') return 0;
-    return sortedEntries.reduce((sum, entry) => {
-      const taskType = settings.taskTypes.find(t => t.name === entry.task);
-      const rate = taskType?.hourlyRate || 0;
-      return sum + (entry.duration * rate);
-    }, 0);
-  }, [sortedEntries, viewMode, settings.taskTypes]);
-
-  const getProjectSubtotal = (entries: TimeEntry[]) => {
-    return entries.reduce((sum, entry) => sum + entry.duration, 0);
-  };
+    return { groups, total: { hours: totalHours, fee: totalFee } };
+  }, [timeEntries, sortOption, viewMode, settings]);
 
   const handleExport = async () => {
     try {
-      const pdfBlob = await generatePDF(sortedEntries, settings, viewMode);
+      const pdfBlob = await generatePDF(timeEntries, settings, viewMode);
       const fileName = `time-${viewMode}-${format(new Date(), 'yyyy-MM-dd')}.pdf`;
       
-      // Create a URL for the PDF
       const url = URL.createObjectURL(pdfBlob);
       
-      // Try to use native share if available
       if (await Share.canShare()) {
         await Share.share({
           title: fileName,
@@ -90,7 +147,6 @@ export const TimeTally: React.FC = () => {
           url: url,
         });
       } else {
-        // Fallback to download
         const a = document.createElement('a');
         a.href = url;
         a.download = fileName;
@@ -102,6 +158,36 @@ export const TimeTally: React.FC = () => {
       console.error('Error exporting PDF:', error);
     }
   };
+
+  // Get sort option display text
+  const getSortOptionText = () => {
+    switch (sortOption) {
+      case 'project': return 'By Project';
+      case 'date': return 'By Date';
+      case 'task': return 'By Task';
+      default: return 'By Project';
+    }
+  };
+
+  // Get table headers based on sort option
+  const getTableHeaders = () => {
+    if (sortOption === 'project') {
+      return viewMode === 'invoice' 
+        ? ['Date', 'Task', 'Hours', 'Fee']
+        : ['Date', 'Task', 'Hours'];
+    } else if (sortOption === 'date') {
+      return viewMode === 'invoice'
+        ? ['Project', 'Task', 'Hours', 'Fee']
+        : ['Project', 'Task', 'Hours'];
+    } else { // task
+      return viewMode === 'invoice'
+        ? ['Date', 'Project', 'Hours', 'Fee']
+        : ['Date', 'Project', 'Hours'];
+    }
+  };
+
+  const headers = getTableHeaders();
+  const gridCols = viewMode === 'invoice' ? 'grid-cols-4' : 'grid-cols-3';
 
   return (
     <div className="flex flex-col h-full w-full">
@@ -135,90 +221,194 @@ export const TimeTally: React.FC = () => {
       {/* Header */}
       <div className="flex items-center justify-between w-full min-w-full px-5 py-6">
         <h1 className="text-[#09121F] text-[28px] font-bold leading-8">
-          Where time went.
+          Where time went
         </h1>
-        <button
-          onClick={() => setSortOption('project')}
-          className="text-[#09121F] text-[15px] font-medium underline"
-        >
-          By Project
-        </button>
+        <div className="flex gap-4">
+          <button
+            onClick={() => setSortOption('project')}
+            className={`text-[15px] font-medium ${sortOption === 'project' ? 'text-[#09121F] underline' : 'text-[#BFBFBF]'}`}
+          >
+            By Project
+          </button>
+          <button
+            onClick={() => setSortOption('date')}
+            className={`text-[15px] font-medium ${sortOption === 'date' ? 'text-[#09121F] underline' : 'text-[#BFBFBF]'}`}
+          >
+            By Date
+          </button>
+          <button
+            onClick={() => setSortOption('task')}
+            className={`text-[15px] font-medium ${sortOption === 'task' ? 'text-[#09121F] underline' : 'text-[#BFBFBF]'}`}
+          >
+            By Task
+          </button>
+        </div>
       </div>
 
-      {/* Divider */}
-      <div className="h-px bg-[#09121F] mx-5 mb-6" />
-
       {/* Table Header */}
-      <div className="w-full pb-2">
-        <div className="grid grid-cols-3 gap-4 pb-2 mx-5">
-          <span className="text-[#09121F] text-[15px] font-bold">Date/Time</span>
-          <span className="text-[#09121F] text-[15px] font-bold">Task</span>
-          <span className="text-[#09121F] text-[15px] font-bold text-right">Hours</span>
+      <div className="w-full pb-2 px-5">
+        <div className={`grid ${gridCols} gap-4 pb-2`}>
+          {headers.map((header, index) => (
+            <span 
+              key={header} 
+              className={`text-[#09121F] text-[15px] font-bold ${index === headers.length - 1 ? 'text-right' : ''}`}
+            >
+              {header}
+            </span>
+          ))}
         </div>
-        <div className="h-px bg-[#09121F] mx-5 mt-2 mb-4" />
+        <div className="h-px bg-[#09121F] mt-2 mb-4" />
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-y-auto w-full">
-        {Object.keys(groupedEntries).length === 0 ? (
+      <div className="flex-1 overflow-y-auto w-full px-5">
+        {organizedData.groups.length === 0 ? (
           <div className="text-center py-8">
             <p className="text-[#BFBFBF] text-lg">No time entries found</p>
           </div>
         ) : (
-          <div className="space-y-6 mx-5">
-            {Object.entries(groupedEntries).map(([projectName, entries]) => (
-              <div key={projectName}>
-                {/* Project Name */}
-                <h3 className="text-[#09121F] text-[18px] font-bold py-3 w-full">
-                  {projectName}
-                </h3>
-                
-                {/* Project Entries */}
-                <div className="space-y-2 w-full">
-                  {entries.map((entry) => (
-                    <div key={entry.id} className="grid grid-cols-3 gap-4 py-2">
-                      <div className="text-[#BFBFBF] text-[15px]">
-                        {format(new Date(entry.date), 'MM/dd')} {format(new Date(entry.submittedAt), 'HH:mm')}
-                      </div>
-                      <div className="text-[#09121F] text-[15px]">
-                        /{entry.task}/
-                      </div>
-                      <div className="text-[#09121F] text-[15px] text-right">
-                        /{entry.duration.toFixed(1)}h/
-                      </div>
-                    </div>
-                  ))}
+          <div className="space-y-4">
+            {organizedData.groups.map((group, groupIndex) => (
+              <div key={`${group.type}-${group.name}-${groupIndex}`}>
+                {/* Group Header */}
+                <div className="font-bold text-[#09121F] text-[15px] mb-2">
+                  {group.name}
                 </div>
 
-                {/* Project Subtotal */}
-                <div className="grid grid-cols-3 gap-4 py-2 mt-2 w-full">
-                  <div className="h-px bg-[#09121F] col-span-3 mb-2" />
-                  <div></div>
-                  <div className="text-[#09121F] text-[15px] font-bold">
-                    Sub-total
+                {/* Group Content */}
+                {sortOption === 'project' && group.projects ? (
+                  group.projects.map((project: any, projectIndex: number) => (
+                    <div key={`project-${project.name}-${projectIndex}`} className="mb-4">
+                      <div className="font-bold text-[#09121F] text-[15px] ml-4 mb-2">
+                        {project.name}
+                      </div>
+                      
+                      {project.entries.map((entry: TimeEntry) => (
+                        <div key={entry.id} className={`grid ${gridCols} gap-4 py-1 ml-8`}>
+                          <div className="text-[#BFBFBF] text-[15px]">
+                            {format(new Date(entry.date), 'MM/dd')}
+                          </div>
+                          <div className="text-[#09121F] text-[15px]">
+                            {entry.task}
+                          </div>
+                          <div className="text-[#09121F] text-[15px] text-right">
+                            {formatHours(entry.duration)}
+                          </div>
+                          {viewMode === 'invoice' && (
+                            <div className="text-[#09121F] text-[15px] text-right">
+                              ${calculateFee(entry).toFixed(2)}
+                            </div>
+                          )}
+                        </div>
+                      ))}
+                      
+                      <div className={`grid ${gridCols} gap-4 py-1 ml-8 border-t border-[#09121F] mt-2 pt-2`}>
+                        <div></div>
+                        <div className="text-[#09121F] text-[15px] font-bold">Sub-total</div>
+                        <div className="text-[#09121F] text-[15px] font-bold text-right">
+                          {formatHours(project.subtotal.hours)}
+                        </div>
+                        {viewMode === 'invoice' && (
+                          <div className="text-[#09121F] text-[15px] font-bold text-right">
+                            ${project.subtotal.fee.toFixed(2)}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ))
+                ) : sortOption === 'date' && group.projects ? (
+                  <div>
+                    {group.projects.map((project: any, projectIndex: number) => (
+                      <div key={`date-project-${project.name}-${projectIndex}`}>
+                        {project.entries.map((entry: TimeEntry) => (
+                          <div key={entry.id} className={`grid ${gridCols} gap-4 py-1 ml-4`}>
+                            <div className="text-[#09121F] text-[15px]">
+                              {entry.project}
+                            </div>
+                            <div className="text-[#09121F] text-[15px]">
+                              {entry.task}
+                            </div>
+                            <div className="text-[#09121F] text-[15px] text-right">
+                              {formatHours(entry.duration)}
+                            </div>
+                            {viewMode === 'invoice' && (
+                              <div className="text-[#09121F] text-[15px] text-right">
+                                ${calculateFee(entry).toFixed(2)}
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    ))}
+                    
+                    <div className={`grid ${gridCols} gap-4 py-1 ml-4 border-t border-[#09121F] mt-2 pt-2`}>
+                      <div></div>
+                      <div className="text-[#09121F] text-[15px] font-bold">Sub-total</div>
+                      <div className="text-[#09121F] text-[15px] font-bold text-right">
+                        {formatHours(group.subtotal.hours)}
+                      </div>
+                      {viewMode === 'invoice' && (
+                        <div className="text-[#09121F] text-[15px] font-bold text-right">
+                          ${group.subtotal.fee.toFixed(2)}
+                        </div>
+                      )}
+                    </div>
                   </div>
-                  <div className="text-[#09121F] text-[15px] font-bold text-right">
-                    /{getProjectSubtotal(entries).toFixed(1)}h/
+                ) : sortOption === 'task' && group.entries ? (
+                  <div>
+                    {group.entries.map((entry: TimeEntry) => (
+                      <div key={entry.id} className={`grid ${gridCols} gap-4 py-1 ml-4`}>
+                        <div className="text-[#BFBFBF] text-[15px]">
+                          {format(new Date(entry.date), 'MM/dd')}
+                        </div>
+                        <div className="text-[#09121F] text-[15px]">
+                          {entry.project}
+                        </div>
+                        <div className="text-[#09121F] text-[15px] text-right">
+                          {formatHours(entry.duration)}
+                        </div>
+                        {viewMode === 'invoice' && (
+                          <div className="text-[#09121F] text-[15px] text-right">
+                            ${calculateFee(entry).toFixed(2)}
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                    
+                    <div className={`grid ${gridCols} gap-4 py-1 ml-4 border-t border-[#09121F] mt-2 pt-2`}>
+                      <div></div>
+                      <div className="text-[#09121F] text-[15px] font-bold">Sub-total</div>
+                      <div className="text-[#09121F] text-[15px] font-bold text-right">
+                        {formatHours(group.subtotal.hours)}
+                      </div>
+                      {viewMode === 'invoice' && (
+                        <div className="text-[#09121F] text-[15px] font-bold text-right">
+                          ${group.subtotal.fee.toFixed(2)}
+                        </div>
+                      )}
+                    </div>
                   </div>
-                </div>
+                ) : null}
               </div>
             ))}
 
             {/* Total */}
-            <div className="pt-4 w-full">
-              <div className="h-px bg-[#09121F] w-full mb-4" />
-              <div className="grid grid-cols-3 gap-4 py-2">
+            <div className="pt-4 w-full border-t border-[#09121F] mt-6">
+              <div className={`grid ${gridCols} gap-4 py-2`}>
                 <div></div>
-                <div className="text-[#09121F] text-[18px] font-bold">
-                  TOTAL
-                </div>
+                <div className="text-[#09121F] text-[18px] font-bold">TOTAL</div>
                 <div className="text-[#09121F] text-[18px] font-bold text-right">
-                  /{totalHours.toFixed(1)}h/
+                  {formatHours(organizedData.total.hours)}
                 </div>
+                {viewMode === 'invoice' && (
+                  <div className="text-[#09121F] text-[18px] font-bold text-right">
+                    ${organizedData.total.fee.toFixed(2)}
+                  </div>
+                )}
               </div>
               <div className="flex justify-end mt-2">
                 <button className="text-[#09121F] text-[15px] underline">
-                  +/-/Edit
+                  Press & hold line items to ✏️ or 🗑️
                 </button>
               </div>
             </div>
