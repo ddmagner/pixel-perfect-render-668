@@ -4,6 +4,13 @@ import { TimeEntry } from '@/types';
 import { format } from 'date-fns';
 import { Share } from '@capacitor/share';
 import { generatePDF } from '@/utils/pdfGenerator';
+import { ChevronDown } from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 export const TimeTally: React.FC = () => {
   const { timeEntries, sortOption, setSortOption, viewMode, setViewMode, settings } = useApp();
@@ -223,26 +230,34 @@ export const TimeTally: React.FC = () => {
         <h1 className="text-[#09121F] text-[28px] font-bold leading-8">
           Where time went
         </h1>
-        <div className="flex gap-4">
-          <button
-            onClick={() => setSortOption('project')}
-            className={`text-[15px] font-medium ${sortOption === 'project' ? 'text-[#09121F] underline' : 'text-[#BFBFBF]'}`}
-          >
-            By Project
-          </button>
-          <button
-            onClick={() => setSortOption('date')}
-            className={`text-[15px] font-medium ${sortOption === 'date' ? 'text-[#09121F] underline' : 'text-[#BFBFBF]'}`}
-          >
-            By Date
-          </button>
-          <button
-            onClick={() => setSortOption('task')}
-            className={`text-[15px] font-medium ${sortOption === 'task' ? 'text-[#09121F] underline' : 'text-[#BFBFBF]'}`}
-          >
-            By Task
-          </button>
-        </div>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <button className="flex items-center gap-2 text-[15px] font-medium text-[#09121F] bg-white border border-[#09121F] rounded-lg px-4 py-2 hover:bg-gray-50">
+              {getSortOptionText()}
+              <ChevronDown className="h-4 w-4" />
+            </button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end" className="bg-white border border-[#09121F] rounded-lg shadow-lg">
+            <DropdownMenuItem 
+              onClick={() => setSortOption('project')}
+              className="text-[15px] font-medium text-[#09121F] hover:bg-gray-50 cursor-pointer"
+            >
+              By Project
+            </DropdownMenuItem>
+            <DropdownMenuItem 
+              onClick={() => setSortOption('date')}
+              className="text-[15px] font-medium text-[#09121F] hover:bg-gray-50 cursor-pointer"
+            >
+              By Date
+            </DropdownMenuItem>
+            <DropdownMenuItem 
+              onClick={() => setSortOption('task')}
+              className="text-[15px] font-medium text-[#09121F] hover:bg-gray-50 cursor-pointer"
+            >
+              By Task
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
 
       {/* Table Header */}
