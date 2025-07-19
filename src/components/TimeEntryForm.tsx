@@ -72,7 +72,7 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({ onSubmit, transcri
               placeholder="How long?"
               value={formData.duration}
               onChange={(e) => handleInputChange('duration', e.target.value)}
-              className="flex-[1_0_0] text-[#09121F] text-[15px] font-normal leading-5 tracking-[0.1px] bg-transparent border-none outline-none placeholder:text-[#09121F]"
+              className="flex-[1_0_0] text-[#09121F] text-[15px] font-normal leading-5 tracking-[0.1px] bg-transparent border-none outline-none placeholder:text-[#BFBFBF]"
               aria-describedby="duration-help"
             />
             <span id="duration-help" className="sr-only">Enter duration in hours</span>
@@ -95,7 +95,7 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({ onSubmit, transcri
               placeholder="Doing what?"
               value={formData.task}
               onChange={(e) => handleInputChange('task', e.target.value)}
-              className="flex-[1_0_0] text-[#09121F] text-[15px] font-normal leading-5 tracking-[0.1px] bg-transparent border-none outline-none placeholder:text-[#09121F]"
+              className="flex-[1_0_0] text-[#09121F] text-[15px] font-normal leading-5 tracking-[0.1px] bg-transparent border-none outline-none placeholder:text-[#BFBFBF]"
             />
             <button 
               type="button"
@@ -123,7 +123,7 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({ onSubmit, transcri
               placeholder="For which project?"
               value={formData.project}
               onChange={(e) => handleInputChange('project', e.target.value)}
-              className="flex-[1_0_0] text-[#09121F] text-[15px] font-normal leading-5 tracking-[0.1px] bg-transparent border-none outline-none placeholder:text-[#09121F]"
+              className="flex-[1_0_0] text-[#09121F] text-[15px] font-normal leading-5 tracking-[0.1px] bg-transparent border-none outline-none placeholder:text-[#BFBFBF]"
             />
             <button 
               type="button"
