@@ -299,7 +299,7 @@ export const TimeTally: React.FC = () => {
                       </div>
                       
                       {project.entries.map((entry: TimeEntry) => (
-                        <div key={entry.id} className={`grid ${gridCols} gap-4 py-1 h-[30px] items-center`}>
+                        <div key={entry.id} className={`grid ${gridCols} gap-4 py-1`}>
                           <div className="text-[#BFBFBF] text-sm">
                             {format(new Date(entry.date), 'MM/dd')}
                           </div>
@@ -317,7 +317,7 @@ export const TimeTally: React.FC = () => {
                         </div>
                       ))}
                       
-                      <div className={`grid ${gridCols} gap-4 py-1 h-[30px] items-center border-t border-[#09121F] mt-2 pt-2`}>
+                      <div className={`grid ${gridCols} gap-4 py-1 border-t border-[#09121F] mt-2 pt-2`}>
                         <div></div>
                         <div className="text-[#09121F] text-sm font-bold">Sub-total</div>
                         <div className="text-[#09121F] text-sm font-bold text-right">
@@ -336,7 +336,7 @@ export const TimeTally: React.FC = () => {
                     {group.projects.map((project: any, projectIndex: number) => (
                       <div key={`date-project-${project.name}-${projectIndex}`}>
                         {project.entries.map((entry: TimeEntry) => (
-                          <div key={entry.id} className={`grid ${gridCols} gap-4 py-1 h-[30px] items-center ml-4`}>
+                          <div key={entry.id} className={`grid ${gridCols} gap-4 py-1 ml-4`}>
                             <div className="text-[#09121F] text-sm">
                               {entry.project}
                             </div>
@@ -356,7 +356,7 @@ export const TimeTally: React.FC = () => {
                       </div>
                     ))}
                     
-                    <div className={`grid ${gridCols} gap-4 py-1 h-[30px] items-center border-t border-[#09121F] mt-2 pt-2`}>
+                    <div className={`grid ${gridCols} gap-4 py-1 border-t border-[#09121F] mt-2 pt-2`}>
                       <div></div>
                       <div className="text-[#09121F] text-sm font-bold">Sub-total</div>
                       <div className="text-[#09121F] text-sm font-bold text-right">
@@ -372,7 +372,7 @@ export const TimeTally: React.FC = () => {
                 ) : sortOption === 'task' && group.entries ? (
                   <div>
                     {group.entries.map((entry: TimeEntry) => (
-                      <div key={entry.id} className={`grid ${gridCols} gap-4 py-1 h-[30px] items-center ml-4`}>
+                      <div key={entry.id} className={`grid ${gridCols} gap-4 py-1 ml-4`}>
                         <div className="text-[#BFBFBF] text-sm">
                           {format(new Date(entry.date), 'MM/dd')}
                         </div>
@@ -390,7 +390,7 @@ export const TimeTally: React.FC = () => {
                       </div>
                     ))}
                     
-                    <div className={`grid ${gridCols} gap-4 py-1 h-[30px] items-center border-t border-[#09121F] mt-2 pt-2`}>
+                    <div className={`grid ${gridCols} gap-4 py-1 border-t border-[#09121F] mt-2 pt-2`}>
                       <div></div>
                       <div className="text-[#09121F] text-sm font-bold">Sub-total</div>
                       <div className="text-[#09121F] text-sm font-bold text-right">
@@ -409,7 +409,7 @@ export const TimeTally: React.FC = () => {
 
             {/* Total */}
             <div className="pt-4 w-full border-t border-[#09121F] mt-6">
-              <div className={`grid ${gridCols} gap-4 py-2 h-[30px] items-center`}>
+              <div className={`grid ${gridCols} gap-4 py-2`}>
                 <div></div>
                 <div className="text-[#09121F] text-sm font-bold">TOTAL</div>
                 <div className="text-[#09121F] text-sm font-bold text-right">
