@@ -318,9 +318,9 @@ export const TimeTally: React.FC = () => {
                       ))}
                       
                       <div className={`grid ${gridCols} gap-4 py-1 border-t border-[#09121F] mt-2 pt-2`}>
-                        <div></div>
-                        <div className="text-[#09121F] text-sm font-bold">Sub-total</div>
-                        <div className="text-[#09121F] text-sm font-bold text-right">
+                        <div className="flex items-center"></div>
+                        <div className="text-[#09121F] text-sm font-bold flex items-center">Sub-total</div>
+                        <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
                           {formatHours(project.subtotal.hours)}
                         </div>
                         {viewMode === 'invoice' && (
