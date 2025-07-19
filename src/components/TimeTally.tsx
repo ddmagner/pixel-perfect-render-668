@@ -421,8 +421,8 @@ export const TimeTally: React.FC = () => {
                   </div>
                 )}
               </div>
-              <div className="flex justify-end mt-2">
-                <button className="text-[#09121F] text-sm underline flex items-center gap-1">
+              <div className="flex justify-start mt-2">
+                <button className="text-[#09121F] text-sm flex items-center gap-1">
                   Press & hold line items to <Pencil className="h-3.5 w-3.5" /> or <Trash2 className="h-3.5 w-3.5" />
                 </button>
               </div>
