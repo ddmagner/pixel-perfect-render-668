@@ -4,7 +4,7 @@ import { TimeEntry } from '@/types';
 import { format } from 'date-fns';
 import { Share } from '@capacitor/share';
 import { generatePDF } from '@/utils/pdfGenerator';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, Pencil } from 'lucide-react';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -422,8 +422,8 @@ export const TimeTally: React.FC = () => {
                 )}
               </div>
               <div className="flex justify-end mt-2">
-                <button className="text-[#09121F] text-sm underline">
-                  Press & hold line items to ✏️ or 🗑️
+                <button className="text-[#09121F] text-sm underline flex items-center gap-1">
+                  Press & hold line items to <Pencil className="h-3 w-3" /> or 🗑️
                 </button>
               </div>
             </div>
