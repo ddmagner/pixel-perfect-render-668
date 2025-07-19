@@ -72,7 +72,7 @@ export const RecordButton: React.FC<RecordButtonProps> = ({
           </div>
           <button
             className={`w-[220px] h-[220px] shrink-0 absolute left-0 top-0 max-sm:w-[180px] max-sm:h-[180px] transition-all flex items-center justify-center rounded-full ${
-              isPressed ? 'scale-95 bg-[#BFBFBF]' : 'scale-100 bg-white'
+              isPressed ? 'scale-95' : 'scale-100'
             } ${isRecording ? 'animate-pulse' : ''}`}
             onMouseDown={handleMouseDown}
             onMouseUp={handleMouseUp}
