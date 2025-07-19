@@ -105,7 +105,7 @@ export const RecordButton: React.FC<RecordButtonProps> = ({
             </div>
           </button>
         </div>
-        <div className="flex items-center justify-center whitespace-nowrap w-full gap-0.5">
+        <div className="flex items-center justify-center whitespace-nowrap w-full">
           <span className="text-[#09121F] text-[15px] italic font-extrabold leading-[15px] tracking-[0.2px]">
             "
           </span>
