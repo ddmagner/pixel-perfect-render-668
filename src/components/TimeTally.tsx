@@ -226,7 +226,7 @@ export const TimeTally: React.FC = () => {
       <div className="h-px bg-[#09121F] mx-5 mb-6" />
 
       {/* Header */}
-      <div className="flex items-center justify-between w-full min-w-full px-5 py-6">
+      <div className="flex items-center justify-between px-5 py-6">
         <h1 className="text-[#09121F] text-[28px] font-bold leading-8">
           Where time went
         </h1>
