@@ -269,7 +269,7 @@ export const TimeTally: React.FC = () => {
             </span>
           ))}
         </div>
-        <div className="h-px bg-[#09121F] mb-4" />
+        <div className="h-px bg-[#09121F]" />
       </div>
 
       {/* Content */}
