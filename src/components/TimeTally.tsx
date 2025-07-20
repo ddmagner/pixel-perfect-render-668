@@ -292,7 +292,7 @@ export const TimeTally: React.FC = () => {
                   {sortOption === 'project' && group.projects ? (
                     group.projects.map((project: any, projectIndex: number) => (
                       <div key={`project-${project.name}-${projectIndex}`}>
-                        <div className="font-bold text-[#09121F] text-base mb-2">
+                        <div className="font-bold text-[#09121F] text-base">
                           {project.name}
                         </div>
                         
