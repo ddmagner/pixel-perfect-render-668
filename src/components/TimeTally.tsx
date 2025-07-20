@@ -15,12 +15,9 @@ import {
 export const TimeTally: React.FC = () => {
   const { timeEntries, sortOption, setSortOption, viewMode, setViewMode, settings } = useApp();
 
-  // Format hours as MM:SS
+  // Format hours as decimal
   const formatHours = (hours: number): string => {
-    const totalMinutes = Math.round(hours * 60);
-    const mins = Math.floor(totalMinutes / 60);
-    const secs = totalMinutes % 60;
-    return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+    return hours.toFixed(2);
   };
 
   // Get client name by project
@@ -262,7 +259,7 @@ export const TimeTally: React.FC = () => {
 
       {/* Table Header */}
       <div className="w-full pb-2 px-5">
-        <div className={`grid ${gridCols} gap-4 pb-2`}>
+        <div className={`grid ${gridCols} gap-4 h-[40px] items-center`}>
           {headers.map((header, index) => (
             <span 
               key={header} 
@@ -272,7 +269,7 @@ export const TimeTally: React.FC = () => {
             </span>
           ))}
         </div>
-        <div className="h-px bg-[#09121F] mt-2 mb-4" />
+        <div className="h-px bg-[#09121F] mb-4" />
       </div>
 
       {/* Content */}
@@ -286,7 +283,7 @@ export const TimeTally: React.FC = () => {
             {organizedData.groups.map((group, groupIndex) => (
               <div key={`${group.type}-${group.name}-${groupIndex}`}>
                 {/* Group Header */}
-                <div className="font-bold text-[#09121F] text-sm mb-2">
+                <div className="font-bold text-[#09121F] text-base mb-4 mt-6">
                   {group.name}
                 </div>
 
@@ -294,13 +291,13 @@ export const TimeTally: React.FC = () => {
                 {sortOption === 'project' && group.projects ? (
                   group.projects.map((project: any, projectIndex: number) => (
                     <div key={`project-${project.name}-${projectIndex}`} className="mb-4">
-                      <div className="font-bold text-[#09121F] text-sm ml-4 mb-2">
+                      <div className="font-bold text-[#09121F] text-base mb-2">
                         {project.name}
                       </div>
                       
                       {project.entries.map((entry: TimeEntry) => (
-                        <div key={entry.id} className={`grid ${gridCols} gap-4 h-[30px] items-center`}>
-                          <div className="text-[#BFBFBF] text-sm flex items-center">
+                        <div key={entry.id} className={`grid ${gridCols} gap-4 h-[32px] items-center`}>
+                          <div className="text-[#09121F] text-sm flex items-center">
                             {format(new Date(entry.date), 'MM/dd')}
                           </div>
                           <div className="text-[#09121F] text-sm flex items-center">
@@ -336,7 +333,7 @@ export const TimeTally: React.FC = () => {
                     {group.projects.map((project: any, projectIndex: number) => (
                       <div key={`date-project-${project.name}-${projectIndex}`}>
                         {project.entries.map((entry: TimeEntry) => (
-                          <div key={entry.id} className={`grid ${gridCols} gap-4 h-[30px] ml-4 items-center`}>
+                          <div key={entry.id} className={`grid ${gridCols} gap-4 h-[32px] items-center`}>
                             <div className="text-[#09121F] text-sm flex items-center">
                               {entry.project}
                             </div>
@@ -356,7 +353,7 @@ export const TimeTally: React.FC = () => {
                       </div>
                     ))}
                     
-                    <div className={`grid ${gridCols} gap-4 h-[30px] border-t border-[#09121F] mt-2 pt-2 items-center`}>
+                    <div className={`grid ${gridCols} gap-4 h-[32px] border-t border-[#09121F] mt-2 items-center`}>
                       <div className="flex items-center"></div>
                       <div className="text-[#09121F] text-sm font-bold flex items-center">Sub-total</div>
                       <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
@@ -372,8 +369,8 @@ export const TimeTally: React.FC = () => {
                 ) : sortOption === 'task' && group.entries ? (
                   <div>
                     {group.entries.map((entry: TimeEntry) => (
-                        <div key={entry.id} className={`grid ${gridCols} gap-4 h-[30px] ml-4 items-center`}>
-                          <div className="text-[#BFBFBF] text-sm flex items-center">
+                        <div key={entry.id} className={`grid ${gridCols} gap-4 h-[32px] items-center`}>
+                          <div className="text-[#09121F] text-sm flex items-center">
                             {format(new Date(entry.date), 'MM/dd')}
                           </div>
                           <div className="text-[#09121F] text-sm flex items-center">
@@ -390,7 +387,7 @@ export const TimeTally: React.FC = () => {
                         </div>
                     ))}
                     
-                    <div className={`grid ${gridCols} gap-4 h-[30px] border-t border-[#09121F] mt-2 pt-2 items-center`}>
+                    <div className={`grid ${gridCols} gap-4 h-[32px] border-t border-[#09121F] mt-2 items-center`}>
                       <div className="flex items-center"></div>
                       <div className="text-[#09121F] text-sm font-bold flex items-center">Sub-total</div>
                       <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
@@ -409,7 +406,7 @@ export const TimeTally: React.FC = () => {
 
             {/* Total */}
             <div className="pt-4 w-full border-t border-[#09121F] mt-6">
-              <div className={`grid ${gridCols} gap-4 h-[30px] items-center`}>
+              <div className={`grid ${gridCols} gap-4 h-[32px] items-center`}>
                 <div className="flex items-center"></div>
                 <div className="text-[#09121F] text-sm font-bold flex items-center">TOTAL</div>
                 <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
@@ -421,10 +418,10 @@ export const TimeTally: React.FC = () => {
                   </div>
                 )}
               </div>
-              <div className="flex justify-start mt-2">
-                <button className="text-[#09121F] text-sm italic flex items-center gap-1">
+              <div className="flex justify-start mt-4">
+                <p className="text-[#09121F] text-sm italic flex items-center gap-1">
                   Press & hold line items to <Pencil className="h-3.5 w-3.5" /> or <Trash2 className="h-3.5 w-3.5" />
-                </button>
+                </p>
               </div>
             </div>
           </div>
