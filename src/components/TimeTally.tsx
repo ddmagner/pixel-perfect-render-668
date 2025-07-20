@@ -411,7 +411,7 @@ export const TimeTally: React.FC = () => {
             ))}
 
             {/* Total */}
-            <div className="pt-4 w-full border-t border-[#09121F] mt-6">
+            <div className="mt-2 w-full">
               <div className={`grid ${gridCols} gap-4 h-[32px] items-center`}>
                 <div className="flex items-center"></div>
                 <div className="text-[#09121F] text-sm font-bold flex items-center">TOTAL</div>
