@@ -258,7 +258,7 @@ export const TimeTally: React.FC = () => {
       </div>
 
       {/* Table Header */}
-      <div className="w-full pb-2 px-5">
+      <div className="w-full px-5">
         <div className={`grid ${gridCols} gap-4 h-[40px] items-center`}>
           {headers.map((header, index) => (
             <span 
