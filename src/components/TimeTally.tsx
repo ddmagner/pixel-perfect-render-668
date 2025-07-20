@@ -317,7 +317,7 @@ export const TimeTally: React.FC = () => {
                         </div>
                       ))}
                       
-                      <div className={`grid ${gridCols} gap-4 h-[30px] border-t border-[#09121F] mt-2 pt-2 items-center`}>
+                      <div className={`grid ${gridCols} gap-4 h-[32px] border-t border-[#09121F] mt-2 items-center`}>
                         <div className="flex items-center"></div>
                         <div className="text-[#09121F] text-sm font-bold flex items-center">Sub-total</div>
                         <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
