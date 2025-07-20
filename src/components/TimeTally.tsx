@@ -314,9 +314,10 @@ export const TimeTally: React.FC = () => {
                         </div>
                       ))}
                       
-                      <div className={`grid ${gridCols} gap-4 h-[32px] border-t border-[#09121F] mt-2 items-center`}>
-                        <div className="flex items-center"></div>
-                        <div className="text-[#09121F] text-sm font-bold flex items-center">Sub-total</div>
+                      <div className="h-px bg-[#09121F] mt-2" />
+                      <div className={`grid ${gridCols} gap-4 h-[32px] items-center justify-center`}>
+                        <div></div>
+                        <div className="text-[#09121F] text-sm font-bold flex items-center justify-center">Sub-total</div>
                         <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
                           {formatHours(project.subtotal.hours)}
                         </div>
@@ -326,6 +327,7 @@ export const TimeTally: React.FC = () => {
                           </div>
                         )}
                       </div>
+                      <div className="h-px bg-[#09121F]" />
                     </div>
                   ))
                 ) : sortOption === 'date' && group.projects ? (
@@ -353,9 +355,10 @@ export const TimeTally: React.FC = () => {
                       </div>
                     ))}
                     
-                    <div className={`grid ${gridCols} gap-4 h-[32px] border-t border-[#09121F] mt-2 items-center`}>
-                      <div className="flex items-center"></div>
-                      <div className="text-[#09121F] text-sm font-bold flex items-center">Sub-total</div>
+                    <div className="h-px bg-[#09121F] mt-2" />
+                    <div className={`grid ${gridCols} gap-4 h-[32px] items-center justify-center`}>
+                      <div></div>
+                      <div className="text-[#09121F] text-sm font-bold flex items-center justify-center">Sub-total</div>
                       <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
                         {formatHours(group.subtotal.hours)}
                       </div>
@@ -365,6 +368,7 @@ export const TimeTally: React.FC = () => {
                         </div>
                       )}
                     </div>
+                    <div className="h-px bg-[#09121F]" />
                   </div>
                 ) : sortOption === 'task' && group.entries ? (
                   <div>
@@ -387,9 +391,10 @@ export const TimeTally: React.FC = () => {
                         </div>
                     ))}
                     
-                    <div className={`grid ${gridCols} gap-4 h-[32px] border-t border-[#09121F] mt-2 items-center`}>
-                      <div className="flex items-center"></div>
-                      <div className="text-[#09121F] text-sm font-bold flex items-center">Sub-total</div>
+                    <div className="h-px bg-[#09121F] mt-2" />
+                    <div className={`grid ${gridCols} gap-4 h-[32px] items-center justify-center`}>
+                      <div></div>
+                      <div className="text-[#09121F] text-sm font-bold flex items-center justify-center">Sub-total</div>
                       <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
                         {formatHours(group.subtotal.hours)}
                       </div>
@@ -399,6 +404,7 @@ export const TimeTally: React.FC = () => {
                         </div>
                       )}
                     </div>
+                    <div className="h-px bg-[#09121F]" />
                   </div>
                 ) : null}
               </div>
