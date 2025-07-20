@@ -279,65 +279,27 @@ export const TimeTally: React.FC = () => {
             <p className="text-[#BFBFBF] text-lg">No time entries found</p>
           </div>
         ) : (
-          <div className="space-y-4">
-            {organizedData.groups.map((group, groupIndex) => (
-              <div key={`${group.type}-${group.name}-${groupIndex}`}>
-                {/* Group Header */}
-                <div className="font-bold text-[#09121F] text-base mb-4 mt-6">
-                  {group.name}
-                </div>
+          <>
+            <div className="space-y-4">
+              {organizedData.groups.map((group, groupIndex) => (
+                <div key={`${group.type}-${group.name}-${groupIndex}`}>
+                  {/* Group Header */}
+                  <div className="font-bold text-[#09121F] text-base mb-4 mt-6">
+                    {group.name}
+                  </div>
 
-                {/* Group Content */}
-                {sortOption === 'project' && group.projects ? (
-                  group.projects.map((project: any, projectIndex: number) => (
-                    <div key={`project-${project.name}-${projectIndex}`} className="mb-4">
-                      <div className="font-bold text-[#09121F] text-base mb-2">
-                        {project.name}
-                      </div>
-                      
-                      {project.entries.map((entry: TimeEntry) => (
-                        <div key={entry.id} className={`grid ${gridCols} gap-4 h-[32px] items-center`}>
-                          <div className="text-[#09121F] text-sm flex items-center">
-                            {format(new Date(entry.date), 'MM/dd')}
-                          </div>
-                          <div className="text-[#09121F] text-sm flex items-center">
-                            {entry.task}
-                          </div>
-                          <div className="text-[#09121F] text-sm text-right flex items-center justify-end">
-                            {formatHours(entry.duration)}
-                          </div>
-                          {viewMode === 'invoice' && (
-                            <div className="text-[#09121F] text-sm text-right flex items-center justify-end">
-                              ${calculateFee(entry).toFixed(2)}
-                            </div>
-                          )}
+                  {/* Group Content */}
+                  {sortOption === 'project' && group.projects ? (
+                    group.projects.map((project: any, projectIndex: number) => (
+                      <div key={`project-${project.name}-${projectIndex}`} className="mb-4">
+                        <div className="font-bold text-[#09121F] text-base mb-2">
+                          {project.name}
                         </div>
-                      ))}
-                      
-                      <div className="h-px bg-[#09121F] mt-2" />
-                      <div className={`grid ${gridCols} gap-4 h-[32px] items-center justify-center`}>
-                        <div></div>
-                        <div className="text-[#09121F] text-sm font-bold flex items-center">Sub-total</div>
-                        <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
-                          {formatHours(project.subtotal.hours)}
-                        </div>
-                        {viewMode === 'invoice' && (
-                          <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
-                            ${project.subtotal.fee.toFixed(2)}
-                          </div>
-                        )}
-                      </div>
-                      <div className="h-px bg-[#09121F]" />
-                    </div>
-                  ))
-                ) : sortOption === 'date' && group.projects ? (
-                  <div>
-                    {group.projects.map((project: any, projectIndex: number) => (
-                      <div key={`date-project-${project.name}-${projectIndex}`}>
+                        
                         {project.entries.map((entry: TimeEntry) => (
                           <div key={entry.id} className={`grid ${gridCols} gap-4 h-[32px] items-center`}>
                             <div className="text-[#09121F] text-sm flex items-center">
-                              {entry.project}
+                              {format(new Date(entry.date), 'MM/dd')}
                             </div>
                             <div className="text-[#09121F] text-sm flex items-center">
                               {entry.task}
@@ -352,63 +314,103 @@ export const TimeTally: React.FC = () => {
                             )}
                           </div>
                         ))}
-                      </div>
-                    ))}
-                    
-                    <div className="h-px bg-[#09121F] mt-2" />
-                    <div className={`grid ${gridCols} gap-4 h-[32px] items-center justify-center`}>
-                      <div></div>
-                      <div className="text-[#09121F] text-sm font-bold flex items-center justify-center">Sub-total</div>
-                      <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
-                        {formatHours(group.subtotal.hours)}
-                      </div>
-                      {viewMode === 'invoice' && (
-                        <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
-                          ${group.subtotal.fee.toFixed(2)}
-                        </div>
-                      )}
-                    </div>
-                    <div className="h-px bg-[#09121F]" />
-                  </div>
-                ) : sortOption === 'task' && group.entries ? (
-                  <div>
-                    {group.entries.map((entry: TimeEntry) => (
-                        <div key={entry.id} className={`grid ${gridCols} gap-4 h-[32px] items-center`}>
-                          <div className="text-[#09121F] text-sm flex items-center">
-                            {format(new Date(entry.date), 'MM/dd')}
-                          </div>
-                          <div className="text-[#09121F] text-sm flex items-center">
-                            {entry.project}
-                          </div>
-                          <div className="text-[#09121F] text-sm text-right flex items-center justify-end">
-                            {formatHours(entry.duration)}
+                        
+                        <div className="h-px bg-[#09121F] mt-2" />
+                        <div className={`grid ${gridCols} gap-4 h-[32px] items-center justify-center`}>
+                          <div></div>
+                          <div className="text-[#09121F] text-sm font-bold flex items-center">Sub-total</div>
+                          <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
+                            {formatHours(project.subtotal.hours)}
                           </div>
                           {viewMode === 'invoice' && (
-                            <div className="text-[#09121F] text-sm text-right flex items-center justify-end">
-                              ${calculateFee(entry).toFixed(2)}
+                            <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
+                              ${project.subtotal.fee.toFixed(2)}
                             </div>
                           )}
                         </div>
-                    ))}
-                    
-                    <div className="h-px bg-[#09121F] mt-2" />
-                    <div className={`grid ${gridCols} gap-4 h-[32px] items-center justify-center`}>
-                      <div></div>
-                      <div className="text-[#09121F] text-sm font-bold flex items-center justify-center">Sub-total</div>
-                      <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
-                        {formatHours(group.subtotal.hours)}
+                        <div className="h-px bg-[#09121F]" />
                       </div>
-                      {viewMode === 'invoice' && (
-                        <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
-                          ${group.subtotal.fee.toFixed(2)}
+                    ))
+                  ) : sortOption === 'date' && group.projects ? (
+                    <div>
+                      {group.projects.map((project: any, projectIndex: number) => (
+                        <div key={`date-project-${project.name}-${projectIndex}`}>
+                          {project.entries.map((entry: TimeEntry) => (
+                            <div key={entry.id} className={`grid ${gridCols} gap-4 h-[32px] items-center`}>
+                              <div className="text-[#09121F] text-sm flex items-center">
+                                {entry.project}
+                              </div>
+                              <div className="text-[#09121F] text-sm flex items-center">
+                                {entry.task}
+                              </div>
+                              <div className="text-[#09121F] text-sm text-right flex items-center justify-end">
+                                {formatHours(entry.duration)}
+                              </div>
+                              {viewMode === 'invoice' && (
+                                <div className="text-[#09121F] text-sm text-right flex items-center justify-end">
+                                  ${calculateFee(entry).toFixed(2)}
+                                </div>
+                              )}
+                            </div>
+                          ))}
                         </div>
-                      )}
+                      ))}
+                      
+                      <div className="h-px bg-[#09121F] mt-2" />
+                      <div className={`grid ${gridCols} gap-4 h-[32px] items-center justify-center`}>
+                        <div></div>
+                        <div className="text-[#09121F] text-sm font-bold flex items-center">Sub-total</div>
+                        <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
+                          {formatHours(group.subtotal.hours)}
+                        </div>
+                        {viewMode === 'invoice' && (
+                          <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
+                            ${group.subtotal.fee.toFixed(2)}
+                          </div>
+                        )}
+                      </div>
+                      <div className="h-px bg-[#09121F]" />
                     </div>
-                    <div className="h-px bg-[#09121F]" />
-                  </div>
-                ) : null}
-              </div>
-            ))}
+                  ) : sortOption === 'task' && group.entries ? (
+                    <div>
+                      {group.entries.map((entry: TimeEntry) => (
+                          <div key={entry.id} className={`grid ${gridCols} gap-4 h-[32px] items-center`}>
+                            <div className="text-[#09121F] text-sm flex items-center">
+                              {format(new Date(entry.date), 'MM/dd')}
+                            </div>
+                            <div className="text-[#09121F] text-sm flex items-center">
+                              {entry.project}
+                            </div>
+                            <div className="text-[#09121F] text-sm text-right flex items-center justify-end">
+                              {formatHours(entry.duration)}
+                            </div>
+                            {viewMode === 'invoice' && (
+                              <div className="text-[#09121F] text-sm text-right flex items-center justify-end">
+                                ${calculateFee(entry).toFixed(2)}
+                              </div>
+                            )}
+                          </div>
+                      ))}
+                      
+                      <div className="h-px bg-[#09121F] mt-2" />
+                      <div className={`grid ${gridCols} gap-4 h-[32px] items-center justify-center`}>
+                        <div></div>
+                        <div className="text-[#09121F] text-sm font-bold flex items-center">Sub-total</div>
+                        <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
+                          {formatHours(group.subtotal.hours)}
+                        </div>
+                        {viewMode === 'invoice' && (
+                          <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
+                            ${group.subtotal.fee.toFixed(2)}
+                          </div>
+                        )}
+                      </div>
+                      <div className="h-px bg-[#09121F]" />
+                    </div>
+                  ) : null}
+                </div>
+              ))}
+            </div>
 
             {/* Total */}
             <div className="w-full">
@@ -430,7 +432,7 @@ export const TimeTally: React.FC = () => {
                 </p>
               </div>
             </div>
-          </div>
+          </>
         )}
       </div>
 
