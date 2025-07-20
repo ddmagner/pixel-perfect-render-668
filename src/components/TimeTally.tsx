@@ -284,7 +284,7 @@ export const TimeTally: React.FC = () => {
               {organizedData.groups.map((group, groupIndex) => (
                 <div key={`${group.type}-${group.name}-${groupIndex}`}>
                   {/* Group Header */}
-                  <div className="font-bold text-[#09121F] text-base">
+                  <div className="font-bold text-[#09121F] text-base h-[32px] flex items-center">
                     {group.name}
                   </div>
 
