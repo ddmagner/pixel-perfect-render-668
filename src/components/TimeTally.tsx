@@ -411,24 +411,25 @@ export const TimeTally: React.FC = () => {
             ))}
 
             {/* Total */}
-            <div className="mt-2 w-full">
-              <div className={`grid ${gridCols} gap-4 h-[32px] items-center`}>
-                <div className="flex items-center"></div>
-                <div className="text-[#09121F] text-sm font-bold flex items-center">TOTAL</div>
+            <div className="h-px bg-[#09121F] mt-2" />
+            <div className={`grid ${gridCols} gap-4 h-[32px] items-center justify-center`}>
+              <div></div>
+              <div className="text-[#09121F] text-sm font-bold flex items-center justify-center">TOTAL</div>
+              <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
+                {formatHours(organizedData.total.hours)}
+              </div>
+              {viewMode === 'invoice' && (
                 <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
-                  {formatHours(organizedData.total.hours)}
+                  ${organizedData.total.fee.toFixed(2)}
                 </div>
-                {viewMode === 'invoice' && (
-                  <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
-                    ${organizedData.total.fee.toFixed(2)}
-                  </div>
-                )}
-              </div>
-              <div className="flex justify-start mt-4">
-                <p className="text-[#09121F] text-sm italic flex items-center gap-1">
-                  Press & hold line items to <Pencil className="h-3.5 w-3.5" /> or <Trash2 className="h-3.5 w-3.5" />
-                </p>
-              </div>
+              )}
+            </div>
+            <div className="h-px bg-[#09121F]" />
+            
+            <div className="flex justify-start mt-4">
+              <p className="text-[#09121F] text-sm italic flex items-center gap-1">
+                Press & hold line items to <Pencil className="h-3.5 w-3.5" /> or <Trash2 className="h-3.5 w-3.5" />
+              </p>
             </div>
           </div>
         )}
