@@ -97,7 +97,7 @@ export const TimeEntrySettings: React.FC = () => {
         
         <div className="space-y-3">
           {settings.clients.map((client) => (
-            <div key={client.id} className="flex items-center justify-between py-2">
+            <div key={client.id} className="flex items-center justify-between">
               <span className="text-[#09121F] text-sm">{client.name}</span>
               <div className="flex gap-3">
                 <button
@@ -116,7 +116,7 @@ export const TimeEntrySettings: React.FC = () => {
             </div>
           ))}
           
-          <div className="flex items-center justify-between py-2">
+          <div className="flex items-center justify-between">
             <input
               type="text"
               placeholder="Add client"
@@ -143,7 +143,7 @@ export const TimeEntrySettings: React.FC = () => {
         
         <div className="space-y-3">
           {settings.projects.map((project) => (
-            <div key={project.id} className="flex items-center justify-between py-2">
+            <div key={project.id} className="flex items-center justify-between">
               <span className="text-[#09121F] text-sm">{project.name}</span>
               <div className="flex gap-3">
                 <button
@@ -162,7 +162,7 @@ export const TimeEntrySettings: React.FC = () => {
             </div>
           ))}
           
-          <div className="flex items-center justify-between py-2">
+          <div className="flex items-center justify-between">
             <input
               type="text"
               placeholder="Add project"
@@ -194,7 +194,7 @@ export const TimeEntrySettings: React.FC = () => {
         
         <div className="space-y-3">
           {settings.taskTypes.map((task) => (
-            <div key={task.id} className="flex items-center justify-between py-2">
+            <div key={task.id} className="flex items-center justify-between">
               <span className="text-[#09121F] text-sm">{task.name}</span>
               <div className="flex items-center gap-3">
                 {settings.invoiceMode && (
@@ -220,7 +220,7 @@ export const TimeEntrySettings: React.FC = () => {
             </div>
           ))}
           
-          <div className="flex items-center justify-between py-2">
+          <div className="flex items-center justify-between">
             <input
               type="text"
               placeholder="Add task type"
