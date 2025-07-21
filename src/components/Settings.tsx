@@ -18,7 +18,7 @@ export const Settings: React.FC = () => {
   return (
     <div className="flex flex-col h-full w-full bg-white">
       {/* Mode Toggle */}
-      <div className="flex justify-center items-center w-full px-5 py-6">
+      <div className="flex justify-center items-center w-full px-5 py-4">
         <div className="flex items-center gap-4">
           <span className={`text-sm font-medium ${!settings.invoiceMode ? 'text-[#09121F]' : 'text-[#BFBFBF]'}`}>
             Time Card Mode
@@ -42,7 +42,7 @@ export const Settings: React.FC = () => {
       </div>
 
       {/* Main Title */}
-      <div className="px-5 mb-6">
+      <div className="px-5 mb-4">
         <h1 className="text-[#09121F] text-xl font-bold">Time In settings</h1>
       </div>
 
@@ -52,10 +52,10 @@ export const Settings: React.FC = () => {
         <UserProfile />
         
         {/* Coloring Time Section */}
-        <div className="px-5 py-6 border-t border-gray-200">
+        <div className="px-5 py-4 border-t border-gray-200">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-[#09121F] text-xl font-bold">Coloring time</h2>
+              <h2 className="text-[#09121F] text-lg font-bold">Coloring time</h2>
               <p className="text-[#BFBFBF] text-sm underline cursor-pointer" onClick={() => setShowColorOverlay(true)}>
                 Customize the app accent color
               </p>

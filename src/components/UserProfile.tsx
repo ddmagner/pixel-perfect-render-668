@@ -43,8 +43,8 @@ export const UserProfile: React.FC = () => {
   }, [profile.zipCode]);
 
   return (
-    <div className="px-5 py-6">
-      <div className="border-b border-gray-200 pb-2 mb-6">
+    <div className="px-5 py-4">
+      <div className="border-b border-gray-200 pb-2 mb-4">
         <h2 className="text-[#09121F] text-lg font-bold">User profile</h2>
       </div>
       

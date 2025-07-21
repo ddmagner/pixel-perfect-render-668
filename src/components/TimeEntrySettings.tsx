@@ -87,7 +87,7 @@ export const TimeEntrySettings: React.FC = () => {
 
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Clients */}
       <section className="px-5">
         <div className="border-b border-gray-200 pb-2 mb-4">
