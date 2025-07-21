@@ -16,11 +16,11 @@ export const Settings: React.FC = () => {
   };
 
   return (
-    <div className="flex flex-col h-full w-full">
+    <div className="flex flex-col h-full w-full bg-white">
       {/* Mode Toggle */}
-      <div className="flex justify-center items-center w-full px-5 py-4">
+      <div className="flex justify-center items-center w-full px-5 py-6">
         <div className="flex items-center gap-4">
-          <span className={`text-[15px] font-medium ${!settings.invoiceMode ? 'text-[#09121F]' : 'text-[#BFBFBF]'}`}>
+          <span className={`text-sm font-medium ${!settings.invoiceMode ? 'text-[#09121F]' : 'text-[#BFBFBF]'}`}>
             Time Card Mode
           </span>
           <button
@@ -35,14 +35,16 @@ export const Settings: React.FC = () => {
               }`}
             />
           </button>
-          <span className={`text-[15px] font-medium ${settings.invoiceMode ? 'text-[#09121F]' : 'text-[#BFBFBF]'}`}>
+          <span className={`text-sm font-medium ${settings.invoiceMode ? 'text-[#09121F]' : 'text-[#BFBFBF]'}`}>
             Invoice Mode
           </span>
         </div>
       </div>
 
-      {/* Divider */}
-      <div className="h-px bg-[#09121F] mx-5 mb-6" />
+      {/* Main Title */}
+      <div className="px-5 mb-6">
+        <h1 className="text-[#09121F] text-xl font-bold">Time In settings</h1>
+      </div>
 
       {/* Settings Content */}
       <div className="flex-1 overflow-y-auto">
@@ -50,20 +52,18 @@ export const Settings: React.FC = () => {
         <UserProfile />
         
         {/* Coloring Time Section */}
-        <div className="px-5 pt-6">
-          <div className="h-px bg-[#09121F] mx-5 mb-6" />
-          <button
-            onClick={() => setShowColorOverlay(true)}
-            className="flex items-center gap-4 w-full py-4"
-          >
-            <div className="w-12 h-12 bg-[#F5F5F5] rounded-lg flex items-center justify-center">
+        <div className="px-5 py-6 border-t border-gray-200">
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-[#09121F] text-xl font-bold">Coloring time</h2>
+              <p className="text-[#BFBFBF] text-sm underline cursor-pointer" onClick={() => setShowColorOverlay(true)}>
+                Customize the app accent color
+              </p>
+            </div>
+            <div className="w-12 h-12 bg-gray-200 rounded-lg flex items-center justify-center">
               <Clock className="w-6 h-6 text-[#09121F]" />
             </div>
-            <div className="flex-1 text-left">
-              <h3 className="text-[#09121F] text-[18px] font-bold">Coloring time</h3>
-              <p className="text-[#BFBFBF] text-sm">Customize the app accent color</p>
-            </div>
-          </button>
+          </div>
         </div>
       </div>
 
@@ -72,10 +72,10 @@ export const Settings: React.FC = () => {
         <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-end">
           <div className="bg-white w-full rounded-t-2xl animate-slide-in-right">
             <div className="flex items-center justify-between p-5 border-b border-gray-200">
-              <h2 className="text-[#09121F] text-[18px] font-bold">Coloring time</h2>
+              <h2 className="text-[#09121F] text-lg font-bold">Coloring time</h2>
               <button
                 onClick={() => setShowColorOverlay(false)}
-                className="text-[#BFBFBF] text-[16px] font-bold"
+                className="text-[#BFBFBF] text-base font-bold"
               >
                 Done
               </button>

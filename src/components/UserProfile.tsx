@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useApp } from '@/context/AppContext';
+import { Edit3 } from 'lucide-react';
 
 export const UserProfile: React.FC = () => {
   const { settings, updateSettings } = useApp();
@@ -42,105 +43,85 @@ export const UserProfile: React.FC = () => {
   }, [profile.zipCode]);
 
   return (
-    <div className="px-5 py-4">
+    <div className="px-5 py-6">
+      <div className="border-b border-gray-200 pb-2 mb-6">
+        <h2 className="text-[#09121F] text-lg font-bold">User profile</h2>
+      </div>
+      
       <div className="space-y-4">
         <div>
-          <label className="block text-[#09121F] text-[15px] font-bold mb-2">
-            Name
-          </label>
-          <input
-            type="text"
-            value={profile.name}
-            onChange={(e) => handleInputChange('name', e.target.value)}
-            placeholder="Enter your full name"
-            className="w-full p-3 border border-gray-300 rounded-lg text-[#09121F] placeholder:text-[#BFBFBF]"
-          />
-        </div>
-
-        <div>
-          <label className="block text-[#09121F] text-[15px] font-bold mb-2">
-            Email
-          </label>
-          <input
-            type="email"
-            value={profile.email}
-            onChange={(e) => handleInputChange('email', e.target.value)}
-            placeholder="Enter your email address"
-            className="w-full p-3 border border-gray-300 rounded-lg text-[#09121F] placeholder:text-[#BFBFBF]"
-          />
-        </div>
-
-        <div>
-          <label className="block text-[#09121F] text-[15px] font-bold mb-2">
-            Phone
-          </label>
-          <input
-            type="tel"
-            value={profile.phone || ''}
-            onChange={(e) => handleInputChange('phone', e.target.value)}
-            placeholder="Enter your phone number"
-            className="w-full p-3 border border-gray-300 rounded-lg text-[#09121F] placeholder:text-[#BFBFBF]"
-          />
-        </div>
-
-        <div>
-          <label className="block text-[#09121F] text-[15px] font-bold mb-2">
-            Address
-          </label>
-          <input
-            type="text"
-            value={profile.address || ''}
-            onChange={(e) => handleInputChange('address', e.target.value)}
-            placeholder="Enter your street address"
-            className="w-full p-3 border border-gray-300 rounded-lg text-[#09121F] placeholder:text-[#BFBFBF]"
-          />
-        </div>
-
-        <div>
-          <label className="block text-[#09121F] text-[15px] font-bold mb-2">
-            Zip Code
-          </label>
-          <input
-            type="text"
-            value={profile.zipCode || ''}
-            onChange={(e) => handleInputChange('zipCode', e.target.value)}
-            placeholder="Enter your zip code"
-            className="w-full p-3 border border-gray-300 rounded-lg text-[#09121F] placeholder:text-[#BFBFBF]"
-          />
-        </div>
-
-        <div className="grid grid-cols-2 gap-4">
-          <div>
-            <label className="block text-[#09121F] text-[15px] font-bold mb-2">
-              City
-            </label>
+          <h3 className="text-[#09121F] text-sm font-medium mb-2">Name</h3>
+          <div className="flex items-center justify-between py-2 border-b border-gray-100">
             <input
               type="text"
-              value={profile.city || ''}
-              onChange={(e) => handleInputChange('city', e.target.value)}
-              placeholder="City"
-              className="w-full p-3 border border-gray-300 rounded-lg text-[#09121F] placeholder:text-[#BFBFBF] bg-gray-50"
-              readOnly
+              value={profile.name || ''}
+              onChange={(e) => handleInputChange('name', e.target.value)}
+              placeholder="Full name"
+              className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none flex-1"
             />
+            <Edit3 size={16} className="text-gray-400" />
           </div>
-          <div>
-            <label className="block text-[#09121F] text-[15px] font-bold mb-2">
-              State
-            </label>
+        </div>
+
+        <div>
+          <h3 className="text-[#09121F] text-sm font-medium mb-2">Address</h3>
+          <div className="flex items-center justify-between py-2 border-b border-gray-100">
             <input
               type="text"
-              value={profile.state || ''}
-              onChange={(e) => handleInputChange('state', e.target.value)}
-              placeholder="State"
-              className="w-full p-3 border border-gray-300 rounded-lg text-[#09121F] placeholder:text-[#BFBFBF] bg-gray-50"
-              readOnly
+              value={profile.address || ''}
+              onChange={(e) => handleInputChange('address', e.target.value)}
+              placeholder="Address"
+              className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none flex-1"
             />
+            <Edit3 size={16} className="text-gray-400" />
+          </div>
+        </div>
+
+        <div>
+          <h3 className="text-[#09121F] text-sm font-medium mb-2">Zip Code</h3>
+          <div className="flex items-center justify-between py-2 border-b border-gray-100">
+            <input
+              type="text"
+              value={profile.zipCode || ''}
+              onChange={(e) => handleInputChange('zipCode', e.target.value)}
+              placeholder="Zip code"
+              className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none flex-1"
+            />
+            <Edit3 size={16} className="text-gray-400" />
+          </div>
+        </div>
+
+        <div>
+          <h3 className="text-[#09121F] text-sm font-medium mb-2">Email</h3>
+          <div className="flex items-center justify-between py-2 border-b border-gray-100">
+            <input
+              type="email"
+              value={profile.email || ''}
+              onChange={(e) => handleInputChange('email', e.target.value)}
+              placeholder="Email"
+              className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none flex-1"
+            />
+            <Edit3 size={16} className="text-gray-400" />
+          </div>
+        </div>
+
+        <div>
+          <h3 className="text-[#09121F] text-sm font-medium mb-2">Phone</h3>
+          <div className="flex items-center justify-between py-2 border-b border-gray-100">
+            <input
+              type="tel"
+              value={profile.phone || ''}
+              onChange={(e) => handleInputChange('phone', e.target.value)}
+              placeholder="000-000-0000"
+              className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none flex-1"
+            />
+            <Edit3 size={16} className="text-gray-400" />
           </div>
         </div>
 
         <button
           onClick={handleSave}
-          className="w-full bg-[#09121F] text-white py-3 px-4 rounded-lg font-bold text-[15px] hover:bg-[#1a1a1a] transition-colors"
+          className="w-full bg-[#09121F] text-white py-4 px-4 rounded-lg font-bold text-sm mt-8"
         >
           Save Profile
         </button>

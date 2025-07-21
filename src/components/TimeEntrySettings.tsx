@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useApp } from '@/context/AppContext';
 import { TaskType, Project, Client } from '@/types';
-import { Plus, Trash2, Edit3 } from 'lucide-react';
+import { Edit3, Trash2 } from 'lucide-react';
 
 export const TimeEntrySettings: React.FC = () => {
   const { settings, updateSettings } = useApp();
@@ -87,163 +87,162 @@ export const TimeEntrySettings: React.FC = () => {
 
 
   return (
-    <div className="px-5 py-4 space-y-6">
-      {/* Task Types */}
-      <section>
-        <h3 className="text-[#09121F] text-[18px] font-bold mb-3">Task Types</h3>
-        
-        {/* Add New Task */}
-        <div className="flex gap-2 mb-4">
-          <input
-            type="text"
-            placeholder="Task name"
-            value={newTaskName}
-            onChange={(e) => setNewTaskName(e.target.value)}
-            className="flex-1 p-2 border border-gray-300 rounded text-[#09121F]"
-          />
-          {settings.invoiceMode && (
-            <input
-              type="number"
-              placeholder="Rate"
-              value={newTaskRate}
-              onChange={(e) => setNewTaskRate(e.target.value)}
-              className="w-20 p-2 border border-gray-300 rounded text-[#09121F]"
-            />
-          )}
-          <button
-            onClick={handleAddTask}
-            className="p-2 bg-[#09121F] text-white rounded hover:bg-[#1a1a1a]"
-          >
-            <Plus size={16} />
-          </button>
+    <div className="space-y-6">
+      {/* Clients */}
+      <section className="px-5">
+        <div className="border-b border-gray-200 pb-2 mb-4">
+          <h3 className="text-[#09121F] text-lg font-bold">Clients</h3>
         </div>
-
-        {/* Task List */}
-        <div className="space-y-2">
-          {settings.taskTypes.map((task) => (
-            <div key={task.id} className="flex items-center justify-between p-3 bg-gray-50 rounded">
-              {editingTask?.id === task.id ? (
-                <div className="flex gap-2 flex-1">
-                  <input
-                    type="text"
-                    value={editingTask.name}
-                    onChange={(e) => setEditingTask({ ...editingTask, name: e.target.value })}
-                    className="flex-1 p-1 border border-gray-300 rounded text-[#09121F]"
-                  />
-                  {settings.invoiceMode && (
-                    <input
-                      type="number"
-                      value={editingTask.hourlyRate || ''}
-                      onChange={(e) => setEditingTask({ 
-                        ...editingTask, 
-                        hourlyRate: e.target.value ? parseFloat(e.target.value) : undefined 
-                      })}
-                      className="w-20 p-1 border border-gray-300 rounded text-[#09121F]"
-                    />
-                  )}
-                  <button
-                    onClick={() => handleUpdateTask(editingTask)}
-                    className="px-3 py-1 bg-[#09121F] text-white rounded text-sm"
-                  >
-                    Save
-                  </button>
-                </div>
-              ) : (
-                <>
-                  <div>
-                    <span className="text-[#09121F] font-medium">{task.name}</span>
-                    {settings.invoiceMode && task.hourlyRate && (
-                      <span className="text-[#BFBFBF] ml-2">${task.hourlyRate}/hr</span>
-                    )}
-                  </div>
-                  <div className="flex gap-2">
-                    <button
-                      onClick={() => setEditingTask(task)}
-                      className="p-1 text-[#BFBFBF] hover:text-[#09121F]"
-                    >
-                      <Edit3 size={14} />
-                    </button>
-                    <button
-                      onClick={() => handleDeleteTask(task.id)}
-                      className="p-1 text-[#BFBFBF] hover:text-red-500"
-                    >
-                      <Trash2 size={14} />
-                    </button>
-                  </div>
-                </>
-              )}
+        
+        <div className="space-y-3">
+          {settings.clients.map((client) => (
+            <div key={client.id} className="flex items-center justify-between py-2">
+              <span className="text-[#09121F] text-sm">{client.name}</span>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setEditingClient(client)}
+                  className="text-gray-400 hover:text-[#09121F]"
+                >
+                  <Edit3 size={16} />
+                </button>
+                <button
+                  onClick={() => handleDeleteClient(client.id)}
+                  className="text-gray-400 hover:text-red-500"
+                >
+                  <Trash2 size={16} />
+                </button>
+              </div>
             </div>
           ))}
+          
+          <div className="flex items-center justify-between py-2">
+            <input
+              type="text"
+              placeholder="Add client"
+              value={newClientName}
+              onChange={(e) => setNewClientName(e.target.value)}
+              className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none flex-1"
+            />
+            <button
+              onClick={handleAddClient}
+              className="w-6 h-6 bg-[#09121F] text-white rounded flex items-center justify-center text-xs font-bold"
+            >
+              +
+            </button>
+          </div>
         </div>
       </section>
 
       {/* Projects */}
-      <section>
-        <h3 className="text-[#09121F] text-[18px] font-bold mb-3">Projects</h3>
-        
-        <div className="flex gap-2 mb-4">
-          <input
-            type="text"
-            placeholder="Project name"
-            value={newProjectName}
-            onChange={(e) => setNewProjectName(e.target.value)}
-            className="flex-1 p-2 border border-gray-300 rounded text-[#09121F]"
-          />
-          <button
-            onClick={handleAddProject}
-            className="p-2 bg-[#09121F] text-white rounded hover:bg-[#1a1a1a]"
-          >
-            <Plus size={16} />
-          </button>
+      <section className="px-5">
+        <div className="border-b border-gray-200 pb-2 mb-4">
+          <h3 className="text-[#09121F] text-lg font-bold">Projects</h3>
         </div>
-
-        <div className="space-y-2">
+        
+        <div className="space-y-3">
           {settings.projects.map((project) => (
-            <div key={project.id} className="flex items-center justify-between p-3 bg-gray-50 rounded">
-              <span className="text-[#09121F] font-medium">{project.name}</span>
-              <button
-                onClick={() => handleDeleteProject(project.id)}
-                className="p-1 text-[#BFBFBF] hover:text-red-500"
-              >
-                <Trash2 size={14} />
-              </button>
+            <div key={project.id} className="flex items-center justify-between py-2">
+              <span className="text-[#09121F] text-sm">{project.name}</span>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setEditingProject(project)}
+                  className="text-gray-400 hover:text-[#09121F]"
+                >
+                  <Edit3 size={16} />
+                </button>
+                <button
+                  onClick={() => handleDeleteProject(project.id)}
+                  className="text-gray-400 hover:text-red-500"
+                >
+                  <Trash2 size={16} />
+                </button>
+              </div>
             </div>
           ))}
+          
+          <div className="flex items-center justify-between py-2">
+            <input
+              type="text"
+              placeholder="Add project"
+              value={newProjectName}
+              onChange={(e) => setNewProjectName(e.target.value)}
+              className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none flex-1"
+            />
+            <button
+              onClick={handleAddProject}
+              className="w-6 h-6 bg-[#09121F] text-white rounded flex items-center justify-center text-xs font-bold"
+            >
+              +
+            </button>
+          </div>
         </div>
       </section>
 
-      {/* Clients */}
-      <section>
-        <h3 className="text-[#09121F] text-[18px] font-bold mb-3">Clients</h3>
-        
-        <div className="flex gap-2 mb-4">
-          <input
-            type="text"
-            placeholder="Client name"
-            value={newClientName}
-            onChange={(e) => setNewClientName(e.target.value)}
-            className="flex-1 p-2 border border-gray-300 rounded text-[#09121F]"
-          />
-          <button
-            onClick={handleAddClient}
-            className="p-2 bg-[#09121F] text-white rounded hover:bg-[#1a1a1a]"
-          >
-            <Plus size={16} />
-          </button>
+      {/* Tasks */}
+      <section className="px-5">
+        <div className="border-b border-gray-200 pb-2 mb-4">
+          <div className="flex justify-between items-center">
+            <h3 className="text-[#09121F] text-lg font-bold">Tasks</h3>
+            {settings.invoiceMode && (
+              <h3 className="text-[#09121F] text-lg font-bold">Hourly Rate</h3>
+            )}
+          </div>
         </div>
-
-        <div className="space-y-2">
-          {settings.clients.map((client) => (
-            <div key={client.id} className="flex items-center justify-between p-3 bg-gray-50 rounded">
-              <span className="text-[#09121F] font-medium">{client.name}</span>
-              <button
-                onClick={() => handleDeleteClient(client.id)}
-                className="p-1 text-[#BFBFBF] hover:text-red-500"
-              >
-                <Trash2 size={14} />
-              </button>
+        
+        <div className="space-y-3">
+          {settings.taskTypes.map((task) => (
+            <div key={task.id} className="flex items-center justify-between py-2">
+              <span className="text-[#09121F] text-sm">{task.name}</span>
+              <div className="flex items-center gap-3">
+                {settings.invoiceMode && (
+                  <span className="text-[#09121F] text-sm min-w-[60px] text-right">
+                    ${task.hourlyRate || '0.00'}
+                  </span>
+                )}
+                <div className="flex gap-3">
+                  <button
+                    onClick={() => setEditingTask(task)}
+                    className="text-gray-400 hover:text-[#09121F]"
+                  >
+                    <Edit3 size={16} />
+                  </button>
+                  <button
+                    onClick={() => handleDeleteTask(task.id)}
+                    className="text-gray-400 hover:text-red-500"
+                  >
+                    <Trash2 size={16} />
+                  </button>
+                </div>
+              </div>
             </div>
           ))}
+          
+          <div className="flex items-center justify-between py-2">
+            <input
+              type="text"
+              placeholder="Add task type"
+              value={newTaskName}
+              onChange={(e) => setNewTaskName(e.target.value)}
+              className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none flex-1"
+            />
+            <div className="flex items-center gap-3">
+              {settings.invoiceMode && (
+                <input
+                  type="text"
+                  placeholder="$0.00"
+                  value={newTaskRate}
+                  onChange={(e) => setNewTaskRate(e.target.value)}
+                  className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none w-16 text-right"
+                />
+              )}
+              <button
+                onClick={handleAddTask}
+                className="w-6 h-6 bg-[#09121F] text-white rounded flex items-center justify-center text-xs font-bold"
+              >
+                +
+              </button>
+            </div>
+          </div>
         </div>
       </section>
     </div>
