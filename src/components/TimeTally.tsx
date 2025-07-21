@@ -225,7 +225,7 @@ export const TimeTally: React.FC = () => {
       {/* Header */}
       <div className="flex items-baseline justify-between px-5 pt-0.5 pb-1">
         <h1 className="text-[#09121F] text-[28px] font-bold leading-8">
-          Where time went
+          Where time went.
         </h1>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
