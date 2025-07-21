@@ -89,7 +89,7 @@ export const TimeEntrySettings: React.FC = () => {
   return (
     <div>
       {/* Clients */}
-      <section className="px-5 pb-4">
+      <section className="px-5">
         <div className="border-b border-gray-200 pb-2 mb-3">
           <h3 className="text-[#09121F] text-lg font-bold">Clients</h3>
         </div>
@@ -134,7 +134,7 @@ export const TimeEntrySettings: React.FC = () => {
       </section>
 
       {/* Projects */}
-      <section className="px-5 pb-4">
+      <section className="px-5">
         <div className="border-b border-gray-200 pb-2 mb-3">
           <h3 className="text-[#09121F] text-lg font-bold">Projects</h3>
         </div>
@@ -179,7 +179,7 @@ export const TimeEntrySettings: React.FC = () => {
       </section>
 
       {/* Tasks */}
-      <section className="px-5 pb-4">
+      <section className="px-5">
         <div className="border-b border-gray-200 pb-2 mb-3">
           <div className="flex justify-between items-center">
             <h3 className="text-[#09121F] text-lg font-bold">Tasks</h3>

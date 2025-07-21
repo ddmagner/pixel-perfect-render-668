@@ -41,13 +41,16 @@ export const Settings: React.FC = () => {
         </div>
       </div>
 
-      {/* Main Title */}
-      <div className="px-5 mb-4">
-        <h1 className="text-[#09121F] text-xl font-bold">Time In settings</h1>
+      {/* Divider */}
+      <div className="h-px bg-[#09121F] mx-5 mb-6" />
+
+      {/* Header */}
+      <div className="flex items-baseline justify-between px-5 pt-0.5 pb-1">
+        <h1 className="text-[#09121F] text-[28px] font-bold leading-8">Time In settings</h1>
       </div>
 
       {/* Settings Content */}
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto w-full">
         <TimeEntrySettings />
         <UserProfile />
         
