@@ -90,9 +90,10 @@ export const TimeEntrySettings: React.FC = () => {
     <div>
       {/* Clients */}
       <section className="px-5">
-        <div className="border-b border-gray-200 pb-2 mb-3">
+        <div className="pb-2 mb-3">
           <h3 className="text-[#09121F] text-sm font-bold">Clients</h3>
         </div>
+        <div className="border-b border-[#09121F] mb-3"></div>
         
         <div className="space-y-3">
           {settings.clients.map((client) => (
@@ -135,9 +136,10 @@ export const TimeEntrySettings: React.FC = () => {
 
       {/* Projects */}
       <section className="px-5">
-        <div className="border-t border-gray-200 pt-2 mb-3">
+        <div className="pt-2 pb-2 mb-3">
           <h3 className="text-[#09121F] text-sm font-bold">Projects</h3>
         </div>
+        <div className="border-b border-[#09121F] mb-3"></div>
         
         <div className="space-y-3">
           {settings.projects.map((project) => (
@@ -180,7 +182,7 @@ export const TimeEntrySettings: React.FC = () => {
 
       {/* Tasks */}
       <section className="px-5">
-        <div className="border-t border-gray-200 pt-2 mb-3">
+        <div className="pt-2 pb-2 mb-3">
           <div className="flex justify-between items-center">
             <h3 className="text-[#09121F] text-sm font-bold">Tasks</h3>
             {settings.invoiceMode && (
@@ -188,6 +190,7 @@ export const TimeEntrySettings: React.FC = () => {
             )}
           </div>
         </div>
+        <div className="border-b border-[#09121F] mb-3"></div>
         
         <div className="space-y-3">
           {settings.taskTypes.map((task) => (
