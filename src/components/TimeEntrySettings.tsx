@@ -90,7 +90,7 @@ export const TimeEntrySettings: React.FC = () => {
     <div>
       {/* Clients */}
       <section className="px-5">
-        <div className="pb-2 mb-3">
+        <div className="border-b border-gray-200 pb-2 mb-3">
           <h3 className="text-[#09121F] text-lg font-bold">Clients</h3>
         </div>
         
