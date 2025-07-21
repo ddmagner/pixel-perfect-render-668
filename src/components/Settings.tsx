@@ -4,36 +4,26 @@ import { UserProfile } from './UserProfile';
 import { ColorCustomization } from './ColorCustomization';
 import { useApp } from '@/context/AppContext';
 import { Clock } from 'lucide-react';
-
 export const Settings: React.FC = () => {
-  const { settings, updateSettings } = useApp();
+  const {
+    settings,
+    updateSettings
+  } = useApp();
   const [showColorOverlay, setShowColorOverlay] = useState(false);
-
   const handleModeToggle = () => {
     updateSettings({
-      invoiceMode: !settings.invoiceMode,
+      invoiceMode: !settings.invoiceMode
     });
   };
-
-  return (
-    <div className="flex flex-col h-full w-full bg-white">
+  return <div className="flex flex-col h-full w-full bg-white">
       {/* Mode Toggle */}
       <div className="flex justify-center items-center w-full px-5 py-4">
         <div className="flex items-center gap-4">
           <span className={`text-sm font-medium ${!settings.invoiceMode ? 'text-[#09121F]' : 'text-[#BFBFBF]'}`}>
             Time Card Mode
           </span>
-          <button
-            onClick={handleModeToggle}
-            className={`w-12 h-6 rounded-full transition-colors ${
-              settings.invoiceMode ? 'bg-[#09121F]' : 'bg-[#BFBFBF]'
-            }`}
-          >
-            <div
-              className={`w-5 h-5 bg-white rounded-full transition-transform ${
-                settings.invoiceMode ? 'translate-x-6' : 'translate-x-0.5'
-              }`}
-            />
+          <button onClick={handleModeToggle} className={`w-12 h-6 rounded-full transition-colors ${settings.invoiceMode ? 'bg-[#09121F]' : 'bg-[#BFBFBF]'}`}>
+            <div className={`w-5 h-5 bg-white rounded-full transition-transform ${settings.invoiceMode ? 'translate-x-6' : 'translate-x-0.5'}`} />
           </button>
           <span className={`text-sm font-medium ${settings.invoiceMode ? 'text-[#09121F]' : 'text-[#BFBFBF]'}`}>
             Invoice Mode
@@ -71,22 +61,16 @@ export const Settings: React.FC = () => {
       </div>
 
       {/* Color Overlay */}
-      {showColorOverlay && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-end">
+      {showColorOverlay && <div className="fixed inset-0 bg-black bg-opacity-50 z-50 flex items-end">
           <div className="bg-white w-full rounded-t-2xl animate-slide-in-right">
             <div className="flex items-center justify-between p-5 border-b border-gray-200">
               <h2 className="text-[#09121F] text-lg font-bold">Coloring time</h2>
-              <button
-                onClick={() => setShowColorOverlay(false)}
-                className="text-[#BFBFBF] text-base font-bold"
-              >
+              <button onClick={() => setShowColorOverlay(false)} className="text-[#BFBFBF] text-base font-bold">
                 Done
               </button>
             </div>
             <ColorCustomization />
           </div>
-        </div>
-      )}
-    </div>
-  );
+        </div>}
+    </div>;
 };
