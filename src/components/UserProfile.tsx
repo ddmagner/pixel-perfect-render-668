@@ -45,7 +45,7 @@ export const UserProfile: React.FC = () => {
   return (
     <div className="px-5">
       <div className="border-t border-gray-200 pt-2 mb-3">
-        <h2 className="text-[#09121F] text-lg font-bold">User profile</h2>
+        <h2 className="text-[#09121F] text-sm font-bold">User profile</h2>
       </div>
       
       <div className="space-y-4">
