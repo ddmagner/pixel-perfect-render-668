@@ -49,7 +49,7 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({ onSubmit, transcri
     <section className="flex flex-col items-start flex-[1_0_0] self-stretch px-0 py-2.5">
       <div className="flex h-px flex-col items-start gap-2.5 self-stretch px-5 py-0" />
       
-      <header className="flex h-14 flex-col justify-center items-start gap-14 self-stretch pt-2.5 pb-3.5 px-5">
+      <header className="flex h-14 flex-col justify-center items-start gap-14 self-stretch pt-2.5 px-5">
         <h1 className="self-stretch text-[#09121F] text-[28px] font-bold leading-8 tracking-[-0.56px]">
           New time in.
         </h1>
