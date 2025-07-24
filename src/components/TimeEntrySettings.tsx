@@ -228,7 +228,7 @@ export const TimeEntrySettings: React.FC = () => {
               onChange={(e) => setNewTaskName(e.target.value)}
               className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none flex-1"
             />
-            <div className="flex items-center gap-3 w-20">
+            <div className="flex items-center gap-3">
               {settings.invoiceMode && (
                 <input
                   type="text"
