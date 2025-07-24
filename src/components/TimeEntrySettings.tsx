@@ -198,7 +198,7 @@ export const TimeEntrySettings: React.FC = () => {
               <span className="text-[#09121F] text-sm">{task.name}</span>
               <div className="flex items-center gap-3">
                 {settings.invoiceMode && (
-                  <span className="text-[#09121F] text-sm min-w-[60px] text-right">
+                  <span className="text-[#09121F] text-sm min-w-[60px] text-left">
                     ${task.hourlyRate || '0.00'}
                   </span>
                 )}
