@@ -197,7 +197,7 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
               <Input 
                 value={fileName}
                 onChange={(e) => setFileName(e.target.value)}
-                className="h-12 text-base bg-[#BFBFBF]/50 rounded-none border-none outline-none"
+                className="h-12 text-base bg-[#BFBFBF]/50 rounded-[4px] border-none outline-none"
                 placeholder="Enter filename"
               />
             </div>
