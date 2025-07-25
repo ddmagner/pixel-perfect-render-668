@@ -20,14 +20,11 @@ export const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }
             />
           </div>
           <div className="w-[91px] self-stretch">
-            <div>
-              <div
-                dangerouslySetInnerHTML={{
-                  __html:
-                    "<svg width=\"91\" height=\"14\" viewBox=\"0 0 91 14\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\" class=\"time-in-text\" style=\"display: inline-flex; height: 14px; align-items: center; gap: 13px; width: 91px\"> <path d=\"M51.1992 10.32H56.3992V14H47.1992V0H56.2992V3.64H51.1992V5.16H55.7992V8.76H51.1992V10.32Z\" fill=\"#09121F\"></path> <path d=\"M41.1996 0V14H37.1996V7.18L34.0796 12.42H33.7196L30.5996 7.18V14H26.5996V0H30.5996L33.8996 5.7L37.1996 0H41.1996Z\" fill=\"#09121F\"></path> <path d=\"M16.5996 0H20.5996V14H16.5996V0Z\" fill=\"#09121F\"></path> <path d=\"M10.6 0V3.88H7.3V14H3.3V3.88H0V0H10.6Z\" fill=\"#09121F\"></path> <path d=\"M86.9994 0H90.9994V14H87.7994L83.3994 7.6V14H79.3994V0H82.5994L86.9994 6.4V0Z\" fill=\"#09121F\"></path> <path d=\"M69.3994 0H73.3994V14H69.3994V0Z\" fill=\"#09121F\"></path> </svg>",
-                }}
-              />
-            </div>
+            <img 
+              src="/lovable-uploads/0121bcac-6571-4b1a-abc6-4696c2677607.png" 
+              alt="TIME IN Logo" 
+              className="h-[14px] w-[91px]"
+            />
           </div>
         </div>
       </div>
