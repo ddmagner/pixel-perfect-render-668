@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
-import { Drawer, DrawerContent, DrawerHeader, DrawerTitle } from '@/components/ui/drawer';
+import { Drawer, DrawerContent } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
+import { Switch } from '@/components/ui/switch';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Input } from '@/components/ui/input';
 import { TimeEntry, AppSettings, ViewMode } from '@/types';
 import { generatePDF } from '@/utils/pdfGenerator';
 import { generateSpreadsheet } from '@/utils/spreadsheetGenerator';
 import { Share } from '@capacitor/share';
 import { format } from 'date-fns';
-import { FileText, FileSpreadsheet, Share2, Printer, X } from 'lucide-react';
+import { X, Download, Mail, Printer } from 'lucide-react';
 
 interface ExportDialogProps {
   isOpen: boolean;
@@ -16,9 +19,6 @@ interface ExportDialogProps {
   viewMode: ViewMode;
 }
 
-type FileFormat = 'pdf' | 'spreadsheet';
-type ExportMethod = 'download' | 'share' | 'print';
-
 export const ExportDialog: React.FC<ExportDialogProps> = ({
   isOpen,
   onClose,
@@ -26,12 +26,21 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
   settings,
   viewMode
 }) => {
-  const [fileFormat, setFileFormat] = useState<FileFormat>('pdf');
+  const [isPdfFormat, setIsPdfFormat] = useState(true);
+  const [downloadToDevice, setDownloadToDevice] = useState(true);
+  const [shareViaEmail, setShareViaEmail] = useState(false);
+  const [printDocument, setPrintDocument] = useState(false);
+  const [fileName, setFileName] = useState(`${settings.userProfile.name || 'User'} Time Report ${format(new Date(), 'yyyy-MM-dd')}`);
   const [isExporting, setIsExporting] = useState(false);
 
-  const handleExport = async (method: ExportMethod) => {
+  const handleExport = async () => {
     if (timeEntries.length === 0) {
       alert('No time entries to export');
+      return;
+    }
+
+    if (!downloadToDevice && !shareViaEmail && !printDocument) {
+      alert('Please select at least one export method');
       return;
     }
 
@@ -39,63 +48,59 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
     
     try {
       let blob: Blob;
-      let fileName: string;
+      let fileExtension: string;
 
-      if (fileFormat === 'pdf') {
+      if (isPdfFormat) {
         blob = await generatePDF(timeEntries, settings, viewMode);
-        fileName = `time-${viewMode}-${format(new Date(), 'yyyy-MM-dd')}.pdf`;
+        fileExtension = 'pdf';
       } else {
         blob = await generateSpreadsheet(timeEntries, settings, viewMode);
-        fileName = `time-${viewMode}-${format(new Date(), 'yyyy-MM-dd')}.xlsx`;
+        fileExtension = 'xlsx';
       }
 
+      const finalFileName = `${fileName}.${fileExtension}`;
       const url = URL.createObjectURL(blob);
 
-      switch (method) {
-        case 'download':
+      if (downloadToDevice) {
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = finalFileName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      }
+
+      if (shareViaEmail) {
+        if (await Share.canShare()) {
+          await Share.share({
+            title: finalFileName,
+            text: `Time ${viewMode} report`,
+            url: url
+          });
+        } else {
+          const subject = encodeURIComponent(`Time ${viewMode} Report`);
+          const body = encodeURIComponent(`Please find attached the time ${viewMode} report.`);
+          window.open(`mailto:?subject=${subject}&body=${body}`, '_blank');
+        }
+      }
+
+      if (printDocument) {
+        if (isPdfFormat) {
+          const newWindow = window.open(url, '_blank');
+          if (newWindow) {
+            newWindow.onload = () => {
+              newWindow.print();
+            };
+          }
+        } else {
           const a = document.createElement('a');
           a.href = url;
-          a.download = fileName;
+          a.download = finalFileName;
           document.body.appendChild(a);
           a.click();
           document.body.removeChild(a);
-          break;
-
-        case 'share':
-          if (await Share.canShare()) {
-            await Share.share({
-              title: fileName,
-              text: `Time ${viewMode} report`,
-              url: url
-            });
-          } else {
-            // Fallback: create mailto link
-            const subject = encodeURIComponent(`Time ${viewMode} Report`);
-            const body = encodeURIComponent(`Please find attached the time ${viewMode} report.`);
-            window.open(`mailto:?subject=${subject}&body=${body}`, '_blank');
-          }
-          break;
-
-        case 'print':
-          if (fileFormat === 'pdf') {
-            // Open PDF in new window for printing
-            const newWindow = window.open(url, '_blank');
-            if (newWindow) {
-              newWindow.onload = () => {
-                newWindow.print();
-              };
-            }
-          } else {
-            // For spreadsheets, download and inform user to print from app
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = fileName;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            alert('Spreadsheet downloaded. Please open it in your preferred app to print.');
-          }
-          break;
+          alert('Spreadsheet downloaded. Please open it in your preferred app to print.');
+        }
       }
 
       URL.revokeObjectURL(url);
@@ -113,66 +118,98 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
       <DrawerContent className="mx-0 border-none bg-background">
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b">
-          <h2 className="text-lg font-semibold text-foreground">Export/Share/Print</h2>
+          <h2 className="text-xl font-semibold text-foreground">Export/Share/Print</h2>
           <Button variant="ghost" size="icon" onClick={onClose} className="h-8 w-8">
-            <X className="h-4 w-4" />
+            <X className="h-5 w-5" />
           </Button>
         </div>
         
         {/* Content */}
-        <div className="px-6 py-4 space-y-6">
-          {/* Format Selection */}
-          <div className="flex gap-3">
-            <Button
-              variant={fileFormat === 'pdf' ? 'default' : 'outline'}
-              onClick={() => setFileFormat('pdf')}
-              className="flex-1 h-14 text-base font-medium"
-              style={fileFormat === 'pdf' ? { backgroundColor: settings.accentColor, color: 'white' } : {}}
-            >
-              <FileText className="h-5 w-5 mr-2" />
-              PDF
-            </Button>
-            <Button
-              variant={fileFormat === 'spreadsheet' ? 'default' : 'outline'}
-              onClick={() => setFileFormat('spreadsheet')}
-              className="flex-1 h-14 text-base font-medium"
-              style={fileFormat === 'spreadsheet' ? { backgroundColor: settings.accentColor, color: 'white' } : {}}
-            >
-              <FileSpreadsheet className="h-5 w-5 mr-2" />
-              Excel
-            </Button>
+        <div className="px-6 py-6 space-y-6">
+          {/* Format Toggle */}
+          <div className="space-y-4">
+            <div className="flex items-center justify-between">
+              <span className="text-base font-medium">PDF Document</span>
+              <Switch 
+                checked={!isPdfFormat} 
+                onCheckedChange={(checked) => setIsPdfFormat(!checked)}
+                className="data-[state=checked]:bg-foreground"
+              />
+              <span className="text-base font-medium">Excel Spreadsheet</span>
+            </div>
+          </div>
+
+          <div className="border-t pt-6">
+            <h3 className="text-lg font-semibold mb-4">Export Method</h3>
+            
+            {/* Export Methods */}
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <Download className="h-5 w-5" />
+                  <span className="text-base">Download to device</span>
+                </div>
+                <Checkbox 
+                  checked={downloadToDevice}
+                  onCheckedChange={(checked) => setDownloadToDevice(checked === true)}
+                  className="h-6 w-6"
+                />
+              </div>
+              
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <Mail className="h-5 w-5" />
+                  <span className="text-base">Share via email</span>
+                </div>
+                <Checkbox 
+                  checked={shareViaEmail}
+                  onCheckedChange={(checked) => setShareViaEmail(checked === true)}
+                  className="h-6 w-6"
+                />
+              </div>
+              
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
+                  <Printer className="h-5 w-5" />
+                  <span className="text-base">Print</span>
+                </div>
+                <Checkbox 
+                  checked={printDocument}
+                  onCheckedChange={(checked) => setPrintDocument(checked === true)}
+                  className="h-6 w-6"
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Save As */}
+          <div className="border-t pt-6">
+            <div className="space-y-3">
+              <label className="text-base font-medium">Save as</label>
+              <Input 
+                value={fileName}
+                onChange={(e) => setFileName(e.target.value)}
+                className="h-12 text-base bg-muted"
+                placeholder="Enter filename"
+              />
+            </div>
           </div>
 
           {/* Action Buttons */}
-          <div className="flex gap-3 pb-2">
-            <Button
-              variant="outline"
-              onClick={() => handleExport('download')}
-              disabled={isExporting}
-              className="flex-1 h-20 flex flex-col items-center justify-center gap-2 border-2"
+          <div className="flex gap-4 pt-4">
+            <Button 
+              variant="outline" 
+              onClick={onClose} 
+              className="flex-1 h-12 text-base font-medium"
             >
-              <FileText className="h-6 w-6" />
-              <span className="text-sm font-medium">Save</span>
+              Cancel
             </Button>
-            
-            <Button
-              variant="outline"
-              onClick={() => handleExport('share')}
+            <Button 
+              onClick={handleExport} 
               disabled={isExporting}
-              className="flex-1 h-20 flex flex-col items-center justify-center gap-2 border-2"
+              className="flex-1 h-12 text-base font-medium bg-foreground text-background hover:bg-foreground/90"
             >
-              <Share2 className="h-6 w-6" />
-              <span className="text-sm font-medium">Share</span>
-            </Button>
-            
-            <Button
-              variant="outline"
-              onClick={() => handleExport('print')}
-              disabled={isExporting}
-              className="flex-1 h-20 flex flex-col items-center justify-center gap-2 border-2"
-            >
-              <Printer className="h-6 w-6" />
-              <span className="text-sm font-medium">Print</span>
+              {isExporting ? 'Exporting...' : 'Export'}
             </Button>
           </div>
         </div>
