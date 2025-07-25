@@ -13,10 +13,10 @@ export const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }
       <div className="flex h-3.5 justify-end items-center">
         <div className="flex items-center gap-[9px]">
           <div>
-            <div
-              dangerouslySetInnerHTML={{
-                __html: `<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg" class="time-icon" style="width: 14px; height: 14px; aspect-ratio: 1/1; fill: ${settings.accentColor}"> <path d="M7 0C10.8661 0 14 3.1339 14 7C14 10.8661 10.8661 14 7 14C5.8086 14 4.6865 13.7025 3.7044 13.1775L0 14L0.8232 10.297C0.2982 9.3142 0 8.1921 0 7C0 3.1339 3.1339 0 7 0ZM7.7 3.5H6.3V8.4H10.5V7H7.7V3.5Z" fill="${settings.accentColor}"></path> </svg>`,
-              }}
+            <img 
+              src="/lovable-uploads/8829a351-d8df-4d66-829d-f34b1754bd35.png" 
+              alt="Logo" 
+              className="w-[14px] h-[14px]"
             />
           </div>
           <div className="w-[91px] self-stretch">
