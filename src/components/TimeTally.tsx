@@ -360,7 +360,7 @@ export const TimeTally: React.FC = () => {
 
       {/* Export Button */}
       <div className="w-full px-5 py-5">
-        <button onClick={handleExport} className="w-full text-white py-4 font-bold text-sm transition-colors" style={{
+        <button onClick={handleExport} className="w-full text-white py-3.5 font-bold text-sm transition-colors" style={{
         backgroundColor: settings.accentColor
       }}>
           Export/Share/Print
