@@ -1,11 +1,10 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useApp } from '@/context/AppContext';
 import { TimeEntry } from '@/types';
 import { format } from 'date-fns';
-import { Share } from '@capacitor/share';
-import { generatePDF } from '@/utils/pdfGenerator';
 import { ChevronDown, Pencil, Trash2 } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { ExportDialog } from '@/components/ExportDialog';
 export const TimeTally: React.FC = () => {
   const {
     timeEntries,
@@ -15,6 +14,8 @@ export const TimeTally: React.FC = () => {
     setViewMode,
     settings
   } = useApp();
+  
+  const [isExportDialogOpen, setIsExportDialogOpen] = useState(false);
 
   // Format hours as decimal
   const formatHours = (hours: number): string => {
@@ -145,27 +146,8 @@ export const TimeTally: React.FC = () => {
       }
     };
   }, [timeEntries, sortOption, viewMode, settings]);
-  const handleExport = async () => {
-    try {
-      const pdfBlob = await generatePDF(timeEntries, settings, viewMode);
-      const fileName = `time-${viewMode}-${format(new Date(), 'yyyy-MM-dd')}.pdf`;
-      const url = URL.createObjectURL(pdfBlob);
-      if (await Share.canShare()) {
-        await Share.share({
-          title: fileName,
-          text: `Time ${viewMode} report`,
-          url: url
-        });
-      } else {
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = fileName;
-        a.click();
-      }
-      URL.revokeObjectURL(url);
-    } catch (error) {
-      console.error('Error exporting PDF:', error);
-    }
+  const handleExport = () => {
+    setIsExportDialogOpen(true);
   };
 
   // Get sort option display text
@@ -384,5 +366,14 @@ export const TimeTally: React.FC = () => {
           Export/Share/Print
         </button>
       </div>
+
+      {/* Export Dialog */}
+      <ExportDialog
+        isOpen={isExportDialogOpen}
+        onClose={() => setIsExportDialogOpen(false)}
+        timeEntries={timeEntries}
+        settings={settings}
+        viewMode={viewMode}
+      />
     </div>;
 };
