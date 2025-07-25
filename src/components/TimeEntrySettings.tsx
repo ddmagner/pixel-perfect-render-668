@@ -202,7 +202,7 @@ export const TimeEntrySettings: React.FC = () => {
                     ${(task.hourlyRate || 0).toFixed(2)}
                   </span>
                 )}
-                <div className="flex gap-3">
+                <div className="flex gap-3 pl-3 justify-end">
                   <button
                     onClick={() => setEditingTask(task)}
                     className="text-gray-400 hover:text-[#09121F]"
