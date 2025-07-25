@@ -128,7 +128,7 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
         <div className="px-6 py-6 space-y-6">
           {/* Format Toggle */}
           <div className="space-y-4">
-            <div className="flex items-center gap-4">
+            <div className="flex justify-center items-center gap-4">
               <span className={`text-sm font-medium font-gilroy ${isPdfFormat ? 'text-[#09121F]' : 'text-[#BFBFBF]'}`}>PDF Document</span>
               <button 
                 onClick={() => setIsPdfFormat(!isPdfFormat)} 
