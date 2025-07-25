@@ -235,7 +235,7 @@ export const TimeEntrySettings: React.FC = () => {
                   placeholder="$0.00"
                   value={newTaskRate}
                   onChange={(e) => setNewTaskRate(e.target.value)}
-                  className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none w-20 text-left"
+                  className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none w-20 text-right"
                 />
               )}
               <button
