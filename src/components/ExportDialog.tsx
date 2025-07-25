@@ -140,7 +140,11 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
             </div>
           </div>
 
-          <div className="border-t pt-6">
+          {/* Divider */}
+          <div className="h-px bg-[#09121F] mx-0" />
+
+          {/* Export Method */}
+          <div>
             <h3 className="text-lg font-semibold mb-4">Export Method</h3>
             
             {/* Export Methods */}
@@ -183,8 +187,11 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
             </div>
           </div>
 
+          {/* Divider */}
+          <div className="h-px bg-[#09121F] mx-0" />
+
           {/* Save As */}
-          <div className="border-t pt-6">
+          <div>
             <div className="space-y-3">
               <label className="text-base font-medium">Save as</label>
               <Input 
