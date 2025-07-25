@@ -134,7 +134,10 @@ export const TimeEntrySettings: React.FC = () => {
         <div className="pt-5 mb-3">
           <div className="flex justify-between items-center">
             <h3 className="text-[#09121F] text-sm font-bold">Tasks</h3>
-            {settings.invoiceMode && <h3 className="text-[#09121F] text-sm font-bold flex pr-6">Hourly Rate</h3>}
+            {settings.invoiceMode && <div className="flex items-center gap-3">
+              <h3 className="text-[#09121F] text-sm font-bold min-w-[60px] text-right">Hourly Rate</h3>
+              <div className="flex gap-3 pl-3 w-[35px]"></div>
+            </div>}
           </div>
         </div>
         <div className="border-b border-[#09121F] mb-3"></div>
