@@ -238,7 +238,7 @@ export const TimeEntrySettings: React.FC = () => {
                   className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none w-20 text-right"
                 />
               )}
-              <div className="flex pl-9 justify-end">
+              <div className="flex pl-8 justify-end">
                 <button
                   onClick={handleAddTask}
                   className="w-6 h-6 bg-[#09121F] text-white rounded flex items-center justify-center text-xs font-bold"
