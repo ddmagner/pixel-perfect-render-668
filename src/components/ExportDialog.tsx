@@ -129,14 +129,14 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
           {/* Format Toggle */}
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <span className="text-base font-medium">PDF Document</span>
+              <span className={`text-sm font-medium font-gilroy ${isPdfFormat ? 'text-[#09121F]' : 'text-[#BFBFBF]'}`}>PDF Document</span>
               <button 
                 onClick={() => setIsPdfFormat(!isPdfFormat)} 
                 className={`w-12 h-6 rounded-full transition-colors ${!isPdfFormat ? 'bg-[#09121F]' : 'bg-[#BFBFBF]'}`}
               >
                 <div className={`w-5 h-5 bg-white rounded-full transition-transform ${!isPdfFormat ? 'translate-x-6' : 'translate-x-0.5'}`} />
               </button>
-              <span className="text-base font-medium">Excel Spreadsheet</span>
+              <span className={`text-sm font-medium font-gilroy ${!isPdfFormat ? 'text-[#09121F]' : 'text-[#BFBFBF]'}`}>Excel Spreadsheet</span>
             </div>
           </div>
 
