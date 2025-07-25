@@ -115,7 +115,7 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
 
   return (
     <Drawer open={isOpen} onOpenChange={onClose}>
-      <DrawerContent className="mx-0 border-none bg-background">
+      <DrawerContent className="mx-0 border-none bg-background rounded-none">
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4 border-b">
           <h2 className="text-xl font-semibold text-foreground">Export/Share/Print</h2>
@@ -133,7 +133,7 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
               <Switch 
                 checked={!isPdfFormat} 
                 onCheckedChange={(checked) => setIsPdfFormat(!checked)}
-                className="data-[state=checked]:bg-foreground"
+                className="data-[state=checked]:bg-foreground rounded-full"
               />
               <span className="text-base font-medium">Excel Spreadsheet</span>
             </div>
@@ -152,7 +152,7 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
                 <Checkbox 
                   checked={downloadToDevice}
                   onCheckedChange={(checked) => setDownloadToDevice(checked === true)}
-                  className="h-6 w-6"
+                  className="h-6 w-6 rounded-none border-2 border-foreground data-[state=checked]:bg-foreground"
                 />
               </div>
               
@@ -164,7 +164,7 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
                 <Checkbox 
                   checked={shareViaEmail}
                   onCheckedChange={(checked) => setShareViaEmail(checked === true)}
-                  className="h-6 w-6"
+                  className="h-6 w-6 rounded-none border-2 border-foreground data-[state=checked]:bg-foreground"
                 />
               </div>
               
@@ -176,7 +176,7 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
                 <Checkbox 
                   checked={printDocument}
                   onCheckedChange={(checked) => setPrintDocument(checked === true)}
-                  className="h-6 w-6"
+                  className="h-6 w-6 rounded-none border-2 border-foreground data-[state=checked]:bg-foreground"
                 />
               </div>
             </div>
@@ -189,7 +189,7 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
               <Input 
                 value={fileName}
                 onChange={(e) => setFileName(e.target.value)}
-                className="h-12 text-base bg-muted"
+                className="h-12 text-base bg-muted rounded-none border-foreground"
                 placeholder="Enter filename"
               />
             </div>
@@ -200,14 +200,14 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
             <Button 
               variant="outline" 
               onClick={onClose} 
-              className="flex-1 h-12 text-base font-medium"
+              className="flex-1 h-12 text-base font-medium rounded-none border-2 border-foreground"
             >
               Cancel
             </Button>
             <Button 
               onClick={handleExport} 
               disabled={isExporting}
-              className="flex-1 h-12 text-base font-medium bg-foreground text-background hover:bg-foreground/90"
+              className="flex-1 h-12 text-base font-medium bg-foreground text-background hover:bg-foreground/90 rounded-none"
             >
               {isExporting ? 'Exporting...' : 'Export'}
             </Button>
