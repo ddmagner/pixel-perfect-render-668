@@ -117,7 +117,7 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
     <Drawer open={isOpen} onOpenChange={onClose}>
       <DrawerContent className="mx-0 border-none bg-background rounded-none">
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b">
+        <div className="flex items-center justify-between px-6 py-4">
           <h2 className="text-xl font-semibold text-foreground">Export/Share/Print</h2>
           <Button variant="ghost" size="icon" onClick={onClose} className="h-8 w-8">
             <X className="h-5 w-5" />
