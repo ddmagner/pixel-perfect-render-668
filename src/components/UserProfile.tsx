@@ -121,7 +121,7 @@ export const UserProfile: React.FC = () => {
 
         <button
           onClick={handleSave}
-          className="w-full bg-[#09121F] text-white py-4 px-4 font-bold text-sm mt-8"
+          className="w-full bg-[#09121F] text-white py-3.5 px-4 font-bold text-sm mt-8"
         >
           Save Profile
         </button>
