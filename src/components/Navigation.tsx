@@ -21,7 +21,7 @@ export const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }
           </div>
           <div className="w-[91px] self-stretch">
             <img 
-              src="/lovable-uploads/0121bcac-6571-4b1a-abc6-4696c2677607.png" 
+              src="/lovable-uploads/21706651-e7f7-4eec-b5d7-cd8ccf2a385f.png" 
               alt="TIME IN Logo" 
               className="h-[14px] w-[91px]"
             />
