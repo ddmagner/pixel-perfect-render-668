@@ -110,7 +110,7 @@ export const RecordButton: React.FC<RecordButtonProps> = ({
             />
           </div>
           <span className="text-[#09121F] text-[15px] italic font-black leading-[15px] tracking-[0.2px] mx-0.5">
-            hours in...doing
+            hours...doing
           </span>
           <div
             className="w-fit"
