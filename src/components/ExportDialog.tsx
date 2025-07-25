@@ -110,76 +110,70 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
 
   return (
     <Drawer open={isOpen} onOpenChange={onClose}>
-      <DrawerContent className="p-0">
-        <DrawerHeader className="flex flex-row items-center justify-between p-4 pb-0">
-          <DrawerTitle className="text-lg font-semibold text-foreground">
-            Export/Share/Print
-          </DrawerTitle>
-          <Button variant="ghost" size="icon" onClick={onClose} className="h-6 w-6">
+      <DrawerContent className="mx-0 border-none bg-background">
+        {/* Header */}
+        <div className="flex items-center justify-between px-6 py-4 border-b">
+          <h2 className="text-lg font-semibold text-foreground">Export/Share/Print</h2>
+          <Button variant="ghost" size="icon" onClick={onClose} className="h-8 w-8">
             <X className="h-4 w-4" />
           </Button>
-        </DrawerHeader>
+        </div>
         
-        <div className="p-4 space-y-4">
-          {/* File Format Selection */}
-          <div className="space-y-3">
-            <h3 className="text-sm font-medium text-foreground">Choose format</h3>
-            <div className="flex gap-2">
-              <Button
-                variant={fileFormat === 'pdf' ? 'default' : 'outline'}
-                onClick={() => setFileFormat('pdf')}
-                className="flex-1 h-12 flex items-center gap-2"
-                style={fileFormat === 'pdf' ? { backgroundColor: settings.accentColor } : {}}
-              >
-                <FileText className="h-4 w-4" />
-                PDF
-              </Button>
-              <Button
-                variant={fileFormat === 'spreadsheet' ? 'default' : 'outline'}
-                onClick={() => setFileFormat('spreadsheet')}
-                className="flex-1 h-12 flex items-center gap-2"
-                style={fileFormat === 'spreadsheet' ? { backgroundColor: settings.accentColor } : {}}
-              >
-                <FileSpreadsheet className="h-4 w-4" />
-                Excel
-              </Button>
-            </div>
+        {/* Content */}
+        <div className="px-6 py-4 space-y-6">
+          {/* Format Selection */}
+          <div className="flex gap-3">
+            <Button
+              variant={fileFormat === 'pdf' ? 'default' : 'outline'}
+              onClick={() => setFileFormat('pdf')}
+              className="flex-1 h-14 text-base font-medium"
+              style={fileFormat === 'pdf' ? { backgroundColor: settings.accentColor, color: 'white' } : {}}
+            >
+              <FileText className="h-5 w-5 mr-2" />
+              PDF
+            </Button>
+            <Button
+              variant={fileFormat === 'spreadsheet' ? 'default' : 'outline'}
+              onClick={() => setFileFormat('spreadsheet')}
+              className="flex-1 h-14 text-base font-medium"
+              style={fileFormat === 'spreadsheet' ? { backgroundColor: settings.accentColor, color: 'white' } : {}}
+            >
+              <FileSpreadsheet className="h-5 w-5 mr-2" />
+              Excel
+            </Button>
           </div>
 
-          {/* Export Actions */}
-          <div className="space-y-3">
-            <h3 className="text-sm font-medium text-foreground">Export options</h3>
-            <div className="grid grid-cols-3 gap-2">
-              <Button
-                variant="outline"
-                onClick={() => handleExport('download')}
-                disabled={isExporting}
-                className="h-16 flex flex-col items-center gap-1 p-2"
-              >
-                <FileText className="h-5 w-5" />
-                <span className="text-xs">Save</span>
-              </Button>
-              
-              <Button
-                variant="outline"
-                onClick={() => handleExport('share')}
-                disabled={isExporting}
-                className="h-16 flex flex-col items-center gap-1 p-2"
-              >
-                <Share2 className="h-5 w-5" />
-                <span className="text-xs">Share</span>
-              </Button>
-              
-              <Button
-                variant="outline"
-                onClick={() => handleExport('print')}
-                disabled={isExporting}
-                className="h-16 flex flex-col items-center gap-1 p-2"
-              >
-                <Printer className="h-5 w-5" />
-                <span className="text-xs">Print</span>
-              </Button>
-            </div>
+          {/* Action Buttons */}
+          <div className="flex gap-3 pb-2">
+            <Button
+              variant="outline"
+              onClick={() => handleExport('download')}
+              disabled={isExporting}
+              className="flex-1 h-20 flex flex-col items-center justify-center gap-2 border-2"
+            >
+              <FileText className="h-6 w-6" />
+              <span className="text-sm font-medium">Save</span>
+            </Button>
+            
+            <Button
+              variant="outline"
+              onClick={() => handleExport('share')}
+              disabled={isExporting}
+              className="flex-1 h-20 flex flex-col items-center justify-center gap-2 border-2"
+            >
+              <Share2 className="h-6 w-6" />
+              <span className="text-sm font-medium">Share</span>
+            </Button>
+            
+            <Button
+              variant="outline"
+              onClick={() => handleExport('print')}
+              disabled={isExporting}
+              className="flex-1 h-20 flex flex-col items-center justify-center gap-2 border-2"
+            >
+              <Printer className="h-6 w-6" />
+              <span className="text-sm font-medium">Print</span>
+            </Button>
           </div>
         </div>
       </DrawerContent>
