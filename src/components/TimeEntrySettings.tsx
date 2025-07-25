@@ -136,7 +136,7 @@ export const TimeEntrySettings: React.FC = () => {
             <h3 className="text-[#09121F] text-sm font-bold">Tasks</h3>
             {settings.invoiceMode && <div className="flex items-center gap-3">
               <h3 className="text-[#09121F] text-sm font-bold min-w-[60px] text-right">Hourly Rate</h3>
-              <div className="flex gap-3 pl-3 w-[35px]"></div>
+              <div className="flex gap-3 pl-3 w-[56px]"></div>
             </div>}
           </div>
         </div>
