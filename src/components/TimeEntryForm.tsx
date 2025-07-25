@@ -72,7 +72,7 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
           </div>
           <div className="flex items-start gap-2.5 self-stretch px-5 py-1.5">
             <input id="task" type="text" placeholder="Doing what?" value={formData.task} onChange={e => handleInputChange('task', e.target.value)} className="flex-[1_0_0] text-[#09121F] text-[15px] font-normal leading-5 tracking-[0.1px] bg-transparent border-none outline-none placeholder:text-[#BFBFBF]" />
-            <button type="button" className="text-[#09121F] text-right text-[15px] font-normal leading-5 underline decoration-solid decoration-auto underline-offset-auto" aria-label="Add new task">
+            <button type="button" className="text-[#BFBFBF] text-right text-[15px] font-normal leading-5 underline decoration-solid decoration-auto underline-offset-auto" aria-label="Add new task">
               + Task
             </button>
           </div>
