@@ -78,7 +78,7 @@ export const RecordButton: React.FC<RecordButtonProps> = ({
             <div
               dangerouslySetInnerHTML={{
                 __html: `<svg width="220" height="221" viewBox="0 0 220 221" fill="none" xmlns="http://www.w3.org/2000/svg" class="record-button max-sm:w-[180px] max-sm:h-[180px]" style="width: 220px; height: 220px; flex-shrink: 0;">
-                  <path d="M110 0.5C170.753 0.5 220 49.747 220 110.5C220 171.253 170.753 220.5 110 220.5C91.278 220.5 73.645 215.825 58.212 207.575L0 220.5L12.936 162.31C4.686 146.866 0 129.233 0 110.5C0 49.747 49.247 0.5 110 0.5Z" fill="${isPressed ? '#BFBFBF' : '#FF4015'}"/>
+                  <path d="M110 0.5C170.753 0.5 220 49.747 220 110.5C220 171.253 170.753 220.5 110 220.5C91.278 220.5 73.645 215.825 58.212 207.575L0 220.5L12.936 162.31C4.686 146.866 0 129.233 0 110.5C0 49.747 49.247 0.5 110 0.5Z" fill="${isPressed ? '#BFBFBF' : settings.accentColor}"/>
                   <path d="M110 0.5C170.753 0.5 220 49.747 220 110.5C220 171.253 170.753 220.5 110 220.5C91.278 220.5 73.645 215.825 58.212 207.575L0 220.5L12.936 162.31C4.686 146.866 0 129.233 0 110.5C0 49.747 49.247 0.5 110 0.5ZM110 22.5C61.402 22.5 22 61.902 22 110.5C22 125.185 25.586 139.298 32.34 151.926L36.19 159.12L28.974 191.526L61.402 184.332L68.585 188.171C81.213 194.925 95.315 198.5 110 198.5C158.598 198.5 198 159.098 198 110.5C198 61.902 158.598 22.5 110 22.5Z" fill="#09121F"/>
                 </svg>`,
               }}
@@ -105,7 +105,7 @@ export const RecordButton: React.FC<RecordButtonProps> = ({
             </span>
             <div
               dangerouslySetInnerHTML={{
-                __html: `<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" class="speech-bubble-1" style="width: 12px; height: 12px; aspect-ratio: 1/1; fill: #FF4015; margin: 0 2px;"> <path d="M5.75 0.5C8.78765 0.5 11.25 2.96235 11.25 6C11.25 9.03765 8.78765 11.5 5.75 11.5C4.8139 11.5 3.93225 11.2663 3.1606 10.8538L0.25 11.5L0.8968 8.5905C0.4843 7.8183 0.25 6.93665 0.25 6C0.25 2.96235 2.71235 0.5 5.75 0.5Z" fill="#FF4015"></path> </svg>`,
+                __html: `<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" class="speech-bubble-1" style="width: 12px; height: 12px; aspect-ratio: 1/1; fill: ${settings.accentColor}; margin: 0 2px;"> <path d="M5.75 0.5C8.78765 0.5 11.25 2.96235 11.25 6C11.25 9.03765 8.78765 11.5 5.75 11.5C4.8139 11.5 3.93225 11.2663 3.1606 10.8538L0.25 11.5L0.8968 8.5905C0.4843 7.8183 0.25 6.93665 0.25 6C0.25 2.96235 2.71235 0.5 5.75 0.5Z" fill="${settings.accentColor}"></path> </svg>`,
               }}
             />
           </div>
@@ -115,7 +115,7 @@ export const RecordButton: React.FC<RecordButtonProps> = ({
           <div
             className="w-fit"
             dangerouslySetInnerHTML={{
-              __html: `<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" class="speech-bubble-2" style="width: 12px; height: 12px; aspect-ratio: 1/1; fill: #FF4015; margin: 0 2px;"> <path d="M5.75 0.5C8.78765 0.5 11.25 2.96235 11.25 6C11.25 9.03765 8.78765 11.5 5.75 11.5C4.8139 11.5 3.93225 11.2663 3.1606 10.8538L0.25 11.5L0.8968 8.5905C0.4843 7.8183 0.25 6.93665 0.25 6C0.25 2.96235 2.71235 0.5 5.75 0.5Z" fill="#FF4015"></path> </svg>`,
+              __html: `<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" class="speech-bubble-2" style="width: 12px; height: 12px; aspect-ratio: 1/1; fill: ${settings.accentColor}; margin: 0 2px;"> <path d="M5.75 0.5C8.78765 0.5 11.25 2.96235 11.25 6C11.25 9.03765 8.78765 11.5 5.75 11.5C4.8139 11.5 3.93225 11.2663 3.1606 10.8538L0.25 11.5L0.8968 8.5905C0.4843 7.8183 0.25 6.93665 0.25 6C0.25 2.96235 2.71235 0.5 5.75 0.5Z" fill="${settings.accentColor}"></path> </svg>`,
             }}
           />
           <span className="text-[#09121F] text-[15px] italic font-black leading-[15px] tracking-[0.2px] mr-0.5">
@@ -124,7 +124,7 @@ export const RecordButton: React.FC<RecordButtonProps> = ({
           <div className="flex items-center">
             <div
               dangerouslySetInnerHTML={{
-                __html: `<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" class="speech-bubble-3" style="width: 12px; height: 12px; aspect-ratio: 1/1; fill: #FF4015; margin: 0 2px;"> <path d="M5.75 0.5C8.78765 0.5 11.25 2.96235 11.25 6C11.25 9.03765 8.78765 11.5 5.75 11.5C4.8139 11.5 3.93225 11.2663 3.1606 10.8538L0.25 11.5L0.8968 8.5905C0.4843 7.8183 0.25 6.93665 0.25 6C0.25 2.96235 2.71235 0.5 5.75 0.5Z" fill="#FF4015"></path> </svg>`,
+                __html: `<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" class="speech-bubble-3" style="width: 12px; height: 12px; aspect-ratio: 1/1; fill: ${settings.accentColor}; margin: 0 2px;"> <path d="M5.75 0.5C8.78765 0.5 11.25 2.96235 11.25 6C11.25 9.03765 8.78765 11.5 5.75 11.5C4.8139 11.5 3.93225 11.2663 3.1606 10.8538L0.25 11.5L0.8968 8.5905C0.4843 7.8183 0.25 6.93665 0.25 6C0.25 2.96235 2.71235 0.5 5.75 0.5Z" fill="${settings.accentColor}"></path> </svg>`,
               }}
             />
             <span className="text-[#09121F] text-[15px] italic font-black leading-[15px] tracking-[0.2px]">

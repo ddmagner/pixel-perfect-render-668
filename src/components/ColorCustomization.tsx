@@ -16,6 +16,23 @@ export const ColorCustomization: React.FC = () => {
     // Update CSS custom properties for immediate visual feedback
     document.documentElement.style.setProperty('--accent-color', color);
 
+    // Update all elements that currently use #FF4015
+    const elementsToUpdate = document.querySelectorAll('[fill="#FF4015"], [style*="fill: #FF4015"]');
+    elementsToUpdate.forEach((element) => {
+      if (element instanceof SVGElement || element instanceof HTMLElement) {
+        element.setAttribute('fill', color);
+        if (element.style.fill) {
+          element.style.fill = color;
+        }
+      }
+    });
+
+    // Update the main speech bubble background color
+    const speechBubblePath = document.querySelector('path[fill="#FF4015"]');
+    if (speechBubblePath) {
+      speechBubblePath.setAttribute('fill', color);
+    }
+
     // Sync widget data for iOS widget
     syncWidgetData({
       accentColor: color
