@@ -38,6 +38,16 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
   }, [transcript]);
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Validate that all fields have data
+    if (!formData.duration.trim() || !formData.task.trim() || !formData.project.trim()) {
+      toast({
+        description: "Please fill in all fields.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     onSubmit(formData);
     
     // Show toast notification
