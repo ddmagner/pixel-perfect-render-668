@@ -6,7 +6,7 @@ import type {
 } from "@/components/ui/toast"
 
 const TOAST_LIMIT = 1
-const TOAST_REMOVE_DELAY = 1000000
+const TOAST_REMOVE_DELAY = 1600
 
 type ToasterToast = ToastProps & {
   id: string
@@ -163,11 +163,7 @@ function toast({ ...props }: Toast) {
     },
   })
 
-  // Handle auto-dismiss with custom duration
-  const toastDuration = props.duration || 3000
-  setTimeout(() => {
-    dismiss()
-  }, toastDuration)
+  // Radix will auto-dismiss via duration and call onOpenChange to dismiss
 
   return {
     id: id,
