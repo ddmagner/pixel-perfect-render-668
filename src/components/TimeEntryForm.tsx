@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { parseTimeEntryFromSpeech } from '@/utils/speechParser';
 import { useApp } from '@/context/AppContext';
+import { useToast } from '@/hooks/use-toast';
 interface TimeEntryData {
   duration: string;
   task: string;
@@ -17,6 +18,7 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
   const {
     settings
   } = useApp();
+  const { toast } = useToast();
   const [formData, setFormData] = useState<TimeEntryData>({
     duration: '',
     task: '',
@@ -37,6 +39,18 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     onSubmit(formData);
+    
+    // Show toast notification
+    toast({
+      description: "Time added.",
+    });
+    
+    // Clear form fields
+    setFormData({
+      duration: '',
+      task: '',
+      project: ''
+    });
   };
   const handleInputChange = (field: keyof TimeEntryData, value: string) => {
     setFormData(prev => ({
