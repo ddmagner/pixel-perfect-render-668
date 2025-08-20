@@ -223,7 +223,7 @@ export const TimeTally: React.FC = () => {
       {/* Table Header */}
       <div className="w-full px-5">
         <div className={`grid ${gridCols} gap-4 h-[32px] items-center`}>
-          {headers.map((header, index) => <span key={header} className={`text-[#09121F] text-sm font-bold text-right`}>
+          {headers.map((header, index) => <span key={header} className={`text-[#09121F] text-sm font-bold ${(header === 'Project' || header === 'Task') ? 'text-left' : 'text-right'}`}>
               {header}
             </span>)}
         </div>
