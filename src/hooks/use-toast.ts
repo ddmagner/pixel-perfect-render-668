@@ -156,14 +156,17 @@ function toast({ ...props }: Toast) {
       ...props,
       id,
       open: true,
-      duration: props.duration || 3000, // Set Radix UI duration
       onOpenChange: (open) => {
         if (!open) dismiss()
       },
     },
   })
 
-  // Radix will auto-dismiss via duration and call onOpenChange to dismiss
+  // Auto-dismiss after specified duration
+  const toastDuration = props.duration || 3000
+  setTimeout(() => {
+    dismiss()
+  }, toastDuration)
 
   return {
     id: id,
