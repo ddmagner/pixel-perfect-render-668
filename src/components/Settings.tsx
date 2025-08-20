@@ -49,7 +49,7 @@ export const Settings: React.FC = () => {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-[#09121F] text-[28px] font-bold leading-8">Coloring time</h1>
-              <p className="text-[#BFBFBF] text-sm underline cursor-pointer" onClick={() => setShowColorOverlay(true)}>
+              <p className="text-[#09121F] text-sm underline cursor-pointer" onClick={() => setShowColorOverlay(true)}>
                 Customize the app accent color
               </p>
             </div>
