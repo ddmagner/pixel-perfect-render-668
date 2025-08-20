@@ -53,7 +53,7 @@ export const ColorCustomization: React.FC = () => {
           const col = i % 10;
           const row = Math.floor(i / 10) + 1; // Start from row 1 instead of row 0
           const hue = col * 36 % 360; // 360/10 colors = 36° per column
-          const lightness = 100 - row * 100 / 7; // 7 rows of decreasing lightness
+          const lightness = 100 - row * 100 / 9; // Keep original 9-row lightness calculation
           const color = `hsl(${hue} 100% ${lightness}%)`;
           return <button key={i} onClick={() => handleColorSelect(color)} className="w-full h-full transition-transform hover:scale-110 hover:z-10" style={{
             backgroundColor: color
