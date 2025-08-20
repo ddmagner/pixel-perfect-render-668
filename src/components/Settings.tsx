@@ -73,7 +73,7 @@ export const Settings: React.FC = () => {
                 Done
               </button>
             </div>
-            <ColorCustomization />
+            <ColorCustomization onClose={() => setShowColorOverlay(false)} />
           </div>
         </div>}
     </div>;

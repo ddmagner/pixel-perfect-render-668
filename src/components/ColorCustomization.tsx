@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useApp } from '@/context/AppContext';
 import { syncWidgetData } from '@/utils/widgetSync';
-export const ColorCustomization: React.FC = () => {
+export const ColorCustomization: React.FC<{ onClose?: () => void }> = ({ onClose }) => {
   const {
     settings,
     updateSettings
@@ -64,7 +64,7 @@ export const ColorCustomization: React.FC = () => {
 
       {/* Save Button */}
       <div className="p-5">
-        <button onClick={() => handleColorSelect(selectedColor)} className="w-full py-3 px-4 font-bold text-[15px] transition-colors text-white hover:opacity-90" style={{ backgroundColor: '#09121F' }}>
+        <button onClick={() => { handleColorSelect(selectedColor); onClose?.(); }} className="w-full py-3 px-4 font-bold text-[15px] transition-colors text-white hover:opacity-90" style={{ backgroundColor: '#09121F' }}>
           Save
         </button>
       </div>
