@@ -44,6 +44,7 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
       toast({
         description: "Please fill in all fields.",
         variant: "destructive",
+        duration: 3000,
       });
       return;
     }
@@ -53,6 +54,7 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
     // Show toast notification
     toast({
       description: "Time added.",
+      duration: 3000,
     });
     
     // Clear form fields
