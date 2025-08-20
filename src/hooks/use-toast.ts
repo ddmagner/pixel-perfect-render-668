@@ -13,6 +13,7 @@ type ToasterToast = ToastProps & {
   title?: React.ReactNode
   description?: React.ReactNode
   action?: ToastActionElement
+  duration?: number
 }
 
 const actionTypes = {
@@ -155,6 +156,7 @@ function toast({ ...props }: Toast) {
       ...props,
       id,
       open: true,
+      duration: props.duration || 3000, // Set Radix UI duration
       onOpenChange: (open) => {
         if (!open) dismiss()
       },
@@ -162,11 +164,10 @@ function toast({ ...props }: Toast) {
   })
 
   // Handle auto-dismiss with custom duration
-  if (props.duration !== undefined) {
-    setTimeout(() => {
-      dismiss()
-    }, props.duration)
-  }
+  const toastDuration = props.duration || 3000
+  setTimeout(() => {
+    dismiss()
+  }, toastDuration)
 
   return {
     id: id,
