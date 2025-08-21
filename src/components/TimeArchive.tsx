@@ -8,7 +8,7 @@ export const TimeArchive: React.FC = () => {
   };
   return <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-[#09121F] text-[28px] font-bold leading-8">View time archive</h1>
+        <h1 className="text-[#09121F] text-[28px] font-bold leading-8">Time archive</h1>
         <Archive className="h-5 w-5 text-[#09121F]" />
       </div>
     </div>;
