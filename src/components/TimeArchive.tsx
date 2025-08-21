@@ -16,9 +16,9 @@ export const TimeArchive: React.FC = () => {
         onClick={handleViewArchive}
       >
         <div className="flex items-center gap-3">
-          <h3 className="text-lg font-semibold text-[#09121F]">
+          <h1 className="text-lg font-semibold text-[#09121F]">
             View archive
-          </h3>
+          </h1>
         </div>
         <div className="flex items-center gap-2">
           <Archive className="h-5 w-5 text-[#09121F]" />
