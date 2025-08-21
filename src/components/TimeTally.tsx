@@ -316,7 +316,7 @@ export const TimeTally: React.FC = () => {
             </Button>
           </div>
         ) : (
-          <div className="flex items-baseline justify-between h-full">
+          <div className="flex items-baseline justify-between h-full relative z-[60] bg-white">
             <h1 className="text-[#09121F] text-[28px] font-bold leading-8">Where time went</h1>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
