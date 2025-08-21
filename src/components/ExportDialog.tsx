@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Drawer, DrawerContent } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
-import { Checkbox } from '@/components/ui/checkbox';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Input } from '@/components/ui/input';
 import { TimeEntry, AppSettings, ViewMode } from '@/types';
 import { generatePDF } from '@/utils/pdfGenerator';
@@ -27,20 +27,13 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
   viewMode
 }) => {
   const [isPdfFormat, setIsPdfFormat] = useState(true);
-  const [downloadToDevice, setDownloadToDevice] = useState(true);
-  const [shareViaEmail, setShareViaEmail] = useState(false);
-  const [printDocument, setPrintDocument] = useState(false);
+  const [exportMethod, setExportMethod] = useState<'download' | 'email' | 'print'>('download');
   const [fileName, setFileName] = useState(`${settings.userProfile.name || 'User'} Time Report ${format(new Date(), 'yyyy-MM-dd')}`);
   const [isExporting, setIsExporting] = useState(false);
 
   const handleExport = async () => {
     if (timeEntries.length === 0) {
       alert('No time entries to export');
-      return;
-    }
-
-    if (!downloadToDevice && !shareViaEmail && !printDocument) {
-      alert('Please select at least one export method');
       return;
     }
 
@@ -61,7 +54,7 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
       const finalFileName = `${fileName}.${fileExtension}`;
       const url = URL.createObjectURL(blob);
 
-      if (downloadToDevice) {
+      if (exportMethod === 'download') {
         const a = document.createElement('a');
         a.href = url;
         a.download = finalFileName;
@@ -70,7 +63,7 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
         document.body.removeChild(a);
       }
 
-      if (shareViaEmail) {
+      if (exportMethod === 'email') {
         if (await Share.canShare()) {
           await Share.share({
             title: finalFileName,
@@ -84,7 +77,7 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
         }
       }
 
-      if (printDocument) {
+      if (exportMethod === 'print') {
         if (isPdfFormat) {
           const newWindow = window.open(url, '_blank');
           if (newWindow) {
@@ -148,16 +141,15 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
             <h3 className="text-lg font-semibold mb-4">Export Method</h3>
             
             {/* Export Methods */}
-            <div className="space-y-4">
+            <RadioGroup value={exportMethod} onValueChange={(value) => setExportMethod(value as 'download' | 'email' | 'print')}>
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
                   <Download className="h-5 w-5" />
                   <span className="text-base">Download to device</span>
                 </div>
-                <Checkbox 
-                  checked={downloadToDevice}
-                  onCheckedChange={(checked) => setDownloadToDevice(checked === true)}
-                  className="h-6 w-6 rounded-none border-2 border-foreground data-[state=checked]:bg-foreground"
+                <RadioGroupItem 
+                  value="download"
+                  className="h-6 w-6 rounded-full border-2 border-foreground data-[state=checked]:bg-foreground"
                 />
               </div>
               
@@ -166,10 +158,9 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
                   <Mail className="h-5 w-5" />
                   <span className="text-base">Share via email</span>
                 </div>
-                <Checkbox 
-                  checked={shareViaEmail}
-                  onCheckedChange={(checked) => setShareViaEmail(checked === true)}
-                  className="h-6 w-6 rounded-none border-2 border-foreground data-[state=checked]:bg-foreground"
+                <RadioGroupItem 
+                  value="email"
+                  className="h-6 w-6 rounded-full border-2 border-foreground data-[state=checked]:bg-foreground"
                 />
               </div>
               
@@ -178,13 +169,12 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
                   <Printer className="h-5 w-5" />
                   <span className="text-base">Print</span>
                 </div>
-                <Checkbox 
-                  checked={printDocument}
-                  onCheckedChange={(checked) => setPrintDocument(checked === true)}
-                  className="h-6 w-6 rounded-none border-2 border-foreground data-[state=checked]:bg-foreground"
+                <RadioGroupItem 
+                  value="print"
+                  className="h-6 w-6 rounded-full border-2 border-foreground data-[state=checked]:bg-foreground"
                 />
               </div>
-            </div>
+            </RadioGroup>
           </div>
 
           {/* Divider */}
