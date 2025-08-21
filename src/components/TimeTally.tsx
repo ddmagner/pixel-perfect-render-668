@@ -273,7 +273,7 @@ export const TimeTally: React.FC = () => {
       <div className="px-5 pt-0.5 pb-1 h-[2.75rem]">
         {selection.hasAnySelected ? (
           <div className="flex items-center gap-2 bg-gray-200 w-full h-full py-2 px-3 justify-between">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-4 pl-8">
               <Button
                 size="sm"
                 variant="ghost"
@@ -281,7 +281,7 @@ export const TimeTally: React.FC = () => {
                 disabled={selection.selectedCount !== 1}
                 className="bg-transparent text-black hover:text-gray-600 hover:bg-transparent border-none shadow-none"
               >
-                <Pencil className="h-4 w-4 mr-0.5" />
+                <Pencil className="h-4 w-4" />
                 Edit
               </Button>
               
@@ -291,7 +291,7 @@ export const TimeTally: React.FC = () => {
                 onClick={() => setShowDeleteDialog(true)}
                 className="bg-transparent text-black hover:text-gray-600 hover:bg-transparent border-none shadow-none"
               >
-                <Trash2 className="h-4 w-4 mr-0.5" />
+                <Trash2 className="h-4 w-4" />
                 Delete
               </Button>
               
@@ -301,7 +301,7 @@ export const TimeTally: React.FC = () => {
                 onClick={() => setShowArchiveDialog(true)}
                 className="bg-transparent text-black hover:text-gray-600 hover:bg-transparent border-none shadow-none"
               >
-                <Archive className="h-4 w-4 mr-0.5" />
+                <Archive className="h-4 w-4" />
                 Archive
               </Button>
             </div>
