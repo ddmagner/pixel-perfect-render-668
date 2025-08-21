@@ -317,10 +317,10 @@ export const TimeTally: React.FC = () => {
       {/* Table Header */}
       <div className="w-full px-5">
         <div className={`grid ${gridColsWithSelection} h-[32px] items-center`} style={{
-        gridTemplateColumns: '16px 2fr 2fr 1fr' + (viewMode === 'invoice' ? ' calc(1fr + 20px)' : ''),
+        gridTemplateColumns: '32px 2fr 2fr 1fr' + (viewMode === 'invoice' ? ' calc(1fr + 20px)' : ''),
         gap: '0'
       }}>
-          <div className="flex items-center w-[16px]">
+          <div className="flex items-center w-[32px]">
             <div className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${isAllSelected ? 'bg-gray-300' : 'bg-white'}`} onClick={() => selection.toggleSelectAll(allEntryIds)}>
               {isAllSelected && <div className="w-2 h-2 rounded-full bg-black"></div>}
             </div>
@@ -392,7 +392,7 @@ export const TimeTally: React.FC = () => {
                       </div>) : sortOption === 'date' && group.projects ? <div>
                       {group.projects.map((project: any, projectIndex: number) => <div key={`date-project-${project.name}-${projectIndex}`}>
                           {project.entries.map((entry: TimeEntry) => <div key={entry.id} className={`grid ${gridColsWithSelection} h-[32px] items-center hover:bg-gray-50`} style={{
-                  gridTemplateColumns: '16px 2fr 2fr 1fr' + (viewMode === 'invoice' ? ' calc(1fr + 20px)' : ''),
+                  gridTemplateColumns: '32px 2fr 2fr 1fr' + (viewMode === 'invoice' ? ' calc(1fr + 20px)' : ''),
                   gap: '0'
                 }}>
                               <div className="flex items-center w-[32px]">
