@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import { useApp } from '@/context/AppContext';
 import { TimeEntry } from '@/types';
 import { format } from 'date-fns';
-import { Trash2, RotateCcw, Archive, ArrowLeft } from 'lucide-react';
+import { Trash2, RotateCcw, Archive, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { useSelection } from '@/hooks/useSelection';
 import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
@@ -20,7 +21,9 @@ export const TimeArchivePage: React.FC = () => {
     updateTimeEntry,
     settings,
     viewMode,
-    setViewMode
+    setViewMode,
+    sortOption,
+    setSortOption
   } = useApp();
   const {
     toast
@@ -75,6 +78,20 @@ export const TimeArchivePage: React.FC = () => {
   const getTaskRate = (task: string): number => {
     const taskType = settings.taskTypes.find(t => t.name.toLowerCase() === task.toLowerCase());
     return taskType?.hourlyRate || 0;
+  };
+
+  // Get sort option display text
+  const getSortOptionText = () => {
+    switch (sortOption) {
+      case 'project':
+        return 'By Project';
+      case 'date':
+        return 'By Date';
+      case 'task':
+        return 'By Task';
+      default:
+        return 'By Date';
+    }
   };
 
   const isAllSelected = allArchivedIds.length > 0 && allArchivedIds.every(id => selection.isSelected(id));
@@ -137,22 +154,31 @@ export const TimeArchivePage: React.FC = () => {
                   <Button size="sm" variant="ghost" onClick={selection.clearSelection} className="bg-transparent text-black hover:text-gray-600 hover:bg-transparent border-none shadow-none p-1">
                     <span className="text-sm">Clear</span>
                   </Button>
-                </div>
-              </div>}
-            <div className="flex items-center justify-between h-full">
-              <div className="flex items-center gap-3">
-                <Button 
-                  variant="ghost" 
-                  size="sm" 
-                  onClick={() => navigate('/')}
-                  className="p-1 hover:bg-transparent"
-                >
-                  <ArrowLeft className="h-5 w-5 text-[#09121F]" />
-                </Button>
-                <h1 className="text-[#09121F] text-[28px] font-bold leading-8">Time Archive</h1>
-              </div>
             </div>
-          </div>
+          </div>}
+        <div className="flex items-baseline justify-between h-full">
+          <h1 className="text-[#09121F] text-[28px] font-bold leading-8">Time Archive</h1>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="flex items-center gap-2 text-sm font-medium text-[#09121F] hover:bg-gray-50">
+                {getSortOptionText()}
+                <ChevronDown className="h-4 w-4" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="bg-white border border-[#09121F] rounded-lg shadow-lg">
+              <DropdownMenuItem onClick={() => setSortOption('project')} className="text-sm font-medium text-[#09121F] hover:bg-gray-50 cursor-pointer">
+                By Project
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setSortOption('date')} className="text-sm font-medium text-[#09121F] hover:bg-gray-50 cursor-pointer">
+                By Date
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setSortOption('task')} className="text-sm font-medium text-[#09121F] hover:bg-gray-50 cursor-pointer">
+                By Task
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </div>
 
           {/* Divider */}
           <div className="h-px bg-[#09121F] mx-5 mb-6" />
@@ -206,9 +232,20 @@ export const TimeArchivePage: React.FC = () => {
               </>}
           </div>
 
+          {/* Exit Button */}
+          <div className="p-5">
+            <Button 
+              variant="outline" 
+              onClick={() => navigate('/')} 
+              className="w-full h-12 text-base font-medium rounded-none border-2 border-foreground"
+            >
+              Exit
+            </Button>
+          </div>
+
           {/* Export Button - Fixed at bottom */}
           {archivedEntries.length > 0 && (
-            <div className="p-5">
+            <div className="px-5 pb-5">
               <button 
                 onClick={() => setIsExportDialogOpen(true)} 
                 className="w-full text-white py-3.5 font-bold text-sm transition-colors" 
