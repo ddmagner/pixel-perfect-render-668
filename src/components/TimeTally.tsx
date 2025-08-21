@@ -270,7 +270,7 @@ export const TimeTally: React.FC = () => {
       <div className="h-px bg-[#09121F] mx-5 mb-6" />
 
       {/* Header / Selection Toolbar */}
-      <div className="sticky top-[180px] z-[60] bg-white px-5 pt-0.5 pb-1 h-[2.75rem]">
+      <div className="px-5 pt-0.5 pb-1 h-[2.75rem]">
         {selection.hasAnySelected ? (
           <div className="fixed left-1/2 transform -translate-x-1/2 w-[calc(100%-2.5rem)] max-w-md flex items-center gap-2 bg-gray-50 h-[2.75rem] py-2 pl-0 pr-3 justify-between rounded z-50" style={{ top: '180px', boxShadow: '0 -3px 8px -1px rgba(0, 0, 0, 0.2), 0 3px 8px -1px rgba(0, 0, 0, 0.2)' }}>
             <div className="flex items-center gap-4" style={{ paddingLeft: '32px' }}>
@@ -316,7 +316,7 @@ export const TimeTally: React.FC = () => {
             </Button>
           </div>
         ) : (
-          <div className="flex items-baseline justify-between h-full relative z-[60] bg-white">
+          <div className="flex items-baseline justify-between h-full">
             <h1 className="text-[#09121F] text-[28px] font-bold leading-8">Where time went</h1>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
