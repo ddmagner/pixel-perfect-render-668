@@ -250,12 +250,13 @@ const TimeArchiveContent: React.FC = () => {
         >
           Export/Share/Print
         </button>
-        <button 
+        <Button 
+          variant="outline" 
           onClick={handleExit} 
-          className="w-full text-black py-3.5 font-bold text-sm transition-colors bg-white border border-black"
+          className="w-full h-12 text-base font-medium rounded-none border-2 border-foreground"
         >
           Exit
-        </button>
+        </Button>
       </div>
 
       {/* Export Dialog */}
