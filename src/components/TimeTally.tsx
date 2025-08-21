@@ -2,9 +2,24 @@ import React, { useMemo, useState } from 'react';
 import { useApp } from '@/context/AppContext';
 import { TimeEntry } from '@/types';
 import { format } from 'date-fns';
-import { ChevronDown, Pencil, Trash2 } from 'lucide-react';
+import { ChevronDown, Pencil, Trash2, Archive, Edit } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { ExportDialog } from '@/components/ExportDialog';
+import { EditTimeEntryDialog } from '@/components/EditTimeEntryDialog';
+import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { useSelection } from '@/hooks/useSelection';
+import { useToast } from '@/hooks/use-toast';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 export const TimeTally: React.FC = () => {
   const {
     timeEntries,
@@ -12,10 +27,20 @@ export const TimeTally: React.FC = () => {
     setSortOption,
     viewMode,
     setViewMode,
-    settings
+    settings,
+    deleteTimeEntries,
+    archiveTimeEntries
   } = useApp();
   
   const [isExportDialogOpen, setIsExportDialogOpen] = useState(false);
+  const [editingEntry, setEditingEntry] = useState<TimeEntry | null>(null);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [showArchiveDialog, setShowArchiveDialog] = useState(false);
+  const selection = useSelection();
+  const { toast } = useToast();
+
+  // Filter out archived entries
+  const activeTimeEntries = timeEntries.filter(entry => !entry.archived);
 
   // Format hours as decimal
   const formatHours = (hours: number): string => {
@@ -46,7 +71,7 @@ export const TimeTally: React.FC = () => {
 
   // Group and sort entries based on sort option
   const organizedData = useMemo(() => {
-    if (timeEntries.length === 0) return {
+    if (activeTimeEntries.length === 0) return {
       groups: [],
       total: {
         hours: 0,
@@ -56,7 +81,7 @@ export const TimeTally: React.FC = () => {
     let groups: any[] = [];
     let totalHours = 0;
     let totalFee = 0;
-    timeEntries.forEach(entry => {
+    activeTimeEntries.forEach(entry => {
       totalHours += entry.duration;
       totalFee += calculateFee(entry);
     });
@@ -67,7 +92,7 @@ export const TimeTally: React.FC = () => {
           [key: string]: TimeEntry[];
         };
       } = {};
-      timeEntries.forEach(entry => {
+      activeTimeEntries.forEach(entry => {
         const clientName = getClientByProject(entry.project) || 'No Client';
         const projectName = entry.project;
         if (!clientGroups[clientName]) clientGroups[clientName] = {};
@@ -94,7 +119,7 @@ export const TimeTally: React.FC = () => {
           [key: string]: TimeEntry[];
         };
       } = {};
-      timeEntries.forEach(entry => {
+      activeTimeEntries.forEach(entry => {
         const dateKey = format(new Date(entry.date), 'MM/dd');
         const projectKey = entry.project;
         if (!dateGroups[dateKey]) dateGroups[dateKey] = {};
@@ -123,7 +148,7 @@ export const TimeTally: React.FC = () => {
       const taskGroups: {
         [key: string]: TimeEntry[];
       } = {};
-      timeEntries.forEach(entry => {
+      activeTimeEntries.forEach(entry => {
         const taskName = entry.task;
         if (!taskGroups[taskName]) taskGroups[taskName] = [];
         taskGroups[taskName].push(entry);
@@ -145,7 +170,52 @@ export const TimeTally: React.FC = () => {
         fee: totalFee
       }
     };
-  }, [timeEntries, sortOption, viewMode, settings]);
+  }, [activeTimeEntries, sortOption, viewMode, settings]);
+
+  // Get all entry IDs for selection
+  const allEntryIds = useMemo(() => {
+    const ids: string[] = [];
+    organizedData.groups.forEach(group => {
+      if (group.projects) {
+        group.projects.forEach((project: any) => {
+          project.entries.forEach((entry: TimeEntry) => ids.push(entry.id));
+        });
+      } else if (group.entries) {
+        group.entries.forEach((entry: TimeEntry) => ids.push(entry.id));
+      }
+    });
+    return ids;
+  }, [organizedData]);
+
+  const handleEdit = () => {
+    if (selection.selectedCount === 1) {
+      const entryId = selection.selectedIds[0];
+      const entry = activeTimeEntries.find(e => e.id === entryId);
+      if (entry) {
+        setEditingEntry(entry);
+      }
+    }
+  };
+
+  const handleDelete = () => {
+    deleteTimeEntries(selection.selectedIds);
+    selection.clearSelection();
+    setShowDeleteDialog(false);
+    toast({
+      title: "Entries Deleted",
+      description: `${selection.selectedCount} ${selection.selectedCount === 1 ? 'entry' : 'entries'} deleted`
+    });
+  };
+
+  const handleArchive = () => {
+    archiveTimeEntries(selection.selectedIds);
+    selection.clearSelection();
+    setShowArchiveDialog(false);
+    toast({
+      title: "Entries Archived",
+      description: `${selection.selectedCount} ${selection.selectedCount === 1 ? 'entry' : 'entries'} moved to archive`
+    });
+  };
   const handleExport = () => {
     setIsExportDialogOpen(true);
   };
@@ -177,6 +247,9 @@ export const TimeTally: React.FC = () => {
   };
   const headers = getTableHeaders();
   const gridCols = viewMode === 'invoice' ? 'grid-cols-4' : 'grid-cols-3';
+  const gridColsWithSelection = viewMode === 'invoice' ? 'grid-cols-5' : 'grid-cols-4';
+  
+  const isAllSelected = allEntryIds.length > 0 && allEntryIds.every(id => selection.isSelected(id));
   return <div className="flex flex-col h-full w-full font-gilroy">
       {/* Mode Toggle */}
       <div className="flex justify-center items-center w-full px-5 py-4">
@@ -220,9 +293,59 @@ export const TimeTally: React.FC = () => {
         </DropdownMenu>
       </div>
 
+      {/* Selection Toolbar */}
+      {selection.hasAnySelected && (
+        <div className="flex items-center gap-2 mx-5 mb-4 p-3 bg-blue-50 rounded-lg">
+          <span className="text-sm font-medium text-blue-900">
+            {selection.selectedCount} selected
+          </span>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={handleEdit}
+            disabled={selection.selectedCount !== 1}
+            className="text-green-600 hover:text-green-700 disabled:opacity-50"
+          >
+            <Edit className="h-4 w-4 mr-1" />
+            Edit
+          </Button>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => setShowDeleteDialog(true)}
+            className="text-red-600 hover:text-red-700"
+          >
+            <Trash2 className="h-4 w-4 mr-1" />
+            Delete
+          </Button>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => setShowArchiveDialog(true)}
+            className="text-orange-600 hover:text-orange-700"
+          >
+            <Archive className="h-4 w-4 mr-1" />
+            Archive
+          </Button>
+          <Button
+            size="sm"
+            variant="ghost"
+            onClick={selection.clearSelection}
+          >
+            Clear Selection
+          </Button>
+        </div>
+      )}
+
       {/* Table Header */}
       <div className="w-full px-5">
-        <div className={`grid ${gridCols} gap-4 h-[32px] items-center`}>
+        <div className={`grid ${gridColsWithSelection} gap-4 h-[32px] items-center`}>
+          <div className="flex items-center">
+            <Checkbox
+              checked={isAllSelected}
+              onCheckedChange={() => selection.toggleSelectAll(allEntryIds)}
+            />
+          </div>
           {headers.map((header, index) => <span key={header} className={`text-[#09121F] text-sm font-bold ${(header === 'Hours' || header === 'Fee') ? 'text-right' : 'text-left'}`}>
               {header}
             </span>)}
@@ -248,7 +371,13 @@ export const TimeTally: React.FC = () => {
                           {project.name}
                         </div>
                         
-                        {project.entries.map((entry: TimeEntry) => <div key={entry.id} className={`grid ${gridCols} gap-4 h-[32px] items-center`}>
+                        {project.entries.map((entry: TimeEntry) => <div key={entry.id} className={`grid ${gridColsWithSelection} gap-4 h-[32px] items-center hover:bg-gray-50`}>
+                            <div className="flex items-center">
+                              <Checkbox
+                                checked={selection.isSelected(entry.id)}
+                                onCheckedChange={() => selection.toggleSelectRecord(entry.id)}
+                              />
+                            </div>
                             <div className="text-[#09121F] text-sm flex items-center">
                               {format(new Date(entry.date), 'MM/dd')}
                             </div>
@@ -264,7 +393,8 @@ export const TimeTally: React.FC = () => {
                           </div>)}
                         
                         <div className="h-px bg-[#09121F]" />
-                        <div className={`grid ${gridCols} gap-4 h-[32px] items-center justify-center`}>
+                        <div className={`grid ${gridColsWithSelection} gap-4 h-[32px] items-center justify-center`}>
+                          <div></div>
                           <div></div>
                           <div className="text-[#09121F] text-sm font-bold flex items-center">Sub-total</div>
                           <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
@@ -277,7 +407,13 @@ export const TimeTally: React.FC = () => {
                         <div className="h-px bg-[#09121F]" />
                       </div>) : sortOption === 'date' && group.projects ? <div>
                       {group.projects.map((project: any, projectIndex: number) => <div key={`date-project-${project.name}-${projectIndex}`}>
-                          {project.entries.map((entry: TimeEntry) => <div key={entry.id} className={`grid ${gridCols} gap-4 h-[32px] items-center`}>
+                          {project.entries.map((entry: TimeEntry) => <div key={entry.id} className={`grid ${gridColsWithSelection} gap-4 h-[32px] items-center hover:bg-gray-50`}>
+                              <div className="flex items-center">
+                                <Checkbox
+                                  checked={selection.isSelected(entry.id)}
+                                  onCheckedChange={() => selection.toggleSelectRecord(entry.id)}
+                                />
+                              </div>
                               <div className="text-[#09121F] text-sm flex items-center">
                                 {entry.project}
                               </div>
@@ -294,7 +430,8 @@ export const TimeTally: React.FC = () => {
                         </div>)}
                       
                       <div className="h-px bg-[#09121F] mt-2" />
-                      <div className={`grid ${gridCols} gap-4 h-[32px] items-center justify-center`}>
+                      <div className={`grid ${gridColsWithSelection} gap-4 h-[32px] items-center justify-center`}>
+                        <div></div>
                         <div></div>
                         <div className="text-[#09121F] text-sm font-bold flex items-center">Sub-total</div>
                         <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
@@ -306,7 +443,13 @@ export const TimeTally: React.FC = () => {
                       </div>
                       <div className="h-px bg-[#09121F]" />
                     </div> : sortOption === 'task' && group.entries ? <div>
-                      {group.entries.map((entry: TimeEntry) => <div key={entry.id} className={`grid ${gridCols} gap-4 h-[32px] items-center`}>
+                      {group.entries.map((entry: TimeEntry) => <div key={entry.id} className={`grid ${gridColsWithSelection} gap-4 h-[32px] items-center hover:bg-gray-50`}>
+                            <div className="flex items-center">
+                              <Checkbox
+                                checked={selection.isSelected(entry.id)}
+                                onCheckedChange={() => selection.toggleSelectRecord(entry.id)}
+                              />
+                            </div>
                             <div className="text-[#09121F] text-sm flex items-center">
                               {format(new Date(entry.date), 'MM/dd')}
                             </div>
@@ -322,7 +465,8 @@ export const TimeTally: React.FC = () => {
                           </div>)}
                       
                       <div className="h-px bg-[#09121F] mt-2" />
-                      <div className={`grid ${gridCols} gap-4 h-[32px] items-center justify-center`}>
+                      <div className={`grid ${gridColsWithSelection} gap-4 h-[32px] items-center justify-center`}>
+                        <div></div>
                         <div></div>
                         <div className="text-[#09121F] text-sm font-bold flex items-center">Sub-total</div>
                         <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
@@ -339,7 +483,8 @@ export const TimeTally: React.FC = () => {
 
             {/* Total */}
             <div className="w-full">
-              <div className={`grid ${gridCols} gap-4 h-[32px] items-center`}>
+              <div className={`grid ${gridColsWithSelection} gap-4 h-[32px] items-center`}>
+                <div className="flex items-center"></div>
                 <div className="flex items-center"></div>
                 <div className="text-[#09121F] text-sm font-bold flex items-center">TOTAL</div>
                 <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
@@ -351,7 +496,7 @@ export const TimeTally: React.FC = () => {
               </div>
               <div className="flex justify-start mt-4">
                 <p className="text-[#09121F] text-sm italic flex items-center gap-1">
-                  Press & hold line items to <Pencil className="h-3.5 w-3.5 px-px" /> or <Trash2 className="h-3.5 w-3.5 px-px" />
+                  Select records to edit, delete, or archive
                 </p>
               </div>
             </div>
@@ -375,5 +520,48 @@ export const TimeTally: React.FC = () => {
         settings={settings}
         viewMode={viewMode}
       />
+
+      {/* Edit Dialog */}
+      <EditTimeEntryDialog
+        isOpen={!!editingEntry}
+        onClose={() => setEditingEntry(null)}
+        entry={editingEntry}
+      />
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Entries</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to delete {selection.selectedCount} selected {selection.selectedCount === 1 ? 'entry' : 'entries'}? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDelete} className="bg-red-600 hover:bg-red-700">
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Archive Confirmation Dialog */}
+      <AlertDialog open={showArchiveDialog} onOpenChange={setShowArchiveDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Archive Entries</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to archive {selection.selectedCount} selected {selection.selectedCount === 1 ? 'entry' : 'entries'}? You can restore them from the archive later.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleArchive} className="bg-orange-600 hover:bg-orange-700">
+              Archive
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>;
 };

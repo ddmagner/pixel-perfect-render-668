@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { TimeEntrySettings } from './TimeEntrySettings';
 import { UserProfile } from './UserProfile';
 import { ColorCustomization } from './ColorCustomization';
+import { TimeArchive } from './TimeArchive';
 import { useApp } from '@/context/AppContext';
 import { Clock } from 'lucide-react';
 export const Settings: React.FC = () => {
@@ -43,6 +44,11 @@ export const Settings: React.FC = () => {
       <div className="flex-1 overflow-y-auto w-full">
         <TimeEntrySettings />
         <UserProfile />
+        
+        {/* Time Archive Section */}
+        <div className="px-5 py-4 border-t border-gray-200">
+          <TimeArchive />
+        </div>
         
         {/* Coloring Time Section */}
         <div className="px-5 py-4 border-t border-gray-200 pb-4">

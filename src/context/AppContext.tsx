@@ -13,6 +13,8 @@ interface AppContextType {
   setViewMode: (mode: ViewMode) => void;
   deleteTimeEntry: (id: string) => void;
   updateTimeEntry: (id: string, updates: Partial<TimeEntry>) => void;
+  archiveTimeEntries: (ids: string[]) => void;
+  deleteTimeEntries: (ids: string[]) => void;
 }
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
@@ -74,6 +76,16 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     ));
   };
 
+  const archiveTimeEntries = (ids: string[]) => {
+    setTimeEntries(timeEntries.map(entry => 
+      ids.includes(entry.id) ? { ...entry, archived: true } : entry
+    ));
+  };
+
+  const deleteTimeEntries = (ids: string[]) => {
+    setTimeEntries(timeEntries.filter(entry => !ids.includes(entry.id)));
+  };
+
   const value: AppContextType = {
     timeEntries,
     settings,
@@ -85,6 +97,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     setViewMode,
     deleteTimeEntry,
     updateTimeEntry,
+    archiveTimeEntries,
+    deleteTimeEntries,
   };
 
   return (

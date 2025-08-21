@@ -7,6 +7,7 @@ export interface TimeEntry {
   date: string; // ISO date string
   submittedAt: string; // ISO datetime string
   hourlyRate?: number; // for invoice mode
+  archived?: boolean; // for archive functionality
 }
 
 export interface TaskType {
