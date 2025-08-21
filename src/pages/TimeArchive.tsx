@@ -315,10 +315,7 @@ export const TimeArchivePage: React.FC = () => {
               </DropdownMenu>
             </div>
           </div>
-
-          {/* Divider */}
-          <div className="h-px bg-[#09121F] mx-5" />
-
+          
           {/* Table Header */}
           <div className="w-full px-5">
             <div className={`grid ${gridColsWithSelection} h-[32px] items-center`} style={{
