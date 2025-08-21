@@ -52,7 +52,7 @@ export const Settings: React.FC = () => {
         
         {/* Coloring Time Section */}
         <div className="px-5 py-4 pb-4">
-          <div className="h-px bg-[#09121F] mx-5 mb-6" />
+          <div className="h-px bg-[#09121F]" />
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-[#09121F] text-[28px] font-bold leading-8">Coloring time</h1>
