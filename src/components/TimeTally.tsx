@@ -266,7 +266,7 @@ export const TimeTally: React.FC = () => {
           boxShadow: '0 -3px 8px -1px rgba(0, 0, 0, 0.2), 0 3px 8px -1px rgba(0, 0, 0, 0.2)'
         }}>
             <div className="flex items-center gap-2" style={{
-            paddingLeft: '12px'
+            paddingLeft: '32px'
           }}>
               <Button size="sm" variant="ghost" onClick={handleEdit} disabled={selection.selectedCount !== 1} className="bg-transparent text-black hover:text-gray-600 hover:bg-transparent border-none shadow-none pl-0 gap-1 text-xs">
                 <Pencil className="h-3 w-3" />
