@@ -345,7 +345,7 @@ export const TimeTally: React.FC = () => {
 
       {/* Table Header */}
       <div className="w-full px-5">
-        <div className={`grid ${gridColsWithSelection} h-[32px] items-center`} style={{ gridTemplateColumns: '32px 120px 1fr 80px' + (viewMode === 'invoice' ? ' 120px' : ''), gap: '0' }}>
+        <div className={`grid ${gridColsWithSelection} h-[32px] items-center`} style={{ gridTemplateColumns: '32px 1.5fr 1.5fr 1fr' + (viewMode === 'invoice' ? ' 1fr' : ''), gap: '0' }}>
           <div className="flex items-center w-[32px]">
             <div 
               className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${
@@ -383,7 +383,7 @@ export const TimeTally: React.FC = () => {
                           {project.name}
                         </div>
                         
-                        {project.entries.map((entry: TimeEntry) => <div key={entry.id} className={`grid ${gridColsWithSelection} h-[32px] items-center hover:bg-gray-50`} style={{ gridTemplateColumns: '32px 120px 1fr 80px' + (viewMode === 'invoice' ? ' 120px' : ''), gap: '0' }}>
+                        {project.entries.map((entry: TimeEntry) => <div key={entry.id} className={`grid ${gridColsWithSelection} h-[32px] items-center hover:bg-gray-50`} style={{ gridTemplateColumns: '32px 1.5fr 1.5fr 1fr' + (viewMode === 'invoice' ? ' 1fr' : ''), gap: '0' }}>
                             <div className="flex items-center w-[32px]">
                               <div 
                                 className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${
@@ -411,7 +411,7 @@ export const TimeTally: React.FC = () => {
                           </div>)}
                         
                         <div className="h-px bg-[#09121F]" />
-                        <div className={`grid ${gridColsWithSelection} gap-0 h-[32px] items-center`} style={{ gridTemplateColumns: '32px 120px 1fr 80px' + (viewMode === 'invoice' ? ' 120px' : '') }}>
+                        <div className={`grid ${gridColsWithSelection} gap-0 h-[32px] items-center`} style={{ gridTemplateColumns: '32px 1.5fr 1.5fr 1fr' + (viewMode === 'invoice' ? ' 1fr' : '') }}>
                           <div></div>
                           <div></div>
                           <div className="text-[#09121F] text-sm font-bold flex items-center">Sub-total</div>
@@ -425,7 +425,7 @@ export const TimeTally: React.FC = () => {
                         <div className="h-px bg-[#09121F]" />
                       </div>) : sortOption === 'date' && group.projects ? <div>
                       {group.projects.map((project: any, projectIndex: number) => <div key={`date-project-${project.name}-${projectIndex}`}>
-                          {project.entries.map((entry: TimeEntry) => <div key={entry.id} className={`grid ${gridColsWithSelection} h-[32px] items-center hover:bg-gray-50`} style={{ gridTemplateColumns: '32px 120px 1fr 80px' + (viewMode === 'invoice' ? ' 120px' : ''), gap: '0' }}>
+                          {project.entries.map((entry: TimeEntry) => <div key={entry.id} className={`grid ${gridColsWithSelection} h-[32px] items-center hover:bg-gray-50`} style={{ gridTemplateColumns: '32px 1.5fr 1.5fr 1fr' + (viewMode === 'invoice' ? ' 1fr' : ''), gap: '0' }}>
                               <div className="flex items-center w-[32px]">
                                 <div 
                                   className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${
@@ -454,7 +454,7 @@ export const TimeTally: React.FC = () => {
                         </div>)}
                       
                       <div className="h-px bg-[#09121F] mt-2" />
-                      <div className={`grid ${gridColsWithSelection} gap-0 h-[32px] items-center`} style={{ gridTemplateColumns: '32px 120px 1fr 80px' + (viewMode === 'invoice' ? ' 120px' : '') }}>
+                      <div className={`grid ${gridColsWithSelection} gap-0 h-[32px] items-center`} style={{ gridTemplateColumns: '32px 1.5fr 1.5fr 1fr' + (viewMode === 'invoice' ? ' 1fr' : '') }}>
                         <div></div>
                         <div></div>
                         <div className="text-[#09121F] text-sm font-bold flex items-center">Sub-total</div>
@@ -467,7 +467,7 @@ export const TimeTally: React.FC = () => {
                       </div>
                       <div className="h-px bg-[#09121F]" />
                     </div> : sortOption === 'task' && group.entries ? <div>
-                      {group.entries.map((entry: TimeEntry) => <div key={entry.id} className={`grid ${gridColsWithSelection} h-[32px] items-center hover:bg-gray-50`} style={{ gridTemplateColumns: '32px 120px 1fr 80px' + (viewMode === 'invoice' ? ' 120px' : ''), gap: '0' }}>
+                      {group.entries.map((entry: TimeEntry) => <div key={entry.id} className={`grid ${gridColsWithSelection} h-[32px] items-center hover:bg-gray-50`} style={{ gridTemplateColumns: '32px 1.5fr 1.5fr 1fr' + (viewMode === 'invoice' ? ' 1fr' : ''), gap: '0' }}>
                             <div className="flex items-center w-[32px]">
                               <div 
                                 className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${
@@ -495,7 +495,7 @@ export const TimeTally: React.FC = () => {
                           </div>)}
                       
                       <div className="h-px bg-[#09121F] mt-2" />
-                      <div className={`grid ${gridColsWithSelection} gap-0 h-[32px] items-center`} style={{ gridTemplateColumns: '32px 120px 1fr 80px' + (viewMode === 'invoice' ? ' 120px' : '') }}>
+                      <div className={`grid ${gridColsWithSelection} gap-0 h-[32px] items-center`} style={{ gridTemplateColumns: '32px 1.5fr 1.5fr 1fr' + (viewMode === 'invoice' ? ' 1fr' : '') }}>
                         <div></div>
                         <div></div>
                         <div className="text-[#09121F] text-sm font-bold flex items-center">Sub-total</div>
@@ -513,7 +513,7 @@ export const TimeTally: React.FC = () => {
 
             {/* Total */}
             <div className="w-full">
-              <div className={`grid ${gridColsWithSelection} gap-0 h-[32px] items-center`} style={{ gridTemplateColumns: '32px 120px 1fr 80px' + (viewMode === 'invoice' ? ' 120px' : '') }}>
+              <div className={`grid ${gridColsWithSelection} gap-0 h-[32px] items-center`} style={{ gridTemplateColumns: '32px 1.5fr 1.5fr 1fr' + (viewMode === 'invoice' ? ' 1fr' : '') }}>
                 <div className="flex items-center"></div>
                 <div className="flex items-center"></div>
                 <div className="text-[#09121F] text-sm font-bold flex items-center">TOTAL</div>
