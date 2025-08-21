@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { useApp } from '@/context/AppContext';
 import { TimeEntry } from '@/types';
 import { format } from 'date-fns';
-import { ChevronDown, Pencil, Trash2, Archive, Edit } from 'lucide-react';
+import { ChevronDown, Pencil, Trash2, Archive, Edit, X } from 'lucide-react';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { ExportDialog } from '@/components/ExportDialog';
 import { EditTimeEntryDialog } from '@/components/EditTimeEntryDialog';
@@ -329,7 +329,7 @@ export const TimeTally: React.FC = () => {
             variant="ghost"
             onClick={selection.clearSelection}
           >
-            Clear Selection
+            <X className="h-4 w-4" />
           </Button>
         </div>
       )}
