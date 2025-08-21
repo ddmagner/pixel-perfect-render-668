@@ -137,10 +137,10 @@ export const EditTimeEntryDialog: React.FC<EditTimeEntryDialogProps> = ({
           </div>
 
           <div className="flex gap-2 pt-4">
-            <Button type="button" variant="outline" onClick={onClose} className="flex-1">
+            <Button type="button" variant="outline" onClick={onClose} className="flex-1 rounded-none">
               Cancel
             </Button>
-            <Button type="submit" className="flex-1">
+            <Button type="submit" className="flex-1 rounded-none">
               Update Entry
             </Button>
           </div>
