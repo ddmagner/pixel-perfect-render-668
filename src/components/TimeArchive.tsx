@@ -12,7 +12,7 @@ export const TimeArchive: React.FC = () => {
         onClick={handleViewArchive}
       >
         <h1 className="text-[#09121F] text-[28px] font-bold leading-8">Time archive</h1>
-        <p className="text-[#09121F] text-sm">View</p>
+        <p className="text-[#09121F] text-sm underline">View</p>
       </div>
     </div>;
 };
