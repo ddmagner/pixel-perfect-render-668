@@ -89,9 +89,6 @@ export const TimeArchivePage: React.FC = () => {
           </div>}
         <div className="flex items-center justify-between h-full">
           <h1 className="text-[#09121F] text-[28px] font-bold leading-8">Time Archive</h1>
-          {archivedEntries.length > 0 && <Button variant="ghost" size="sm" onClick={() => setShowClearDialog(true)} className="text-red-600 hover:text-red-700 hover:bg-transparent">
-              Clear All
-            </Button>}
         </div>
       </div>
 
