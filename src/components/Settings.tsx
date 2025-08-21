@@ -46,7 +46,7 @@ export const Settings: React.FC = () => {
         <UserProfile />
         
         {/* Time Archive Section */}
-        <div className="px-5 py-4 border-t border-gray-200">
+        <div className="px-5 py-4">
           <TimeArchive />
         </div>
         
