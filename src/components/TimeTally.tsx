@@ -269,9 +269,49 @@ export const TimeTally: React.FC = () => {
       {/* Divider */}
       <div className="h-px bg-[#09121F] mx-5 mb-6" />
 
-      {/* Header */}
+      {/* Header / Selection Toolbar */}
       <div className="flex items-baseline justify-between px-5 pt-0.5 pb-1">
-        <h1 className="text-[#09121F] text-[28px] font-bold leading-8">Where time went</h1>
+        {selection.hasAnySelected ? (
+          <div className="flex items-center gap-2 p-3 bg-blue-50 rounded-lg flex-1 mr-4">
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={handleEdit}
+              disabled={selection.selectedCount !== 1}
+              className="text-blue-600 hover:text-blue-700"
+            >
+              <Pencil className="h-4 w-4 mr-1" />
+              Edit
+            </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => setShowDeleteDialog(true)}
+              className="text-red-600 hover:text-red-700"
+            >
+              <Trash2 className="h-4 w-4 mr-1" />
+              Delete
+            </Button>
+            <Button
+              size="sm"
+              variant="outline"
+              onClick={() => setShowArchiveDialog(true)}
+              className="text-orange-600 hover:text-orange-700"
+            >
+              <Archive className="h-4 w-4 mr-1" />
+              Archive
+            </Button>
+            <Button
+              size="sm"
+              variant="ghost"
+              onClick={selection.clearSelection}
+            >
+              <X className="h-4 w-4" />
+            </Button>
+          </div>
+        ) : (
+          <h1 className="text-[#09121F] text-[28px] font-bold leading-8">Where time went</h1>
+        )}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <button className="flex items-center gap-2 text-sm font-medium text-[#09121F] hover:bg-gray-50">
@@ -293,46 +333,6 @@ export const TimeTally: React.FC = () => {
         </DropdownMenu>
       </div>
 
-      {/* Selection Toolbar */}
-      {selection.hasAnySelected && (
-        <div className="flex items-center gap-2 mx-5 mb-4 p-3 bg-blue-50 rounded-lg">
-          <Button
-            size="sm"
-            variant="outline"
-            onClick={handleEdit}
-            disabled={selection.selectedCount !== 1}
-            className="text-green-600 hover:text-green-700 disabled:opacity-50"
-          >
-            <Edit className="h-4 w-4 mr-1" />
-            Edit
-          </Button>
-          <Button
-            size="sm"
-            variant="outline"
-            onClick={() => setShowDeleteDialog(true)}
-            className="text-red-600 hover:text-red-700"
-          >
-            <Trash2 className="h-4 w-4 mr-1" />
-            Delete
-          </Button>
-          <Button
-            size="sm"
-            variant="outline"
-            onClick={() => setShowArchiveDialog(true)}
-            className="text-orange-600 hover:text-orange-700"
-          >
-            <Archive className="h-4 w-4 mr-1" />
-            Archive
-          </Button>
-          <Button
-            size="sm"
-            variant="ghost"
-            onClick={selection.clearSelection}
-          >
-            <X className="h-4 w-4" />
-          </Button>
-        </div>
-      )}
 
       {/* Table Header */}
       <div className="w-full px-5">
