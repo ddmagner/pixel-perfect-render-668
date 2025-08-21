@@ -340,7 +340,7 @@ export const TimeTally: React.FC = () => {
       {/* Table Header */}
       <div className="w-full px-5">
         <div className={`grid ${gridColsWithSelection} gap-4 h-[32px] items-center`}>
-          <div className="flex items-center justify-center w-[32px]">
+          <div className="flex items-center w-[32px]">
             <div 
               className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${
                 isAllSelected ? 'bg-gray-300' : 'bg-white'
@@ -378,7 +378,7 @@ export const TimeTally: React.FC = () => {
                         </div>
                         
                         {project.entries.map((entry: TimeEntry) => <div key={entry.id} className={`grid ${gridColsWithSelection} gap-4 h-[32px] items-center hover:bg-gray-50`}>
-                            <div className="flex items-center justify-center w-[32px]">
+                            <div className="flex items-center w-[32px] -mr-2">
                               <div 
                                 className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${
                                   selection.isSelected(entry.id) ? 'bg-gray-300' : 'bg-white'
@@ -420,7 +420,7 @@ export const TimeTally: React.FC = () => {
                       </div>) : sortOption === 'date' && group.projects ? <div>
                       {group.projects.map((project: any, projectIndex: number) => <div key={`date-project-${project.name}-${projectIndex}`}>
                           {project.entries.map((entry: TimeEntry) => <div key={entry.id} className={`grid ${gridColsWithSelection} gap-4 h-[32px] items-center hover:bg-gray-50`}>
-                              <div className="flex items-center justify-center w-[32px]">
+                              <div className="flex items-center w-[32px] -mr-2">
                                 <div 
                                   className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${
                                     selection.isSelected(entry.id) ? 'bg-gray-300' : 'bg-white'
@@ -462,7 +462,7 @@ export const TimeTally: React.FC = () => {
                       <div className="h-px bg-[#09121F]" />
                     </div> : sortOption === 'task' && group.entries ? <div>
                       {group.entries.map((entry: TimeEntry) => <div key={entry.id} className={`grid ${gridColsWithSelection} gap-4 h-[32px] items-center hover:bg-gray-50`}>
-                            <div className="flex items-center justify-center w-[32px]">
+                            <div className="flex items-center w-[32px] -mr-2">
                               <div 
                                 className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${
                                   selection.isSelected(entry.id) ? 'bg-gray-300' : 'bg-white'
