@@ -217,7 +217,7 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
               disabled={isExporting}
               className="flex-1 h-12 text-base font-medium bg-foreground text-background hover:bg-foreground/90 rounded-none"
             >
-              {isExporting ? 'Exporting...' : 'Export'}
+              {isExporting ? 'Exporting...' : 'Next'}
             </Button>
           </div>
         </div>
