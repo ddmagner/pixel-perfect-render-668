@@ -141,16 +141,18 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
             <h3 className="text-lg font-semibold mb-4">Export Method</h3>
             
             {/* Export Methods */}
-            <RadioGroup value={exportMethod} onValueChange={(value) => setExportMethod(value as 'download' | 'email' | 'print')}>
+            <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
                   <Download className="h-5 w-5" />
                   <span className="text-base">Download to device</span>
                 </div>
-                <RadioGroupItem 
-                  value="download"
-                  className="h-6 w-6 rounded-full border-2 border-foreground data-[state=checked]:bg-foreground"
-                />
+                <div 
+                  className={`w-6 h-6 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${exportMethod === 'download' ? 'bg-gray-300' : 'bg-white'}`}
+                  onClick={() => setExportMethod('download')}
+                >
+                  {exportMethod === 'download' && <div className="w-3 h-3 rounded-full bg-black"></div>}
+                </div>
               </div>
               
               <div className="flex items-center justify-between">
@@ -158,10 +160,12 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
                   <Mail className="h-5 w-5" />
                   <span className="text-base">Share via email</span>
                 </div>
-                <RadioGroupItem 
-                  value="email"
-                  className="h-6 w-6 rounded-full border-2 border-foreground data-[state=checked]:bg-foreground"
-                />
+                <div 
+                  className={`w-6 h-6 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${exportMethod === 'email' ? 'bg-gray-300' : 'bg-white'}`}
+                  onClick={() => setExportMethod('email')}
+                >
+                  {exportMethod === 'email' && <div className="w-3 h-3 rounded-full bg-black"></div>}
+                </div>
               </div>
               
               <div className="flex items-center justify-between">
@@ -169,12 +173,14 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
                   <Printer className="h-5 w-5" />
                   <span className="text-base">Print</span>
                 </div>
-                <RadioGroupItem 
-                  value="print"
-                  className="h-6 w-6 rounded-full border-2 border-foreground data-[state=checked]:bg-foreground"
-                />
+                <div 
+                  className={`w-6 h-6 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${exportMethod === 'print' ? 'bg-gray-300' : 'bg-white'}`}
+                  onClick={() => setExportMethod('print')}
+                >
+                  {exportMethod === 'print' && <div className="w-3 h-3 rounded-full bg-black"></div>}
+                </div>
               </div>
-            </RadioGroup>
+            </div>
           </div>
 
           {/* Divider */}
