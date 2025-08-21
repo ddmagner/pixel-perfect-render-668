@@ -332,8 +332,8 @@ export const TimeArchivePage: React.FC = () => {
                           </div>
                           
                           {project.entries.map((entry: TimeEntry) => (
-                            <div key={entry.id} className={`grid h-[32px] items-center hover:bg-gray-50 ${viewMode === 'invoice' ? 'grid-cols-6' : 'grid-cols-5'}`} style={{
-                              gridTemplateColumns: viewMode === 'invoice' ? '32px 2fr 2fr 2fr 1fr 1fr' : '32px 2fr 2fr 2fr 1fr',
+                            <div key={entry.id} className={`grid grid-cols-${viewMode === 'invoice' ? '5' : '4'} h-[32px] items-center hover:bg-gray-50`} style={{
+                              gridTemplateColumns: '32px 2fr 2fr 1fr' + (viewMode === 'invoice' ? ' 1fr' : ''),
                               gap: '0'
                             }}>
                               <div className="flex items-center w-[32px]">
@@ -359,8 +359,8 @@ export const TimeArchivePage: React.FC = () => {
                           ))}
                           
                           <div className="h-px bg-[#09121F]" />
-                          <div className={`grid h-[32px] items-center ${viewMode === 'invoice' ? 'grid-cols-6' : 'grid-cols-5'}`} style={{
-                            gridTemplateColumns: viewMode === 'invoice' ? '32px 2fr 2fr 2fr 1fr 1fr' : '32px 2fr 2fr 2fr 1fr',
+                          <div className={`grid grid-cols-${viewMode === 'invoice' ? '5' : '4'} h-[32px] items-center`} style={{
+                            gridTemplateColumns: '32px 2fr 2fr 1fr' + (viewMode === 'invoice' ? ' 1fr' : ''),
                             gap: '0'
                           }}>
                             <div></div>
@@ -383,8 +383,8 @@ export const TimeArchivePage: React.FC = () => {
                         {group.projects.map((project: any, projectIndex: number) => (
                           <div key={`date-project-${project.name}-${projectIndex}`}>
                             {project.entries.map((entry: TimeEntry) => (
-                              <div key={entry.id} className={`grid h-[32px] items-center hover:bg-gray-50 ${viewMode === 'invoice' ? 'grid-cols-6' : 'grid-cols-5'}`} style={{
-                                gridTemplateColumns: viewMode === 'invoice' ? '32px 2fr 2fr 2fr 1fr 1fr' : '32px 2fr 2fr 2fr 1fr',
+                            <div key={entry.id} className={`grid grid-cols-${viewMode === 'invoice' ? '5' : '4'} h-[32px] items-center hover:bg-gray-50`} style={{
+                                gridTemplateColumns: '32px 2fr 2fr 1fr' + (viewMode === 'invoice' ? ' 1fr' : ''),
                                 gap: '0'
                               }}>
                                 <div className="flex items-center w-[32px]">
@@ -412,8 +412,8 @@ export const TimeArchivePage: React.FC = () => {
                         ))}
                         
                         <div className="h-px bg-[#09121F] mt-2" />
-                        <div className={`grid h-[32px] items-center ${viewMode === 'invoice' ? 'grid-cols-6' : 'grid-cols-5'}`} style={{
-                          gridTemplateColumns: viewMode === 'invoice' ? '32px 2fr 2fr 2fr 1fr 1fr' : '32px 2fr 2fr 2fr 1fr',
+                        <div className={`grid grid-cols-${viewMode === 'invoice' ? '5' : '4'} h-[32px] items-center`} style={{
+                          gridTemplateColumns: '32px 2fr 2fr 1fr' + (viewMode === 'invoice' ? ' 1fr' : ''),
                           gap: '0'
                         }}>
                           <div></div>
@@ -433,8 +433,8 @@ export const TimeArchivePage: React.FC = () => {
                     ) : sortOption === 'task' && group.entries ? (
                       <div>
                         {group.entries.map((entry: TimeEntry) => (
-                          <div key={entry.id} className={`grid h-[32px] items-center hover:bg-gray-50 ${viewMode === 'invoice' ? 'grid-cols-6' : 'grid-cols-5'}`} style={{
-                            gridTemplateColumns: viewMode === 'invoice' ? '32px 2fr 2fr 2fr 1fr 1fr' : '32px 2fr 2fr 2fr 1fr',
+                          <div key={entry.id} className={`grid grid-cols-${viewMode === 'invoice' ? '5' : '4'} h-[32px] items-center hover:bg-gray-50`} style={{
+                            gridTemplateColumns: '32px 2fr 2fr 1fr' + (viewMode === 'invoice' ? ' 1fr' : ''),
                             gap: '0'
                           }}>
                             <div className="flex items-center w-[32px]">
@@ -460,8 +460,8 @@ export const TimeArchivePage: React.FC = () => {
                         ))}
                         
                         <div className="h-px bg-[#09121F] mt-2" />
-                        <div className={`grid h-[32px] items-center ${viewMode === 'invoice' ? 'grid-cols-6' : 'grid-cols-5'}`} style={{
-                          gridTemplateColumns: viewMode === 'invoice' ? '32px 2fr 2fr 2fr 1fr 1fr' : '32px 2fr 2fr 2fr 1fr',
+                        <div className={`grid grid-cols-${viewMode === 'invoice' ? '5' : '4'} h-[32px] items-center`} style={{
+                          gridTemplateColumns: '32px 2fr 2fr 1fr' + (viewMode === 'invoice' ? ' 1fr' : ''),
                           gap: '0'
                         }}>
                           <div></div>
