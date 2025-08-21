@@ -37,6 +37,133 @@ export const TimeArchivePage: React.FC = () => {
   // Filter archived entries
   const archivedEntries = timeEntries.filter(entry => entry.archived);
   const allArchivedIds = archivedEntries.map(entry => entry.id);
+
+  // Get client by project
+  const getClientByProject = (projectName: string) => {
+    const project = settings.projects.find(p => p.name === projectName);
+    if (project && project.clientId) {
+      const client = settings.clients.find(c => c.id === project.clientId);
+      return client?.name;
+    }
+    return null;
+  };
+
+  // Get task rate for invoice mode
+  const getTaskRate = (task: string): number => {
+    const taskType = settings.taskTypes.find(t => t.name.toLowerCase() === task.toLowerCase());
+    return taskType?.hourlyRate || 0;
+  };
+
+  // Calculate fee for invoice mode
+  const calculateFee = (entry: TimeEntry): number => {
+    if (viewMode !== 'invoice') return 0;
+    const rate = getTaskRate(entry.task);
+    return entry.duration * rate;
+  };
+
+  // Group and sort archived entries based on sort option
+  const organizedData = useMemo(() => {
+    if (archivedEntries.length === 0) return {
+      groups: [],
+      total: {
+        hours: 0,
+        fee: 0
+      }
+    };
+    let groups: any[] = [];
+    let totalHours = 0;
+    let totalFee = 0;
+    archivedEntries.forEach(entry => {
+      totalHours += entry.duration;
+      totalFee += calculateFee(entry);
+    });
+    if (sortOption === 'project') {
+      // Group by Client > Project > Individual entries
+      const clientGroups: {
+        [key: string]: {
+          [key: string]: TimeEntry[];
+        };
+      } = {};
+      archivedEntries.forEach(entry => {
+        const clientName = getClientByProject(entry.project) || 'No Client';
+        const projectName = entry.project;
+        if (!clientGroups[clientName]) clientGroups[clientName] = {};
+        if (!clientGroups[clientName][projectName]) clientGroups[clientName][projectName] = [];
+        clientGroups[clientName][projectName].push(entry);
+      });
+      groups = Object.entries(clientGroups).map(([clientName, projects]) => ({
+        type: 'client',
+        name: clientName,
+        projects: Object.entries(projects).map(([projectName, entries]) => ({
+          type: 'project',
+          name: projectName,
+          entries: entries.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()),
+          subtotal: {
+            hours: entries.reduce((sum, e) => sum + e.duration, 0),
+            fee: entries.reduce((sum, e) => sum + calculateFee(e), 0)
+          }
+        }))
+      }));
+    } else if (sortOption === 'date') {
+      // Group by Date > Project > Task
+      const dateGroups: {
+        [key: string]: {
+          [key: string]: TimeEntry[];
+        };
+      } = {};
+      archivedEntries.forEach(entry => {
+        const dateKey = format(new Date(entry.date), 'MM/dd');
+        const projectKey = entry.project;
+        if (!dateGroups[dateKey]) dateGroups[dateKey] = {};
+        if (!dateGroups[dateKey][projectKey]) dateGroups[dateKey][projectKey] = [];
+        dateGroups[dateKey][projectKey].push(entry);
+      });
+      groups = Object.entries(dateGroups).sort(([a], [b]) => a.localeCompare(b)).map(([date, projects]) => ({
+        type: 'date',
+        name: date,
+        projects: Object.entries(projects).map(([projectName, entries]) => ({
+          type: 'project',
+          name: projectName,
+          entries: entries,
+          subtotal: {
+            hours: entries.reduce((sum, e) => sum + e.duration, 0),
+            fee: entries.reduce((sum, e) => sum + calculateFee(e), 0)
+          }
+        })),
+        subtotal: {
+          hours: Object.values(projects).flat().reduce((sum, e) => sum + e.duration, 0),
+          fee: Object.values(projects).flat().reduce((sum, e) => sum + calculateFee(e), 0)
+        }
+      }));
+    } else if (sortOption === 'task') {
+      // Group by Task > Date + Project combinations
+      const taskGroups: {
+        [key: string]: TimeEntry[];
+      } = {};
+      archivedEntries.forEach(entry => {
+        const taskName = entry.task;
+        if (!taskGroups[taskName]) taskGroups[taskName] = [];
+        taskGroups[taskName].push(entry);
+      });
+      groups = Object.entries(taskGroups).map(([taskName, entries]) => ({
+        type: 'task',
+        name: taskName,
+        entries: entries.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()),
+        subtotal: {
+          hours: entries.reduce((sum, e) => sum + e.duration, 0),
+          fee: entries.reduce((sum, e) => sum + calculateFee(e), 0)
+        }
+      }));
+    }
+    return {
+      groups,
+      total: {
+        hours: totalHours,
+        fee: totalFee
+      }
+    };
+  }, [archivedEntries, sortOption, viewMode, settings]);
+
   const handleRestore = (ids: string[]) => {
     ids.forEach(id => {
       updateTimeEntry(id, {
@@ -49,6 +176,7 @@ export const TimeArchivePage: React.FC = () => {
       description: `${ids.length} ${ids.length === 1 ? 'entry' : 'entries'} restored to active records`
     });
   };
+
   const handleDelete = (ids: string[]) => {
     ids.forEach(id => {
       deleteTimeEntry(id);
@@ -59,6 +187,7 @@ export const TimeArchivePage: React.FC = () => {
       description: `${ids.length} ${ids.length === 1 ? 'entry' : 'entries'} permanently deleted`
     });
   };
+
   const handleClearArchive = () => {
     archivedEntries.forEach(entry => {
       deleteTimeEntry(entry.id);
@@ -70,14 +199,9 @@ export const TimeArchivePage: React.FC = () => {
       description: "All archived entries have been permanently deleted"
     });
   };
+
   const formatHours = (hours: number): string => {
     return hours.toFixed(2);
-  };
-
-  // Get task rate for invoice mode
-  const getTaskRate = (task: string): number => {
-    const taskType = settings.taskTypes.find(t => t.name.toLowerCase() === task.toLowerCase());
-    return taskType?.hourlyRate || 0;
   };
 
   // Get sort option display text
@@ -154,82 +278,211 @@ export const TimeArchivePage: React.FC = () => {
                   <Button size="sm" variant="ghost" onClick={selection.clearSelection} className="bg-transparent text-black hover:text-gray-600 hover:bg-transparent border-none shadow-none p-1">
                     <span className="text-sm">Clear</span>
                   </Button>
+                </div>
+              </div>}
+            <div className="flex items-baseline justify-between h-full">
+              <h1 className="text-[#09121F] text-[28px] font-bold leading-8">Time Archive</h1>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <button className="flex items-center gap-2 text-sm font-medium text-[#09121F] hover:bg-gray-50">
+                    {getSortOptionText()}
+                    <ChevronDown className="h-4 w-4" />
+                  </button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="bg-white border border-[#09121F] rounded-lg shadow-lg z-50">
+                  <DropdownMenuItem onClick={() => setSortOption('project')} className="text-sm font-medium text-[#09121F] hover:bg-gray-50 cursor-pointer">
+                    By Project
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setSortOption('date')} className="text-sm font-medium text-[#09121F] hover:bg-gray-50 cursor-pointer">
+                    By Date
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setSortOption('task')} className="text-sm font-medium text-[#09121F] hover:bg-gray-50 cursor-pointer">
+                    By Task
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
-          </div>}
-        <div className="flex items-baseline justify-between h-full">
-          <h1 className="text-[#09121F] text-[28px] font-bold leading-8">Time Archive</h1>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <button className="flex items-center gap-2 text-sm font-medium text-[#09121F] hover:bg-gray-50">
-                {getSortOptionText()}
-                <ChevronDown className="h-4 w-4" />
-              </button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="bg-white border border-[#09121F] rounded-lg shadow-lg">
-              <DropdownMenuItem onClick={() => setSortOption('project')} className="text-sm font-medium text-[#09121F] hover:bg-gray-50 cursor-pointer">
-                By Project
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setSortOption('date')} className="text-sm font-medium text-[#09121F] hover:bg-gray-50 cursor-pointer">
-                By Date
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setSortOption('task')} className="text-sm font-medium text-[#09121F] hover:bg-gray-50 cursor-pointer">
-                By Task
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-      </div>
+          </div>
 
           {/* Divider */}
           <div className="h-px bg-[#09121F] mx-5 mb-6" />
 
           {/* Content */}
           <div className="flex-1 overflow-y-auto w-full px-5">
-            {archivedEntries.length === 0 ? <div className="text-center py-8">
+            {archivedEntries.length === 0 ? (
+              <div className="text-center py-8">
                 <Archive className="h-12 w-12 mx-auto mb-2 opacity-50 text-[#BFBFBF]" />
                 <p className="text-[#BFBFBF] text-lg">No archived entries</p>
-              </div> : <>
-                {/* Table Header */}
-                <div className={`grid h-[32px] items-center ${viewMode === 'invoice' ? 'grid-cols-6' : 'grid-cols-5'}`} style={{
-              gridTemplateColumns: viewMode === 'invoice' ? '32px 2fr 2fr 2fr 1fr 1fr' : '32px 2fr 2fr 2fr 1fr',
-              gap: '0'
-            }}>
-                  <div className="flex items-center w-[32px]">
-                    <div className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${isAllSelected ? 'bg-gray-300' : 'bg-white'}`} onClick={() => selection.toggleSelectAll(allArchivedIds)}>
-                      {isAllSelected && <div className="w-2 h-2 rounded-full bg-black"></div>}
+              </div>
+            ) : (
+              <div className="space-y-4">
+                {organizedData.groups.map((group, groupIndex) => (
+                  <div key={`${group.type}-${group.name}-${groupIndex}`}>
+                    {/* Group Header */}
+                    <div className="font-bold text-[#09121F] text-sm h-[32px] flex items-center pl-8">
+                      {group.name}
                     </div>
-                  </div>
-                  <span className="text-[#09121F] text-sm font-bold">Date</span>
-                  <span className="text-[#09121F] text-sm font-bold">Project</span>
-                  <span className="text-[#09121F] text-sm font-bold">Task</span>
-                  <span className="text-[#09121F] text-sm font-bold text-right">Hours</span>
-                  {viewMode === 'invoice' && <span className="text-[#09121F] text-sm font-bold text-right">Fee</span>}
-                </div>
-                <div className="h-px bg-[#09121F] mb-4" />
 
-                {/* Entries */}
-                <div className="space-y-0">
-                  {archivedEntries.map(entry => <div key={entry.id} className={`grid h-[32px] items-center hover:bg-gray-50 ${viewMode === 'invoice' ? 'grid-cols-6' : 'grid-cols-5'}`} style={{
-                gridTemplateColumns: viewMode === 'invoice' ? '32px 2fr 2fr 2fr 1fr 1fr' : '32px 2fr 2fr 2fr 1fr',
-                gap: '0'
-              }}>
-                      <div className="flex items-center w-[32px]">
-                        <div className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${selection.isSelected(entry.id) ? 'bg-gray-300' : 'bg-white'}`} onClick={() => selection.toggleSelectRecord(entry.id)}>
-                          {selection.isSelected(entry.id) && <div className="w-2 h-2 rounded-full bg-black"></div>}
+                    {/* Group Content */}
+                    {sortOption === 'project' && group.projects ? (
+                      group.projects.map((project: any, projectIndex: number) => (
+                        <div key={`project-${project.name}-${projectIndex}`}>
+                          <div className="font-bold text-[#09121F] text-sm h-[32px] flex items-center">
+                            {project.name}
+                          </div>
+                          
+                          {project.entries.map((entry: TimeEntry) => (
+                            <div key={entry.id} className={`grid h-[32px] items-center hover:bg-gray-50 ${viewMode === 'invoice' ? 'grid-cols-6' : 'grid-cols-5'}`} style={{
+                              gridTemplateColumns: viewMode === 'invoice' ? '32px 2fr 2fr 2fr 1fr 1fr' : '32px 2fr 2fr 2fr 1fr',
+                              gap: '0'
+                            }}>
+                              <div className="flex items-center w-[32px]">
+                                <div className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${selection.isSelected(entry.id) ? 'bg-gray-300' : 'bg-white'}`} onClick={() => selection.toggleSelectRecord(entry.id)}>
+                                  {selection.isSelected(entry.id) && <div className="w-2 h-2 rounded-full bg-black"></div>}
+                                </div>
+                              </div>
+                              <div className="text-[#09121F] text-sm flex items-center">
+                                {format(new Date(entry.date), 'MM/dd')}
+                              </div>
+                              <div className="text-[#09121F] text-sm flex items-center">
+                                {entry.task}
+                              </div>
+                              <div className="text-[#09121F] text-sm text-right flex items-center justify-end">
+                                {formatHours(entry.duration)}
+                              </div>
+                              {viewMode === 'invoice' && (
+                                <div className="text-[#09121F] text-sm text-right flex items-center justify-end">
+                                  ${calculateFee(entry).toFixed(2)}
+                                </div>
+                              )}
+                            </div>
+                          ))}
+                          
+                          <div className="h-px bg-[#09121F]" />
+                          <div className={`grid h-[32px] items-center ${viewMode === 'invoice' ? 'grid-cols-6' : 'grid-cols-5'}`} style={{
+                            gridTemplateColumns: viewMode === 'invoice' ? '32px 2fr 2fr 2fr 1fr 1fr' : '32px 2fr 2fr 2fr 1fr',
+                            gap: '0'
+                          }}>
+                            <div></div>
+                            <div></div>
+                            <div className="text-[#09121F] text-sm font-bold flex items-center">Sub-total</div>
+                            <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
+                              {formatHours(project.subtotal.hours)}
+                            </div>
+                            {viewMode === 'invoice' && (
+                              <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
+                                ${project.subtotal.fee.toFixed(2)}
+                              </div>
+                            )}
+                          </div>
+                          <div className="h-px bg-[#09121F]" />
                         </div>
+                      ))
+                    ) : sortOption === 'date' && group.projects ? (
+                      <div>
+                        {group.projects.map((project: any, projectIndex: number) => (
+                          <div key={`date-project-${project.name}-${projectIndex}`}>
+                            {project.entries.map((entry: TimeEntry) => (
+                              <div key={entry.id} className={`grid h-[32px] items-center hover:bg-gray-50 ${viewMode === 'invoice' ? 'grid-cols-6' : 'grid-cols-5'}`} style={{
+                                gridTemplateColumns: viewMode === 'invoice' ? '32px 2fr 2fr 2fr 1fr 1fr' : '32px 2fr 2fr 2fr 1fr',
+                                gap: '0'
+                              }}>
+                                <div className="flex items-center w-[32px]">
+                                  <div className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${selection.isSelected(entry.id) ? 'bg-gray-300' : 'bg-white'}`} onClick={() => selection.toggleSelectRecord(entry.id)}>
+                                    {selection.isSelected(entry.id) && <div className="w-2 h-2 rounded-full bg-black"></div>}
+                                  </div>
+                                </div>
+                                <div className="text-[#09121F] text-sm flex items-center">
+                                  {entry.project}
+                                </div>
+                                <div className="text-[#09121F] text-sm flex items-center">
+                                  {entry.task}
+                                </div>
+                                <div className="text-[#09121F] text-sm text-right flex items-center justify-end">
+                                  {formatHours(entry.duration)}
+                                </div>
+                                {viewMode === 'invoice' && (
+                                  <div className="text-[#09121F] text-sm text-right flex items-center justify-end">
+                                    ${calculateFee(entry).toFixed(2)}
+                                  </div>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        ))}
+                        
+                        <div className="h-px bg-[#09121F] mt-2" />
+                        <div className={`grid h-[32px] items-center ${viewMode === 'invoice' ? 'grid-cols-6' : 'grid-cols-5'}`} style={{
+                          gridTemplateColumns: viewMode === 'invoice' ? '32px 2fr 2fr 2fr 1fr 1fr' : '32px 2fr 2fr 2fr 1fr',
+                          gap: '0'
+                        }}>
+                          <div></div>
+                          <div></div>
+                          <div className="text-[#09121F] text-sm font-bold flex items-center">Sub-total</div>
+                          <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
+                            {formatHours(group.subtotal.hours)}
+                          </div>
+                          {viewMode === 'invoice' && (
+                            <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
+                              ${group.subtotal.fee.toFixed(2)}
+                            </div>
+                          )}
+                        </div>
+                        <div className="h-px bg-[#09121F]" />
                       </div>
-                      <div className="text-[#09121F] text-sm">
-                        {format(new Date(entry.date), 'MM/dd/yyyy')}
+                    ) : sortOption === 'task' && group.entries ? (
+                      <div>
+                        {group.entries.map((entry: TimeEntry) => (
+                          <div key={entry.id} className={`grid h-[32px] items-center hover:bg-gray-50 ${viewMode === 'invoice' ? 'grid-cols-6' : 'grid-cols-5'}`} style={{
+                            gridTemplateColumns: viewMode === 'invoice' ? '32px 2fr 2fr 2fr 1fr 1fr' : '32px 2fr 2fr 2fr 1fr',
+                            gap: '0'
+                          }}>
+                            <div className="flex items-center w-[32px]">
+                              <div className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${selection.isSelected(entry.id) ? 'bg-gray-300' : 'bg-white'}`} onClick={() => selection.toggleSelectRecord(entry.id)}>
+                                {selection.isSelected(entry.id) && <div className="w-2 h-2 rounded-full bg-black"></div>}
+                              </div>
+                            </div>
+                            <div className="text-[#09121F] text-sm flex items-center">
+                              {format(new Date(entry.date), 'MM/dd')}
+                            </div>
+                            <div className="text-[#09121F] text-sm flex items-center">
+                              {entry.project}
+                            </div>
+                            <div className="text-[#09121F] text-sm text-right flex items-center justify-end">
+                              {formatHours(entry.duration)}
+                            </div>
+                            {viewMode === 'invoice' && (
+                              <div className="text-[#09121F] text-sm text-right flex items-center justify-end">
+                                ${calculateFee(entry).toFixed(2)}
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                        
+                        <div className="h-px bg-[#09121F] mt-2" />
+                        <div className={`grid h-[32px] items-center ${viewMode === 'invoice' ? 'grid-cols-6' : 'grid-cols-5'}`} style={{
+                          gridTemplateColumns: viewMode === 'invoice' ? '32px 2fr 2fr 2fr 1fr 1fr' : '32px 2fr 2fr 2fr 1fr',
+                          gap: '0'
+                        }}>
+                          <div></div>
+                          <div></div>
+                          <div className="text-[#09121F] text-sm font-bold flex items-center">Sub-total</div>
+                          <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
+                            {formatHours(group.subtotal.hours)}
+                          </div>
+                          {viewMode === 'invoice' && (
+                            <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
+                              ${group.subtotal.fee.toFixed(2)}
+                            </div>
+                          )}
+                        </div>
+                        <div className="h-px bg-[#09121F]" />
                       </div>
-                      <div className="text-[#09121F] text-sm">{entry.project}</div>
-                      <div className="text-[#09121F] text-sm">{entry.task}</div>
-                      <div className="text-[#09121F] text-sm text-right">{formatHours(entry.duration)}</div>
-                      {viewMode === 'invoice' && <div className="text-[#09121F] text-sm text-right">
-                        ${(entry.duration * getTaskRate(entry.task)).toFixed(2)}
-                      </div>}
-                    </div>)}
-                </div>
-              </>}
+                    ) : null}
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Exit Button */}
