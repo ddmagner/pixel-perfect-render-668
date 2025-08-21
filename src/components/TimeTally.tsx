@@ -340,11 +340,17 @@ export const TimeTally: React.FC = () => {
       {/* Table Header */}
       <div className="w-full px-5">
         <div className={`grid ${gridColsWithSelection} gap-4 h-[32px] items-center`}>
-          <div className="flex items-center">
-            <Checkbox
-              checked={isAllSelected}
-              onCheckedChange={() => selection.toggleSelectAll(allEntryIds)}
-            />
+          <div className="flex items-center justify-center w-[32px]">
+            <div 
+              className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${
+                isAllSelected ? 'bg-gray-300' : 'bg-white'
+              }`}
+              onClick={() => selection.toggleSelectAll(allEntryIds)}
+            >
+              {isAllSelected && (
+                <div className="w-2 h-2 rounded-full bg-black"></div>
+              )}
+            </div>
           </div>
           {headers.map((header, index) => <span key={header} className={`text-[#09121F] text-sm font-bold ${(header === 'Hours' || header === 'Fee') ? 'text-right' : 'text-left'}`}>
               {header}
@@ -372,11 +378,17 @@ export const TimeTally: React.FC = () => {
                         </div>
                         
                         {project.entries.map((entry: TimeEntry) => <div key={entry.id} className={`grid ${gridColsWithSelection} gap-4 h-[32px] items-center hover:bg-gray-50`}>
-                            <div className="flex items-center">
-                              <Checkbox
-                                checked={selection.isSelected(entry.id)}
-                                onCheckedChange={() => selection.toggleSelectRecord(entry.id)}
-                              />
+                            <div className="flex items-center justify-center w-[32px]">
+                              <div 
+                                className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${
+                                  selection.isSelected(entry.id) ? 'bg-gray-300' : 'bg-white'
+                                }`}
+                                onClick={() => selection.toggleSelectRecord(entry.id)}
+                              >
+                                {selection.isSelected(entry.id) && (
+                                  <div className="w-2 h-2 rounded-full bg-black"></div>
+                                )}
+                              </div>
                             </div>
                             <div className="text-[#09121F] text-sm flex items-center">
                               {format(new Date(entry.date), 'MM/dd')}
@@ -408,11 +420,17 @@ export const TimeTally: React.FC = () => {
                       </div>) : sortOption === 'date' && group.projects ? <div>
                       {group.projects.map((project: any, projectIndex: number) => <div key={`date-project-${project.name}-${projectIndex}`}>
                           {project.entries.map((entry: TimeEntry) => <div key={entry.id} className={`grid ${gridColsWithSelection} gap-4 h-[32px] items-center hover:bg-gray-50`}>
-                              <div className="flex items-center">
-                                <Checkbox
-                                  checked={selection.isSelected(entry.id)}
-                                  onCheckedChange={() => selection.toggleSelectRecord(entry.id)}
-                                />
+                              <div className="flex items-center justify-center w-[32px]">
+                                <div 
+                                  className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${
+                                    selection.isSelected(entry.id) ? 'bg-gray-300' : 'bg-white'
+                                  }`}
+                                  onClick={() => selection.toggleSelectRecord(entry.id)}
+                                >
+                                  {selection.isSelected(entry.id) && (
+                                    <div className="w-2 h-2 rounded-full bg-black"></div>
+                                  )}
+                                </div>
                               </div>
                               <div className="text-[#09121F] text-sm flex items-center">
                                 {entry.project}
@@ -444,11 +462,17 @@ export const TimeTally: React.FC = () => {
                       <div className="h-px bg-[#09121F]" />
                     </div> : sortOption === 'task' && group.entries ? <div>
                       {group.entries.map((entry: TimeEntry) => <div key={entry.id} className={`grid ${gridColsWithSelection} gap-4 h-[32px] items-center hover:bg-gray-50`}>
-                            <div className="flex items-center">
-                              <Checkbox
-                                checked={selection.isSelected(entry.id)}
-                                onCheckedChange={() => selection.toggleSelectRecord(entry.id)}
-                              />
+                            <div className="flex items-center justify-center w-[32px]">
+                              <div 
+                                className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${
+                                  selection.isSelected(entry.id) ? 'bg-gray-300' : 'bg-white'
+                                }`}
+                                onClick={() => selection.toggleSelectRecord(entry.id)}
+                              >
+                                {selection.isSelected(entry.id) && (
+                                  <div className="w-2 h-2 rounded-full bg-black"></div>
+                                )}
+                              </div>
                             </div>
                             <div className="text-[#09121F] text-sm flex items-center">
                               {format(new Date(entry.date), 'MM/dd')}
