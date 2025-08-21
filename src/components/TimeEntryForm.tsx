@@ -111,7 +111,7 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
             </label>
           </div>
           <div className="flex items-start gap-2.5 self-stretch px-5 py-1.5">
-            <input id="project" type="text" placeholder="For which project?" value={formData.project} onChange={e => handleInputChange('project', e.target.value)} className="flex-[1_0_0] text-[#09121F] text-[15px] font-normal leading-5 tracking-[0.1px] bg-transparent border-none outline-none placeholder:text-[#BFBFBF]" />
+            <input id="project" type="text" placeholder="On what?" value={formData.project} onChange={e => handleInputChange('project', e.target.value)} className="flex-[1_0_0] text-[#09121F] text-[15px] font-normal leading-5 tracking-[0.1px] bg-transparent border-none outline-none placeholder:text-[#BFBFBF]" />
             <button type="button" className="text-[#BFBFBF] text-right text-[15px] font-normal leading-5 underline decoration-solid decoration-auto underline-offset-auto" aria-label="Add new project">
               + Project
             </button>
