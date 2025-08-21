@@ -218,6 +218,21 @@ export const TimeArchivePage: React.FC = () => {
     }
   };
 
+  // Get table headers based on sort option
+  const getTableHeaders = () => {
+    if (sortOption === 'project') {
+      return viewMode === 'invoice' ? ['Date', 'Task', 'Hours', 'Fee'] : ['Date', 'Task', 'Hours'];
+    } else if (sortOption === 'date') {
+      return viewMode === 'invoice' ? ['Project', 'Task', 'Hours', 'Fee'] : ['Project', 'Task', 'Hours'];
+    } else {
+      // task
+      return viewMode === 'invoice' ? ['Date', 'Project', 'Hours', 'Fee'] : ['Date', 'Project', 'Hours'];
+    }
+  };
+  const headers = getTableHeaders();
+  const gridCols = viewMode === 'invoice' ? 'grid-cols-4' : 'grid-cols-3';
+  const gridColsWithSelection = viewMode === 'invoice' ? 'grid-cols-5' : 'grid-cols-4';
+
   const isAllSelected = allArchivedIds.length > 0 && allArchivedIds.every(id => selection.isSelected(id));
   
   return (
@@ -250,9 +265,6 @@ export const TimeArchivePage: React.FC = () => {
             </span>
           </div>
         </div>
-
-        {/* Divider */}
-        <div className="h-px bg-[#09121F] mx-5 mb-6" />
         
         <div className="flex flex-col h-full w-full font-gilroy">
           {/* Header / Selection Toolbar */}
@@ -307,6 +319,26 @@ export const TimeArchivePage: React.FC = () => {
           {/* Divider */}
           <div className="h-px bg-[#09121F] mx-5 mb-6" />
 
+          {/* Table Header */}
+          <div className="w-full px-5">
+            <div className={`grid ${gridColsWithSelection} h-[32px] items-center`} style={{
+              gridTemplateColumns: '32px 2fr 2fr 1fr' + (viewMode === 'invoice' ? ' 1fr' : ''),
+              gap: '0'
+            }}>
+              <div className="flex items-center w-[32px]">
+                <div className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${isAllSelected ? 'bg-gray-300' : 'bg-white'}`} onClick={() => selection.toggleSelectAll(allArchivedIds)}>
+                  {isAllSelected && <div className="w-2 h-2 rounded-full bg-black"></div>}
+                </div>
+              </div>
+              {headers.map((header, index) => (
+                <span key={header} className={`text-[#09121F] text-sm font-bold ${header === 'Hours' || header === 'Fee' ? 'text-right' : 'text-left'}`}>
+                  {header}
+                </span>
+              ))}
+            </div>
+            <div className="h-px bg-[#09121F]" />
+          </div>
+
           {/* Content */}
           <div className="flex-1 overflow-y-auto w-full px-5">
             {archivedEntries.length === 0 ? (
@@ -332,7 +364,7 @@ export const TimeArchivePage: React.FC = () => {
                           </div>
                           
                           {project.entries.map((entry: TimeEntry) => (
-                            <div key={entry.id} className={`grid grid-cols-${viewMode === 'invoice' ? '5' : '4'} h-[32px] items-center hover:bg-gray-50`} style={{
+                            <div key={entry.id} className={`grid ${gridColsWithSelection} h-[32px] items-center hover:bg-gray-50`} style={{
                               gridTemplateColumns: '32px 2fr 2fr 1fr' + (viewMode === 'invoice' ? ' 1fr' : ''),
                               gap: '0'
                             }}>
@@ -359,7 +391,7 @@ export const TimeArchivePage: React.FC = () => {
                           ))}
                           
                           <div className="h-px bg-[#09121F]" />
-                          <div className={`grid grid-cols-${viewMode === 'invoice' ? '5' : '4'} h-[32px] items-center`} style={{
+                          <div className={`grid ${gridColsWithSelection} h-[32px] items-center`} style={{
                             gridTemplateColumns: '32px 2fr 2fr 1fr' + (viewMode === 'invoice' ? ' 1fr' : ''),
                             gap: '0'
                           }}>
@@ -383,7 +415,7 @@ export const TimeArchivePage: React.FC = () => {
                         {group.projects.map((project: any, projectIndex: number) => (
                           <div key={`date-project-${project.name}-${projectIndex}`}>
                             {project.entries.map((entry: TimeEntry) => (
-                            <div key={entry.id} className={`grid grid-cols-${viewMode === 'invoice' ? '5' : '4'} h-[32px] items-center hover:bg-gray-50`} style={{
+                              <div key={entry.id} className={`grid ${gridColsWithSelection} h-[32px] items-center hover:bg-gray-50`} style={{
                                 gridTemplateColumns: '32px 2fr 2fr 1fr' + (viewMode === 'invoice' ? ' 1fr' : ''),
                                 gap: '0'
                               }}>
@@ -412,7 +444,7 @@ export const TimeArchivePage: React.FC = () => {
                         ))}
                         
                         <div className="h-px bg-[#09121F] mt-2" />
-                        <div className={`grid grid-cols-${viewMode === 'invoice' ? '5' : '4'} h-[32px] items-center`} style={{
+                        <div className={`grid ${gridColsWithSelection} h-[32px] items-center`} style={{
                           gridTemplateColumns: '32px 2fr 2fr 1fr' + (viewMode === 'invoice' ? ' 1fr' : ''),
                           gap: '0'
                         }}>
@@ -433,7 +465,7 @@ export const TimeArchivePage: React.FC = () => {
                     ) : sortOption === 'task' && group.entries ? (
                       <div>
                         {group.entries.map((entry: TimeEntry) => (
-                          <div key={entry.id} className={`grid grid-cols-${viewMode === 'invoice' ? '5' : '4'} h-[32px] items-center hover:bg-gray-50`} style={{
+                          <div key={entry.id} className={`grid ${gridColsWithSelection} h-[32px] items-center hover:bg-gray-50`} style={{
                             gridTemplateColumns: '32px 2fr 2fr 1fr' + (viewMode === 'invoice' ? ' 1fr' : ''),
                             gap: '0'
                           }}>
@@ -460,7 +492,7 @@ export const TimeArchivePage: React.FC = () => {
                         ))}
                         
                         <div className="h-px bg-[#09121F] mt-2" />
-                        <div className={`grid grid-cols-${viewMode === 'invoice' ? '5' : '4'} h-[32px] items-center`} style={{
+                        <div className={`grid ${gridColsWithSelection} h-[32px] items-center`} style={{
                           gridTemplateColumns: '32px 2fr 2fr 1fr' + (viewMode === 'invoice' ? ' 1fr' : ''),
                           gap: '0'
                         }}>
