@@ -2,11 +2,16 @@ import React, { useState } from 'react';
 import { useApp } from '@/context/AppContext';
 import { TimeEntry } from '@/types';
 import { format } from 'date-fns';
-import { Trash2, RotateCcw, Archive, X } from 'lucide-react';
+import { Trash2, RotateCcw, Archive, X, Pencil } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useSelection } from '@/hooks/useSelection';
 import { useToast } from '@/hooks/use-toast';
+import { useNavigate } from 'react-router-dom';
+import { Navigation } from '@/components/Navigation';
+import { Divider } from '@/components/Divider';
+import { ExportDialog } from '@/components/ExportDialog';
+import { EditTimeEntryDialog } from '@/components/EditTimeEntryDialog';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -18,36 +23,66 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 
-export const TimeArchivePage: React.FC = () => {
-  const { timeEntries, deleteTimeEntry, updateTimeEntry } = useApp();
+const Index = () => {
+  const [activeTab, setActiveTab] = useState('archive');
+  
+  return (
+    <>
+      <Navigation activeTab={activeTab} onTabChange={setActiveTab} />
+      <Divider />
+      <div className="flex-1 overflow-hidden">
+        <TimeArchiveContent />
+      </div>
+    </>
+  );
+};
+
+const TimeArchiveContent: React.FC = () => {
+  const { timeEntries, deleteTimeEntry, updateTimeEntry, settings } = useApp();
   const { toast } = useToast();
+  const navigate = useNavigate();
   const selection = useSelection();
+  const [isExportDialogOpen, setIsExportDialogOpen] = useState(false);
+  const [editingEntry, setEditingEntry] = useState<TimeEntry | null>(null);
   const [showClearDialog, setShowClearDialog] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [showUnarchiveDialog, setShowUnarchiveDialog] = useState(false);
 
   // Filter archived entries
   const archivedEntries = timeEntries.filter(entry => entry.archived);
   const allArchivedIds = archivedEntries.map(entry => entry.id);
 
-  const handleRestore = (ids: string[]) => {
-    ids.forEach(id => {
-      updateTimeEntry(id, { archived: false });
-    });
-    selection.clearSelection();
-    toast({
-      title: "Entries Restored",
-      description: `${ids.length} ${ids.length === 1 ? 'entry' : 'entries'} restored to active records`
-    });
+  const handleEdit = () => {
+    if (selection.selectedCount === 1) {
+      const entryId = selection.selectedIds[0];
+      const entry = archivedEntries.find(e => e.id === entryId);
+      if (entry) {
+        setEditingEntry(entry);
+      }
+    }
   };
 
-  const handleDelete = (ids: string[]) => {
-    ids.forEach(id => {
+  const handleDelete = () => {
+    selection.selectedIds.forEach(id => {
       deleteTimeEntry(id);
     });
     selection.clearSelection();
+    setShowDeleteDialog(false);
     toast({
       title: "Entries Deleted",
-      description: `${ids.length} ${ids.length === 1 ? 'entry' : 'entries'} permanently deleted`
+      description: `${selection.selectedCount} ${selection.selectedCount === 1 ? 'entry' : 'entries'} permanently deleted`
+    });
+  };
+
+  const handleUnarchive = () => {
+    selection.selectedIds.forEach(id => {
+      updateTimeEntry(id, { archived: false });
+    });
+    selection.clearSelection();
+    setShowUnarchiveDialog(false);
+    toast({
+      title: "Entries Restored",
+      description: `${selection.selectedCount} ${selection.selectedCount === 1 ? 'entry' : 'entries'} restored to active records`
     });
   };
 
@@ -61,6 +96,14 @@ export const TimeArchivePage: React.FC = () => {
       title: "Archive Cleared",
       description: "All archived entries have been permanently deleted"
     });
+  };
+
+  const handleExport = () => {
+    setIsExportDialogOpen(true);
+  };
+
+  const handleExit = () => {
+    navigate('/');
   };
 
   const formatHours = (hours: number): string => {
@@ -88,11 +131,12 @@ export const TimeArchivePage: React.FC = () => {
                 <Button
                   size="sm"
                   variant="ghost"
-                  onClick={() => handleRestore(selection.selectedIds)}
+                  onClick={handleEdit}
+                  disabled={selection.selectedCount !== 1}
                   className="bg-transparent text-black hover:text-gray-600 hover:bg-transparent border-none shadow-none pl-0 gap-1"
                 >
-                  <RotateCcw className="h-4 w-4" />
-                  Restore
+                  <Pencil className="h-4 w-4" />
+                  Edit
                 </Button>
                 <Button
                   size="sm"
@@ -102,6 +146,15 @@ export const TimeArchivePage: React.FC = () => {
                 >
                   <Trash2 className="h-4 w-4" />
                   Delete
+                </Button>
+                <Button
+                  size="sm"
+                  variant="ghost"
+                  onClick={() => setShowUnarchiveDialog(true)}
+                  className="bg-transparent text-black hover:text-gray-600 hover:bg-transparent border-none shadow-none"
+                >
+                  <RotateCcw className="h-4 w-4" />
+                  Unarchive
                 </Button>
               </div>
               <Button
@@ -188,6 +241,76 @@ export const TimeArchivePage: React.FC = () => {
         )}
       </div>
 
+      {/* Action Buttons */}
+      <div className="w-full px-5 py-5 space-y-3">
+        <button 
+          onClick={handleExport} 
+          className="w-full text-white py-3.5 font-bold text-sm transition-colors" 
+          style={{ backgroundColor: '#09121F' }}
+        >
+          Export/Share/Print
+        </button>
+        <button 
+          onClick={handleExit} 
+          className="w-full text-white py-3.5 font-bold text-sm transition-colors" 
+          style={{ backgroundColor: '#09121F' }}
+        >
+          Exit
+        </button>
+      </div>
+
+      {/* Export Dialog */}
+      <ExportDialog 
+        isOpen={isExportDialogOpen} 
+        onClose={() => setIsExportDialogOpen(false)} 
+        timeEntries={archivedEntries} 
+        settings={settings} 
+        viewMode="timecard" 
+      />
+
+      {/* Edit Dialog */}
+      <EditTimeEntryDialog 
+        isOpen={!!editingEntry} 
+        onClose={() => setEditingEntry(null)} 
+        entry={editingEntry} 
+      />
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Delete Entries</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to permanently delete {selection.selectedCount} selected {selection.selectedCount === 1 ? 'entry' : 'entries'}? This action cannot be undone.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDelete} className="bg-red-600 hover:bg-red-700">
+              Delete
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
+      {/* Unarchive Confirmation Dialog */}
+      <AlertDialog open={showUnarchiveDialog} onOpenChange={setShowUnarchiveDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Unarchive Entries</AlertDialogTitle>
+            <AlertDialogDescription>
+              Are you sure you want to restore {selection.selectedCount} selected {selection.selectedCount === 1 ? 'entry' : 'entries'} to active records?
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction onClick={handleUnarchive} className="bg-green-600 hover:bg-green-700">
+              Unarchive
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+
       {/* Clear Archive Dialog */}
       <AlertDialog open={showClearDialog} onOpenChange={setShowClearDialog}>
         <AlertDialogContent>
@@ -205,30 +328,8 @@ export const TimeArchivePage: React.FC = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-
-      {/* Delete Selected Dialog */}
-      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Delete Selected Entries</AlertDialogTitle>
-            <AlertDialogDescription>
-              This will permanently delete {selection.selectedCount} selected entries. This action cannot be undone.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction 
-              onClick={() => {
-                handleDelete(selection.selectedIds);
-                setShowDeleteDialog(false);
-              }}
-              className="bg-red-600 hover:bg-red-700"
-            >
-              Delete Selected
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </div>
   );
 };
+
+export const TimeArchivePage: React.FC = Index;
