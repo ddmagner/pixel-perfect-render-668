@@ -333,7 +333,7 @@ export const TimeTally: React.FC = () => {
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-y-auto w-full px-5">
+      <div className="flex-1 overflow-y-auto w-full">
         {organizedData.groups.length === 0 ? <div className="text-center py-8">
             <p className="text-[#BFBFBF] text-lg">No time entries found</p>
           </div> : <>
