@@ -272,40 +272,49 @@ export const TimeTally: React.FC = () => {
       {/* Header / Selection Toolbar */}
       <div className="px-5 pt-0.5 pb-1 h-[2.75rem]">
         {selection.hasAnySelected ? (
-          <div className="flex items-center gap-2 bg-gray-200 w-full h-full py-2 px-3">
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={handleEdit}
-              disabled={selection.selectedCount !== 1}
-              className="text-blue-600 hover:text-blue-700"
-            >
-              <Pencil className="h-4 w-4 mr-1" />
-              Edit
-            </Button>
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => setShowDeleteDialog(true)}
-              className="text-red-600 hover:text-red-700"
-            >
-              <Trash2 className="h-4 w-4 mr-1" />
-              Delete
-            </Button>
-            <Button
-              size="sm"
-              variant="outline"
-              onClick={() => setShowArchiveDialog(true)}
-              className="text-orange-600 hover:text-orange-700"
-            >
-              <Archive className="h-4 w-4 mr-1" />
-              Archive
-            </Button>
+          <div className="flex items-center gap-2 bg-gray-200 w-full h-full py-2 px-3 justify-between">
+            <div className="flex items-center gap-2">
+              <span className="text-sm font-medium text-black">
+                {selection.selectedCount} selected
+              </span>
+              
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={handleEdit}
+                disabled={selection.selectedCount !== 1}
+                className="bg-transparent text-black hover:text-gray-600 hover:bg-transparent border-none shadow-none"
+              >
+                <Pencil className="h-4 w-4 mr-1" />
+                Edit
+              </Button>
+              
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() => setShowDeleteDialog(true)}
+                className="bg-transparent text-black hover:text-gray-600 hover:bg-transparent border-none shadow-none"
+              >
+                <Trash2 className="h-4 w-4 mr-1" />
+                Delete
+              </Button>
+              
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={() => setShowArchiveDialog(true)}
+                className="bg-transparent text-black hover:text-gray-600 hover:bg-transparent border-none shadow-none"
+              >
+                <Archive className="h-4 w-4 mr-1" />
+                Archive
+              </Button>
+            </div>
+
             <Button
               size="sm"
               variant="ghost"
               onClick={selection.clearSelection}
-              className="ml-auto"
+              className="bg-transparent text-black hover:text-gray-600 hover:bg-transparent border-none shadow-none p-1"
             >
               <X className="h-4 w-4" />
             </Button>
