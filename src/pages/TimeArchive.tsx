@@ -243,13 +243,12 @@ const TimeArchiveContent: React.FC = () => {
 
       {/* Action Buttons */}
       <div className="w-full px-5 py-5 space-y-3">
-        <button 
+        <Button 
           onClick={handleExport} 
-          className="w-full text-white py-3.5 font-bold text-sm transition-colors" 
-          style={{ backgroundColor: '#09121F' }}
+          className="w-full h-12 text-base font-medium bg-foreground text-background hover:bg-foreground/90 rounded-none"
         >
           Export/Share/Print
-        </button>
+        </Button>
         <Button 
           variant="outline" 
           onClick={handleExit} 
