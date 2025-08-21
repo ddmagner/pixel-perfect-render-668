@@ -65,9 +65,16 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
     });
   };
   const handleInputChange = (field: keyof TimeEntryData, value: string) => {
+    let formattedValue = value;
+    
+    // Apply initial capitalization for task and project fields
+    if (field === 'task' || field === 'project') {
+      formattedValue = value.replace(/\b\w/g, char => char.toUpperCase());
+    }
+    
     setFormData(prev => ({
       ...prev,
-      [field]: value
+      [field]: formattedValue
     }));
   };
   return <section className="flex flex-col items-start flex-[1_0_0] self-stretch px-0 py-2.5">
