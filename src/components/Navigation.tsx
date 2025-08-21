@@ -9,7 +9,7 @@ interface NavigationProps {
 export const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }) => {
   const { settings } = useApp();
   return (
-    <nav className="flex justify-center items-center self-stretch bg-gray-50 px-5 py-4 opacity-50 pointer-events-none">
+    <nav className="flex justify-center items-center self-stretch bg-gray-200 px-5 py-4 opacity-50 pointer-events-none">
       <div className="flex h-3.5 justify-end items-center">
         <div className="flex items-center gap-[9px]">
           <div>
@@ -40,7 +40,7 @@ interface TabNavigationProps {
 export const TabNavigation: React.FC<TabNavigationProps> = ({ activeTab, onTabChange }) => {
   const { settings } = useApp();
   return (
-    <nav className="flex items-start self-stretch bg-gray-50 px-5 py-0 pb-0 opacity-50 pointer-events-none">
+    <nav className="flex items-start self-stretch bg-gray-200 px-5 py-0 pb-0 opacity-50 pointer-events-none">
       <button
         className={`flex h-12 flex-col justify-center items-center flex-[1_0_0] px-0 py-[9px] relative ${
           activeTab === 'enter-time' ? '' : 'opacity-60'
