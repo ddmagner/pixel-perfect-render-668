@@ -2,7 +2,8 @@ import React, { useMemo, useState } from 'react';
 import { useApp } from '@/context/AppContext';
 import { TimeEntry } from '@/types';
 import { format } from 'date-fns';
-import { ChevronDown, Pencil, Trash2, Archive, Edit, X } from 'lucide-react';
+import { ChevronDown, Pencil, Trash2, Archive, Edit, X, Plus } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { ExportDialog } from '@/components/ExportDialog';
 import { EditTimeEntryDialog } from '@/components/EditTimeEntryDialog';
@@ -20,8 +21,10 @@ export const TimeTally: React.FC = () => {
     setViewMode,
     settings,
     deleteTimeEntries,
-    archiveTimeEntries
+    archiveTimeEntries,
+    updateSettings
   } = useApp();
+  const navigate = useNavigate();
   const [isExportDialogOpen, setIsExportDialogOpen] = useState(false);
   const [editingEntry, setEditingEntry] = useState<TimeEntry | null>(null);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
@@ -53,6 +56,29 @@ export const TimeTally: React.FC = () => {
   const getTaskRate = (taskName: string): number => {
     const taskType = settings.taskTypes.find(t => t.name === taskName);
     return taskType?.hourlyRate || 0;
+  };
+
+  // Check if task has hourly rate set
+  const hasTaskRate = (taskName: string): boolean => {
+    const taskType = settings.taskTypes.find(t => t.name === taskName);
+    return taskType?.hourlyRate !== undefined && taskType.hourlyRate > 0;
+  };
+
+  // Handle add rate click - navigate to settings and pre-populate task
+  const handleAddRate = (taskName: string) => {
+    // Check if task already exists, if not, add it
+    const existingTask = settings.taskTypes.find(t => t.name === taskName);
+    if (!existingTask) {
+      const newTask = {
+        id: Date.now().toString(),
+        name: taskName,
+        hourlyRate: 0
+      };
+      updateSettings({
+        taskTypes: [...settings.taskTypes, newTask]
+      });
+    }
+    navigate('/settings');
   };
 
   // Calculate fee for an entry
@@ -369,7 +395,16 @@ export const TimeTally: React.FC = () => {
                               {formatHours(entry.duration)}
                             </div>
                             {viewMode === 'invoice' && <div className="text-[#09121F] text-sm text-right flex items-center justify-end">
-                                ${calculateFee(entry).toFixed(2)}
+                                {hasTaskRate(entry.task) ? (
+                                  `$${calculateFee(entry).toFixed(2)}`
+                                ) : (
+                                  <button 
+                                    onClick={() => handleAddRate(entry.task)}
+                                    className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-gray-700 transition-colors"
+                                  >
+                                    <Plus className="h-2.5 w-2.5" />
+                                  </button>
+                                )}
                               </div>}
                           </div>)}
                         
@@ -410,7 +445,16 @@ export const TimeTally: React.FC = () => {
                                 {formatHours(entry.duration)}
                               </div>
                               {viewMode === 'invoice' && <div className="text-[#09121F] text-sm text-right flex items-center justify-end">
-                                  ${calculateFee(entry).toFixed(2)}
+                                  {hasTaskRate(entry.task) ? (
+                                    `$${calculateFee(entry).toFixed(2)}`
+                                  ) : (
+                                    <button 
+                                      onClick={() => handleAddRate(entry.task)}
+                                      className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-gray-700 transition-colors"
+                                    >
+                                      <Plus className="h-2.5 w-2.5" />
+                                    </button>
+                                  )}
                                 </div>}
                             </div>)}
                         </div>)}
@@ -451,7 +495,16 @@ export const TimeTally: React.FC = () => {
                               {formatHours(entry.duration)}
                             </div>
                             {viewMode === 'invoice' && <div className="text-[#09121F] text-sm text-right flex items-center justify-end">
-                                ${calculateFee(entry).toFixed(2)}
+                                {hasTaskRate(entry.task) ? (
+                                  `$${calculateFee(entry).toFixed(2)}`
+                                ) : (
+                                  <button 
+                                    onClick={() => handleAddRate(entry.task)}
+                                    className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-gray-700 transition-colors"
+                                  >
+                                    <Plus className="h-2.5 w-2.5" />
+                                  </button>
+                                )}
                               </div>}
                           </div>)}
                       

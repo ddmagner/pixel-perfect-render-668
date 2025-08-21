@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { useApp } from '@/context/AppContext';
 import { TimeEntry } from '@/types';
 import { format } from 'date-fns';
-import { Trash2, RotateCcw, Archive, ChevronDown, X } from 'lucide-react';
+import { Trash2, RotateCcw, Archive, ChevronDown, X, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -23,7 +23,8 @@ export const TimeArchivePage: React.FC = () => {
     viewMode,
     setViewMode,
     sortOption,
-    setSortOption
+    setSortOption,
+    updateSettings
   } = useApp();
   const {
     toast
@@ -52,6 +53,29 @@ export const TimeArchivePage: React.FC = () => {
   const getTaskRate = (task: string): number => {
     const taskType = settings.taskTypes.find(t => t.name.toLowerCase() === task.toLowerCase());
     return taskType?.hourlyRate || 0;
+  };
+
+  // Check if task has hourly rate set
+  const hasTaskRate = (taskName: string): boolean => {
+    const taskType = settings.taskTypes.find(t => t.name === taskName);
+    return taskType?.hourlyRate !== undefined && taskType.hourlyRate > 0;
+  };
+
+  // Handle add rate click - navigate to settings and pre-populate task
+  const handleAddRate = (taskName: string) => {
+    // Check if task already exists, if not, add it
+    const existingTask = settings.taskTypes.find(t => t.name === taskName);
+    if (!existingTask) {
+      const newTask = {
+        id: Date.now().toString(),
+        name: taskName,
+        hourlyRate: 0
+      };
+      updateSettings({
+        taskTypes: [...settings.taskTypes, newTask]
+      });
+    }
+    navigate('/settings');
   };
 
   // Calculate fee for invoice mode
@@ -379,11 +403,20 @@ export const TimeArchivePage: React.FC = () => {
                               <div className="text-[#09121F] text-sm text-right flex items-center justify-end">
                                 {formatHours(entry.duration)}
                               </div>
-                              {viewMode === 'invoice' && (
-                                <div className="text-[#09121F] text-sm text-right flex items-center justify-end">
-                                  ${calculateFee(entry).toFixed(2)}
-                                </div>
-                              )}
+                               {viewMode === 'invoice' && (
+                                 <div className="text-[#09121F] text-sm text-right flex items-center justify-end">
+                                   {hasTaskRate(entry.task) ? (
+                                     `$${calculateFee(entry).toFixed(2)}`
+                                   ) : (
+                                     <button 
+                                       onClick={() => handleAddRate(entry.task)}
+                                       className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-gray-700 transition-colors"
+                                     >
+                                       <Plus className="h-2.5 w-2.5" />
+                                     </button>
+                                   )}
+                                 </div>
+                               )}
                             </div>
                           ))}
                           
@@ -430,11 +463,20 @@ export const TimeArchivePage: React.FC = () => {
                                 <div className="text-[#09121F] text-sm text-right flex items-center justify-end">
                                   {formatHours(entry.duration)}
                                 </div>
-                                {viewMode === 'invoice' && (
-                                  <div className="text-[#09121F] text-sm text-right flex items-center justify-end">
-                                    ${calculateFee(entry).toFixed(2)}
-                                  </div>
-                                )}
+                                 {viewMode === 'invoice' && (
+                                   <div className="text-[#09121F] text-sm text-right flex items-center justify-end">
+                                     {hasTaskRate(entry.task) ? (
+                                       `$${calculateFee(entry).toFixed(2)}`
+                                     ) : (
+                                       <button 
+                                         onClick={() => handleAddRate(entry.task)}
+                                         className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-gray-700 transition-colors"
+                                       >
+                                         <Plus className="h-2.5 w-2.5" />
+                                       </button>
+                                     )}
+                                   </div>
+                                 )}
                               </div>
                             ))}
                           </div>
@@ -480,11 +522,20 @@ export const TimeArchivePage: React.FC = () => {
                             <div className="text-[#09121F] text-sm text-right flex items-center justify-end">
                               {formatHours(entry.duration)}
                             </div>
-                            {viewMode === 'invoice' && (
-                              <div className="text-[#09121F] text-sm text-right flex items-center justify-end">
-                                ${calculateFee(entry).toFixed(2)}
-                              </div>
-                            )}
+                             {viewMode === 'invoice' && (
+                               <div className="text-[#09121F] text-sm text-right flex items-center justify-end">
+                                 {hasTaskRate(entry.task) ? (
+                                   `$${calculateFee(entry).toFixed(2)}`
+                                 ) : (
+                                   <button 
+                                     onClick={() => handleAddRate(entry.task)}
+                                     className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-gray-700 transition-colors"
+                                   >
+                                     <Plus className="h-2.5 w-2.5" />
+                                   </button>
+                                 )}
+                               </div>
+                             )}
                           </div>
                         ))}
                         
