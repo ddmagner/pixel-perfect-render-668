@@ -272,7 +272,7 @@ export const TimeTally: React.FC = () => {
       {/* Header / Selection Toolbar */}
       <div className="px-5 pt-0.5 pb-1 h-[2.75rem]">
         {selection.hasAnySelected ? (
-          <div className="flex items-center gap-2 bg-gray-200 w-full h-full py-2 px-3 justify-between">
+          <div className="flex items-center gap-2 bg-gray-200 w-full h-full py-2 pl-0 pr-3 justify-between">
             <div className="flex items-center gap-4" style={{ paddingLeft: '32px' }}>
               <Button
                 size="sm"
