@@ -252,8 +252,7 @@ const TimeArchiveContent: React.FC = () => {
         </button>
         <button 
           onClick={handleExit} 
-          className="w-full text-white py-3.5 font-bold text-sm transition-colors" 
-          style={{ backgroundColor: '#09121F' }}
+          className="w-full text-black py-3.5 font-bold text-sm transition-colors bg-white border border-black"
         >
           Exit
         </button>
