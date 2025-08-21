@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useApp } from '@/context/AppContext';
 import { TimeEntry } from '@/types';
 import { format } from 'date-fns';
-import { Trash2, RotateCcw, Archive } from 'lucide-react';
+import { Trash2, RotateCcw, Archive, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useSelection } from '@/hooks/useSelection';
@@ -110,12 +110,12 @@ export const TimeArchivePage: React.FC = () => {
                 onClick={selection.clearSelection}
                 className="bg-transparent text-black hover:text-gray-600 hover:bg-transparent border-none shadow-none p-1"
               >
-                <span className="text-sm">Clear</span>
+                <X className="h-4 w-4" />
               </Button>
             </div>
           </div>
         )}
-        <div className="flex items-center justify-between h-full">
+        <div className="flex items-baseline justify-between h-full">
           <h1 className="text-[#09121F] text-[28px] font-bold leading-8">Time Archive</h1>
           {archivedEntries.length > 0 && (
             <Button 
