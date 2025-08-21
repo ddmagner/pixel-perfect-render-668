@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { useApp } from '@/context/AppContext';
 import { TimeEntry } from '@/types';
 import { format } from 'date-fns';
-import { Trash2, RotateCcw, Archive, ChevronDown } from 'lucide-react';
+import { Trash2, RotateCcw, Archive, ChevronDown, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -288,7 +288,7 @@ export const TimeArchivePage: React.FC = () => {
                     </Button>
                   </div>
                   <Button size="sm" variant="ghost" onClick={selection.clearSelection} className="bg-transparent text-black hover:text-gray-600 hover:bg-transparent border-none shadow-none p-1">
-                    <span className="text-sm">Clear</span>
+                    <X className="h-4 w-4" />
                   </Button>
                 </div>
               </div>}
