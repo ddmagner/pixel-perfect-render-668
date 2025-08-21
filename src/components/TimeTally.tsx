@@ -454,7 +454,7 @@ export const TimeTally: React.FC = () => {
                         </div>)}
                       
                       <div className="h-px bg-[#09121F] mt-2" />
-                      <div className={`grid ${gridColsWithSelection} gap-4 h-[32px] items-center justify-center`}>
+                      <div className={`grid ${gridColsWithSelection} gap-0 h-[32px] items-center`} style={{ gridTemplateColumns: '32px 2fr 2fr 1fr' + (viewMode === 'invoice' ? ' 1fr' : '') }}>
                         <div></div>
                         <div></div>
                         <div className="text-[#09121F] text-sm font-bold flex items-center">Sub-total</div>
