@@ -392,7 +392,7 @@ export const TimeTally: React.FC = () => {
                       </div>) : sortOption === 'date' && group.projects ? <div>
                       {group.projects.map((project: any, projectIndex: number) => <div key={`date-project-${project.name}-${projectIndex}`}>
                           {project.entries.map((entry: TimeEntry) => <div key={entry.id} className={`grid ${gridColsWithSelection} h-[32px] items-center hover:bg-gray-50`} style={{
-                  gridTemplateColumns: '32px 2fr 2fr 1fr' + (viewMode === 'invoice' ? ' calc(1fr + 20px)' : ''),
+                  gridTemplateColumns: '16px 2fr 2fr 1fr' + (viewMode === 'invoice' ? ' calc(1fr + 20px)' : ''),
                   gap: '0'
                 }}>
                               <div className="flex items-center w-[32px]">
