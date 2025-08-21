@@ -18,7 +18,9 @@ export const TimeArchivePage: React.FC = () => {
     timeEntries,
     deleteTimeEntry,
     updateTimeEntry,
-    settings
+    settings,
+    viewMode,
+    setViewMode
   } = useApp();
   const {
     toast
@@ -68,6 +70,13 @@ export const TimeArchivePage: React.FC = () => {
   const formatHours = (hours: number): string => {
     return hours.toFixed(2);
   };
+
+  // Get task rate for invoice mode
+  const getTaskRate = (task: string): number => {
+    const taskType = settings.taskTypes.find(t => t.name.toLowerCase() === task.toLowerCase());
+    return taskType?.hourlyRate || 0;
+  };
+
   const isAllSelected = allArchivedIds.length > 0 && allArchivedIds.every(id => selection.isSelected(id));
   
   return (
@@ -85,6 +94,24 @@ export const TimeArchivePage: React.FC = () => {
         <TabNavigation activeTab="" onTabChange={() => {}} />
         
         <Divider />
+        
+        {/* Mode Toggle */}
+        <div className="flex justify-center items-center w-full px-5 py-4">
+          <div className="flex items-center gap-4">
+            <span className={`text-sm font-medium ${viewMode === 'timecard' ? 'text-[#09121F]' : 'text-[#BFBFBF]'}`}>
+              Time Card Mode
+            </span>
+            <button onClick={() => setViewMode(viewMode === 'timecard' ? 'invoice' : 'timecard')} className={`w-12 h-6 rounded-full transition-colors ${viewMode === 'invoice' ? 'bg-[#09121F]' : 'bg-[#BFBFBF]'}`}>
+              <div className={`w-5 h-5 bg-white rounded-full transition-transform ${viewMode === 'invoice' ? 'translate-x-6' : 'translate-x-0.5'}`} />
+            </button>
+            <span className={`text-sm font-medium ${viewMode === 'invoice' ? 'text-[#09121F]' : 'text-[#BFBFBF]'}`}>
+              Invoice Mode
+            </span>
+          </div>
+        </div>
+
+        {/* Divider */}
+        <div className="h-px bg-[#09121F] mx-5 mb-6" />
         
         <div className="flex flex-col h-full w-full font-gilroy">
           {/* Header / Selection Toolbar */}
@@ -137,8 +164,8 @@ export const TimeArchivePage: React.FC = () => {
                 <p className="text-[#BFBFBF] text-lg">No archived entries</p>
               </div> : <>
                 {/* Table Header */}
-                <div className="grid grid-cols-5 h-[32px] items-center" style={{
-              gridTemplateColumns: '32px 2fr 2fr 2fr 1fr',
+                <div className={`grid h-[32px] items-center ${viewMode === 'invoice' ? 'grid-cols-6' : 'grid-cols-5'}`} style={{
+              gridTemplateColumns: viewMode === 'invoice' ? '32px 2fr 2fr 2fr 1fr 1fr' : '32px 2fr 2fr 2fr 1fr',
               gap: '0'
             }}>
                   <div className="flex items-center w-[32px]">
@@ -150,13 +177,14 @@ export const TimeArchivePage: React.FC = () => {
                   <span className="text-[#09121F] text-sm font-bold">Project</span>
                   <span className="text-[#09121F] text-sm font-bold">Task</span>
                   <span className="text-[#09121F] text-sm font-bold text-right">Hours</span>
+                  {viewMode === 'invoice' && <span className="text-[#09121F] text-sm font-bold text-right">Fee</span>}
                 </div>
                 <div className="h-px bg-[#09121F] mb-4" />
 
                 {/* Entries */}
                 <div className="space-y-0">
-                  {archivedEntries.map(entry => <div key={entry.id} className="grid grid-cols-5 h-[32px] items-center hover:bg-gray-50" style={{
-                gridTemplateColumns: '32px 2fr 2fr 2fr 1fr',
+                  {archivedEntries.map(entry => <div key={entry.id} className={`grid h-[32px] items-center hover:bg-gray-50 ${viewMode === 'invoice' ? 'grid-cols-6' : 'grid-cols-5'}`} style={{
+                gridTemplateColumns: viewMode === 'invoice' ? '32px 2fr 2fr 2fr 1fr 1fr' : '32px 2fr 2fr 2fr 1fr',
                 gap: '0'
               }}>
                       <div className="flex items-center w-[32px]">
@@ -170,6 +198,9 @@ export const TimeArchivePage: React.FC = () => {
                       <div className="text-[#09121F] text-sm">{entry.project}</div>
                       <div className="text-[#09121F] text-sm">{entry.task}</div>
                       <div className="text-[#09121F] text-sm text-right">{formatHours(entry.duration)}</div>
+                      {viewMode === 'invoice' && <div className="text-[#09121F] text-sm text-right">
+                        ${(entry.duration * getTaskRate(entry.task)).toFixed(2)}
+                      </div>}
                     </div>)}
                 </div>
               </>}
@@ -196,7 +227,7 @@ export const TimeArchivePage: React.FC = () => {
             onClose={() => setIsExportDialogOpen(false)} 
             timeEntries={archivedEntries} 
             settings={settings} 
-            viewMode="timecard" 
+            viewMode={viewMode} 
           />
 
           {/* Clear Archive Dialog */}
