@@ -485,20 +485,9 @@ export const TimeArchivePage: React.FC = () => {
             )}
           </div>
 
-          {/* Exit Button */}
-          <div className="p-5">
-            <Button 
-              variant="outline" 
-              onClick={() => navigate('/')} 
-              className="w-full h-12 text-base font-medium rounded-none border-2 border-foreground"
-            >
-              Exit
-            </Button>
-          </div>
-
-          {/* Export Button - Fixed at bottom */}
+          {/* Export Button */}
           {archivedEntries.length > 0 && (
-            <div className="px-5 pb-5">
+            <div className="px-5 pt-5">
               <button 
                 onClick={() => setIsExportDialogOpen(true)} 
                 className="w-full text-white py-3.5 font-bold text-sm transition-colors" 
@@ -510,6 +499,17 @@ export const TimeArchivePage: React.FC = () => {
               </button>
             </div>
           )}
+
+          {/* Exit Button */}
+          <div className="px-5 pt-2 pb-5">
+            <Button 
+              variant="outline" 
+              onClick={() => navigate('/')} 
+              className="w-full h-12 text-base font-medium rounded-none border-2 border-foreground"
+            >
+              Exit
+            </Button>
+          </div>
 
           {/* Export Dialog */}
           <ExportDialog 
