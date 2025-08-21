@@ -2,24 +2,29 @@ import React, { useState } from 'react';
 import { useApp } from '@/context/AppContext';
 import { TimeEntry } from '@/types';
 import { format } from 'date-fns';
-import { Trash2, RotateCcw, Archive } from 'lucide-react';
+import { Trash2, RotateCcw, Archive, ArrowLeft } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useSelection } from '@/hooks/useSelection';
 import { useToast } from '@/hooks/use-toast';
+import { useNavigate } from 'react-router-dom';
+import { ExportDialog } from '@/components/ExportDialog';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 export const TimeArchivePage: React.FC = () => {
   const {
     timeEntries,
     deleteTimeEntry,
-    updateTimeEntry
+    updateTimeEntry,
+    settings
   } = useApp();
   const {
     toast
   } = useToast();
+  const navigate = useNavigate();
   const selection = useSelection();
   const [showClearDialog, setShowClearDialog] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
+  const [isExportDialogOpen, setIsExportDialogOpen] = useState(false);
 
   // Filter archived entries
   const archivedEntries = timeEntries.filter(entry => entry.archived);
@@ -88,10 +93,17 @@ export const TimeArchivePage: React.FC = () => {
             </div>
           </div>}
         <div className="flex items-center justify-between h-full">
-          <h1 className="text-[#09121F] text-[28px] font-bold leading-8">Time Archive</h1>
-          {archivedEntries.length > 0 && <Button variant="ghost" size="sm" onClick={() => setShowClearDialog(true)} className="text-red-600 hover:text-red-700 hover:bg-transparent">
-              Clear All
-            </Button>}
+          <div className="flex items-center gap-3">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={() => navigate('/')}
+              className="p-1 hover:bg-transparent"
+            >
+              <ArrowLeft className="h-5 w-5 text-[#09121F]" />
+            </Button>
+            <h1 className="text-[#09121F] text-[28px] font-bold leading-8">Time Archive</h1>
+          </div>
         </div>
       </div>
 
@@ -142,6 +154,30 @@ export const TimeArchivePage: React.FC = () => {
             </div>
           </>}
       </div>
+
+      {/* Export Button - Fixed at bottom */}
+      {archivedEntries.length > 0 && (
+        <div className="p-5">
+          <button 
+            onClick={() => setIsExportDialogOpen(true)} 
+            className="w-full text-white py-3.5 font-bold text-sm transition-colors" 
+            style={{
+              background: 'linear-gradient(135deg, #09121F 0%, #2C3E50 100%)'
+            }}
+          >
+            Export/Share/Print
+          </button>
+        </div>
+      )}
+
+      {/* Export Dialog */}
+      <ExportDialog 
+        isOpen={isExportDialogOpen} 
+        onClose={() => setIsExportDialogOpen(false)} 
+        timeEntries={archivedEntries} 
+        settings={settings} 
+        viewMode="timecard" 
+      />
 
       {/* Clear Archive Dialog */}
       <AlertDialog open={showClearDialog} onOpenChange={setShowClearDialog}>
