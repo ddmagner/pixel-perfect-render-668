@@ -271,7 +271,7 @@ export const TimeTally: React.FC = () => {
 
       {/* Header / Selection Toolbar */}
       <div className="px-5 pt-0.5 pb-1 h-[2.75rem]">
-        {selection.hasAnySelected ? (
+        {selection.hasAnySelected && (
           <div className="fixed left-1/2 transform -translate-x-1/2 w-[calc(100%-2.5rem)] max-w-md flex items-center gap-2 bg-gray-50 h-[2.75rem] py-2 pl-0 pr-3 justify-between rounded z-50" style={{ top: '180px', boxShadow: '0 -3px 8px -1px rgba(0, 0, 0, 0.2), 0 3px 8px -1px rgba(0, 0, 0, 0.2)' }}>
             <div className="flex items-center gap-4" style={{ paddingLeft: '32px' }}>
               <Button
@@ -315,30 +315,29 @@ export const TimeTally: React.FC = () => {
               <X className="h-4 w-4" />
             </Button>
           </div>
-        ) : (
-          <div className="flex items-baseline justify-between h-full">
-            <h1 className="text-[#09121F] text-[28px] font-bold leading-8">Where time went</h1>
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <button className="flex items-center gap-2 text-sm font-medium text-[#09121F] hover:bg-gray-50">
-                  {getSortOptionText()}
-                  <ChevronDown className="h-4 w-4" />
-                </button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="bg-white border border-[#09121F] rounded-lg shadow-lg">
-                <DropdownMenuItem onClick={() => setSortOption('project')} className="text-sm font-medium text-[#09121F] hover:bg-gray-50 cursor-pointer">
-                  By Project
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setSortOption('date')} className="text-sm font-medium text-[#09121F] hover:bg-gray-50 cursor-pointer">
-                  By Date
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setSortOption('task')} className="text-sm font-medium text-[#09121F] hover:bg-gray-50 cursor-pointer">
-                  By Task
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
         )}
+        <div className={`flex items-baseline justify-between h-full ${selection.hasAnySelected ? 'mt-11' : ''}`}>
+          <h1 className="text-[#09121F] text-[28px] font-bold leading-8">Where time went</h1>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <button className="flex items-center gap-2 text-sm font-medium text-[#09121F] hover:bg-gray-50">
+                {getSortOptionText()}
+                <ChevronDown className="h-4 w-4" />
+              </button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="bg-white border border-[#09121F] rounded-lg shadow-lg">
+              <DropdownMenuItem onClick={() => setSortOption('project')} className="text-sm font-medium text-[#09121F] hover:bg-gray-50 cursor-pointer">
+                By Project
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setSortOption('date')} className="text-sm font-medium text-[#09121F] hover:bg-gray-50 cursor-pointer">
+                By Date
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => setSortOption('task')} className="text-sm font-medium text-[#09121F] hover:bg-gray-50 cursor-pointer">
+                By Task
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
 
 
