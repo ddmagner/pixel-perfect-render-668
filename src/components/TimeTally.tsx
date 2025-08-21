@@ -317,7 +317,7 @@ export const TimeTally: React.FC = () => {
       {/* Table Header */}
       <div className="w-full px-5">
         <div className={`grid ${gridColsWithSelection} h-[32px] items-center`} style={{
-        gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 80px' + (viewMode === 'invoice' ? ' calc(80px + 20px)' : ''),
+        gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (viewMode === 'invoice' ? ' calc(40px + 20px)' : ''),
         gap: '0'
       }}>
           <div className="flex items-center w-[32px]">
@@ -351,7 +351,7 @@ export const TimeTally: React.FC = () => {
                         </div>
                         
                         {project.entries.map((entry: TimeEntry) => <div key={entry.id} className={`grid ${gridColsWithSelection} h-[32px] items-center hover:bg-gray-50`} style={{
-                gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 80px' + (viewMode === 'invoice' ? ' calc(80px + 20px)' : ''),
+                gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (viewMode === 'invoice' ? ' calc(40px + 20px)' : ''),
                 gap: '0'
               }}>
                             <div className="flex items-center w-[32px]">
@@ -375,7 +375,7 @@ export const TimeTally: React.FC = () => {
                         
                         <div className="h-px bg-[#09121F]" />
                         <div className={`grid ${gridColsWithSelection} h-[32px] items-center`} style={{
-                gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 80px' + (viewMode === 'invoice' ? ' calc(80px + 20px)' : ''),
+                gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (viewMode === 'invoice' ? ' calc(40px + 20px)' : ''),
                 gap: '0'
               }}>
                           <div></div>
@@ -392,7 +392,7 @@ export const TimeTally: React.FC = () => {
                       </div>) : sortOption === 'date' && group.projects ? <div>
                       {group.projects.map((project: any, projectIndex: number) => <div key={`date-project-${project.name}-${projectIndex}`}>
                           {project.entries.map((entry: TimeEntry) => <div key={entry.id} className={`grid ${gridColsWithSelection} h-[32px] items-center hover:bg-gray-50`} style={{
-                  gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 80px' + (viewMode === 'invoice' ? ' calc(80px + 20px)' : ''),
+                  gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (viewMode === 'invoice' ? ' calc(40px + 20px)' : ''),
                   gap: '0'
                 }}>
                               <div className="flex items-center w-[32px]">
@@ -417,7 +417,7 @@ export const TimeTally: React.FC = () => {
                       
                       <div className="h-px bg-[#09121F] mt-2" />
                       <div className={`grid ${gridColsWithSelection} h-[32px] items-center`} style={{
-                gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 80px' + (viewMode === 'invoice' ? ' calc(80px + 20px)' : ''),
+                gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (viewMode === 'invoice' ? ' calc(40px + 20px)' : ''),
                 gap: '0'
               }}>
                         <div></div>
@@ -433,7 +433,7 @@ export const TimeTally: React.FC = () => {
                       <div className="h-px bg-[#09121F]" />
                     </div> : sortOption === 'task' && group.entries ? <div>
                       {group.entries.map((entry: TimeEntry) => <div key={entry.id} className={`grid ${gridColsWithSelection} h-[32px] items-center hover:bg-gray-50`} style={{
-                gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 80px' + (viewMode === 'invoice' ? ' calc(80px + 20px)' : ''),
+                gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (viewMode === 'invoice' ? ' calc(40px + 20px)' : ''),
                 gap: '0'
               }}>
                             <div className="flex items-center w-[32px]">
@@ -457,7 +457,7 @@ export const TimeTally: React.FC = () => {
                       
                       <div className="h-px bg-[#09121F] mt-2" />
                       <div className={`grid ${gridColsWithSelection} h-[32px] items-center`} style={{
-                gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 80px' + (viewMode === 'invoice' ? ' calc(80px + 20px)' : ''),
+                gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (viewMode === 'invoice' ? ' calc(40px + 20px)' : ''),
                 gap: '0'
               }}>
                         <div></div>
@@ -478,7 +478,7 @@ export const TimeTally: React.FC = () => {
             {/* Total */}
             <div className="w-full">
               <div className={`grid ${gridColsWithSelection} h-[32px] items-center`} style={{
-                gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 80px' + (viewMode === 'invoice' ? ' calc(80px + 20px)' : ''),
+                gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (viewMode === 'invoice' ? ' calc(40px + 20px)' : ''),
                 gap: '0'
               }}>
                 <div className="flex items-center"></div>
