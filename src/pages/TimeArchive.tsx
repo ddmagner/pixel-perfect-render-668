@@ -71,6 +71,14 @@ export const TimeArchivePage: React.FC = () => {
 
   return (
     <div className="flex flex-col h-full w-full font-gilroy">
+      {/* Mode Toggle - Empty space to match TimeTally layout */}
+      <div className="flex justify-center items-center w-full px-5 py-4">
+        <div className="h-6" /> {/* Empty space to match TimeTally toggle height */}
+      </div>
+
+      {/* Divider */}
+      <div className="h-px bg-[#09121F] mx-5 mb-6" />
+
       {/* Header / Selection Toolbar */}
       <div className="pt-0.5 pb-1 h-[2.75rem] px-5">
         {selection.hasAnySelected && (
@@ -122,8 +130,28 @@ export const TimeArchivePage: React.FC = () => {
         </div>
       </div>
 
-      {/* Divider */}
-      <div className="h-px bg-[#09121F] mx-5 mb-6" />
+      {/* Table Header */}
+      <div className="w-full px-5">
+        <div className="grid grid-cols-5 h-[32px] items-center" style={{ gridTemplateColumns: '32px 2fr 2fr 2fr 1fr', gap: '0' }}>
+          <div className="flex items-center w-[32px]">
+            <div 
+              className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${
+                isAllSelected ? 'bg-gray-300' : 'bg-white'
+              }`}
+              onClick={() => selection.toggleSelectAll(allArchivedIds)}
+            >
+              {isAllSelected && (
+                <div className="w-2 h-2 rounded-full bg-black"></div>
+              )}
+            </div>
+          </div>
+          <span className="text-[#09121F] text-sm font-bold">Date</span>
+          <span className="text-[#09121F] text-sm font-bold">Project</span>
+          <span className="text-[#09121F] text-sm font-bold">Task</span>
+          <span className="text-[#09121F] text-sm font-bold text-right">Hours</span>
+        </div>
+        <div className="h-px bg-[#09121F]" />
+      </div>
 
       {/* Content */}
       <div className="flex-1 overflow-y-auto w-full px-5">
@@ -133,54 +161,30 @@ export const TimeArchivePage: React.FC = () => {
             <p className="text-[#BFBFBF] text-lg">No archived entries</p>
           </div>
         ) : (
-          <>
-            {/* Table Header */}
-            <div className="grid grid-cols-5 h-[32px] items-center" style={{ gridTemplateColumns: '32px 2fr 2fr 2fr 1fr', gap: '0' }}>
-              <div className="flex items-center w-[32px]">
-                <div 
-                  className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${
-                    isAllSelected ? 'bg-gray-300' : 'bg-white'
-                  }`}
-                  onClick={() => selection.toggleSelectAll(allArchivedIds)}
-                >
-                  {isAllSelected && (
-                    <div className="w-2 h-2 rounded-full bg-black"></div>
-                  )}
+          <div className="space-y-0">
+            {archivedEntries.map((entry) => (
+              <div key={entry.id} className="grid grid-cols-5 h-[32px] items-center hover:bg-gray-50" style={{ gridTemplateColumns: '32px 2fr 2fr 2fr 1fr', gap: '0' }}>
+                <div className="flex items-center w-[32px]">
+                  <div 
+                    className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${
+                      selection.isSelected(entry.id) ? 'bg-gray-300' : 'bg-white'
+                    }`}
+                    onClick={() => selection.toggleSelectRecord(entry.id)}
+                  >
+                    {selection.isSelected(entry.id) && (
+                      <div className="w-2 h-2 rounded-full bg-black"></div>
+                    )}
+                  </div>
                 </div>
+                <div className="text-[#09121F] text-sm">
+                  {format(new Date(entry.date), 'MM/dd/yyyy')}
+                </div>
+                <div className="text-[#09121F] text-sm">{entry.project}</div>
+                <div className="text-[#09121F] text-sm">{entry.task}</div>
+                <div className="text-[#09121F] text-sm text-right">{formatHours(entry.duration)}</div>
               </div>
-              <span className="text-[#09121F] text-sm font-bold">Date</span>
-              <span className="text-[#09121F] text-sm font-bold">Project</span>
-              <span className="text-[#09121F] text-sm font-bold">Task</span>
-              <span className="text-[#09121F] text-sm font-bold text-right">Hours</span>
-            </div>
-            <div className="h-px bg-[#09121F] mb-4" />
-
-            {/* Entries */}
-            <div className="space-y-0">
-              {archivedEntries.map((entry) => (
-                <div key={entry.id} className="grid grid-cols-5 h-[32px] items-center hover:bg-gray-50" style={{ gridTemplateColumns: '32px 2fr 2fr 2fr 1fr', gap: '0' }}>
-                  <div className="flex items-center w-[32px]">
-                    <div 
-                      className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${
-                        selection.isSelected(entry.id) ? 'bg-gray-300' : 'bg-white'
-                      }`}
-                      onClick={() => selection.toggleSelectRecord(entry.id)}
-                    >
-                      {selection.isSelected(entry.id) && (
-                        <div className="w-2 h-2 rounded-full bg-black"></div>
-                      )}
-                    </div>
-                  </div>
-                  <div className="text-[#09121F] text-sm">
-                    {format(new Date(entry.date), 'MM/dd/yyyy')}
-                  </div>
-                  <div className="text-[#09121F] text-sm">{entry.project}</div>
-                  <div className="text-[#09121F] text-sm">{entry.task}</div>
-                  <div className="text-[#09121F] text-sm text-right">{formatHours(entry.duration)}</div>
-                </div>
-              ))}
-            </div>
-          </>
+            ))}
+          </div>
         )}
       </div>
 
