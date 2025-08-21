@@ -270,9 +270,9 @@ export const TimeTally: React.FC = () => {
       <div className="h-px bg-[#09121F] mx-5 mb-6" />
 
       {/* Header / Selection Toolbar */}
-      <div className="flex items-baseline justify-between px-5 pt-0.5 pb-1">
+      <div className="flex items-baseline justify-between px-5 pt-0.5 pb-1 min-h-[2.5rem]">
         {selection.hasAnySelected ? (
-          <div className="flex items-center gap-2 p-3 bg-blue-50 rounded-lg flex-1 mr-4">
+          <div className="flex items-center gap-2 bg-blue-50 rounded-lg w-full h-full py-2 px-3">
             <Button
               size="sm"
               variant="outline"
@@ -305,6 +305,7 @@ export const TimeTally: React.FC = () => {
               size="sm"
               variant="ghost"
               onClick={selection.clearSelection}
+              className="ml-auto"
             >
               <X className="h-4 w-4" />
             </Button>
