@@ -10,16 +10,7 @@ import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useSelection } from '@/hooks/useSelection';
 import { useToast } from '@/hooks/use-toast';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from '@/components/ui/alert-dialog';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 export const TimeTally: React.FC = () => {
   const {
     timeEntries,
@@ -31,13 +22,14 @@ export const TimeTally: React.FC = () => {
     deleteTimeEntries,
     archiveTimeEntries
   } = useApp();
-  
   const [isExportDialogOpen, setIsExportDialogOpen] = useState(false);
   const [editingEntry, setEditingEntry] = useState<TimeEntry | null>(null);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [showArchiveDialog, setShowArchiveDialog] = useState(false);
   const selection = useSelection();
-  const { toast } = useToast();
+  const {
+    toast
+  } = useToast();
 
   // Filter out archived entries
   const activeTimeEntries = timeEntries.filter(entry => !entry.archived);
@@ -186,7 +178,6 @@ export const TimeTally: React.FC = () => {
     });
     return ids;
   }, [organizedData]);
-
   const handleEdit = () => {
     if (selection.selectedCount === 1) {
       const entryId = selection.selectedIds[0];
@@ -196,7 +187,6 @@ export const TimeTally: React.FC = () => {
       }
     }
   };
-
   const handleDelete = () => {
     deleteTimeEntries(selection.selectedIds);
     selection.clearSelection();
@@ -206,7 +196,6 @@ export const TimeTally: React.FC = () => {
       description: `${selection.selectedCount} ${selection.selectedCount === 1 ? 'entry' : 'entries'} deleted`
     });
   };
-
   const handleArchive = () => {
     archiveTimeEntries(selection.selectedIds);
     selection.clearSelection();
@@ -248,7 +237,6 @@ export const TimeTally: React.FC = () => {
   const headers = getTableHeaders();
   const gridCols = viewMode === 'invoice' ? 'grid-cols-4' : 'grid-cols-3';
   const gridColsWithSelection = viewMode === 'invoice' ? 'grid-cols-5' : 'grid-cols-4';
-  
   const isAllSelected = allEntryIds.length > 0 && allEntryIds.every(id => selection.isSelected(id));
   return <div className="flex flex-col h-full w-full font-gilroy">
       {/* Mode Toggle */}
@@ -271,53 +259,36 @@ export const TimeTally: React.FC = () => {
 
       {/* Header / Selection Toolbar */}
       <div className="pt-0.5 pb-1 h-[2.75rem] px-5">
-        {selection.hasAnySelected && (
-          <div className="fixed left-1/2 transform -translate-x-1/2 w-[calc(100%-2.5rem)] max-w-md px-5 z-50" style={{ top: '170px' }}>
-            <div className="flex items-center gap-2 bg-gray-50 h-[2.75rem] py-2 pl-0 pr-3 justify-between rounded" style={{ boxShadow: '0 -3px 8px -1px rgba(0, 0, 0, 0.2), 0 3px 8px -1px rgba(0, 0, 0, 0.2)' }}>
-            <div className="flex items-center gap-4" style={{ paddingLeft: '32px' }}>
-              <Button
-                size="sm"
-                variant="ghost"
-                onClick={handleEdit}
-                disabled={selection.selectedCount !== 1}
-                className="bg-transparent text-black hover:text-gray-600 hover:bg-transparent border-none shadow-none pl-0 gap-1"
-              >
+        {selection.hasAnySelected && <div className="fixed left-1/2 transform -translate-x-1/2 w-[calc(100%-2.5rem)] max-w-md px-5 z-50" style={{
+        top: '170px'
+      }}>
+            <div className="flex items-center gap-2 bg-gray-50 h-[2.75rem] py-2 pl-0 pr-3 justify-between rounded" style={{
+          boxShadow: '0 -3px 8px -1px rgba(0, 0, 0, 0.2), 0 3px 8px -1px rgba(0, 0, 0, 0.2)'
+        }}>
+            <div className="flex items-center gap-4" style={{
+            paddingLeft: '32px'
+          }}>
+              <Button size="sm" variant="ghost" onClick={handleEdit} disabled={selection.selectedCount !== 1} className="bg-transparent text-black hover:text-gray-600 hover:bg-transparent border-none shadow-none pl-0 gap-1">
                 <Pencil className="h-4 w-4" />
                 Edit
               </Button>
               
-              <Button
-                size="sm"
-                variant="ghost"
-                onClick={() => setShowDeleteDialog(true)}
-                className="bg-transparent text-black hover:text-gray-600 hover:bg-transparent border-none shadow-none gap-1"
-              >
+              <Button size="sm" variant="ghost" onClick={() => setShowDeleteDialog(true)} className="bg-transparent text-black hover:text-gray-600 hover:bg-transparent border-none shadow-none gap-1">
                 <Trash2 className="h-4 w-4" />
                 Delete
               </Button>
               
-              <Button
-                size="sm"
-                variant="ghost"
-                onClick={() => setShowArchiveDialog(true)}
-                className="bg-transparent text-black hover:text-gray-600 hover:bg-transparent border-none shadow-none"
-              >
+              <Button size="sm" variant="ghost" onClick={() => setShowArchiveDialog(true)} className="bg-transparent text-black hover:text-gray-600 hover:bg-transparent border-none shadow-none">
                 <Archive className="h-4 w-4" />
                 Archive
               </Button>
             </div>
 
-            <Button
-              size="sm"
-              variant="ghost"
-              onClick={selection.clearSelection}
-              className="bg-transparent text-black hover:text-gray-600 hover:bg-transparent border-none shadow-none p-1"
-            >
+            <Button size="sm" variant="ghost" onClick={selection.clearSelection} className="bg-transparent text-black hover:text-gray-600 hover:bg-transparent border-none shadow-none p-1">
               <X className="h-4 w-4" />
             </Button>
             </div>
-          </div>
-        )}
+          </div>}
         <div className="flex items-baseline justify-between h-full">
           <h1 className="text-[#09121F] text-[28px] font-bold leading-8">Where time went</h1>
           <DropdownMenu>
@@ -345,20 +316,16 @@ export const TimeTally: React.FC = () => {
 
       {/* Table Header */}
       <div className="w-full px-5">
-        <div className={`grid ${gridColsWithSelection} h-[32px] items-center`} style={{ gridTemplateColumns: '32px 1.5fr 1.5fr 1fr' + (viewMode === 'invoice' ? ' 1fr' : ''), gap: '0' }}>
+        <div className={`grid ${gridColsWithSelection} h-[32px] items-center`} style={{
+        gridTemplateColumns: '32px 2fr 2fr 1fr' + (viewMode === 'invoice' ? ' 1fr' : ''),
+        gap: '0'
+      }}>
           <div className="flex items-center w-[32px]">
-            <div 
-              className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${
-                isAllSelected ? 'bg-gray-300' : 'bg-white'
-              }`}
-              onClick={() => selection.toggleSelectAll(allEntryIds)}
-            >
-              {isAllSelected && (
-                <div className="w-2 h-2 rounded-full bg-black"></div>
-              )}
+            <div className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${isAllSelected ? 'bg-gray-300' : 'bg-white'}`} onClick={() => selection.toggleSelectAll(allEntryIds)}>
+              {isAllSelected && <div className="w-2 h-2 rounded-full bg-black"></div>}
             </div>
           </div>
-          {headers.map((header, index) => <span key={header} className={`text-[#09121F] text-sm font-bold ${(header === 'Hours' || header === 'Fee') ? 'text-right' : 'text-left'}`}>
+          {headers.map((header, index) => <span key={header} className={`text-[#09121F] text-sm font-bold ${header === 'Hours' || header === 'Fee' ? 'text-right' : 'text-left'}`}>
               {header}
             </span>)}
         </div>
@@ -379,21 +346,17 @@ export const TimeTally: React.FC = () => {
 
                   {/* Group Content */}
                   {sortOption === 'project' && group.projects ? group.projects.map((project: any, projectIndex: number) => <div key={`project-${project.name}-${projectIndex}`}>
-                        <div className="font-bold text-[#09121F] text-sm h-[32px] flex items-center pl-8">
+                        <div className="font-bold text-[#09121F] text-sm h-[32px] flex items-center">
                           {project.name}
                         </div>
                         
-                        {project.entries.map((entry: TimeEntry) => <div key={entry.id} className={`grid ${gridColsWithSelection} h-[32px] items-center hover:bg-gray-50`} style={{ gridTemplateColumns: '32px 1.5fr 1.5fr 1fr' + (viewMode === 'invoice' ? ' 1fr' : ''), gap: '0' }}>
+                        {project.entries.map((entry: TimeEntry) => <div key={entry.id} className={`grid ${gridColsWithSelection} h-[32px] items-center hover:bg-gray-50`} style={{
+                gridTemplateColumns: '32px 2fr 2fr 1fr' + (viewMode === 'invoice' ? ' 1fr' : ''),
+                gap: '0'
+              }}>
                             <div className="flex items-center w-[32px]">
-                              <div 
-                                className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${
-                                  selection.isSelected(entry.id) ? 'bg-gray-300' : 'bg-white'
-                                }`}
-                                onClick={() => selection.toggleSelectRecord(entry.id)}
-                              >
-                                {selection.isSelected(entry.id) && (
-                                  <div className="w-2 h-2 rounded-full bg-black"></div>
-                                )}
+                              <div className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${selection.isSelected(entry.id) ? 'bg-gray-300' : 'bg-white'}`} onClick={() => selection.toggleSelectRecord(entry.id)}>
+                                {selection.isSelected(entry.id) && <div className="w-2 h-2 rounded-full bg-black"></div>}
                               </div>
                             </div>
                             <div className="text-[#09121F] text-sm flex items-center">
@@ -411,7 +374,7 @@ export const TimeTally: React.FC = () => {
                           </div>)}
                         
                         <div className="h-px bg-[#09121F]" />
-                        <div className={`grid ${gridColsWithSelection} gap-0 h-[32px] items-center`} style={{ gridTemplateColumns: '32px 1.5fr 1.5fr 1fr' + (viewMode === 'invoice' ? ' 1fr' : '') }}>
+                        <div className={`grid ${gridColsWithSelection} gap-4 h-[32px] items-center justify-center`}>
                           <div></div>
                           <div></div>
                           <div className="text-[#09121F] text-sm font-bold flex items-center">Sub-total</div>
@@ -425,17 +388,13 @@ export const TimeTally: React.FC = () => {
                         <div className="h-px bg-[#09121F]" />
                       </div>) : sortOption === 'date' && group.projects ? <div>
                       {group.projects.map((project: any, projectIndex: number) => <div key={`date-project-${project.name}-${projectIndex}`}>
-                          {project.entries.map((entry: TimeEntry) => <div key={entry.id} className={`grid ${gridColsWithSelection} h-[32px] items-center hover:bg-gray-50`} style={{ gridTemplateColumns: '32px 1.5fr 1.5fr 1fr' + (viewMode === 'invoice' ? ' 1fr' : ''), gap: '0' }}>
+                          {project.entries.map((entry: TimeEntry) => <div key={entry.id} className={`grid ${gridColsWithSelection} h-[32px] items-center hover:bg-gray-50`} style={{
+                  gridTemplateColumns: '32px 2fr 2fr 1fr' + (viewMode === 'invoice' ? ' 1fr' : ''),
+                  gap: '0'
+                }}>
                               <div className="flex items-center w-[32px]">
-                                <div 
-                                  className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${
-                                    selection.isSelected(entry.id) ? 'bg-gray-300' : 'bg-white'
-                                  }`}
-                                  onClick={() => selection.toggleSelectRecord(entry.id)}
-                                >
-                                  {selection.isSelected(entry.id) && (
-                                    <div className="w-2 h-2 rounded-full bg-black"></div>
-                                  )}
+                                <div className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${selection.isSelected(entry.id) ? 'bg-gray-300' : 'bg-white'}`} onClick={() => selection.toggleSelectRecord(entry.id)}>
+                                  {selection.isSelected(entry.id) && <div className="w-2 h-2 rounded-full bg-black"></div>}
                                 </div>
                               </div>
                               <div className="text-[#09121F] text-sm flex items-center">
@@ -454,7 +413,9 @@ export const TimeTally: React.FC = () => {
                         </div>)}
                       
                       <div className="h-px bg-[#09121F] mt-2" />
-                      <div className={`grid ${gridColsWithSelection} gap-0 h-[32px] items-center`} style={{ gridTemplateColumns: '32px 1.5fr 1.5fr 1fr' + (viewMode === 'invoice' ? ' 1fr' : '') }}>
+                      <div className={`grid ${gridColsWithSelection} gap-0 h-[32px] items-center`} style={{
+                gridTemplateColumns: '32px 2fr 2fr 1fr' + (viewMode === 'invoice' ? ' 1fr' : '')
+              }}>
                         <div></div>
                         <div></div>
                         <div className="text-[#09121F] text-sm font-bold flex items-center">Sub-total</div>
@@ -467,17 +428,13 @@ export const TimeTally: React.FC = () => {
                       </div>
                       <div className="h-px bg-[#09121F]" />
                     </div> : sortOption === 'task' && group.entries ? <div>
-                      {group.entries.map((entry: TimeEntry) => <div key={entry.id} className={`grid ${gridColsWithSelection} h-[32px] items-center hover:bg-gray-50`} style={{ gridTemplateColumns: '32px 1.5fr 1.5fr 1fr' + (viewMode === 'invoice' ? ' 1fr' : ''), gap: '0' }}>
+                      {group.entries.map((entry: TimeEntry) => <div key={entry.id} className={`grid ${gridColsWithSelection} h-[32px] items-center hover:bg-gray-50`} style={{
+                gridTemplateColumns: '32px 2fr 2fr 1fr' + (viewMode === 'invoice' ? ' 1fr' : ''),
+                gap: '0'
+              }}>
                             <div className="flex items-center w-[32px]">
-                              <div 
-                                className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${
-                                  selection.isSelected(entry.id) ? 'bg-gray-300' : 'bg-white'
-                                }`}
-                                onClick={() => selection.toggleSelectRecord(entry.id)}
-                              >
-                                {selection.isSelected(entry.id) && (
-                                  <div className="w-2 h-2 rounded-full bg-black"></div>
-                                )}
+                              <div className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${selection.isSelected(entry.id) ? 'bg-gray-300' : 'bg-white'}`} onClick={() => selection.toggleSelectRecord(entry.id)}>
+                                {selection.isSelected(entry.id) && <div className="w-2 h-2 rounded-full bg-black"></div>}
                               </div>
                             </div>
                             <div className="text-[#09121F] text-sm flex items-center">
@@ -495,7 +452,7 @@ export const TimeTally: React.FC = () => {
                           </div>)}
                       
                       <div className="h-px bg-[#09121F] mt-2" />
-                      <div className={`grid ${gridColsWithSelection} gap-0 h-[32px] items-center`} style={{ gridTemplateColumns: '32px 1.5fr 1.5fr 1fr' + (viewMode === 'invoice' ? ' 1fr' : '') }}>
+                      <div className={`grid ${gridColsWithSelection} gap-4 h-[32px] items-center justify-center`}>
                         <div></div>
                         <div></div>
                         <div className="text-[#09121F] text-sm font-bold flex items-center">Sub-total</div>
@@ -513,7 +470,7 @@ export const TimeTally: React.FC = () => {
 
             {/* Total */}
             <div className="w-full">
-              <div className={`grid ${gridColsWithSelection} gap-0 h-[32px] items-center`} style={{ gridTemplateColumns: '32px 1.5fr 1.5fr 1fr' + (viewMode === 'invoice' ? ' 1fr' : '') }}>
+              <div className={`grid ${gridColsWithSelection} gap-4 h-[32px] items-center`}>
                 <div className="flex items-center"></div>
                 <div className="flex items-center"></div>
                 <div className="text-[#09121F] text-sm font-bold flex items-center">TOTAL</div>
@@ -525,9 +482,7 @@ export const TimeTally: React.FC = () => {
                   </div>}
               </div>
               <div className="flex justify-start mt-4">
-                <p className="text-[#09121F] text-sm italic flex items-center gap-1">
-                  Select records to edit, delete, or archive
-                </p>
+                
               </div>
             </div>
           </>}
@@ -543,20 +498,10 @@ export const TimeTally: React.FC = () => {
       </div>
 
       {/* Export Dialog */}
-      <ExportDialog
-        isOpen={isExportDialogOpen}
-        onClose={() => setIsExportDialogOpen(false)}
-        timeEntries={timeEntries}
-        settings={settings}
-        viewMode={viewMode}
-      />
+      <ExportDialog isOpen={isExportDialogOpen} onClose={() => setIsExportDialogOpen(false)} timeEntries={timeEntries} settings={settings} viewMode={viewMode} />
 
       {/* Edit Dialog */}
-      <EditTimeEntryDialog
-        isOpen={!!editingEntry}
-        onClose={() => setEditingEntry(null)}
-        entry={editingEntry}
-      />
+      <EditTimeEntryDialog isOpen={!!editingEntry} onClose={() => setEditingEntry(null)} entry={editingEntry} />
 
       {/* Delete Confirmation Dialog */}
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
