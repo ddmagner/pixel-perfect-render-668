@@ -5,19 +5,22 @@ export interface ParsedTimeEntry {
 }
 
 export function parseTimeEntryFromSpeech(transcript: string): Partial<ParsedTimeEntry> {
-  const text = transcript.toLowerCase();
+  const text = transcript.toLowerCase().trim();
   const result: Partial<ParsedTimeEntry> = {};
 
-  // Extract duration - look for patterns like "2 hours", "1.5 hours", "30 minutes"
+  // Extract duration - prioritize the specific format "[number] hours"
   const hourPatterns = [
-    /(\d+(?:\.\d+)?)\s*(?:hours?|hrs?|h)/i,
+    /(\d+(?:\.\d+)?)\s*hours?/i,
+    /(\d+(?:\.\d+)?)\s*hrs?/i,
+    /(\d+(?:\.\d+)?)\s*h\b/i,
     /(\d+(?:\.\d+)?)\s*(?:and\s*a\s*half|½)\s*(?:hours?|hrs?|h)/i,
   ];
   
   const minutePatterns = [
-    /(\d+)\s*(?:minutes?|mins?|m)/i,
+    /(\d+)\s*(?:minutes?|mins?|m)\b/i,
   ];
 
+  // Look for hour patterns first
   for (const pattern of hourPatterns) {
     const match = text.match(pattern);
     if (match) {
@@ -29,6 +32,7 @@ export function parseTimeEntryFromSpeech(transcript: string): Partial<ParsedTime
     }
   }
 
+  // If no hours found, look for minutes
   if (!result.duration) {
     for (const pattern of minutePatterns) {
       const match = text.match(pattern);
@@ -39,30 +43,36 @@ export function parseTimeEntryFromSpeech(transcript: string): Partial<ParsedTime
     }
   }
 
-  // Extract task - look for patterns like "working on", "doing", "spent time"
+  // Extract task - improved patterns for "doing [task]" format
   const taskPatterns = [
-    /(?:working on|doing|spent time|time on|for)\s+([^,]+?)(?:\s+(?:on|for)\s+|$)/i,
-    /(?:task|activity):\s*([^,]+?)(?:\s+(?:on|for)\s+|$)/i,
+    // Primary pattern for "doing [task]"
+    /doing\s+([^.]+?)(?:\s+on\s+|$)/i,
+    // Alternative patterns
+    /(?:working on|spent time on|time on)\s+([^.]+?)(?:\s+(?:on|for)\s+|$)/i,
+    /(?:task|activity):\s*([^.]+?)(?:\s+(?:on|for)\s+|$)/i,
   ];
 
   for (const pattern of taskPatterns) {
     const match = text.match(pattern);
     if (match) {
-      result.task = match[1].trim();
+      result.task = match[1].trim().replace(/\s+/g, ' ');
       break;
     }
   }
 
-  // Extract project - look for patterns like "on project", "for project"
+  // Extract project - improved patterns for "on [project name]" format
   const projectPatterns = [
-    /(?:on|for)\s+(?:project|the)\s+([^,]+?)(?:\s|$)/i,
-    /project:\s*([^,]+?)(?:\s|$)/i,
+    // Primary pattern for "on [project name]"
+    /\bon\s+([^.]+?)(?:\s*$)/i,
+    // Alternative patterns
+    /(?:for|on)\s+(?:project|the)\s+([^.]+?)(?:\s*$)/i,
+    /project:\s*([^.]+?)(?:\s*$)/i,
   ];
 
   for (const pattern of projectPatterns) {
     const match = text.match(pattern);
     if (match) {
-      result.project = match[1].trim();
+      result.project = match[1].trim().replace(/\s+/g, ' ');
       break;
     }
   }
