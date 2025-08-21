@@ -11,18 +11,11 @@ export const TimeArchive: React.FC = () => {
 
   return (
     <div className="space-y-4">
-      <div 
-        className="flex items-center justify-between p-4 border rounded-lg cursor-pointer hover:bg-gray-50"
-        onClick={handleViewArchive}
-      >
-        <div className="flex items-center gap-3">
-          <h1 className="text-lg font-semibold text-[#09121F]">
-            View archive
-          </h1>
-        </div>
-        <div className="flex items-center gap-2">
-          <Archive className="h-5 w-5 text-[#09121F]" />
-        </div>
+      <div className="flex items-center justify-between">
+        <h1 className="text-lg font-semibold text-[#09121F]">
+          View archive
+        </h1>
+        <Archive className="h-5 w-5 text-[#09121F]" />
       </div>
     </div>
   );
