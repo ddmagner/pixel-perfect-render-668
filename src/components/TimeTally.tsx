@@ -273,7 +273,7 @@ export const TimeTally: React.FC = () => {
       <div className="px-5 pt-0.5 pb-1 h-[2.75rem]">
         {selection.hasAnySelected ? (
           <div className="flex items-center gap-2 bg-gray-200 w-full h-full py-2 px-3 justify-between">
-            <div className="flex items-center gap-4 pl-8">
+            <div className="flex items-center gap-4 pl-7">
               <Button
                 size="sm"
                 variant="ghost"
