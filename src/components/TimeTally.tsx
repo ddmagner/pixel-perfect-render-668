@@ -279,7 +279,7 @@ export const TimeTally: React.FC = () => {
                 variant="ghost"
                 onClick={handleEdit}
                 disabled={selection.selectedCount !== 1}
-                className="bg-transparent text-black hover:text-gray-600 hover:bg-transparent border-none shadow-none"
+                className="bg-transparent text-black hover:text-gray-600 hover:bg-transparent border-none shadow-none pl-0 gap-1"
               >
                 <Pencil className="h-4 w-4" />
                 Edit
@@ -289,7 +289,7 @@ export const TimeTally: React.FC = () => {
                 size="sm"
                 variant="ghost"
                 onClick={() => setShowDeleteDialog(true)}
-                className="bg-transparent text-black hover:text-gray-600 hover:bg-transparent border-none shadow-none"
+                className="bg-transparent text-black hover:text-gray-600 hover:bg-transparent border-none shadow-none gap-1"
               >
                 <Trash2 className="h-4 w-4" />
                 Delete
