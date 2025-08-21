@@ -2,13 +2,15 @@ import React, { useState } from 'react';
 import { useApp } from '@/context/AppContext';
 import { TimeEntry } from '@/types';
 import { format } from 'date-fns';
-import { Trash2, RotateCcw, Archive } from 'lucide-react';
+import { Trash2, RotateCcw, Archive, ArrowLeft } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useSelection } from '@/hooks/useSelection';
 import { useToast } from '@/hooks/use-toast';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 export const TimeArchivePage: React.FC = () => {
+  const navigate = useNavigate();
   const {
     timeEntries,
     deleteTimeEntry,
@@ -18,7 +20,6 @@ export const TimeArchivePage: React.FC = () => {
     toast
   } = useToast();
   const selection = useSelection();
-  const [showClearDialog, setShowClearDialog] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
   // Filter archived entries
@@ -44,17 +45,6 @@ export const TimeArchivePage: React.FC = () => {
     toast({
       title: "Entries Deleted",
       description: `${ids.length} ${ids.length === 1 ? 'entry' : 'entries'} permanently deleted`
-    });
-  };
-  const handleClearArchive = () => {
-    archivedEntries.forEach(entry => {
-      deleteTimeEntry(entry.id);
-    });
-    selection.clearSelection();
-    setShowClearDialog(false);
-    toast({
-      title: "Archive Cleared",
-      description: "All archived entries have been permanently deleted"
     });
   };
   const formatHours = (hours: number): string => {
@@ -88,7 +78,17 @@ export const TimeArchivePage: React.FC = () => {
             </div>
           </div>}
         <div className="flex items-center justify-between h-full">
-          <h1 className="text-[#09121F] text-[28px] font-bold leading-8">Time Archive</h1>
+          <div className="flex items-center gap-3">
+            <Button 
+              variant="ghost" 
+              size="sm" 
+              onClick={() => navigate('/')} 
+              className="p-1 hover:bg-gray-100"
+            >
+              <ArrowLeft className="h-5 w-5" />
+            </Button>
+            <h1 className="text-[#09121F] text-[28px] font-bold leading-8">Time Archive</h1>
+          </div>
         </div>
       </div>
 
@@ -140,23 +140,6 @@ export const TimeArchivePage: React.FC = () => {
           </>}
       </div>
 
-      {/* Clear Archive Dialog */}
-      <AlertDialog open={showClearDialog} onOpenChange={setShowClearDialog}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            
-            <AlertDialogDescription>
-              This will permanently delete all {archivedEntries.length} archived entries. This action cannot be undone.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleClearArchive} className="bg-red-600 hover:bg-red-700">
-              Delete All
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
 
       {/* Delete Selected Dialog */}
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
