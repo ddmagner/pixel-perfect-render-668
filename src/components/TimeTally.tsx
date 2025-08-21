@@ -296,9 +296,6 @@ export const TimeTally: React.FC = () => {
       {/* Selection Toolbar */}
       {selection.hasAnySelected && (
         <div className="flex items-center gap-2 mx-5 mb-4 p-3 bg-blue-50 rounded-lg">
-          <span className="text-sm font-medium text-blue-900">
-            {selection.selectedCount} selected
-          </span>
           <Button
             size="sm"
             variant="outline"
