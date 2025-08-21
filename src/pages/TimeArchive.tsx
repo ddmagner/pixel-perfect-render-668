@@ -8,7 +8,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { useSelection } from '@/hooks/useSelection';
 import { useToast } from '@/hooks/use-toast';
 import { useNavigate } from 'react-router-dom';
-import { Navigation } from '@/components/Navigation';
+import { Navigation, TabNavigation } from '@/components/Navigation';
 import { Divider } from '@/components/Divider';
 import { ExportDialog } from '@/components/ExportDialog';
 import { EditTimeEntryDialog } from '@/components/EditTimeEntryDialog';
@@ -24,20 +24,27 @@ import {
 } from '@/components/ui/alert-dialog';
 
 const Index = () => {
-  const [activeTab, setActiveTab] = useState('archive');
+  const [activeTab, setActiveTab] = useState('settings');
+  const [viewMode, setViewMode] = useState<'timecard' | 'invoice'>('timecard');
   
   return (
     <>
       <Navigation activeTab={activeTab} onTabChange={setActiveTab} />
+      <TabNavigation activeTab={activeTab} onTabChange={setActiveTab} />
       <Divider />
       <div className="flex-1 overflow-hidden">
-        <TimeArchiveContent />
+        <TimeArchiveContent viewMode={viewMode} setViewMode={setViewMode} />
       </div>
     </>
   );
 };
 
-const TimeArchiveContent: React.FC = () => {
+interface TimeArchiveContentProps {
+  viewMode: 'timecard' | 'invoice';
+  setViewMode: (mode: 'timecard' | 'invoice') => void;
+}
+
+const TimeArchiveContent: React.FC<TimeArchiveContentProps> = ({ viewMode, setViewMode }) => {
   const { timeEntries, deleteTimeEntry, updateTimeEntry, settings } = useApp();
   const { toast } = useToast();
   const navigate = useNavigate();
@@ -114,9 +121,19 @@ const TimeArchiveContent: React.FC = () => {
 
   return (
     <div className="flex flex-col h-full w-full font-gilroy">
-      {/* Mode Toggle - Empty space to match TimeTally layout */}
+      {/* Mode Toggle */}
       <div className="flex justify-center items-center w-full px-5 py-4">
-        <div className="h-6" /> {/* Empty space to match TimeTally toggle height */}
+        <div className="flex items-center gap-4">
+          <span className={`text-sm font-medium ${viewMode === 'timecard' ? 'text-[#09121F]' : 'text-[#BFBFBF]'}`}>
+            Time Card Mode
+          </span>
+          <button onClick={() => setViewMode(viewMode === 'timecard' ? 'invoice' : 'timecard')} className={`w-12 h-6 rounded-full transition-colors ${viewMode === 'invoice' ? 'bg-[#09121F]' : 'bg-[#BFBFBF]'}`}>
+            <div className={`w-5 h-5 bg-white rounded-full transition-transform ${viewMode === 'invoice' ? 'translate-x-6' : 'translate-x-0.5'}`} />
+          </button>
+          <span className={`text-sm font-medium ${viewMode === 'invoice' ? 'text-[#09121F]' : 'text-[#BFBFBF]'}`}>
+            Invoice Mode
+          </span>
+        </div>
       </div>
 
       {/* Divider */}
