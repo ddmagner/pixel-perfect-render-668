@@ -271,7 +271,7 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({ highlightS
             <input type="text" placeholder="Add task type" value={newTaskName} onChange={e => setNewTaskName(e.target.value)} className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none flex-1" />
             <div className="flex items-center gap-3">
               {settings.invoiceMode && <input type="text" placeholder="$0.00" value={newTaskRate} onChange={e => setNewTaskRate(e.target.value)} className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none w-20 text-right" />}
-              <div className="flex pl-8 justify-end">
+              <div className="flex pl-8 justify-end w-[56px]">
                 <button onClick={handleAddTask} className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-gray-700 transition-colors">
                   <Plus className="h-2.5 w-2.5" strokeWidth={3} />
                 </button>
