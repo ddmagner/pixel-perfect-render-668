@@ -51,7 +51,7 @@ export const UserProfile: React.FC = () => {
       <div className="space-y-4">
         <div>
           <h3 className="text-[#09121F] text-sm font-medium mb-2">Name</h3>
-          <div className="flex items-center justify-between py-2">
+          <div className="flex items-center justify-between h-5">
             <input
               type="text"
               value={profile.name || ''}
@@ -65,7 +65,7 @@ export const UserProfile: React.FC = () => {
 
         <div>
           <h3 className="text-[#09121F] text-sm font-medium mb-2">Address</h3>
-          <div className="flex items-center justify-between py-2">
+          <div className="flex items-center justify-between h-5">
             <input
               type="text"
               value={profile.address || ''}
@@ -79,7 +79,7 @@ export const UserProfile: React.FC = () => {
 
         <div>
           <h3 className="text-[#09121F] text-sm font-medium mb-2">Zip Code</h3>
-          <div className="flex items-center justify-between py-2">
+          <div className="flex items-center justify-between h-5">
             <input
               type="text"
               value={profile.zipCode || ''}
@@ -93,7 +93,7 @@ export const UserProfile: React.FC = () => {
 
         <div>
           <h3 className="text-[#09121F] text-sm font-medium mb-2">Email</h3>
-          <div className="flex items-center justify-between py-2">
+          <div className="flex items-center justify-between h-5">
             <input
               type="email"
               value={profile.email || ''}
@@ -107,7 +107,7 @@ export const UserProfile: React.FC = () => {
 
         <div>
           <h3 className="text-[#09121F] text-sm font-medium mb-2">Phone</h3>
-          <div className="flex items-center justify-between py-2">
+          <div className="flex items-center justify-between h-5">
             <input
               type="tel"
               value={profile.phone || ''}
