@@ -14,7 +14,7 @@ export const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }
   const isArchivePage = location.pathname === '/archive';
   
   return (
-    <nav className={`flex justify-center items-center self-stretch px-5 pt-4 pb-1 ${
+    <nav className={`flex justify-center items-center w-full max-w-sm mx-auto px-5 pt-4 pb-1 ${
       isArchivePage ? 'bg-gray-200 opacity-50 pointer-events-none' : 'bg-white'
     }`}>
       <div className="flex h-3.5 justify-end items-center">
@@ -51,7 +51,7 @@ export const TabNavigation: React.FC<TabNavigationProps> = ({ activeTab, onTabCh
   const { selectionChanged } = useHaptics();
   
   return (
-    <nav className={`flex items-start self-stretch px-5 pt-0 pb-0 ${
+    <nav className={`flex items-start w-full max-w-sm mx-auto px-5 pt-0 pb-0 ${
       isArchivePage ? 'bg-gray-200 opacity-50 pointer-events-none' : 'bg-white'
     }`}>
       <button

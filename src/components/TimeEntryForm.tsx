@@ -91,33 +91,33 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
   const handleNavigateToSettings = (section: string) => {
     navigate(`/settings?section=${section}`);
   };
-  return <section className="flex w-full flex-col items-start px-0 pb-2.5">
-      <div className="flex h-px flex-col items-start gap-2.5 self-stretch px-5 py-0" />
+  return <section className="flex w-full max-w-sm mx-auto flex-col items-start px-0 pb-2.5">
+      <div className="flex h-px flex-col items-start gap-2.5 w-full px-5 py-0" />
       
-      <header className="flex h-14 flex-col justify-center items-start gap-14 self-stretch pt-2.5 px-5">
-        <h1 className="self-stretch text-[#09121F] text-[28px] font-bold leading-8 tracking-[-0.56px]">New time in</h1>
+      <header className="flex h-14 flex-col justify-center items-start gap-14 w-full pt-2.5 px-5">
+        <h1 className="w-full text-[#09121F] text-[28px] font-bold leading-8 tracking-[-0.56px]">New time in</h1>
       </header>
 
-      <form onSubmit={handleSubmit} className="flex flex-col items-start gap-1 self-stretch">
-        <div className="flex flex-col items-start self-stretch">
-          <div className="flex items-start gap-2.5 self-stretch px-5 py-1">
+      <form onSubmit={handleSubmit} className="flex flex-col items-start gap-1 w-full">
+        <div className="flex flex-col items-start w-full">
+          <div className="flex items-start gap-2.5 w-full px-5 py-1">
             <label htmlFor="duration" className="flex-[1_0_0] text-[#09121F] text-[15px] font-bold leading-5 tracking-[0.1px]">
               Duration (hours)
             </label>
           </div>
-          <div className="flex items-start gap-2.5 self-stretch px-5 py-1">
+          <div className="flex items-start gap-2.5 w-full px-5 py-1">
             <input id="duration" type="text" placeholder="How long?" value={formData.duration} onChange={e => handleInputChange('duration', e.target.value)} className="flex-[1_0_0] text-[#09121F] text-[15px] font-normal leading-5 tracking-[0.1px] bg-transparent border-none outline-none placeholder:text-[#BFBFBF]" aria-describedby="duration-help" />
             <span id="duration-help" className="sr-only">Enter duration in hours</span>
           </div>
         </div>
 
-        <div className="flex flex-col items-start self-stretch">
-          <div className="flex items-start gap-2.5 self-stretch px-5 py-1">
+        <div className="flex flex-col items-start w-full">
+          <div className="flex items-start gap-2.5 w-full px-5 py-1">
             <label htmlFor="task" className="flex-[1_0_0] text-[#09121F] text-[15px] font-bold leading-5 tracking-[0.1px] max-sm:text-sm">
               Task
             </label>
           </div>
-          <div className="flex items-start gap-2.5 self-stretch px-5 py-1">
+          <div className="flex items-start gap-2.5 w-full px-5 py-1">
             <input id="task" type="text" placeholder="Doing what?" value={formData.task} onChange={e => handleInputChange('task', e.target.value)} className="flex-[1_0_0] text-[#09121F] text-[15px] font-normal leading-5 tracking-[0.1px] bg-transparent border-none outline-none placeholder:text-[#BFBFBF]" />
             <button 
               type="button" 
@@ -130,13 +130,13 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
           </div>
         </div>
 
-        <div className="flex flex-col items-start self-stretch">
-          <div className="flex items-start gap-2.5 self-stretch px-5 py-1">
+        <div className="flex flex-col items-start w-full">
+          <div className="flex items-start gap-2.5 w-full px-5 py-1">
             <label htmlFor="project" className="flex-[1_0_0] text-[#09121F] text-[15px] font-bold leading-5 tracking-[0.1px] max-sm:text-sm">
               Project
             </label>
           </div>
-          <div className="flex items-start gap-2.5 self-stretch px-5 py-1">
+          <div className="flex items-start gap-2.5 w-full px-5 py-1">
             <input id="project" type="text" placeholder="On what?" value={formData.project} onChange={e => handleInputChange('project', e.target.value)} className="flex-[1_0_0] text-[#09121F] text-[15px] font-normal leading-5 tracking-[0.1px] bg-transparent border-none outline-none placeholder:text-[#BFBFBF]" />
             <button 
               type="button" 
@@ -149,13 +149,13 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
           </div>
         </div>
 
-        <div className="flex flex-col items-start self-stretch">
-          <div className="flex items-start gap-2.5 self-stretch px-5 py-1">
+        <div className="flex flex-col items-start w-full">
+          <div className="flex items-start gap-2.5 w-full px-5 py-1">
             <label htmlFor="client" className="flex-[1_0_0] text-[#09121F] text-[15px] font-bold leading-5 tracking-[0.1px] max-sm:text-sm">
               Client
             </label>
           </div>
-          <div className="flex items-start gap-2.5 self-stretch px-5 py-1">
+          <div className="flex items-start gap-2.5 w-full px-5 py-1">
             <input id="client" type="text" placeholder="For who?" value={formData.client} onChange={e => handleInputChange('client', e.target.value)} className="flex-[1_0_0] text-[#09121F] text-[15px] font-normal leading-5 tracking-[0.1px] bg-transparent border-none outline-none placeholder:text-[#BFBFBF]" />
             <button 
               type="button" 
@@ -177,8 +177,8 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
         </div>
       </form>
 
-      <div className="flex flex-col justify-end items-start self-stretch">
-        <div className="flex h-[34px] justify-center items-center self-stretch pl-[150px] pr-[151px] pt-5 pb-[9px]">
+      <div className="flex flex-col justify-end items-start w-full">
+        <div className="flex h-[34px] justify-center items-center w-full pl-[150px] pr-[151px] pt-5 pb-[9px]">
           <div className="w-[139px] h-[5px] bg-[#09121F] rounded-[100px]" />
         </div>
       </div>

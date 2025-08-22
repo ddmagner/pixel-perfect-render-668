@@ -86,7 +86,7 @@ export const RecordButton: React.FC<RecordButtonProps> = ({
       document.removeEventListener('visibilitychange', onVisibilityChange);
     };
   }, [isPressed, isSupported]);
-  return <section className="flex w-full justify-center items-center gap-2.5 px-0 pt-[40px] pb-[15px]">
+  return <section className="flex w-full max-w-sm mx-auto justify-center items-center gap-2.5 px-0 pt-[40px] pb-[15px]">
       <div className="flex flex-col items-center gap-10 shrink-0">
         <div className="h-[220px] w-[220px] relative max-sm:h-[180px] max-sm:w-[180px]">
           <button className={`w-[220px] h-[220px] shrink-0 absolute left-0 top-0 max-sm:w-[180px] max-sm:h-[180px] transition-all flex items-center justify-center rounded-full select-none ${isPressed ? 'scale-95' : 'scale-100'} ${isRecording ? 'animate-pulse' : ''}`} onPointerDown={handlePointerDown} onPointerUp={handlePointerUp} onPointerCancel={handlePointerCancel} onPointerLeave={handlePointerLeave} onContextMenu={(e) => e.preventDefault()} aria-label="Hold to record voice note" role="button" style={{ userSelect: 'none', WebkitUserSelect: 'none', WebkitTouchCallout: 'none', touchAction: 'none' }}>
@@ -132,7 +132,7 @@ export const RecordButton: React.FC<RecordButtonProps> = ({
           }} />
             <span className="text-[#09121F] text-[15px] italic font-black leading-[15px] tracking-[0.2px] pr-0.5">...for</span>
             <div dangerouslySetInnerHTML={{
-            __html: `<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" class="speech-bubble-4" style="width: 12px; height: 12px; aspect-ratio: 1/1; fill: ${settings.accentColor}; margin: 0 2px;"> <path d="M5.75 0.5C8.78765 0.5 11.25 2.96235 11.25 6C11.25 9.03765 8.78765 11.5 5.75 11.5C4.8139 11.5 3.93225 11.2663 3.1606 10.8538L0.25 11.5L0.8968 8.5905C0.4843 7.8183 0.25 6.93665 0.25 6C0.25 2.96235 2.71235 0.5 5.75 0.5Z" fill="${settings.accentColor}"></path> </svg>`
+            __html: `<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" class="speech-bubble-4" style="width: 12px; height: 12px; aspect-ratio: 1/1; fill: ${settings.accentColor}; margin: 0 2px;"> <path d="M5.75 0.5C8.78765 0.5 11.25 2.96235 11.25 6C11.25 9.03765 8.78765 11.5 5.75 11.5C4.8139 11.5 3.93225 11.2663 3.1606 10.8538L0 220.5L0.8968 8.5905C0.4843 7.8183 0.25 6.93665 0.25 6C0.25 2.96235 2.71235 0.5 5.75 0.5Z" fill="${settings.accentColor}"></path> </svg>`
           }} />
             <span className="text-[#09121F] text-[15px] italic font-extrabold leading-[15px] tracking-[0.2px]">
               "
