@@ -331,7 +331,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({ onSwitchToSettings }) => {
                 <ChevronDown className="h-4 w-4" />
               </button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="bg-white border border-[#09121F] rounded-lg shadow-lg">
+            <DropdownMenuContent align="end" className="bg-white border-none shadow-lg z-50">
               <DropdownMenuItem onClick={() => setSortOption('project')} className="text-sm font-medium text-[#09121F] hover:bg-gray-50 cursor-pointer">
                 By Project
               </DropdownMenuItem>
