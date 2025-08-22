@@ -25,7 +25,10 @@ export const RecordButton: React.FC<RecordButtonProps> = ({
   const {
     settings
   } = useApp();
-  const { mediumImpact, lightImpact } = useHaptics();
+  const {
+    mediumImpact,
+    lightImpact
+  } = useHaptics();
   useEffect(() => {
     if (transcript) {
       onTranscript(transcript);
@@ -35,7 +38,9 @@ export const RecordButton: React.FC<RecordButtonProps> = ({
   const handlePointerDown = (e: React.PointerEvent<HTMLButtonElement>) => {
     e.preventDefault();
     // Capture the pointer so we reliably receive the corresponding pointerup
-    try { (e.currentTarget as any).setPointerCapture?.(e.pointerId); } catch {}
+    try {
+      (e.currentTarget as any).setPointerCapture?.(e.pointerId);
+    } catch {}
     setIsPressed(true);
     mediumImpact();
     onRecordStart();
@@ -44,7 +49,6 @@ export const RecordButton: React.FC<RecordButtonProps> = ({
       startListening();
     }
   };
-
   const stopRecordingIfActive = () => {
     if (!isPressed) return;
     setIsPressed(false);
@@ -54,17 +58,14 @@ export const RecordButton: React.FC<RecordButtonProps> = ({
       stopListening();
     }
   };
-
   const handlePointerUp = (e: React.PointerEvent<HTMLButtonElement>) => {
     e.preventDefault();
     stopRecordingIfActive();
   };
-
   const handlePointerCancel = (e: React.PointerEvent<HTMLButtonElement>) => {
     e.preventDefault();
     stopRecordingIfActive();
   };
-
   const handlePointerLeave = (e: React.PointerEvent<HTMLButtonElement>) => {
     // Do nothing here – we rely on pointerup/cancel/global listeners
   };
@@ -72,13 +73,15 @@ export const RecordButton: React.FC<RecordButtonProps> = ({
   // Global safety net in case the pointerup happens outside the button
   useEffect(() => {
     const onGlobalPointerUp = () => stopRecordingIfActive();
-    const onVisibilityChange = () => { if (document.hidden) stopRecordingIfActive(); };
-
+    const onVisibilityChange = () => {
+      if (document.hidden) stopRecordingIfActive();
+    };
     window.addEventListener('pointerup', onGlobalPointerUp);
     window.addEventListener('pointercancel', onGlobalPointerUp);
-    window.addEventListener('touchend', onGlobalPointerUp, { passive: true } as any);
+    window.addEventListener('touchend', onGlobalPointerUp, {
+      passive: true
+    } as any);
     document.addEventListener('visibilitychange', onVisibilityChange);
-
     return () => {
       window.removeEventListener('pointerup', onGlobalPointerUp);
       window.removeEventListener('pointercancel', onGlobalPointerUp);
@@ -89,7 +92,12 @@ export const RecordButton: React.FC<RecordButtonProps> = ({
   return <section className="flex w-full justify-center items-center gap-2.5 px-0 pt-[40px] pb-[15px]">
       <div className="flex flex-col items-center gap-10 shrink-0">
         <div className="h-[220px] w-[220px] relative max-sm:h-[180px] max-sm:w-[180px]">
-          <button className={`w-[220px] h-[220px] shrink-0 absolute left-0 top-0 max-sm:w-[180px] max-sm:h-[180px] transition-all flex items-center justify-center rounded-full select-none ${isPressed ? 'scale-95' : 'scale-100'} ${isRecording ? 'animate-pulse' : ''}`} onPointerDown={handlePointerDown} onPointerUp={handlePointerUp} onPointerCancel={handlePointerCancel} onPointerLeave={handlePointerLeave} onContextMenu={(e) => e.preventDefault()} aria-label="Hold to record voice note" role="button" style={{ userSelect: 'none', WebkitUserSelect: 'none', WebkitTouchCallout: 'none', touchAction: 'none' }}>
+          <button className={`w-[220px] h-[220px] shrink-0 absolute left-0 top-0 max-sm:w-[180px] max-sm:h-[180px] transition-all flex items-center justify-center rounded-full select-none ${isPressed ? 'scale-95' : 'scale-100'} ${isRecording ? 'animate-pulse' : ''}`} onPointerDown={handlePointerDown} onPointerUp={handlePointerUp} onPointerCancel={handlePointerCancel} onPointerLeave={handlePointerLeave} onContextMenu={e => e.preventDefault()} aria-label="Hold to record voice note" role="button" style={{
+          userSelect: 'none',
+          WebkitUserSelect: 'none',
+          WebkitTouchCallout: 'none',
+          touchAction: 'none'
+        }}>
             <div dangerouslySetInnerHTML={{
             __html: `<svg width="220" height="221" viewBox="0 0 220 221" fill="none" xmlns="http://www.w3.org/2000/svg" class="record-button max-sm:w-[180px] max-sm:h-[180px]" style="width: 220px; height: 220px; flex-shrink: 0;">
                   <path d="M110 0.5C170.753 0.5 220 49.747 220 110.5C220 171.253 170.753 220.5 110 220.5C91.278 220.5 73.645 215.825 58.212 207.575L0 220.5L12.936 162.31C4.686 146.866 0 129.233 0 110.5C0 49.747 49.247 0.5 110 0.5Z" fill="${isPressed ? '#BFBFBF' : settings.accentColor}"/>
@@ -117,9 +125,7 @@ export const RecordButton: React.FC<RecordButtonProps> = ({
             __html: `<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" class="speech-bubble-1" style="width: 12px; height: 12px; aspect-ratio: 1/1; fill: ${settings.accentColor}; margin: 0 2px;"> <path d="M5.75 0.5C8.78765 0.5 11.25 2.96235 11.25 6C11.25 9.03765 8.78765 11.5 5.75 11.5C4.8139 11.5 3.93225 11.2663 3.1606 10.8538L0.25 11.5L0.8968 8.5905C0.4843 7.8183 0.25 6.93665 0.25 6C0.25 2.96235 2.71235 0.5 5.75 0.5Z" fill="${settings.accentColor}"></path> </svg>`
           }} />
           </div>
-            <span className="text-[#09121F] text-[15px] italic font-black leading-[15px] tracking-[0.2px] mx-0.5">
-              hours...doing
-            </span>
+            <span className="text-[#09121F] text-[15px] italic font-black leading-[15px] tracking-[0.2px] mx-0.5">hours...of</span>
           <div className="w-fit" dangerouslySetInnerHTML={{
           __html: `<svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" class="speech-bubble-2" style="width: 12px; height: 12px; aspect-ratio: 1/1; fill: ${settings.accentColor}; margin: 0 2px;"> <path d="M5.75 0.5C8.78765 0.5 11.25 2.96235 11.25 6C11.25 9.03765 8.78765 11.5 5.75 11.5C4.8139 11.5 3.93225 11.2663 3.1606 10.8538L0.25 11.5L0.8968 8.5905C0.4843 7.8183 0.25 6.93665 0.25 6C0.25 2.96235 2.71235 0.5 5.75 0.5Z" fill="${settings.accentColor}"></path> </svg>`
         }} />
