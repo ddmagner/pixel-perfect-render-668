@@ -91,7 +91,7 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
   const handleNavigateToSettings = (section: string) => {
     navigate(`/settings?section=${section}`);
   };
-  return <section className="flex w-full max-w-sm mx-auto flex-col items-start px-0 pb-2.5">
+  return <section className="flex w-full flex-col items-start px-0 pb-2.5">
       <div className="flex h-px flex-col items-start gap-2.5 w-full px-2.5 py-0" />
       
       <header className="flex h-14 flex-col justify-center items-start gap-14 w-full pt-2.5 px-2.5">

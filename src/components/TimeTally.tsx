@@ -292,7 +292,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({ onSwitchToSettings }) => {
 
       {/* Header / Selection Toolbar */}
       <div className="pt-0.5 pb-1 h-[2.75rem] px-2.5">
-        {selection.hasAnySelected && <div className="fixed left-1/2 transform -translate-x-1/2 w-[calc(100%-2.5rem)] max-w-md z-50" style={{
+        {selection.hasAnySelected && <div className="fixed left-1/2 transform -translate-x-1/2 w-[calc(100%-1.25rem)] z-50" style={{
         top: '170px'
       }}>
             <div className="flex items-center gap-2 bg-gray-50 h-[2.75rem] py-2 pl-0 pr-3 justify-between rounded" style={{
