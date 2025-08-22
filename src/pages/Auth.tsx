@@ -117,19 +117,14 @@ const Auth = () => {
           </div>
         </nav>
 
-        {/* Divider */}
-        <div className="flex h-px flex-col items-start gap-2.5 self-stretch px-0 py-0">
-          <div className="h-px bg-[#09121F] self-stretch" />
-        </div>
-
         {/* Auth Content */}
         <div className="flex w-full flex-col items-center justify-center px-0 py-10">
           {/* Title Section */}
-          <header className="flex flex-col justify-center items-center gap-2 mb-8">
+          <header className="flex flex-col justify-start items-start gap-2 mb-8 w-full">
             <h1 className="text-[#09121F] text-[28px] font-bold leading-8 tracking-[-0.56px]">
-              {isSignUp ? 'Create Account' : 'Welcome Back'}
+              {isSignUp ? 'Create Account' : 'Welcome back'}
             </h1>
-            <p className="text-[#BFBFBF] text-[15px] text-center">
+            <p className="text-[#BFBFBF] text-[15px]">
               {isSignUp ? 'Sign up to start tracking your time' : 'Sign in to continue tracking your time'}
             </p>
           </header>
