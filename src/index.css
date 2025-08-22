@@ -98,33 +98,31 @@ All colors MUST be HSL.
 @layer base {
   * {
     @apply border-border;
+    box-sizing: border-box;
   }
 
   html {
     overflow-x: hidden;
-    width: 100%;
+    width: 100vw;
     position: fixed;
-    height: 100%;
+    height: 100vh;
   }
 
   body {
     @apply bg-background text-foreground;
     overflow-x: hidden;
     overflow-y: auto;
-    width: 100%;
-    height: 100%;
+    width: 100vw;
+    height: 100vh;
     position: relative;
-    display: flex;
-    justify-content: center;
+    margin: 0;
+    padding: 0;
     -webkit-overflow-scrolling: touch;
   }
 
   #root {
-    width: 100%;
-    max-width: 440px;
-    min-width: 320px;
-    display: flex;
-    justify-content: center;
+    width: 100vw;
+    min-height: 100vh;
     overflow-x: hidden;
     position: relative;
   }
