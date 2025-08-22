@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { parseTimeEntryFromSpeech } from '@/utils/speechParser';
 import { useApp } from '@/context/AppContext';
 import { useToast } from '@/hooks/use-toast';
+import { useHaptics } from '@/hooks/useHaptics';
 interface TimeEntryData {
   duration: string;
   task: string;
@@ -22,6 +23,7 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
     settings
   } = useApp();
   const { toast } = useToast();
+  const { lightImpact, mediumImpact } = useHaptics();
   const [formData, setFormData] = useState<TimeEntryData>({
     duration: '',
     task: '',
@@ -46,6 +48,7 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
     
     // Validate that all fields have data
     if (!formData.duration.trim() || !formData.task.trim() || !formData.project.trim() || !formData.client.trim()) {
+      mediumImpact(); // Error haptic feedback
       toast({
         description: "Please fill in all fields.",
         variant: "destructive",
@@ -54,6 +57,7 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
       return;
     }
     
+    lightImpact(); // Success haptic feedback
     onSubmit(formData);
     
     // Show toast notification

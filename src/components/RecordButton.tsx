@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSpeechRecognition } from '@/hooks/useSpeechRecognition';
 import { useApp } from '@/context/AppContext';
+import { useHaptics } from '@/hooks/useHaptics';
 interface RecordButtonProps {
   onRecordStart: () => void;
   onRecordStop: () => void;
@@ -24,6 +25,7 @@ export const RecordButton: React.FC<RecordButtonProps> = ({
   const {
     settings
   } = useApp();
+  const { mediumImpact, lightImpact } = useHaptics();
   useEffect(() => {
     if (transcript) {
       onTranscript(transcript);
@@ -31,6 +33,7 @@ export const RecordButton: React.FC<RecordButtonProps> = ({
   }, [transcript, onTranscript]);
   const handleMouseDown = () => {
     setIsPressed(true);
+    mediumImpact(); // Haptic feedback on press
     onRecordStart();
     if (isSupported) {
       resetTranscript();
@@ -39,6 +42,7 @@ export const RecordButton: React.FC<RecordButtonProps> = ({
   };
   const handleMouseUp = () => {
     setIsPressed(false);
+    lightImpact(); // Haptic feedback on release
     onRecordStop();
     if (isSupported) {
       stopListening();
@@ -46,6 +50,7 @@ export const RecordButton: React.FC<RecordButtonProps> = ({
   };
   const handleTouchStart = () => {
     setIsPressed(true);
+    mediumImpact(); // Haptic feedback on touch start
     onRecordStart();
     if (isSupported) {
       resetTranscript();
@@ -54,6 +59,7 @@ export const RecordButton: React.FC<RecordButtonProps> = ({
   };
   const handleTouchEnd = () => {
     setIsPressed(false);
+    lightImpact(); // Haptic feedback on touch end
     onRecordStop();
     if (isSupported) {
       stopListening();

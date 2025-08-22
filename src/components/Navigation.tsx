@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useApp } from '@/context/AppContext';
 import { useLocation } from 'react-router-dom';
+import { useHaptics } from '@/hooks/useHaptics';
 
 interface NavigationProps {
   activeTab: string;
@@ -47,6 +48,7 @@ export const TabNavigation: React.FC<TabNavigationProps> = ({ activeTab, onTabCh
   const { settings } = useApp();
   const location = useLocation();
   const isArchivePage = location.pathname === '/archive';
+  const { selectionChanged } = useHaptics();
   
   return (
     <nav className={`flex items-start self-stretch px-5 py-0 pb-0 ${
@@ -56,7 +58,10 @@ export const TabNavigation: React.FC<TabNavigationProps> = ({ activeTab, onTabCh
         className={`flex h-12 flex-col justify-center items-center flex-[1_0_0] px-0 py-[9px] relative ${
           activeTab === 'enter-time' ? '' : 'opacity-60'
         }`}
-        onClick={() => onTabChange('enter-time')}
+        onClick={() => {
+          selectionChanged();
+          onTabChange('enter-time');
+        }}
         aria-label="Enter Time"
       >
         <div className="flex h-[26px] items-center gap-0.5 shrink-0">
@@ -76,7 +81,10 @@ export const TabNavigation: React.FC<TabNavigationProps> = ({ activeTab, onTabCh
         className={`flex h-12 flex-col justify-center items-center flex-[1_0_0] px-0 py-[9px] relative ${
           activeTab === 'time-tally' ? '' : 'opacity-60'
         }`}
-        onClick={() => onTabChange('time-tally')}
+        onClick={() => {
+          selectionChanged();
+          onTabChange('time-tally');
+        }}
         aria-label="Time Tally"
       >
         <div className="flex h-[26px] items-center gap-0.5 shrink-0">
@@ -96,7 +104,10 @@ export const TabNavigation: React.FC<TabNavigationProps> = ({ activeTab, onTabCh
         className={`flex h-12 flex-col justify-center items-center flex-[1_0_0] px-0 py-[9px] relative ${
           activeTab === 'settings' ? '' : 'opacity-60'
         }`}
-        onClick={() => onTabChange('settings')}
+        onClick={() => {
+          selectionChanged();
+          onTabChange('settings');
+        }}
         aria-label="Settings"
       >
         <div className="flex h-[26px] items-center gap-0.5 shrink-0">
