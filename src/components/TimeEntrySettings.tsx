@@ -103,12 +103,13 @@ export const TimeEntrySettings: React.FC = () => {
                     }
                   }}
                   className="text-[#09121F] text-sm bg-transparent border-none outline-none flex-1 focus:bg-gray-50 px-1 py-0.5 rounded"
+                  style={{ marginRight: '56px' }}
                   autoFocus
                 />
               ) : (
-                <span className="text-[#09121F] text-sm">{client.name}</span>
+                <span className="text-[#09121F] text-sm" style={{ marginRight: '56px' }}>{client.name}</span>
               )}
-              <div className="flex gap-3">
+              <div className="flex gap-3 w-[56px] justify-end">
                 <button onClick={() => setEditingClient(client)} className="text-gray-400 hover:text-[#09121F]">
                   <Edit3 size={16} />
                 </button>
@@ -159,12 +160,13 @@ export const TimeEntrySettings: React.FC = () => {
                     }
                   }}
                   className="text-[#09121F] text-sm bg-transparent border-none outline-none flex-1 focus:bg-gray-50 px-1 py-0.5 rounded"
+                  style={{ marginRight: '56px' }}
                   autoFocus
                 />
               ) : (
-                <span className="text-[#09121F] text-sm">{project.name}</span>
+                <span className="text-[#09121F] text-sm" style={{ marginRight: '56px' }}>{project.name}</span>
               )}
-              <div className="flex gap-3">
+              <div className="flex gap-3 w-[56px] justify-end">
                 <button onClick={() => setEditingProject(project)} className="text-gray-400 hover:text-[#09121F]">
                   <Edit3 size={16} />
                 </button>
@@ -198,55 +200,59 @@ export const TimeEntrySettings: React.FC = () => {
         
         <div className="space-y-3">
           {settings.taskTypes.map(task => <div key={task.id} className="flex items-center justify-between">
-              {editingTask?.id === task.id ? (
-                <input 
-                  type="text" 
-                  value={editingTask.name}
-                  onChange={(e) => setEditingTask({...editingTask, name: e.target.value})}
-                  onBlur={() => {
-                    handleUpdateTask(editingTask);
-                  }}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
+              <div className="flex-1 flex items-center">
+                {editingTask?.id === task.id ? (
+                  <input 
+                    type="text" 
+                    value={editingTask.name}
+                    onChange={(e) => setEditingTask({...editingTask, name: e.target.value})}
+                    onBlur={() => {
                       handleUpdateTask(editingTask);
-                    }
-                    if (e.key === 'Escape') {
-                      setEditingTask(null);
-                    }
-                  }}
-                  className="text-[#09121F] text-sm bg-transparent border-none outline-none flex-1 focus:bg-gray-50 px-1 py-0.5 rounded"
-                  autoFocus
-                />
-              ) : (
-                <span className="text-[#09121F] text-sm">{task.name}</span>
-              )}
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        handleUpdateTask(editingTask);
+                      }
+                      if (e.key === 'Escape') {
+                        setEditingTask(null);
+                      }
+                    }}
+                    className="text-[#09121F] text-sm bg-transparent border-none outline-none flex-1 focus:bg-gray-50 px-1 py-0.5 rounded"
+                    autoFocus
+                  />
+                ) : (
+                  <span className="text-[#09121F] text-sm flex-1">{task.name}</span>
+                )}
+              </div>
               <div className="flex items-center gap-3">
                 {settings.invoiceMode && (
-                  editingTask?.id === task.id ? (
-                    <input 
-                      type="text" 
-                      value={editingTask.hourlyRate?.toString() || ''}
-                      onChange={(e) => setEditingTask({...editingTask, hourlyRate: parseFloat(e.target.value) || 0})}
-                      onBlur={() => {
-                        handleUpdateTask(editingTask);
-                      }}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter') {
+                  <div className="min-w-[60px] text-right">
+                    {editingTask?.id === task.id ? (
+                      <input 
+                        type="text" 
+                        value={editingTask.hourlyRate?.toString() || ''}
+                        onChange={(e) => setEditingTask({...editingTask, hourlyRate: parseFloat(e.target.value) || 0})}
+                        onBlur={() => {
                           handleUpdateTask(editingTask);
-                        }
-                        if (e.key === 'Escape') {
-                          setEditingTask(null);
-                        }
-                      }}
-                      className="text-[#09121F] text-sm bg-transparent border-none outline-none min-w-[60px] text-right focus:bg-gray-50 px-1 py-0.5 rounded"
-                    />
-                  ) : (
-                    <span className="text-[#09121F] text-sm min-w-[60px] text-right">
-                      ${(task.hourlyRate || 0).toFixed(2)}
-                    </span>
-                  )
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            handleUpdateTask(editingTask);
+                          }
+                          if (e.key === 'Escape') {
+                            setEditingTask(null);
+                          }
+                        }}
+                        className="text-[#09121F] text-sm bg-transparent border-none outline-none w-full text-right focus:bg-gray-50 px-1 py-0.5 rounded"
+                      />
+                    ) : (
+                      <span className="text-[#09121F] text-sm">
+                        ${(task.hourlyRate || 0).toFixed(2)}
+                      </span>
+                    )}
+                  </div>
                 )}
-                <div className="flex gap-3 pl-3 justify-end">
+                <div className="flex gap-3 w-[56px] justify-end">
                   <button onClick={() => setEditingTask(task)} className="text-gray-400 hover:text-[#09121F]">
                     <Edit3 size={16} />
                   </button>
