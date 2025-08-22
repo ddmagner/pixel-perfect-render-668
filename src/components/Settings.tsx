@@ -90,7 +90,7 @@ export const Settings: React.FC<SettingsProps> = ({ highlightSection }) => {
             onClick={handleSignOut}
             className="text-[#09121F] text-[15px] font-medium underline hover:opacity-70 transition-opacity"
           >
-            Sign out...
+            Sign out
           </button>
         </div>
       </div>
