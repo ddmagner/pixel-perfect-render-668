@@ -107,7 +107,7 @@ const Auth = () => {
           {/* Title Section */}
           <header className="flex flex-col justify-start items-start gap-2 mb-8 w-full">
             <h1 className="text-[#09121F] text-[28px] font-bold leading-8 tracking-[-0.56px]">
-              {isSignUp ? 'Create Account' : 'Welcome back'}
+              {isSignUp ? 'Create Account' : 'Sign in to time in.'}
             </h1>
             
           </header>
