@@ -38,12 +38,17 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
       const parsed = parseTimeEntryFromSpeech(transcript);
       console.log('Parsed result:', parsed);
       
+      // Helper function to apply initial capitalization
+      const applyInitialCapitalization = (text: string) => {
+        return text.replace(/\b\w/g, char => char.toUpperCase());
+      };
+      
       setFormData(prev => {
         const newData = {
           duration: parsed.duration !== undefined ? parsed.duration.toString() : prev.duration,
-          task: parsed.task || prev.task,
-          project: parsed.project || prev.project,
-          client: parsed.client || prev.client
+          task: parsed.task ? applyInitialCapitalization(parsed.task) : prev.task,
+          project: parsed.project ? applyInitialCapitalization(parsed.project) : prev.project,
+          client: parsed.client ? applyInitialCapitalization(parsed.client) : prev.client
         };
         console.log('Updated form data:', newData);
         return newData;
