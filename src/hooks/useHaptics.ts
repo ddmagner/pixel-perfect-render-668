@@ -1,52 +1,102 @@
 import { Haptics, ImpactStyle } from '@capacitor/haptics';
+import { Capacitor } from '@capacitor/core';
 
 export const useHaptics = () => {
+  const isNative = Capacitor.isNativePlatform();
+
+  // Web vibration fallback function
+  const webVibrate = (pattern: number | number[]) => {
+    if ('vibrate' in navigator) {
+      try {
+        navigator.vibrate(pattern);
+      } catch (error) {
+        console.debug('Web vibration not available:', error);
+      }
+    }
+  };
+
   const lightImpact = async () => {
     try {
-      await Haptics.impact({ style: ImpactStyle.Light });
+      if (isNative) {
+        await Haptics.impact({ style: ImpactStyle.Light });
+      } else {
+        // Light vibration: short pulse
+        webVibrate(20);
+      }
     } catch (error) {
-      // Haptics not available on web or error occurred
       console.debug('Haptics not available:', error);
+      // Fallback to web vibration if Capacitor fails
+      webVibrate(20);
     }
   };
 
   const mediumImpact = async () => {
     try {
-      await Haptics.impact({ style: ImpactStyle.Medium });
+      if (isNative) {
+        await Haptics.impact({ style: ImpactStyle.Medium });
+      } else {
+        // Medium vibration: medium pulse
+        webVibrate(40);
+      }
     } catch (error) {
       console.debug('Haptics not available:', error);
+      webVibrate(40);
     }
   };
 
   const heavyImpact = async () => {
     try {
-      await Haptics.impact({ style: ImpactStyle.Heavy });
+      if (isNative) {
+        await Haptics.impact({ style: ImpactStyle.Heavy });
+      } else {
+        // Heavy vibration: strong pulse
+        webVibrate(60);
+      }
     } catch (error) {
       console.debug('Haptics not available:', error);
+      webVibrate(60);
     }
   };
 
   const selectionStart = async () => {
     try {
-      await Haptics.selectionStart();
+      if (isNative) {
+        await Haptics.selectionStart();
+      } else {
+        // Selection start: subtle pulse
+        webVibrate(15);
+      }
     } catch (error) {
       console.debug('Haptics not available:', error);
+      webVibrate(15);
     }
   };
 
   const selectionChanged = async () => {
     try {
-      await Haptics.selectionChanged();
+      if (isNative) {
+        await Haptics.selectionChanged();
+      } else {
+        // Selection changed: very light pulse
+        webVibrate(10);
+      }
     } catch (error) {
       console.debug('Haptics not available:', error);
+      webVibrate(10);
     }
   };
 
   const selectionEnd = async () => {
     try {
-      await Haptics.selectionEnd();
+      if (isNative) {
+        await Haptics.selectionEnd();
+      } else {
+        // Selection end: double light pulse
+        webVibrate([15, 50, 15]);
+      }
     } catch (error) {
       console.debug('Haptics not available:', error);
+      webVibrate([15, 50, 15]);
     }
   };
 
