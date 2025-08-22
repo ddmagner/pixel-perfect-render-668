@@ -103,7 +103,7 @@ const Auth = () => {
         </nav>
 
         {/* Auth Content */}
-        <div className="flex w-full flex-col items-center justify-center px-0 min-h-screen">
+        <div className="flex w-full flex-col items-center justify-start px-0 pt-[100px] min-h-screen">
           {/* Title Section */}
           <header className="flex flex-col justify-start items-start gap-2 mb-8 w-full">
             <h1 className="text-[#09121F] text-[28px] font-bold leading-8 tracking-[-0.56px]">
