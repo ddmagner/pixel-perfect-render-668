@@ -279,7 +279,7 @@ export const TimeArchivePage: React.FC = () => {
         <Divider />
         
         {/* Mode Toggle */}
-        <div className="flex justify-center items-center w-full px-5 pt-4 pb-1">
+        <div className="flex justify-center items-center w-full px-2.5 pt-4 pb-1">
           <div className="flex items-center gap-4">
             <span className={`text-sm font-medium ${viewMode === 'timecard' ? 'text-[#09121F]' : 'text-[#BFBFBF]'}`}>
               Time Card Mode
@@ -295,7 +295,7 @@ export const TimeArchivePage: React.FC = () => {
         
         <div className="flex flex-col h-full w-full font-gilroy">
           {/* Header / Selection Toolbar */}
-          <div className="pt-0.5 pb-1 h-[2.75rem] px-5">
+          <div className="pt-0.5 pb-1 h-[2.75rem] px-2.5">
             {selection.hasAnySelected && <div className="fixed left-1/2 transform -translate-x-1/2 w-[calc(100%-2.5rem)] z-50" style={{
             top: '150px'
           }}>
@@ -344,7 +344,7 @@ export const TimeArchivePage: React.FC = () => {
           </div>
           
           {/* Table Header */}
-          <div className="w-full px-5">
+          <div className="w-full px-2.5">
             <div className={`grid ${gridColsWithSelection} h-[32px] items-center`} style={{
               gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (viewMode === 'invoice' ? ' calc(40px + 50px)' : ''),
               gap: '0'
@@ -364,7 +364,7 @@ export const TimeArchivePage: React.FC = () => {
           </div>
 
           {/* Content */}
-          <div className="flex-1 overflow-y-auto w-full px-5">
+          <div className="flex-1 overflow-y-auto w-full px-2.5">
             {archivedEntries.length === 0 ? (
               <div className="text-center py-8">
                 <Archive className="h-12 w-12 mx-auto mb-2 opacity-50 text-[#BFBFBF]" />
@@ -570,7 +570,7 @@ export const TimeArchivePage: React.FC = () => {
 
           {/* Export Button */}
           {archivedEntries.length > 0 && (
-            <div className="px-5 pt-5">
+            <div className="px-2.5 pt-5">
               <button 
                 onClick={() => setIsExportDialogOpen(true)} 
                 className="w-full text-white py-3.5 font-bold text-sm transition-colors" 
@@ -584,7 +584,7 @@ export const TimeArchivePage: React.FC = () => {
           )}
 
           {/* Exit Button */}
-          <div className="px-5 pt-2 pb-5">
+          <div className="px-2.5 pt-2 pb-5">
             <Button 
               variant="outline" 
               onClick={() => navigate('/')} 

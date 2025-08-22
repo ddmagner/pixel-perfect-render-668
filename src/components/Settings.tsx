@@ -33,7 +33,7 @@ export const Settings: React.FC<SettingsProps> = ({
   };
   return <div className="flex flex-col h-full w-full bg-white">
       {/* Mode Toggle */}
-      <div className="flex justify-center items-center w-full px-5 py-4">
+      <div className="flex justify-center items-center w-full px-2.5 py-4">
         <div className="flex items-center gap-4">
           <span className={`text-sm font-medium ${!settings.invoiceMode ? 'text-[#09121F]' : 'text-[#BFBFBF]'}`}>
             Time Card Mode
@@ -51,7 +51,7 @@ export const Settings: React.FC<SettingsProps> = ({
       <div className="h-px bg-[#09121F] mx-5 mb-6" />
 
       {/* Header */}
-      <div className="flex items-baseline justify-between px-5 pt-0.5 pb-1">
+      <div className="flex items-baseline justify-between px-2.5 pt-0.5 pb-1">
         <h1 className="text-[#09121F] text-[28px] font-bold leading-8">Time In settings</h1>
       </div>
 
@@ -61,13 +61,13 @@ export const Settings: React.FC<SettingsProps> = ({
         <UserProfile />
         
         {/* Time Archive Section */}
-        <div className="px-5 pt-4 pb-1.5">
+        <div className="px-2.5 pt-4 pb-1.5">
           <TimeArchive />
         </div>
         
         {/* Coloring Time Section */}
         <div className="h-px bg-[#09121F] mx-5" />
-        <div className="px-5 py-4 pb-[22px]">
+        <div className="px-2.5 py-4 pb-[22px]">
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-[#09121F] text-[28px] font-bold leading-8">Coloring time</h1>
@@ -83,7 +83,7 @@ export const Settings: React.FC<SettingsProps> = ({
         
         {/* Sign Out Section */}
         <div className="h-px bg-[#09121F] mx-5" />
-        <div className="px-5 py-4 pb-32 md:pb-4" style={{
+        <div className="px-2.5 py-4 pb-32 md:pb-4" style={{
         paddingBottom: 'max(128px, env(safe-area-inset-bottom))'
       }}>
           <button onClick={handleSignOut} className="text-[#09121F] text-[15px] font-medium underline hover:opacity-70 transition-opacity">

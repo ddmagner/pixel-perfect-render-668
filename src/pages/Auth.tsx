@@ -85,7 +85,7 @@ const Auth = () => {
   };
   return <>
       <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Gilroy:wght@400;700;800;900&display=swap" />
-      <div className="flex w-full max-w-sm mx-auto flex-col items-start relative bg-white overflow-hidden h-screen fixed inset-0 px-5" style={{
+      <div className="flex w-full max-w-sm mx-auto flex-col items-start relative bg-white overflow-hidden h-screen fixed inset-0 px-2.5" style={{
       fontFamily: 'Gilroy, sans-serif'
     }}>
         {/* Logo Navigation */}

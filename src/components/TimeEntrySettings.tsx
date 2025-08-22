@@ -76,7 +76,7 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({ highlightS
   };
   return <div>
       {/* Clients */}
-      <section className="px-5">
+      <section className="px-2.5">
         <div className="pt-1.5 mb-3">
           <h3 className="text-[#09121F] text-sm font-bold">Clients</h3>
         </div>
@@ -133,7 +133,7 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({ highlightS
       </section>
 
       {/* Projects */}
-      <section className="px-5">
+      <section className="px-2.5">
         <div className="pt-5 mb-3">
           <h3 className="text-[#09121F] text-sm font-bold">Projects</h3>
         </div>
@@ -190,7 +190,7 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({ highlightS
       </section>
 
       {/* Tasks */}
-      <section className="px-5">
+      <section className="px-2.5">
         <div className="pt-5 mb-3">
           <div className="flex justify-between items-center">
             <h3 className="text-[#09121F] text-sm font-bold">Tasks</h3>

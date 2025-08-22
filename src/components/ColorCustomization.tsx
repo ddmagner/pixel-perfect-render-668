@@ -39,13 +39,13 @@ export const ColorCustomization: React.FC<{ onClose?: () => void }> = ({ onClose
     });
   };
   return <div className="flex flex-col h-full max-w-[440px] mx-auto w-full">
-      <div className="px-5 py-4">
+      <div className="px-2.5 py-4">
         
         <p className="text-muted-foreground">Choose your flava.</p>
       </div>
 
       {/* Color Grid */}
-      <div className="grow px-5">
+      <div className="grow px-2.5">
         <div className="grid grid-cols-10 gap-0 w-full aspect-square mb-2.5">
           {Array.from({
           length: 70

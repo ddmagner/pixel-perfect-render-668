@@ -273,7 +273,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({ onSwitchToSettings }) => {
   const isAllSelected = allEntryIds.length > 0 && allEntryIds.every(id => selection.isSelected(id));
   return <div className="flex flex-col h-full w-full font-gilroy">
       {/* Mode Toggle */}
-      <div className="flex justify-center items-center w-full px-5 py-4">
+      <div className="flex justify-center items-center w-full px-2.5 py-4">
         <div className="flex items-center gap-4">
           <span className={`text-sm font-medium ${viewMode === 'timecard' ? 'text-[#09121F]' : 'text-[#BFBFBF]'}`}>
             Time Card Mode
@@ -291,7 +291,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({ onSwitchToSettings }) => {
       <div className="h-px bg-[#09121F] mx-5 mb-6" />
 
       {/* Header / Selection Toolbar */}
-      <div className="pt-0.5 pb-1 h-[2.75rem] px-5">
+      <div className="pt-0.5 pb-1 h-[2.75rem] px-2.5">
         {selection.hasAnySelected && <div className="fixed left-1/2 transform -translate-x-1/2 w-[calc(100%-2.5rem)] max-w-md z-50" style={{
         top: '170px'
       }}>
@@ -348,7 +348,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({ onSwitchToSettings }) => {
 
 
       {/* Table Header */}
-      <div className="w-full px-5">
+      <div className="w-full px-2.5">
         <div className={`grid ${gridColsWithSelection} h-[32px] items-center`} style={{
         gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (viewMode === 'invoice' ? ' calc(40px + 50px)' : ''),
         gap: '0'
@@ -366,7 +366,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({ onSwitchToSettings }) => {
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-y-auto w-full px-5">
+      <div className="flex-1 overflow-y-auto w-full px-2.5">
         {organizedData.groups.length === 0 ? <div className="text-center py-8">
             <p className="text-[#BFBFBF] text-lg">No time entries found</p>
           </div> : <>
@@ -559,7 +559,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({ onSwitchToSettings }) => {
       </div>
 
       {/* Export Button */}
-      <div className="w-full px-5 py-5">
+      <div className="w-full px-2.5 py-5">
         <button onClick={handleExport} className="w-full text-white py-3.5 font-bold text-sm transition-colors" style={{
         backgroundColor: '#09121F'
       }}>
