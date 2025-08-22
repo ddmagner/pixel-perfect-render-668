@@ -41,11 +41,12 @@ const Index = () => {
     setCurrentTranscript(transcript);
   };
 
-  const handleTimeEntrySubmit = (data: { duration: string; task: string; project: string }) => {
+  const handleTimeEntrySubmit = (data: { duration: string; task: string; project: string; client: string }) => {
     addTimeEntry({
       duration: parseFloat(data.duration) || 0,
       task: data.task,
       project: data.project,
+      client: data.client,
       date: new Date().toISOString().split('T')[0],
     });
     console.log('Time entry submitted:', data);

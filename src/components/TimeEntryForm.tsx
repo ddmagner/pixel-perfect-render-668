@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { parseTimeEntryFromSpeech } from '@/utils/speechParser';
 import { useApp } from '@/context/AppContext';
 import { useToast } from '@/hooks/use-toast';
@@ -16,6 +17,7 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
   onSubmit,
   transcript
 }) => {
+  const navigate = useNavigate();
   const {
     settings
   } = useApp();
@@ -81,6 +83,10 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
       [field]: formattedValue
     }));
   };
+  
+  const handleNavigateToSettings = (section: string) => {
+    navigate(`/settings?section=${section}`);
+  };
   return <section className="flex w-full flex-col items-start px-0 pb-2.5">
       <div className="flex h-px flex-col items-start gap-2.5 self-stretch px-5 py-0" />
       
@@ -109,7 +115,12 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
           </div>
           <div className="flex items-start gap-2.5 self-stretch px-5 py-1.5">
             <input id="task" type="text" placeholder="Doing what?" value={formData.task} onChange={e => handleInputChange('task', e.target.value)} className="flex-[1_0_0] text-[#09121F] text-[15px] font-normal leading-5 tracking-[0.1px] bg-transparent border-none outline-none placeholder:text-[#BFBFBF]" />
-            <button type="button" className="text-[#BFBFBF] text-right text-[15px] font-normal leading-5 underline decoration-solid decoration-auto underline-offset-auto" aria-label="Add new task">
+            <button 
+              type="button" 
+              onClick={() => handleNavigateToSettings('tasks')}
+              className="text-[#BFBFBF] text-right text-[15px] font-normal leading-5 underline decoration-solid decoration-auto underline-offset-auto" 
+              aria-label="Add new task"
+            >
               + Task
             </button>
           </div>
@@ -123,7 +134,12 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
           </div>
           <div className="flex items-start gap-2.5 self-stretch px-5 py-1.5">
             <input id="project" type="text" placeholder="On what?" value={formData.project} onChange={e => handleInputChange('project', e.target.value)} className="flex-[1_0_0] text-[#09121F] text-[15px] font-normal leading-5 tracking-[0.1px] bg-transparent border-none outline-none placeholder:text-[#BFBFBF]" />
-            <button type="button" className="text-[#BFBFBF] text-right text-[15px] font-normal leading-5 underline decoration-solid decoration-auto underline-offset-auto" aria-label="Add new project">
+            <button 
+              type="button" 
+              onClick={() => handleNavigateToSettings('projects')}
+              className="text-[#BFBFBF] text-right text-[15px] font-normal leading-5 underline decoration-solid decoration-auto underline-offset-auto" 
+              aria-label="Add new project"
+            >
               + Project
             </button>
           </div>
@@ -137,7 +153,12 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
           </div>
           <div className="flex items-start gap-2.5 self-stretch px-5 py-1.5">
             <input id="client" type="text" placeholder="For who?" value={formData.client} onChange={e => handleInputChange('client', e.target.value)} className="flex-[1_0_0] text-[#09121F] text-[15px] font-normal leading-5 tracking-[0.1px] bg-transparent border-none outline-none placeholder:text-[#BFBFBF]" />
-            <button type="button" className="text-[#BFBFBF] text-right text-[15px] font-normal leading-5 underline decoration-solid decoration-auto underline-offset-auto" aria-label="Add new client">
+            <button 
+              type="button" 
+              onClick={() => handleNavigateToSettings('clients')}
+              className="text-[#BFBFBF] text-right text-[15px] font-normal leading-5 underline decoration-solid decoration-auto underline-offset-auto" 
+              aria-label="Add new client"
+            >
               + Client
             </button>
           </div>

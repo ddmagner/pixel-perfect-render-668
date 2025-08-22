@@ -2,7 +2,11 @@ import React, { useState } from 'react';
 import { useApp } from '@/context/AppContext';
 import { TaskType, Project, Client } from '@/types';
 import { Edit3, Trash2, Plus } from 'lucide-react';
-export const TimeEntrySettings: React.FC = () => {
+interface TimeEntrySettingsProps {
+  highlightSection?: string | null;
+}
+
+export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({ highlightSection }) => {
   const {
     settings,
     updateSettings

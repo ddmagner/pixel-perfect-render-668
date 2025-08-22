@@ -5,7 +5,11 @@ import { ColorCustomization } from './ColorCustomization';
 import { TimeArchive } from './TimeArchive';
 import { useApp } from '@/context/AppContext';
 import { Clock } from 'lucide-react';
-export const Settings: React.FC = () => {
+interface SettingsProps {
+  highlightSection?: string | null;
+}
+
+export const Settings: React.FC<SettingsProps> = ({ highlightSection }) => {
   const {
     settings,
     updateSettings
@@ -42,7 +46,7 @@ export const Settings: React.FC = () => {
 
       {/* Settings Content */}
       <div className="flex-1 overflow-y-auto w-full">
-        <TimeEntrySettings />
+        <TimeEntrySettings highlightSection={highlightSection} />
         <UserProfile />
         
         {/* Time Archive Section */}
