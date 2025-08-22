@@ -123,28 +123,6 @@ export const TabNavigation: React.FC<TabNavigationProps> = ({ activeTab, onTabCh
         <div className="absolute bottom-0 left-0 right-0 h-0.5" style={{ backgroundColor: activeTab === 'settings' ? '#09121F' : 'transparent' }} />
       </button>
 
-      <button
-        className={`flex h-12 flex-col justify-center items-center flex-[1_0_0] px-0 py-[9px] relative ${
-          activeTab === 'watch-preview' ? '' : 'opacity-60'
-        }`}
-        onClick={() => {
-          selectionChanged();
-          onTabChange('watch-preview');
-        }}
-        aria-label="Watch Preview"
-      >
-        <div className="flex h-[26px] items-center gap-0.5 shrink-0">
-          <div className="w-[24px] h-[24px]">
-            <div
-              dangerouslySetInnerHTML={{
-                __html: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="display: flex; width: 22px; height: 22px; justify-content: center; align-items: center; flex-shrink: 0; fill: ${activeTab === 'watch-preview' ? '#09121F' : '#BFBFBF'}"><path d="M12 7C13.1 7 14 6.1 14 5S13.1 3 12 3 10 3.9 10 5 10.9 7 12 7ZM20 9H17.21C16.9 7.8 15.85 7 14.5 7H9.5C8.15 7 7.1 7.8 6.79 9H4C3.45 9 3 9.45 3 10V11C3 11.55 3.45 12 4 12H6.79C7.1 13.2 8.15 14 9.5 14H14.5C15.85 14 16.9 13.2 17.21 12H20C20.55 12 21 11.55 21 11V10C21 9.45 20.55 9 20 9ZM16 10.5C16 11.33 15.33 12 14.5 12H9.5C8.67 12 8 11.33 8 10.5C8 9.67 8.67 9 9.5 9H14.5C15.33 9 16 9.67 16 10.5ZM6 16C5.45 16 5 16.45 5 17V19C5 19.55 5.45 20 6 20H18C18.55 20 19 19.55 19 19V17C19 16.45 18.55 16 18 16H6Z" fill="${activeTab === 'watch-preview' ? '#09121F' : '#BFBFBF'}"/></svg>`,
-              }}
-            />
-          </div>
-          <span className="text-sm font-bold leading-4" style={{ color: activeTab === 'watch-preview' ? '#09121F' : '#BFBFBF' }}>Watch</span>
-        </div>
-        <div className="absolute bottom-0 left-0 right-0 h-0.5" style={{ backgroundColor: activeTab === 'watch-preview' ? '#09121F' : 'transparent' }} />
-      </button>
     </nav>
   );
 };

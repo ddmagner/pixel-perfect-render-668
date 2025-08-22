@@ -6,7 +6,7 @@ import { RecordButton } from '@/components/RecordButton';
 import { TimeEntryForm } from '@/components/TimeEntryForm';
 import { TimeTally } from '@/components/TimeTally';
 import { Settings } from '@/components/Settings';
-import { WatchMockup } from '@/components/WatchMockup';
+
 import { useApp } from '@/context/AppContext';
 
 const Index = () => {
@@ -92,9 +92,6 @@ const Index = () => {
           <Settings />
         )}
 
-        {activeTab === 'watch-preview' && (
-          <WatchMockup />
-        )}
       </div>
     </>
   );
