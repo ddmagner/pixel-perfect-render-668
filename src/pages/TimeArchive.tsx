@@ -323,7 +323,7 @@ export const TimeArchivePage: React.FC = () => {
               <h1 className="text-[#09121F] text-[28px] font-bold leading-8">Time Archive</h1>
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <button className="flex items-center gap-2 text-sm font-medium text-[#09121F] hover:bg-gray-50">
+                  <button className="flex items-center text-sm font-medium text-[#09121F] hover:bg-gray-50">
                     {getSortOptionText()}
                     <ChevronDown className="h-4 w-4" />
                   </button>
