@@ -24,7 +24,7 @@ const SettingsPage = () => {
         style={{ fontFamily: 'Gilroy, sans-serif' }}
       >
         {/* Navigation with back button */}
-        <nav className="flex justify-between items-center self-stretch px-5 py-4 bg-white">
+        <nav className="flex justify-between items-center self-stretch px-5 pt-4 pb-1 bg-white">
           <button 
             onClick={handleBack}
             className="flex items-center gap-2 text-[#09121F]"

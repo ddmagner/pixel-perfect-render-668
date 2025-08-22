@@ -279,7 +279,7 @@ export const TimeArchivePage: React.FC = () => {
         <Divider />
         
         {/* Mode Toggle */}
-        <div className="flex justify-center items-center w-full px-5 py-4">
+        <div className="flex justify-center items-center w-full px-5 pt-4 pb-1">
           <div className="flex items-center gap-4">
             <span className={`text-sm font-medium ${viewMode === 'timecard' ? 'text-[#09121F]' : 'text-[#BFBFBF]'}`}>
               Time Card Mode
