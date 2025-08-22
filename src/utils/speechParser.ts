@@ -78,9 +78,11 @@ export function parseTimeEntryFromSpeech(transcript: string): Partial<ParsedTime
     }
   }
 
-  // Extract task - improved patterns for "doing [task]" format
+  // Extract task - improved patterns for "doing [task]" and "of [task]" formats
   const taskPatterns = [
-    // Primary pattern for "doing [task]"
+    // Primary pattern for "of [task]"
+    /\bof\s+([^.]+?)(?:\s+on\s+|$)/i,
+    // Secondary pattern for "doing [task]"
     /doing\s+([^.]+?)(?:\s+on\s+|$)/i,
     // Alternative patterns
     /(?:working on|spent time on|time on)\s+([^.]+?)(?:\s+(?:on|for)\s+|$)/i,
