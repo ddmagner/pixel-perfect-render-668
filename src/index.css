@@ -117,6 +117,9 @@ All colors MUST be HSL.
     position: relative;
     margin: 0;
     padding: 0;
+    /* Ensure content clears iOS home indicator */
+    padding-bottom: env(safe-area-inset-bottom);
+    padding-bottom: constant(safe-area-inset-bottom);
     -webkit-overflow-scrolling: touch;
   }
 
