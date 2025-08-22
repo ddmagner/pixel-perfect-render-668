@@ -54,29 +54,45 @@ export function parseTimeEntryFromSpeech(transcript: string): Partial<ParsedTime
     for (const pattern of hourPatterns) {
       const match = text.match(pattern);
       if (match) {
+        const matchedStr = match[0];
+        const g1 = (match[1] ?? '').toString().toLowerCase();
         console.log('Hour pattern matched:', match);
-        if (match[1] && !isNaN(parseFloat(match[1]))) {
-          result.duration = parseFloat(match[1]);
-        } else if (match[1]) {
-          // Handle word numbers
+
+        // Handle explicit "and a half" or "½" cases
+        if (/(and\s*a\s*half|½)/i.test(matchedStr)) {
+          let base = 0;
+          if (!isNaN(parseFloat(g1))) {
+            base = parseFloat(g1);
+          } else {
+            const wordToNumber: { [key: string]: number } = {
+              'one': 1, 'two': 2, 'three': 3, 'four': 4, 'five': 5,
+              'six': 6, 'seven': 7, 'eight': 8, 'nine': 9, 'ten': 10,
+              'eleven': 11, 'twelve': 12
+            };
+            base = wordToNumber[g1] ?? 0;
+          }
+          result.duration = base + 0.5;
+        }
+        // Handle fraction-only hour expressions
+        else if (/^(a\s*quarter|quarter|half|three\s*quarters?)$/.test(g1)) {
+          const fractionToNumber: { [key: string]: number } = {
+            'a quarter': 0.25, 'quarter': 0.25, 'half': 0.5,
+            'three quarters': 0.75, 'three quarter': 0.75
+          };
+          result.duration = fractionToNumber[g1] ?? 0.5;
+        }
+        // Numeric or word-number hours
+        else if (!isNaN(parseFloat(g1))) {
+          result.duration = parseFloat(g1);
+        } else {
           const wordToNumber: { [key: string]: number } = {
             'one': 1, 'two': 2, 'three': 3, 'four': 4, 'five': 5,
             'six': 6, 'seven': 7, 'eight': 8, 'nine': 9, 'ten': 10,
             'eleven': 11, 'twelve': 12
           };
-          result.duration = wordToNumber[match[1]] || 1;
-        } else if (match[1]) {
-          // Handle fraction words
-          const fractionToNumber: { [key: string]: number } = {
-            'quarter': 0.25, 'half': 0.5, 'three quarters': 0.75,
-            'a quarter': 0.25, 'a half': 0.5
-          };
-          result.duration = fractionToNumber[match[1]] || 0.5;
+          result.duration = wordToNumber[g1] ?? undefined;
         }
-        
-        if (text.includes('half') || text.includes('½')) {
-          result.duration = (result.duration || 0) + 0.5;
-        }
+
         console.log('Extracted duration:', result.duration);
         break;
       }
