@@ -88,10 +88,9 @@ export const Settings: React.FC<SettingsProps> = ({ highlightSection }) => {
         <div className="px-5 py-4">
           <button 
             onClick={handleSignOut}
-            className="flex items-center gap-3 text-[#09121F] text-[15px] font-medium hover:opacity-70 transition-opacity"
+            className="text-[#09121F] text-[15px] font-medium underline hover:opacity-70 transition-opacity"
           >
-            <LogOut size={20} />
-            Sign Out
+            Sign out...
           </button>
         </div>
       </div>
