@@ -369,7 +369,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
       {/* Content */}
       <div className="flex-1 overflow-y-auto w-full px-2.5">
         {organizedData.groups.length === 0 ? <div className="text-center py-8">
-            <p className="text-[#BFBFBF] text-lg">No time entries found</p>
+            <p className="text-[#BFBFBF] text-lg">No time entered yet. Get busy.</p>
           </div> : <>
             <div className="space-y-4">
               {organizedData.groups.map((group, groupIndex) => <div key={`${group.type}-${group.name}-${groupIndex}`}>
