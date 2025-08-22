@@ -404,8 +404,8 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                             </div>
                             {viewMode === 'invoice' && <div className="text-[#09121F] text-sm text-right flex items-center justify-end">
                                 {hasTaskRate(entry.task) ? `$${calculateFee(entry).toFixed(2)}` : <button onClick={() => handleAddRate(entry.task)} className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-gray-700 transition-colors">
-                                    <Plus className="h-2.5 w-2.5" strokeWidth={3} />
-                                  </button>}
+                                     <Plus className="h-2.5 w-2.5" strokeWidth={3} />
+                                   </button>}
                               </div>}
                           </div>)}
                         
@@ -446,8 +446,8 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                                 {formatHours(entry.duration)}
                               </div>
                               {viewMode === 'invoice' && <div className="text-[#09121F] text-sm text-right flex items-center justify-end">
-                                  {hasTaskRate(entry.task) ? `$${calculateFee(entry).toFixed(2)}` : <button onClick={() => handleAddRate(entry.task)} className="w-5 h-5 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-gray-700 transition-colors">
-                                        <Plus className="h-2.5 w-2.5" />
+                                  {hasTaskRate(entry.task) ? `$${calculateFee(entry).toFixed(2)}` : <button onClick={() => handleAddRate(entry.task)} className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-gray-700 transition-colors">
+                                        <Plus className="h-2.5 w-2.5" strokeWidth={3} />
                                       </button>}
                                 </div>}
                             </div>)}
@@ -490,8 +490,8 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                             </div>
                             {viewMode === 'invoice' && <div className="text-[#09121F] text-sm text-right flex items-center justify-end">
                                 {hasTaskRate(entry.task) ? `$${calculateFee(entry).toFixed(2)}` : <button onClick={() => handleAddRate(entry.task)} className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-gray-700 transition-colors">
-                                    <Plus className="h-2.5 w-2.5" />
-                                  </button>}
+                                     <Plus className="h-2.5 w-2.5" strokeWidth={3} />
+                                   </button>}
                               </div>}
                           </div>)}
                       
