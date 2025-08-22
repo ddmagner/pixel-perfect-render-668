@@ -45,7 +45,11 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const [timeEntries, setTimeEntries] = useState<TimeEntry[]>([]);
   const [settings, setSettings] = useState<AppSettings>(defaultSettings);
   const [sortOption, setSortOption] = useState<SortOption>('date');
-  const [viewMode, setViewMode] = useState<ViewMode>('timecard');
+  const [viewMode, setViewMode] = useState<ViewMode>(() => {
+    // Load viewMode from localStorage on initialization
+    const saved = localStorage.getItem('timeapp-viewmode');
+    return (saved as ViewMode) || 'timecard';
+  });
   const [loading, setLoading] = useState(true);
 
   // Load user data when user changes
@@ -126,7 +130,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         archived: entry.archived || false
       })));
 
-      setSettings({
+      const newSettings = {
         accentColor: settingsData?.accent_color || defaultSettings.accentColor,
         invoiceMode: settingsData?.invoice_mode || defaultSettings.invoiceMode,
         taskTypes: (taskTypesData || []).length > 0 ? (taskTypesData || []).map(task => ({
@@ -154,7 +158,18 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
           city: profileData?.city || '',
           state: profileData?.state || ''
         }
-      });
+      };
+
+      setSettings(newSettings);
+      
+      // Sync viewMode with invoiceMode setting
+      if (newSettings.invoiceMode && viewMode === 'timecard') {
+        setViewMode('invoice');
+        localStorage.setItem('timeapp-viewmode', 'invoice');
+      } else if (!newSettings.invoiceMode && viewMode === 'invoice') {
+        setViewMode('timecard');
+        localStorage.setItem('timeapp-viewmode', 'timecard');
+      }
 
     } catch (error) {
       console.error('Error loading user data:', error);
@@ -230,6 +245,13 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
       if (error) throw error;
       setSettings(updatedSettings);
+      
+      // Update viewMode when invoiceMode setting changes
+      if ('invoiceMode' in newSettings) {
+        const newViewMode = updatedSettings.invoiceMode ? 'invoice' : 'timecard';
+        setViewMode(newViewMode);
+        localStorage.setItem('timeapp-viewmode', newViewMode);
+      }
     } catch (error) {
       console.error('Error updating settings:', error);
       toast({
@@ -352,7 +374,10 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     addTimeEntry,
     updateSettings,
     setSortOption,
-    setViewMode,
+    setViewMode: (mode: ViewMode) => {
+      setViewMode(mode);
+      localStorage.setItem('timeapp-viewmode', mode);
+    },
     deleteTimeEntry,
     updateTimeEntry,
     archiveTimeEntries,
