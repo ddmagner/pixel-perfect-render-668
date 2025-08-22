@@ -168,7 +168,7 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
           </div>
         </div>
 
-        <div className="w-full px-5 pt-2.5 pb-1">
+        <div className="w-full px-5 pb-1">
           <button type="submit" className="w-full text-white py-3.5 font-bold text-[15px] transition-colors" style={{
           backgroundColor: '#09121F'
         }} aria-label="Add time entry">
