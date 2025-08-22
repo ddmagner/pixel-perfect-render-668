@@ -171,7 +171,7 @@ const Auth = () => {
           </form>
 
           {/* Toggle Sign Up/In */}
-          <div className="text-center mt-6">
+          <div className="text-left mt-6 w-full">
             <button type="button" onClick={() => setIsSignUp(!isSignUp)} className="text-[#09121F] text-[15px] font-normal underline hover:opacity-70 transition-opacity">
               {isSignUp ? 'Already have an account? Sign in' : 'No account? Sign up to time in.'}
             </button>
