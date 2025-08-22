@@ -60,7 +60,7 @@ const Index = () => {
         href="https://fonts.googleapis.com/css2?family=Gilroy:wght@400;700;800;900&display=swap"
       />
       <div 
-        className="flex w-full max-w-[440px] min-h-[956px] flex-col items-start relative bg-white overflow-x-hidden"
+        className="flex w-full max-w-[440px] flex-col items-start relative bg-white overflow-x-hidden"
         style={{ fontFamily: 'Gilroy, sans-serif' }}
       >
         <Navigation activeTab={activeTab} onTabChange={handleTabChange} />
