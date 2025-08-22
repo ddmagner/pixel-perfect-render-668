@@ -2,6 +2,7 @@ export interface ParsedTimeEntry {
   duration: number;
   task: string;
   project: string;
+  client: string;
 }
 
 export function parseTimeEntryFromSpeech(transcript: string): Partial<ParsedTimeEntry> {
@@ -63,16 +64,33 @@ export function parseTimeEntryFromSpeech(transcript: string): Partial<ParsedTime
   // Extract project - improved patterns for "on [project name]" format
   const projectPatterns = [
     // Primary pattern for "on [project name]"
-    /\bon\s+([^.]+?)(?:\s*$)/i,
+    /\bon\s+([^.]+?)(?:\s+for\s+|$)/i,
     // Alternative patterns
-    /(?:for|on)\s+(?:project|the)\s+([^.]+?)(?:\s*$)/i,
-    /project:\s*([^.]+?)(?:\s*$)/i,
+    /(?:for|on)\s+(?:project|the)\s+([^.]+?)(?:\s+for\s+|$)/i,
+    /project:\s*([^.]+?)(?:\s+for\s+|$)/i,
   ];
 
   for (const pattern of projectPatterns) {
     const match = text.match(pattern);
     if (match) {
       result.project = match[1].trim().replace(/\s+/g, ' ');
+      break;
+    }
+  }
+
+  // Extract client - patterns for "for [client name]" format
+  const clientPatterns = [
+    // Primary pattern for "for [client name]"
+    /\bfor\s+([^.]+?)(?:\s*$)/i,
+    // Alternative patterns
+    /(?:client|customer):\s*([^.]+?)(?:\s*$)/i,
+    /(?:working for|time for)\s+([^.]+?)(?:\s*$)/i,
+  ];
+
+  for (const pattern of clientPatterns) {
+    const match = text.match(pattern);
+    if (match) {
+      result.client = match[1].trim().replace(/\s+/g, ' ');
       break;
     }
   }

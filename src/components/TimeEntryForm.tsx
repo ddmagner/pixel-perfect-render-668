@@ -6,6 +6,7 @@ interface TimeEntryData {
   duration: string;
   task: string;
   project: string;
+  client: string;
 }
 interface TimeEntryFormProps {
   onSubmit: (data: TimeEntryData) => void;
@@ -22,7 +23,8 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
   const [formData, setFormData] = useState<TimeEntryData>({
     duration: '',
     task: '',
-    project: ''
+    project: '',
+    client: ''
   });
 
   // Parse transcript and update form data
@@ -32,7 +34,8 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
       setFormData(prev => ({
         duration: parsed.duration ? parsed.duration.toString() : prev.duration,
         task: parsed.task || prev.task,
-        project: parsed.project || prev.project
+        project: parsed.project || prev.project,
+        client: parsed.client || prev.client
       }));
     }
   }, [transcript]);
@@ -40,7 +43,7 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
     e.preventDefault();
     
     // Validate that all fields have data
-    if (!formData.duration.trim() || !formData.task.trim() || !formData.project.trim()) {
+    if (!formData.duration.trim() || !formData.task.trim() || !formData.project.trim() || !formData.client.trim()) {
       toast({
         description: "Please fill in all fields.",
         variant: "destructive",
@@ -61,14 +64,15 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
     setFormData({
       duration: '',
       task: '',
-      project: ''
+      project: '',
+      client: ''
     });
   };
   const handleInputChange = (field: keyof TimeEntryData, value: string) => {
     let formattedValue = value;
     
-    // Apply initial capitalization for task and project fields
-    if (field === 'task' || field === 'project') {
+    // Apply initial capitalization for task, project, and client fields
+    if (field === 'task' || field === 'project' || field === 'client') {
       formattedValue = value.replace(/\b\w/g, char => char.toUpperCase());
     }
     
@@ -121,6 +125,20 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
             <input id="project" type="text" placeholder="On what?" value={formData.project} onChange={e => handleInputChange('project', e.target.value)} className="flex-[1_0_0] text-[#09121F] text-[15px] font-normal leading-5 tracking-[0.1px] bg-transparent border-none outline-none placeholder:text-[#BFBFBF]" />
             <button type="button" className="text-[#BFBFBF] text-right text-[15px] font-normal leading-5 underline decoration-solid decoration-auto underline-offset-auto" aria-label="Add new project">
               + Project
+            </button>
+          </div>
+        </div>
+
+        <div className="flex flex-col items-start self-stretch">
+          <div className="flex items-start gap-2.5 self-stretch px-5 py-1.5">
+            <label htmlFor="client" className="flex-[1_0_0] text-[#09121F] text-[15px] font-bold leading-5 tracking-[0.1px] max-sm:text-sm">
+              Client
+            </label>
+          </div>
+          <div className="flex items-start gap-2.5 self-stretch px-5 py-1.5">
+            <input id="client" type="text" placeholder="For who?" value={formData.client} onChange={e => handleInputChange('client', e.target.value)} className="flex-[1_0_0] text-[#09121F] text-[15px] font-normal leading-5 tracking-[0.1px] bg-transparent border-none outline-none placeholder:text-[#BFBFBF]" />
+            <button type="button" className="text-[#BFBFBF] text-right text-[15px] font-normal leading-5 underline decoration-solid decoration-auto underline-offset-auto" aria-label="Add new client">
+              + Client
             </button>
           </div>
         </div>
