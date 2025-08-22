@@ -16,7 +16,7 @@ const SettingsPage = () => {
   return (
     <>
       <div
-        className="flex w-full flex-col items-start relative bg-white overflow-x-hidden"
+        className="flex w-full max-w-sm mx-auto flex-col items-start relative bg-white overflow-x-hidden"
         style={{ fontFamily: 'Gilroy, sans-serif' }}
       >
         {/* Navigation with back button */}

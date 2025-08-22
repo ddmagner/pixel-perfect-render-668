@@ -48,7 +48,7 @@ export const Settings: React.FC<SettingsProps> = ({
       </div>
 
       {/* Divider */}
-      <div className="h-px bg-[#09121F] mx-5 mb-6" />
+      <div className="w-full px-2.5"><div className="h-px bg-[#09121F]" /></div>
 
       {/* Header */}
       <div className="flex items-baseline justify-between px-2.5 pt-0.5 pb-1">
@@ -66,7 +66,7 @@ export const Settings: React.FC<SettingsProps> = ({
         </div>
         
         {/* Coloring Time Section */}
-        <div className="h-px bg-[#09121F] mx-5" />
+        <div className="w-full px-2.5"><div className="h-px bg-[#09121F]" /></div>
         <div className="px-2.5 py-4 pb-[22px]">
           <div className="flex items-center justify-between">
             <div>
@@ -82,7 +82,7 @@ export const Settings: React.FC<SettingsProps> = ({
         </div>
         
         {/* Sign Out Section */}
-        <div className="h-px bg-[#09121F] mx-5" />
+        <div className="w-full px-2.5"><div className="h-px bg-[#09121F]" /></div>
         <div className="px-2.5 py-4 pb-32 md:pb-4" style={{
         paddingBottom: 'max(128px, env(safe-area-inset-bottom))'
       }}>

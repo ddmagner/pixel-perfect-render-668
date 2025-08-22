@@ -288,7 +288,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({ onSwitchToSettings }) => {
       </div>
 
       {/* Divider */}
-      <div className="h-px bg-[#09121F] mx-5 mb-6" />
+      <div className="w-full px-2.5"><div className="h-px bg-[#09121F]" /></div>
 
       {/* Header / Selection Toolbar */}
       <div className="pt-0.5 pb-1 h-[2.75rem] px-2.5">
