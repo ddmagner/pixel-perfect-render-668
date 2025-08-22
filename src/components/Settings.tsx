@@ -1,20 +1,29 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { TimeEntrySettings } from './TimeEntrySettings';
 import { UserProfile } from './UserProfile';
 import { ColorCustomization } from './ColorCustomization';
 import { TimeArchive } from './TimeArchive';
 import { useApp } from '@/context/AppContext';
-import { Clock } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
+import { Clock, LogOut } from 'lucide-react';
 interface SettingsProps {
   highlightSection?: string | null;
 }
 
 export const Settings: React.FC<SettingsProps> = ({ highlightSection }) => {
+  const navigate = useNavigate();
+  const { signOut } = useAuth();
   const {
     settings,
     updateSettings
   } = useApp();
   const [showColorOverlay, setShowColorOverlay] = useState(false);
+  
+  const handleSignOut = async () => {
+    await signOut();
+    navigate('/auth');
+  };
   const handleModeToggle = () => {
     updateSettings({
       invoiceMode: !settings.invoiceMode
@@ -72,6 +81,18 @@ export const Settings: React.FC<SettingsProps> = ({ highlightSection }) => {
               />
             </div>
           </div>
+        </div>
+        
+        {/* Sign Out Section */}
+        <div className="h-px bg-[#09121F] mx-5" />
+        <div className="px-5 py-4">
+          <button 
+            onClick={handleSignOut}
+            className="flex items-center gap-3 text-[#09121F] text-[15px] font-medium hover:opacity-70 transition-opacity"
+          >
+            <LogOut size={20} />
+            Sign Out
+          </button>
         </div>
       </div>
 
