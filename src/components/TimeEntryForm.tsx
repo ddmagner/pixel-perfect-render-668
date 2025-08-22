@@ -34,13 +34,20 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
   // Parse transcript and update form data
   useEffect(() => {
     if (transcript) {
+      console.log('Processing transcript:', transcript);
       const parsed = parseTimeEntryFromSpeech(transcript);
-      setFormData(prev => ({
-        duration: parsed.duration ? parsed.duration.toString() : prev.duration,
-        task: parsed.task || prev.task,
-        project: parsed.project || prev.project,
-        client: parsed.client || prev.client
-      }));
+      console.log('Parsed result:', parsed);
+      
+      setFormData(prev => {
+        const newData = {
+          duration: parsed.duration !== undefined ? parsed.duration.toString() : prev.duration,
+          task: parsed.task || prev.task,
+          project: parsed.project || prev.project,
+          client: parsed.client || prev.client
+        };
+        console.log('Updated form data:', newData);
+        return newData;
+      });
     }
   }, [transcript]);
   const handleSubmit = (e: React.FormEvent) => {
