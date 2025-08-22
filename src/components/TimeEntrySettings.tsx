@@ -125,7 +125,7 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({ highlightS
           
           <div className="flex items-center justify-between">
             <input type="text" placeholder="Add client" value={newClientName} onChange={e => setNewClientName(e.target.value)} className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none flex-1" />
-            <button onClick={handleAddClient} className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-gray-700 transition-colors">
+            <button onClick={handleAddClient} className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-[#09121F]/80 transition-colors">
               <Plus className="h-2.5 w-2.5" strokeWidth={3} />
             </button>
           </div>
@@ -182,7 +182,7 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({ highlightS
           
           <div className="flex items-center justify-between">
             <input type="text" placeholder="Add project" value={newProjectName} onChange={e => setNewProjectName(e.target.value)} className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none flex-1" />
-            <button onClick={handleAddProject} className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-gray-700 transition-colors">
+            <button onClick={handleAddProject} className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-[#09121F]/80 transition-colors">
               <Plus className="h-2.5 w-2.5" strokeWidth={3} />
             </button>
           </div>
@@ -272,7 +272,7 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({ highlightS
             <div className="flex items-center gap-3">
               {settings.invoiceMode && <input type="text" placeholder="$0.00" value={newTaskRate} onChange={e => setNewTaskRate(e.target.value)} className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none w-20 text-right" />}
               <div className="flex pl-8 justify-end w-[56px]">
-                <button onClick={handleAddTask} className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-gray-700 transition-colors">
+                <button onClick={handleAddTask} className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-[#09121F]/80 transition-colors">
                   <Plus className="h-2.5 w-2.5" strokeWidth={3} />
                 </button>
               </div>

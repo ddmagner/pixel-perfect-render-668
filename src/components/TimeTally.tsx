@@ -302,23 +302,23 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
             <div className="flex items-center gap-2" style={{
             paddingLeft: '32px'
           }}>
-              <Button size="sm" variant="ghost" onClick={handleEdit} disabled={selection.selectedCount !== 1} className="bg-transparent text-black hover:text-gray-600 hover:bg-transparent border-none shadow-none pl-0 gap-1 text-xs">
+              <Button size="sm" variant="ghost" onClick={handleEdit} disabled={selection.selectedCount !== 1} className="bg-transparent text-[#09121F] hover:text-gray-600 hover:bg-transparent border-none shadow-none pl-0 gap-1 text-xs">
                 <Pencil className="h-3 w-3" />
                 Edit
               </Button>
               
-              <Button size="sm" variant="ghost" onClick={() => setShowDeleteDialog(true)} className="bg-transparent text-black hover:text-gray-600 hover:bg-transparent border-none shadow-none gap-1 text-xs">
+              <Button size="sm" variant="ghost" onClick={() => setShowDeleteDialog(true)} className="bg-transparent text-[#09121F] hover:text-gray-600 hover:bg-transparent border-none shadow-none gap-1 text-xs">
                 <Trash2 className="h-3 w-3" />
                 Delete
               </Button>
               
-              <Button size="sm" variant="ghost" onClick={() => setShowArchiveDialog(true)} className="bg-transparent text-black hover:text-gray-600 hover:bg-transparent border-none shadow-none gap-1 text-xs">
+              <Button size="sm" variant="ghost" onClick={() => setShowArchiveDialog(true)} className="bg-transparent text-[#09121F] hover:text-gray-600 hover:bg-transparent border-none shadow-none gap-1 text-xs">
                 <Archive className="h-3 w-3" />
                 Archive
               </Button>
             </div>
 
-            <Button size="sm" variant="ghost" onClick={selection.clearSelection} className="bg-transparent text-black hover:text-gray-600 hover:bg-transparent border-none shadow-none p-1">
+            <Button size="sm" variant="ghost" onClick={selection.clearSelection} className="bg-transparent text-[#09121F] hover:text-gray-600 hover:bg-transparent border-none shadow-none p-1">
               <X className="h-4 w-4" />
             </Button>
             </div>
@@ -356,7 +356,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
       }}>
           <div className="flex items-center w-[32px]">
             <div className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${isAllSelected ? 'bg-gray-300' : 'bg-white'}`} onClick={() => selection.toggleSelectAll(allEntryIds)}>
-              {isAllSelected && <div className="w-2 h-2 rounded-full bg-black"></div>}
+              {isAllSelected && <div className="w-2 h-2 rounded-full bg-[#09121F]"></div>}
             </div>
           </div>
           {headers.map((header, index) => <span key={header} className={`text-[#09121F] text-sm font-bold ${header === 'Hours' || header === 'Fee' ? 'text-right' : 'text-left'}`}>
@@ -390,7 +390,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
               }}>
                             <div className="flex items-center w-[32px]">
                               <div className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${selection.isSelected(entry.id) ? 'bg-gray-300' : 'bg-white'}`} onClick={() => selection.toggleSelectRecord(entry.id)}>
-                                {selection.isSelected(entry.id) && <div className="w-2 h-2 rounded-full bg-black"></div>}
+                                {selection.isSelected(entry.id) && <div className="w-2 h-2 rounded-full bg-[#09121F]"></div>}
                               </div>
                             </div>
                             <div className="text-[#09121F] text-sm flex items-center">
@@ -433,7 +433,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                 }}>
                               <div className="flex items-center w-[32px]">
                                 <div className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${selection.isSelected(entry.id) ? 'bg-gray-300' : 'bg-white'}`} onClick={() => selection.toggleSelectRecord(entry.id)}>
-                                  {selection.isSelected(entry.id) && <div className="w-2 h-2 rounded-full bg-black"></div>}
+                                  {selection.isSelected(entry.id) && <div className="w-2 h-2 rounded-full bg-[#09121F]"></div>}
                                 </div>
                               </div>
                               <div className="text-[#09121F] text-sm flex items-center">
@@ -476,7 +476,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
               }}>
                             <div className="flex items-center w-[32px]">
                               <div className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${selection.isSelected(entry.id) ? 'bg-gray-300' : 'bg-white'}`} onClick={() => selection.toggleSelectRecord(entry.id)}>
-                                {selection.isSelected(entry.id) && <div className="w-2 h-2 rounded-full bg-black"></div>}
+                                {selection.isSelected(entry.id) && <div className="w-2 h-2 rounded-full bg-[#09121F]"></div>}
                               </div>
                             </div>
                             <div className="text-[#09121F] text-sm flex items-center">

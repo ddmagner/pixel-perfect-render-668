@@ -151,7 +151,7 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
                   className={`w-6 h-6 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${exportMethod === 'download' ? 'bg-gray-300' : 'bg-white'}`}
                   onClick={() => setExportMethod('download')}
                 >
-                  {exportMethod === 'download' && <div className="w-3 h-3 rounded-full bg-black"></div>}
+                  {exportMethod === 'download' && <div className="w-3 h-3 rounded-full bg-[#09121F]"></div>}
                 </div>
               </div>
               
@@ -164,7 +164,7 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
                   className={`w-6 h-6 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${exportMethod === 'email' ? 'bg-gray-300' : 'bg-white'}`}
                   onClick={() => setExportMethod('email')}
                 >
-                  {exportMethod === 'email' && <div className="w-3 h-3 rounded-full bg-black"></div>}
+                  {exportMethod === 'email' && <div className="w-3 h-3 rounded-full bg-[#09121F]"></div>}
                 </div>
               </div>
               
@@ -177,7 +177,7 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
                   className={`w-6 h-6 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${exportMethod === 'print' ? 'bg-gray-300' : 'bg-white'}`}
                   onClick={() => setExportMethod('print')}
                 >
-                  {exportMethod === 'print' && <div className="w-3 h-3 rounded-full bg-black"></div>}
+                  {exportMethod === 'print' && <div className="w-3 h-3 rounded-full bg-[#09121F]"></div>}
                 </div>
               </div>
             </div>

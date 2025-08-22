@@ -48,7 +48,7 @@ export const WatchMockup: React.FC = () => {
           <div className="absolute -right-1 top-[100px] w-3 h-6 bg-[#8e8e93] rounded-l-lg"></div>
           
           {/* Screen */}
-          <div className="w-[176px] h-[220px] bg-black rounded-[42px] flex flex-col overflow-hidden">
+          <div className="w-[176px] h-[220px] bg-[#09121F] rounded-[42px] flex flex-col overflow-hidden">
             {/* Status Bar */}
             <div className="flex justify-between items-center px-3 py-1 text-white text-xs">
               <span>9:41</span>
