@@ -22,6 +22,9 @@ const config: CapacitorConfig = {
       splashFullScreen: true,
       splashImmersive: true,
     },
+    Haptics: {
+      // Enable native haptic feedback
+    },
   },
 };
 
