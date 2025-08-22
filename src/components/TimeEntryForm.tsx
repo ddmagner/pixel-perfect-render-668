@@ -77,7 +77,7 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
       [field]: formattedValue
     }));
   };
-  return <section className="flex w-full flex-col items-start px-0 py-2.5">
+  return <section className="flex w-full flex-col items-start px-0 pb-2.5">
       <div className="flex h-px flex-col items-start gap-2.5 self-stretch px-5 py-0" />
       
       <header className="flex h-14 flex-col justify-center items-start gap-14 self-stretch pt-2.5 px-5">
