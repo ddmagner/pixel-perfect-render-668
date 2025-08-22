@@ -98,26 +98,26 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
         <h1 className="self-stretch text-[#09121F] text-[28px] font-bold leading-8 tracking-[-0.56px]">New time in</h1>
       </header>
 
-      <form onSubmit={handleSubmit} className="flex flex-col items-start gap-2.5 self-stretch">
+      <form onSubmit={handleSubmit} className="flex flex-col items-start gap-1 self-stretch">
         <div className="flex flex-col items-start self-stretch">
-          <div className="flex items-start gap-2.5 self-stretch px-5 py-1.5">
+          <div className="flex items-start gap-2.5 self-stretch px-5 py-1">
             <label htmlFor="duration" className="flex-[1_0_0] text-[#09121F] text-[15px] font-bold leading-5 tracking-[0.1px]">
               Duration (hours)
             </label>
           </div>
-          <div className="flex items-start gap-2.5 self-stretch px-5 py-1.5">
+          <div className="flex items-start gap-2.5 self-stretch px-5 py-1">
             <input id="duration" type="text" placeholder="How long?" value={formData.duration} onChange={e => handleInputChange('duration', e.target.value)} className="flex-[1_0_0] text-[#09121F] text-[15px] font-normal leading-5 tracking-[0.1px] bg-transparent border-none outline-none placeholder:text-[#BFBFBF]" aria-describedby="duration-help" />
             <span id="duration-help" className="sr-only">Enter duration in hours</span>
           </div>
         </div>
 
         <div className="flex flex-col items-start self-stretch">
-          <div className="flex items-start gap-2.5 self-stretch px-5 py-1.5">
+          <div className="flex items-start gap-2.5 self-stretch px-5 py-1">
             <label htmlFor="task" className="flex-[1_0_0] text-[#09121F] text-[15px] font-bold leading-5 tracking-[0.1px] max-sm:text-sm">
               Task
             </label>
           </div>
-          <div className="flex items-start gap-2.5 self-stretch px-5 py-1.5">
+          <div className="flex items-start gap-2.5 self-stretch px-5 py-1">
             <input id="task" type="text" placeholder="Doing what?" value={formData.task} onChange={e => handleInputChange('task', e.target.value)} className="flex-[1_0_0] text-[#09121F] text-[15px] font-normal leading-5 tracking-[0.1px] bg-transparent border-none outline-none placeholder:text-[#BFBFBF]" />
             <button 
               type="button" 
@@ -131,12 +131,12 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
         </div>
 
         <div className="flex flex-col items-start self-stretch">
-          <div className="flex items-start gap-2.5 self-stretch px-5 py-1.5">
+          <div className="flex items-start gap-2.5 self-stretch px-5 py-1">
             <label htmlFor="project" className="flex-[1_0_0] text-[#09121F] text-[15px] font-bold leading-5 tracking-[0.1px] max-sm:text-sm">
               Project
             </label>
           </div>
-          <div className="flex items-start gap-2.5 self-stretch px-5 py-1.5">
+          <div className="flex items-start gap-2.5 self-stretch px-5 py-1">
             <input id="project" type="text" placeholder="On what?" value={formData.project} onChange={e => handleInputChange('project', e.target.value)} className="flex-[1_0_0] text-[#09121F] text-[15px] font-normal leading-5 tracking-[0.1px] bg-transparent border-none outline-none placeholder:text-[#BFBFBF]" />
             <button 
               type="button" 
@@ -150,12 +150,12 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
         </div>
 
         <div className="flex flex-col items-start self-stretch">
-          <div className="flex items-start gap-2.5 self-stretch px-5 py-1.5">
+          <div className="flex items-start gap-2.5 self-stretch px-5 py-1">
             <label htmlFor="client" className="flex-[1_0_0] text-[#09121F] text-[15px] font-bold leading-5 tracking-[0.1px] max-sm:text-sm">
               Client
             </label>
           </div>
-          <div className="flex items-start gap-2.5 self-stretch px-5 py-1.5">
+          <div className="flex items-start gap-2.5 self-stretch px-5 py-1">
             <input id="client" type="text" placeholder="For who?" value={formData.client} onChange={e => handleInputChange('client', e.target.value)} className="flex-[1_0_0] text-[#09121F] text-[15px] font-normal leading-5 tracking-[0.1px] bg-transparent border-none outline-none placeholder:text-[#BFBFBF]" />
             <button 
               type="button" 
