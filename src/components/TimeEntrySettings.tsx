@@ -121,7 +121,7 @@ export const TimeEntrySettings: React.FC = () => {
           
           <div className="flex items-center justify-between">
             <input type="text" placeholder="Add client" value={newClientName} onChange={e => setNewClientName(e.target.value)} className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none flex-1" />
-            <button onClick={handleAddClient} className="w-6 h-6 bg-[#09121F] text-white rounded flex items-center justify-center text-xs font-bold">
+            <button onClick={handleAddClient} className="w-5 h-5 bg-[#09121F] text-white flex items-center justify-center text-sm font-bold">
               +
             </button>
           </div>
@@ -178,7 +178,7 @@ export const TimeEntrySettings: React.FC = () => {
           
           <div className="flex items-center justify-between">
             <input type="text" placeholder="Add project" value={newProjectName} onChange={e => setNewProjectName(e.target.value)} className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none flex-1" />
-            <button onClick={handleAddProject} className="w-6 h-6 bg-[#09121F] text-white rounded flex items-center justify-center text-xs font-bold">
+            <button onClick={handleAddProject} className="w-5 h-5 bg-[#09121F] text-white flex items-center justify-center text-sm font-bold">
               +
             </button>
           </div>
@@ -268,7 +268,7 @@ export const TimeEntrySettings: React.FC = () => {
             <div className="flex items-center gap-3">
               {settings.invoiceMode && <input type="text" placeholder="$0.00" value={newTaskRate} onChange={e => setNewTaskRate(e.target.value)} className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none w-20 text-right" />}
               <div className="flex pl-8 justify-end">
-                <button onClick={handleAddTask} className="w-6 h-6 bg-[#09121F] text-white rounded flex items-center justify-center text-xs font-bold">
+                <button onClick={handleAddTask} className="w-5 h-5 bg-[#09121F] text-white flex items-center justify-center text-sm font-bold">
                   +
                 </button>
               </div>
