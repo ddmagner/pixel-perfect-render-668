@@ -75,7 +75,10 @@ export const TimeArchivePage: React.FC = () => {
         taskTypes: [...settings.taskTypes, newTask]
       });
     }
-    navigate('/settings');
+    // Store the task name for settings page to highlight
+    localStorage.setItem('newTaskToEdit', taskName);
+    // Navigate to main page which will show settings tab
+    navigate('/?tab=settings');
   };
 
   // Calculate fee for invoice mode

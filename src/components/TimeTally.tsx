@@ -12,7 +12,11 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { useSelection } from '@/hooks/useSelection';
 import { useToast } from '@/hooks/use-toast';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
-export const TimeTally: React.FC = () => {
+interface TimeTallyProps {
+  onSwitchToSettings?: () => void;
+}
+
+export const TimeTally: React.FC<TimeTallyProps> = ({ onSwitchToSettings }) => {
   const {
     timeEntries,
     sortOption,
@@ -78,7 +82,10 @@ export const TimeTally: React.FC = () => {
         taskTypes: [...settings.taskTypes, newTask]
       });
     }
-    navigate('/settings');
+    // Switch to settings tab
+    if (onSwitchToSettings) {
+      onSwitchToSettings();
+    }
   };
 
   // Calculate fee for an entry

@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { Navigation, TabNavigation } from '@/components/Navigation';
 import { Divider } from '@/components/Divider';
 import { RecordButton } from '@/components/RecordButton';
@@ -8,10 +9,19 @@ import { Settings } from '@/components/Settings';
 import { useApp } from '@/context/AppContext';
 
 const Index = () => {
+  const [searchParams] = useSearchParams();
   const [activeTab, setActiveTab] = useState('enter-time');
   const [isRecording, setIsRecording] = useState(false);
   const [currentTranscript, setCurrentTranscript] = useState('');
   const { timeEntries, addTimeEntry } = useApp();
+
+  // Handle navigation from TimeArchive
+  useEffect(() => {
+    const tab = searchParams.get('tab');
+    if (tab === 'settings') {
+      setActiveTab('settings');
+    }
+  }, [searchParams]);
 
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
@@ -73,7 +83,7 @@ const Index = () => {
         )}
 
         {activeTab === 'time-tally' && (
-          <TimeTally />
+          <TimeTally onSwitchToSettings={() => setActiveTab('settings')} />
         )}
 
         {activeTab === 'settings' && (
