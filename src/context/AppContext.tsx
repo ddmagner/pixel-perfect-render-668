@@ -23,7 +23,7 @@ interface AppContextType {
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
 const defaultSettings: AppSettings = {
-  accentColor: '#09121F',
+  accentColor: 'hsl(0, 0%, 85%)', // Light gray as default secondary color
   invoiceMode: false,
   taskTypes: [
     { id: '1', name: 'Development', hourlyRate: 75 },
