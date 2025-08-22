@@ -6,13 +6,22 @@ export const useHaptics = () => {
 
   // Web vibration fallback function
   const webVibrate = (pattern: number | number[]) => {
+    console.log('Attempting web vibration, isNative:', isNative);
+    console.log('Navigator vibrate available:', 'vibrate' in navigator);
+    console.log('User agent:', navigator.userAgent);
+    
     if ('vibrate' in navigator) {
       try {
-        navigator.vibrate(pattern);
+        const result = navigator.vibrate(pattern);
+        console.log('Vibration result:', result);
+        return result;
       } catch (error) {
-        console.debug('Web vibration not available:', error);
+        console.debug('Web vibration failed:', error);
+        return false;
       }
     }
+    console.log('Vibration API not available');
+    return false;
   };
 
   const lightImpact = async () => {
