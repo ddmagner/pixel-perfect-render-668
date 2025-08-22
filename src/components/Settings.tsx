@@ -68,10 +68,10 @@ export const Settings: React.FC<SettingsProps> = ({
         {/* Coloring Time Section */}
         <div className="w-full px-2.5"><div className="h-px bg-[#09121F]" /></div>
         <div className="px-2.5 py-4 pb-[22px]">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between cursor-pointer" onClick={() => setShowColorOverlay(true)}>
             <div>
               <h1 className="text-[#09121F] text-[28px] font-bold leading-8">Coloring time</h1>
-              <p className="text-[#09121F] text-sm underline cursor-pointer" onClick={() => setShowColorOverlay(true)}>Customize your accent color</p>
+              <p className="text-[#09121F] text-sm underline">Customize your accent color</p>
             </div>
             <div className="w-8 h-8 bg-white rounded-lg flex items-center ml-auto">
               <div dangerouslySetInnerHTML={{
