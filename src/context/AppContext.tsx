@@ -25,20 +25,9 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 const defaultSettings: AppSettings = {
   accentColor: 'hsl(0, 0%, 85%)', // Light gray as default secondary color
   invoiceMode: false,
-  taskTypes: [
-    { id: '1', name: 'Development', hourlyRate: 75 },
-    { id: '2', name: 'Design', hourlyRate: 65 },
-    { id: '3', name: 'Meeting', hourlyRate: 50 },
-    { id: '4', name: 'Research', hourlyRate: 60 },
-  ],
-  projects: [
-    { id: '1', name: 'Project Alpha' },
-    { id: '2', name: 'Project Beta' },
-  ],
-  clients: [
-    { id: '1', name: 'Client A' },
-    { id: '2', name: 'Client B' },
-  ],
+  taskTypes: [],
+  projects: [],
+  clients: [],
   userProfile: {
     name: '',
     email: '',
