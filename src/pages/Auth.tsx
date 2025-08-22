@@ -161,7 +161,7 @@ const Auth = () => {
                 </div>
               </div>}
 
-            <div className="w-full px-0 pt-2.5 pb-1">
+            <div className="w-full px-0 pt-[25px] pb-1">
               <button type="submit" disabled={loading} className="w-full text-white py-3.5 font-bold text-[15px] transition-colors" style={{
               backgroundColor: '#09121F'
             }} aria-label={isSignUp ? 'Create Account' : 'Sign In'}>
