@@ -15,11 +15,7 @@ const SettingsPage = () => {
 
   return (
     <>
-      <link
-        rel="stylesheet"
-        href="https://fonts.googleapis.com/css2?family=Gilroy:wght@400;700;800;900&display=swap"
-      />
-      <div 
+      <div
         className="flex w-full max-w-sm mx-auto flex-col items-start relative bg-white overflow-x-hidden"
         style={{ fontFamily: 'Gilroy, sans-serif' }}
       >
