@@ -65,7 +65,7 @@ export const RecordButton: React.FC<RecordButtonProps> = ({
       stopListening();
     }
   };
-  return <section className="flex w-full justify-center items-center gap-2.5 px-0 pt-[50px] pb-[35px]">
+  return <section className="flex w-full justify-center items-center gap-2.5 px-0 pt-[40px] pb-[25px]">
       <div className="flex flex-col items-center gap-10 shrink-0">
         <div className="h-[220px] w-[220px] relative max-sm:h-[180px] max-sm:w-[180px]">
           <button className={`w-[220px] h-[220px] shrink-0 absolute left-0 top-0 max-sm:w-[180px] max-sm:h-[180px] transition-all flex items-center justify-center rounded-full ${isPressed ? 'scale-95' : 'scale-100'} ${isRecording ? 'animate-pulse' : ''}`} onMouseDown={handleMouseDown} onMouseUp={handleMouseUp} onMouseLeave={handleMouseUp} onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd} aria-label="Hold to record voice note" role="button">
