@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
+import { useMicrophonePermission } from '@/hooks/useMicrophonePermission';
 import { TimeEntry, AppSettings, SortOption, ViewMode } from '@/types';
 import { useToast } from '@/hooks/use-toast';
 
@@ -10,6 +11,8 @@ interface AppContextType {
   sortOption: SortOption;
   viewMode: ViewMode;
   loading: boolean;
+  hasMicrophonePermission: boolean;
+  requestMicrophonePermission: () => Promise<boolean>;
   addTimeEntry: (entry: Omit<TimeEntry, 'id' | 'submittedAt'>) => Promise<void>;
   updateSettings: (settings: Partial<AppSettings>) => Promise<void>;
   setSortOption: (option: SortOption) => void;
@@ -42,6 +45,7 @@ const defaultSettings: AppSettings = {
 export function AppProvider({ children }: { children: React.ReactNode }) {
   const { user, loading: authLoading } = useAuth();
   const { toast } = useToast();
+  const { hasPermission: hasMicrophonePermission, requestPermission: requestMicrophonePermission } = useMicrophonePermission();
   const [timeEntries, setTimeEntries] = useState<TimeEntry[]>([]);
   const [settings, setSettings] = useState<AppSettings>(defaultSettings);
   const [sortOption, setSortOption] = useState<SortOption>('date');
@@ -56,6 +60,17 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (user) {
       loadUserData();
+      // Request microphone permission after successful sign-in
+      if (!hasMicrophonePermission) {
+        requestMicrophonePermission().then((granted) => {
+          if (granted) {
+            toast({
+              title: "Microphone Access Granted",
+              description: "You can now use voice recording features.",
+            });
+          }
+        });
+      }
     } else if (!authLoading) {
       // Reset data when user logs out
       setTimeEntries([]);
@@ -371,6 +386,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     sortOption,
     viewMode,
     loading,
+    hasMicrophonePermission,
+    requestMicrophonePermission,
     addTimeEntry,
     updateSettings,
     setSortOption,

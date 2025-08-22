@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
+import { useApp } from '@/context/AppContext';
 
 interface SpeechRecognitionHook {
   isListening: boolean;
@@ -10,13 +11,15 @@ interface SpeechRecognitionHook {
 }
 
 export function useSpeechRecognition(): SpeechRecognitionHook {
+  const { hasMicrophonePermission } = useApp();
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState('');
   const recognition = useRef<SpeechRecognition | null>(null);
 
-  // Check if speech recognition is supported
+  // Check if speech recognition is supported and we have microphone permission
   const isSupported = typeof window !== 'undefined' && 
-    ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window);
+    ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) &&
+    hasMicrophonePermission;
 
   useEffect(() => {
     if (!isSupported) return;
@@ -65,7 +68,7 @@ export function useSpeechRecognition(): SpeechRecognitionHook {
   }, [isSupported]);
 
   const startListening = () => {
-    if (recognition.current && !isListening) {
+    if (recognition.current && !isListening && hasMicrophonePermission) {
       recognition.current.start();
     }
   };
