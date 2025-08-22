@@ -102,7 +102,7 @@ export const TimeEntrySettings: React.FC = () => {
                       setEditingClient(null);
                     }
                   }}
-                  className="text-[#09121F] text-sm bg-transparent border-none outline-none flex-1 focus:bg-gray-50 px-1 py-0.5 rounded"
+                  className="text-[#09121F] text-sm bg-transparent border-none outline-none flex-1"
                   style={{ marginRight: '56px' }}
                   autoFocus
                 />
@@ -159,7 +159,7 @@ export const TimeEntrySettings: React.FC = () => {
                       setEditingProject(null);
                     }
                   }}
-                  className="text-[#09121F] text-sm bg-transparent border-none outline-none flex-1 focus:bg-gray-50 px-1 py-0.5 rounded"
+                  className="text-[#09121F] text-sm bg-transparent border-none outline-none flex-1"
                   style={{ marginRight: '56px' }}
                   autoFocus
                 />
@@ -217,7 +217,7 @@ export const TimeEntrySettings: React.FC = () => {
                         setEditingTask(null);
                       }
                     }}
-                    className="text-[#09121F] text-sm bg-transparent border-none outline-none flex-1 focus:bg-gray-50 px-1 py-0.5 rounded"
+                    className="text-[#09121F] text-sm bg-transparent border-none outline-none flex-1"
                     autoFocus
                   />
                 ) : (
@@ -243,7 +243,7 @@ export const TimeEntrySettings: React.FC = () => {
                             setEditingTask(null);
                           }
                         }}
-                        className="text-[#09121F] text-sm bg-transparent border-none outline-none w-full text-right focus:bg-gray-50 px-1 py-0.5 rounded"
+                        className="text-[#09121F] text-sm bg-transparent border-none outline-none w-full text-right"
                       />
                     ) : (
                       <span className="text-[#09121F] text-sm">
