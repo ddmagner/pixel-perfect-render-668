@@ -48,7 +48,7 @@ export const Settings: React.FC<SettingsProps> = ({
       </div>
 
       {/* Divider */}
-      <div className="w-full px-2.5"><div className="h-px bg-[#09121F]" /></div>
+      <div className="w-full px-2.5 mb-6"><div className="h-px bg-[#09121F]" /></div>
 
       {/* Header */}
       <div className="flex items-baseline justify-between px-2.5 pt-0.5 pb-1">
