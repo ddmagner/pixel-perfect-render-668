@@ -15,8 +15,9 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 interface TimeTallyProps {
   onSwitchToSettings?: () => void;
 }
-
-export const TimeTally: React.FC<TimeTallyProps> = ({ onSwitchToSettings }) => {
+export const TimeTally: React.FC<TimeTallyProps> = ({
+  onSwitchToSettings
+}) => {
   const {
     timeEntries,
     sortOption,
@@ -323,7 +324,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({ onSwitchToSettings }) => {
             </div>
           </div>}
         <div className="flex items-baseline justify-between h-full">
-          <h1 className="text-[#09121F] text-[28px] font-bold leading-8">Where time went</h1>
+          <h1 className="text-[#09121F] text-[28px] font-bold leading-8">Where the time went</h1>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button className="flex items-center text-sm font-medium text-[#09121F] hover:bg-gray-50">
@@ -402,16 +403,9 @@ export const TimeTally: React.FC<TimeTallyProps> = ({ onSwitchToSettings }) => {
                               {formatHours(entry.duration)}
                             </div>
                             {viewMode === 'invoice' && <div className="text-[#09121F] text-sm text-right flex items-center justify-end">
-                                {hasTaskRate(entry.task) ? (
-                                  `$${calculateFee(entry).toFixed(2)}`
-                                ) : (
-                                  <button 
-                                    onClick={() => handleAddRate(entry.task)}
-                                    className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-gray-700 transition-colors"
-                                  >
+                                {hasTaskRate(entry.task) ? `$${calculateFee(entry).toFixed(2)}` : <button onClick={() => handleAddRate(entry.task)} className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-gray-700 transition-colors">
                                     <Plus className="h-2.5 w-2.5" strokeWidth={3} />
-                                  </button>
-                                )}
+                                  </button>}
                               </div>}
                           </div>)}
                         
@@ -452,25 +446,18 @@ export const TimeTally: React.FC<TimeTallyProps> = ({ onSwitchToSettings }) => {
                                 {formatHours(entry.duration)}
                               </div>
                               {viewMode === 'invoice' && <div className="text-[#09121F] text-sm text-right flex items-center justify-end">
-                                  {hasTaskRate(entry.task) ? (
-                                    `$${calculateFee(entry).toFixed(2)}`
-                                  ) : (
-                    <button 
-                      onClick={() => handleAddRate(entry.task)}
-                      className="w-5 h-5 bg-[#09121F] text-white flex items-center justify-center hover:bg-gray-700 transition-colors text-sm font-bold"
-                    >
+                                  {hasTaskRate(entry.task) ? `$${calculateFee(entry).toFixed(2)}` : <button onClick={() => handleAddRate(entry.task)} className="w-5 h-5 bg-[#09121F] text-white flex items-center justify-center hover:bg-gray-700 transition-colors text-sm font-bold">
                       +
-                    </button>
-                                  )}
+                    </button>}
                                 </div>}
                             </div>)}
                         </div>)}
                       
                       <div className="h-px bg-[#09121F] mt-2" />
                          <div className={`grid ${gridColsWithSelection} h-[32px] items-center`} style={{
-                          gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (viewMode === 'invoice' ? ' calc(40px + 50px)' : ''),
-                          gap: '0'
-                        }}>
+                gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (viewMode === 'invoice' ? ' calc(40px + 50px)' : ''),
+                gap: '0'
+              }}>
                         <div></div>
                         <div></div>
                         <div className="text-[#09121F] text-sm font-bold flex items-center">Sub-total</div>
@@ -502,24 +489,17 @@ export const TimeTally: React.FC<TimeTallyProps> = ({ onSwitchToSettings }) => {
                               {formatHours(entry.duration)}
                             </div>
                             {viewMode === 'invoice' && <div className="text-[#09121F] text-sm text-right flex items-center justify-end">
-                                {hasTaskRate(entry.task) ? (
-                                  `$${calculateFee(entry).toFixed(2)}`
-                                ) : (
-                                  <button 
-                                    onClick={() => handleAddRate(entry.task)}
-                                    className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-gray-700 transition-colors"
-                                  >
+                                {hasTaskRate(entry.task) ? `$${calculateFee(entry).toFixed(2)}` : <button onClick={() => handleAddRate(entry.task)} className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-gray-700 transition-colors">
                                     <Plus className="h-2.5 w-2.5" />
-                                  </button>
-                                )}
+                                  </button>}
                               </div>}
                           </div>)}
                       
                       <div className="h-px bg-[#09121F] mt-2" />
                          <div className={`grid ${gridColsWithSelection} h-[32px] items-center`} style={{
-                          gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (viewMode === 'invoice' ? ' calc(40px + 50px)' : ''),
-                          gap: '0'
-                        }}>
+                gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (viewMode === 'invoice' ? ' calc(40px + 50px)' : ''),
+                gap: '0'
+              }}>
                         <div></div>
                         <div></div>
                         <div className="text-[#09121F] text-sm font-bold flex items-center">Sub-total</div>
@@ -538,9 +518,9 @@ export const TimeTally: React.FC<TimeTallyProps> = ({ onSwitchToSettings }) => {
             {/* Total */}
             <div className="w-full">
               <div className={`grid ${gridColsWithSelection} h-[32px] items-center`} style={{
-                gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (viewMode === 'invoice' ? ' calc(40px + 50px)' : ''),
-                gap: '0'
-              }}>
+            gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (viewMode === 'invoice' ? ' calc(40px + 50px)' : ''),
+            gap: '0'
+          }}>
                 <div className="flex items-center"></div>
                 <div className="flex items-center"></div>
                 <div className="text-[#09121F] text-sm font-bold flex items-center">TOTAL</div>
