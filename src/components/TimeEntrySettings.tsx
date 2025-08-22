@@ -203,7 +203,7 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({ highlightS
         <div className="border-b border-[#09121F] mb-3"></div>
         
         <div className="space-y-3">
-          {settings.taskTypes.map(task => <div key={task.id} className="flex items-center justify-between">
+          {settings.taskTypes.map(task => <div key={task.id} className="flex items-center justify-between min-h-[20px]">
               <div className="flex-1 flex items-center">
                 {editingTask?.id === task.id ? (
                   <input 
@@ -221,11 +221,11 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({ highlightS
                         setEditingTask(null);
                       }
                     }}
-                    className="text-[#09121F] text-sm bg-transparent border-none outline-none flex-1"
+                    className="text-[#09121F] text-sm bg-transparent border-none outline-none flex-1 leading-5"
                     autoFocus
                   />
                 ) : (
-                  <span className="text-[#09121F] text-sm flex-1">{task.name}</span>
+                  <span className="text-[#09121F] text-sm flex-1 leading-5">{task.name}</span>
                 )}
               </div>
               <div className="flex items-center gap-3">
@@ -247,20 +247,20 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({ highlightS
                             setEditingTask(null);
                           }
                         }}
-                        className="text-[#09121F] text-sm bg-transparent border-none outline-none w-full text-right"
+                        className="text-[#09121F] text-sm bg-transparent border-none outline-none w-full text-right leading-5"
                       />
                     ) : (
-                      <span className="text-[#09121F] text-sm">
+                      <span className="text-[#09121F] text-sm leading-5">
                         ${(task.hourlyRate || 0).toFixed(2)}
                       </span>
                     )}
                   </div>
                 )}
                 <div className="flex gap-3 w-[56px] justify-end">
-                  <button onClick={() => setEditingTask(task)} className="text-gray-400 hover:text-[#09121F]">
+                  <button onClick={() => setEditingTask(task)} className="text-gray-400 hover:text-[#09121F] flex items-center justify-center w-4 h-4">
                     <Edit3 size={16} />
                   </button>
-                  <button onClick={() => handleDeleteTask(task.id)} className="text-gray-400 hover:text-red-500">
+                  <button onClick={() => handleDeleteTask(task.id)} className="text-gray-400 hover:text-red-500 flex items-center justify-center w-4 h-4">
                     <Trash2 size={16} />
                   </button>
                 </div>
