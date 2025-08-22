@@ -235,6 +235,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
           user_id: user.id,
           accent_color: updatedSettings.accentColor,
           invoice_mode: updatedSettings.invoiceMode
+        }, {
+          onConflict: 'user_id'
         });
 
       if (error) throw error;
