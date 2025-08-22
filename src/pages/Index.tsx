@@ -6,6 +6,7 @@ import { RecordButton } from '@/components/RecordButton';
 import { TimeEntryForm } from '@/components/TimeEntryForm';
 import { TimeTally } from '@/components/TimeTally';
 import { Settings } from '@/components/Settings';
+import { LoadingScreen } from '@/components/LoadingScreen';
 
 import { useApp } from '@/context/AppContext';
 
@@ -14,6 +15,7 @@ const Index = () => {
   const [activeTab, setActiveTab] = useState('enter-time');
   const [isRecording, setIsRecording] = useState(false);
   const [currentTranscript, setCurrentTranscript] = useState('');
+  const [showLoading, setShowLoading] = useState(true);
   const { timeEntries, addTimeEntry } = useApp();
 
   // Handle navigation from TimeArchive
@@ -52,6 +54,10 @@ const Index = () => {
     });
     console.log('Time entry submitted:', data);
   };
+
+  if (showLoading) {
+    return <LoadingScreen onLoadingComplete={() => setShowLoading(false)} />;
+  }
 
   return (
     <>
