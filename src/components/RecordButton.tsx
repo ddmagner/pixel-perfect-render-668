@@ -31,63 +31,65 @@ export const RecordButton: React.FC<RecordButtonProps> = ({
       onTranscript(transcript);
     }
   }, [transcript, onTranscript]);
-  const handleMouseDown = (e: React.MouseEvent) => {
+  // Unified Pointer Events to avoid mouse/touch conflicts and long-press issues
+  const handlePointerDown = (e: React.PointerEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    // Capture the pointer so we reliably receive the corresponding pointerup
+    try { (e.currentTarget as any).setPointerCapture?.(e.pointerId); } catch {}
     setIsPressed(true);
-    mediumImpact(); // Haptic feedback on press
+    mediumImpact();
     onRecordStart();
     if (isSupported) {
       resetTranscript();
       startListening();
     }
   };
-  
-  const handleMouseUp = (e: React.MouseEvent) => {
-    e.preventDefault();
+
+  const stopRecordingIfActive = () => {
+    if (!isPressed) return;
     setIsPressed(false);
-    lightImpact(); // Haptic feedback on release
-    onRecordStop();
-    if (isSupported) {
-      stopListening();
-    }
-  };
-  
-  const handleTouchStart = (e: React.TouchEvent) => {
-    e.preventDefault();
-    setIsPressed(true);
-    mediumImpact(); // Haptic feedback on touch start
-    onRecordStart();
-    if (isSupported) {
-      resetTranscript();
-      startListening();
-    }
-  };
-  
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    e.preventDefault();
-    setIsPressed(false);
-    lightImpact(); // Haptic feedback on touch end
+    lightImpact();
     onRecordStop();
     if (isSupported) {
       stopListening();
     }
   };
 
-  // Separate handler for mouse leave to avoid conflicts
-  const handleMouseLeave = () => {
-    // Only stop if we're in a pressed state to avoid conflicts
-    if (isPressed) {
-      setIsPressed(false);
-      onRecordStop();
-      if (isSupported) {
-        stopListening();
-      }
-    }
+  const handlePointerUp = (e: React.PointerEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    stopRecordingIfActive();
   };
+
+  const handlePointerCancel = (e: React.PointerEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    stopRecordingIfActive();
+  };
+
+  const handlePointerLeave = (e: React.PointerEvent<HTMLButtonElement>) => {
+    // Do nothing here – we rely on pointerup/cancel/global listeners
+  };
+
+  // Global safety net in case the pointerup happens outside the button
+  useEffect(() => {
+    const onGlobalPointerUp = () => stopRecordingIfActive();
+    const onVisibilityChange = () => { if (document.hidden) stopRecordingIfActive(); };
+
+    window.addEventListener('pointerup', onGlobalPointerUp);
+    window.addEventListener('pointercancel', onGlobalPointerUp);
+    window.addEventListener('touchend', onGlobalPointerUp, { passive: true } as any);
+    document.addEventListener('visibilitychange', onVisibilityChange);
+
+    return () => {
+      window.removeEventListener('pointerup', onGlobalPointerUp);
+      window.removeEventListener('pointercancel', onGlobalPointerUp);
+      window.removeEventListener('touchend', onGlobalPointerUp as any);
+      document.removeEventListener('visibilitychange', onVisibilityChange);
+    };
+  }, [isPressed, isSupported]);
   return <section className="flex w-full justify-center items-center gap-2.5 px-0 pt-[40px] pb-[15px]">
       <div className="flex flex-col items-center gap-10 shrink-0">
         <div className="h-[220px] w-[220px] relative max-sm:h-[180px] max-sm:w-[180px]">
-          <button className={`w-[220px] h-[220px] shrink-0 absolute left-0 top-0 max-sm:w-[180px] max-sm:h-[180px] transition-all flex items-center justify-center rounded-full select-none ${isPressed ? 'scale-95' : 'scale-100'} ${isRecording ? 'animate-pulse' : ''}`} onMouseDown={handleMouseDown} onMouseUp={handleMouseUp} onMouseLeave={handleMouseLeave} onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd} aria-label="Hold to record voice note" role="button" style={{ userSelect: 'none', WebkitUserSelect: 'none', WebkitTouchCallout: 'none' }}>
+          <button className={`w-[220px] h-[220px] shrink-0 absolute left-0 top-0 max-sm:w-[180px] max-sm:h-[180px] transition-all flex items-center justify-center rounded-full select-none ${isPressed ? 'scale-95' : 'scale-100'} ${isRecording ? 'animate-pulse' : ''}`} onPointerDown={handlePointerDown} onPointerUp={handlePointerUp} onPointerCancel={handlePointerCancel} onPointerLeave={handlePointerLeave} onContextMenu={(e) => e.preventDefault()} aria-label="Hold to record voice note" role="button" style={{ userSelect: 'none', WebkitUserSelect: 'none', WebkitTouchCallout: 'none', touchAction: 'none' }}>
             <div dangerouslySetInnerHTML={{
             __html: `<svg width="220" height="221" viewBox="0 0 220 221" fill="none" xmlns="http://www.w3.org/2000/svg" class="record-button max-sm:w-[180px] max-sm:h-[180px]" style="width: 220px; height: 220px; flex-shrink: 0;">
                   <path d="M110 0.5C170.753 0.5 220 49.747 220 110.5C220 171.253 170.753 220.5 110 220.5C91.278 220.5 73.645 215.825 58.212 207.575L0 220.5L12.936 162.31C4.686 146.866 0 129.233 0 110.5C0 49.747 49.247 0.5 110 0.5Z" fill="${isPressed ? '#BFBFBF' : settings.accentColor}"/>
