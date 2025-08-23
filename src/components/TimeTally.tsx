@@ -437,7 +437,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                     }}
                   >
                     <div></div>
-                    <div className="flex items-center">{group.name}</div>
+                    <div className="flex items-center font-bold text-[#09121F] text-sm">{group.name}</div>
                     <div></div>
                     <div></div>
                     {viewMode === 'invoice' && <div></div>}
@@ -455,7 +455,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                           }}
                         >
                           <div></div>
-                          <div className="flex items-center">{project.name}</div>
+                          <div className="flex items-center font-bold text-[#09121F] text-sm">{project.name}</div>
                           <div></div>
                           <div></div>
                           {viewMode === 'invoice' && <div></div>}
