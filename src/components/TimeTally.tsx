@@ -365,8 +365,8 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
         </div>
       </div>
 
-      {/* Spacing */}
-      <div className="h-6"></div>
+      {/* Divider */}
+      <div className="w-full px-2.5 mb-6"><div className="h-px bg-[#09121F]" /></div>
 
       {/* Table Header */}
       <div className="w-full px-2.5">
