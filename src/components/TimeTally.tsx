@@ -482,7 +482,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                               </div>
                             )}
                           </div>
-                        ))
+                        ))}
                         
                         <div className="h-px bg-[#09121F]" />
                         <div 
@@ -506,8 +506,8 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                         </div>
                         <div className="h-px bg-[#09121F]" />
                       </div>
-
-                   ) : sortOption === 'date' && group.projects ? (
+                    ))
+                  ) : sortOption === 'date' && group.projects ? (
                     <div>
                       {group.projects.map((project: any, projectIndex: number) => (
                         <div key={`date-project-${project.name}-${projectIndex}`}>
