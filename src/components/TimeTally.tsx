@@ -483,7 +483,31 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                             )}
                           </div>
                         ))
-                  ) : sortOption === 'date' && group.projects ? (
+                        
+                        <div className="h-px bg-[#09121F]" />
+                        <div 
+                          className={`grid ${gridColsWithSelection} h-[32px] items-center`}
+                          style={{
+                            gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (viewMode === 'invoice' ? ' calc(40px + 50px)' : ''),
+                            gap: '0'
+                          }}
+                        >
+                          <div></div>
+                          <div></div>
+                          <div className="text-[#09121F] text-sm font-bold flex items-center">Sub-total</div>
+                          <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
+                            {formatHours(project.subtotal.hours)}
+                          </div>
+                          {viewMode === 'invoice' && (
+                            <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
+                              ${project.subtotal.fee.toFixed(2)}
+                            </div>
+                          )}
+                        </div>
+                        <div className="h-px bg-[#09121F]" />
+                      </div>
+
+                   ) : sortOption === 'date' && group.projects ? (
                     <div>
                       {group.projects.map((project: any, projectIndex: number) => (
                         <div key={`date-project-${project.name}-${projectIndex}`}>
