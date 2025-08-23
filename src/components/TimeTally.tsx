@@ -444,7 +444,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                         {project.entries.map((entry: TimeEntry) => (
                           <div 
                             key={entry.id} 
-                            className={`grid ${gridColsWithSelection} items-start hover:bg-gray-50 py-0.5`}
+                            className={`grid ${gridColsWithSelection} items-start hover:bg-gray-50 py-2`}
                             style={{
                               gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (viewMode === 'invoice' ? ' calc(40px + 50px)' : ''),
                               gap: '0'
@@ -514,7 +514,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                           {project.entries.map((entry: TimeEntry) => (
                             <div 
                               key={entry.id} 
-                              className={`grid ${gridColsWithSelection} items-start hover:bg-gray-50 py-0.5`}
+                              className={`grid ${gridColsWithSelection} items-start hover:bg-gray-50 py-2`}
                               style={{
                                 gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (viewMode === 'invoice' ? ' calc(40px + 50px)' : ''),
                                 gap: '0'
@@ -583,7 +583,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                       {group.entries.map((entry: TimeEntry) => (
                         <div 
                           key={entry.id} 
-                          className={`grid ${gridColsWithSelection} items-start hover:bg-gray-50 py-0.5`}
+                          className={`grid ${gridColsWithSelection} items-start hover:bg-gray-50 py-2`}
                           style={{
                             gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (viewMode === 'invoice' ? ' calc(40px + 50px)' : ''),
                             gap: '0'
