@@ -38,14 +38,24 @@ export const EditTimeEntryDialog: React.FC<EditTimeEntryDialogProps> = ({
         project: entry.project,
         date: entry.date
       });
+      console.log('Available tasks:', settings.taskTypes.map(t => t.name));
+      console.log('Available projects:', settings.projects.map(p => p.name));
       setFormData({
         duration: entry.duration.toString(),
         task: entry.task,
         project: entry.project,
         date: entry.date
       });
+    } else {
+      // Reset form when no entry
+      setFormData({
+        duration: '',
+        task: '',
+        project: '',
+        date: ''
+      });
     }
-  }, [entry]);
+  }, [entry, settings.taskTypes, settings.projects]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
