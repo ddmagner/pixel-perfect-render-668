@@ -474,7 +474,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                               <div 
                                 className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${selection.isSelected(entry.id) ? 'bg-gray-300' : 'bg-white'}`} 
                                 onClick={() => selection.toggleSelectRecord(entry.id)}
-                                style={{ marginTop: '-2px' }}
+                                style={{ marginTop: '-4px' }}
                               >
                                 {selection.isSelected(entry.id) && <div className="w-2 h-2 rounded-full bg-[#09121F]"></div>}
                               </div>
@@ -545,7 +545,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                                 <div 
                                   className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${selection.isSelected(entry.id) ? 'bg-gray-300' : 'bg-white'}`} 
                                   onClick={() => selection.toggleSelectRecord(entry.id)}
-                                  style={{ marginTop: '-2px' }}
+                                  style={{ marginTop: '-4px' }}
                                 >
                                   {selection.isSelected(entry.id) && <div className="w-2 h-2 rounded-full bg-[#09121F]"></div>}
                                 </div>
@@ -615,7 +615,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                             <div 
                               className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${selection.isSelected(entry.id) ? 'bg-gray-300' : 'bg-white'}`} 
                               onClick={() => selection.toggleSelectRecord(entry.id)}
-                              style={{ marginTop: '-2px' }}
+                              style={{ marginTop: '-4px' }}
                             >
                               {selection.isSelected(entry.id) && <div className="w-2 h-2 rounded-full bg-[#09121F]"></div>}
                             </div>
