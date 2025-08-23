@@ -429,7 +429,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
               {organizedData.groups.map((group, groupIndex) => (
                 <div key={`${group.type}-${group.name}-${groupIndex}`}>
                   {/* Group Header */}
-                  <div className="font-bold text-[#09121F] text-xs h-[32px] flex items-center pl-8 -mt-px">
+                  <div className="font-bold text-[#09121F] text-sm h-[32px] flex items-center pl-8 -mt-px">
                     {group.name}
                   </div>
 
@@ -437,7 +437,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                   {sortOption === 'project' && group.projects ? (
                     group.projects.map((project: any, projectIndex: number) => (
                       <div key={`project-${project.name}-${projectIndex}`}>
-                        <div className="font-bold text-[#09121F] text-xs h-[32px] flex items-center pl-8 -mt-px">
+                        <div className="font-bold text-[#09121F] text-sm h-[32px] flex items-center pl-8 -mt-px">
                           {project.name}
                         </div>
                         
@@ -458,17 +458,17 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                                 {selection.isSelected(entry.id) && <div className="w-2 h-2 rounded-full bg-[#09121F]"></div>}
                               </div>
                             </div>
-                            <div className="text-[#09121F] text-xs leading-tight flex items-start">
+                            <div className="text-[#09121F] text-sm leading-tight flex items-start">
                               {format(new Date(entry.date), 'MM/dd')}
                             </div>
-                            <div className="text-[#09121F] text-xs leading-tight flex items-start">
+                            <div className="text-[#09121F] text-sm leading-tight flex items-start">
                               {entry.task}
                             </div>
-                            <div className="text-[#09121F] text-xs leading-tight text-right flex items-start justify-end">
+                            <div className="text-[#09121F] text-sm leading-tight text-right flex items-start justify-end">
                               {formatHours(entry.duration)}
                             </div>
                             {viewMode === 'invoice' && (
-                              <div className="text-[#09121F] text-xs leading-tight text-right flex items-start justify-end">
+                              <div className="text-[#09121F] text-sm leading-tight text-right flex items-start justify-end">
                                 {hasTaskRate(entry.task) ? (
                                   `$${calculateFee(entry).toFixed(2)}`
                                 ) : (
@@ -494,12 +494,12 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                         >
                           <div></div>
                           <div></div>
-                          <div className="text-[#09121F] text-xs font-bold flex items-center">Sub-total</div>
-                          <div className="text-[#09121F] text-xs font-bold text-right flex items-center justify-end">
+                          <div className="text-[#09121F] text-sm font-bold flex items-center">Sub-total</div>
+                          <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
                             {formatHours(project.subtotal.hours)}
                           </div>
                           {viewMode === 'invoice' && (
-                            <div className="text-[#09121F] text-xs font-bold text-right flex items-center justify-end">
+                            <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
                               ${project.subtotal.fee.toFixed(2)}
                             </div>
                           )}
@@ -528,17 +528,17 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                                   {selection.isSelected(entry.id) && <div className="w-2 h-2 rounded-full bg-[#09121F]"></div>}
                                 </div>
                               </div>
-                                <div className="text-[#09121F] text-xs leading-tight flex items-start">
+                                <div className="text-[#09121F] text-sm leading-tight flex items-start">
                                   {entry.project}
                                 </div>
-                                <div className="text-[#09121F] text-xs leading-tight flex items-start">
+                                <div className="text-[#09121F] text-sm leading-tight flex items-start">
                                   {entry.task}
                                 </div>
-                                <div className="text-[#09121F] text-xs leading-tight text-right flex items-start justify-end">
+                                <div className="text-[#09121F] text-sm leading-tight text-right flex items-start justify-end">
                                   {formatHours(entry.duration)}
                                 </div>
                               {viewMode === 'invoice' && (
-                                  <div className="text-[#09121F] text-xs leading-tight text-right flex items-start justify-end">
+                                  <div className="text-[#09121F] text-sm leading-tight text-right flex items-start justify-end">
                                   {hasTaskRate(entry.task) ? (
                                     `$${calculateFee(entry).toFixed(2)}`
                                   ) : (
@@ -566,12 +566,12 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                       >
                         <div></div>
                         <div></div>
-                        <div className="text-[#09121F] text-xs font-bold flex items-center">Sub-total</div>
-                        <div className="text-[#09121F] text-xs font-bold text-right flex items-center justify-end">
+                        <div className="text-[#09121F] text-sm font-bold flex items-center">Sub-total</div>
+                        <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
                           {formatHours(group.subtotal.hours)}
                         </div>
                         {viewMode === 'invoice' && (
-                          <div className="text-[#09121F] text-xs font-bold text-right flex items-center justify-end">
+                          <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
                             ${group.subtotal.fee.toFixed(2)}
                           </div>
                         )}
@@ -597,17 +597,17 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                               {selection.isSelected(entry.id) && <div className="w-2 h-2 rounded-full bg-[#09121F]"></div>}
                             </div>
                           </div>
-                          <div className="text-[#09121F] text-xs leading-tight flex items-start">
+                          <div className="text-[#09121F] text-sm leading-tight flex items-start">
                             {format(new Date(entry.date), 'MM/dd')}
                           </div>
-                          <div className="text-[#09121F] text-xs leading-tight flex items-start">
+                          <div className="text-[#09121F] text-sm leading-tight flex items-start">
                             {entry.project}
                           </div>
-                          <div className="text-[#09121F] text-xs leading-tight text-right flex items-start justify-end">
+                          <div className="text-[#09121F] text-sm leading-tight text-right flex items-start justify-end">
                             {formatHours(entry.duration)}
                           </div>
                           {viewMode === 'invoice' && (
-                            <div className="text-[#09121F] text-xs leading-tight text-right flex items-start justify-end">
+                            <div className="text-[#09121F] text-sm leading-tight text-right flex items-start justify-end">
                               {hasTaskRate(entry.task) ? (
                                 `$${calculateFee(entry).toFixed(2)}`
                               ) : (
@@ -633,12 +633,12 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                       >
                         <div></div>
                         <div></div>
-                        <div className="text-[#09121F] text-xs font-bold flex items-center">Sub-total</div>
-                        <div className="text-[#09121F] text-xs font-bold text-right flex items-center justify-end">
+                        <div className="text-[#09121F] text-sm font-bold flex items-center">Sub-total</div>
+                        <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
                           {formatHours(group.subtotal.hours)}
                         </div>
                         {viewMode === 'invoice' && (
-                          <div className="text-[#09121F] text-xs font-bold text-right flex items-center justify-end">
+                          <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
                             ${group.subtotal.fee.toFixed(2)}
                           </div>
                         )}
@@ -661,12 +661,12 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
               >
                 <div className="flex items-center"></div>
                 <div className="flex items-center"></div>
-                <div className="text-[#09121F] text-xs font-bold flex items-center">TOTAL</div>
-                <div className="text-[#09121F] text-xs font-bold text-right flex items-center justify-end">
+                <div className="text-[#09121F] text-sm font-bold flex items-center">TOTAL</div>
+                <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
                   {formatHours(organizedData.total.hours)}
                 </div>
                 {viewMode === 'invoice' && (
-                  <div className="text-[#09121F] text-xs font-bold text-right flex items-center justify-end">
+                  <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
                     ${organizedData.total.fee.toFixed(2)}
                   </div>
                 )}
