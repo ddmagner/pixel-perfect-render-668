@@ -392,8 +392,8 @@ export const TimeArchivePage: React.FC = () => {
                               gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (viewMode === 'invoice' ? ' calc(40px + 50px)' : ''),
                               gap: '0'
                             }}>
-                              <div className="flex items-center w-[32px] self-start">
-                                <div className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${selection.isSelected(entry.id) ? 'bg-gray-300' : 'bg-white'}`} onClick={() => selection.toggleSelectRecord(entry.id)} style={{ marginTop: '2px' }}>
+                              <div className="flex items-center w-[32px] self-center">
+                                <div className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${selection.isSelected(entry.id) ? 'bg-gray-300' : 'bg-white'}`} onClick={() => selection.toggleSelectRecord(entry.id)}>
                                   {selection.isSelected(entry.id) && <div className="w-2 h-2 rounded-full bg-[#09121F]"></div>}
                                 </div>
                               </div>
@@ -452,8 +452,8 @@ export const TimeArchivePage: React.FC = () => {
                                 gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (viewMode === 'invoice' ? ' calc(40px + 50px)' : ''),
                                 gap: '0'
                               }}>
-                                <div className="flex items-center w-[32px] self-start">
-                                  <div className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${selection.isSelected(entry.id) ? 'bg-gray-300' : 'bg-white'}`} onClick={() => selection.toggleSelectRecord(entry.id)} style={{ marginTop: '2px' }}>
+                                <div className="flex items-center w-[32px] self-center">
+                                  <div className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${selection.isSelected(entry.id) ? 'bg-gray-300' : 'bg-white'}`} onClick={() => selection.toggleSelectRecord(entry.id)}>
                                     {selection.isSelected(entry.id) && <div className="w-2 h-2 rounded-full bg-[#09121F]"></div>}
                                   </div>
                                 </div>
@@ -511,8 +511,8 @@ export const TimeArchivePage: React.FC = () => {
                             gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (viewMode === 'invoice' ? ' calc(40px + 50px)' : ''),
                             gap: '0'
                           }}>
-                            <div className="flex items-center w-[32px] self-start">
-                              <div className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${selection.isSelected(entry.id) ? 'bg-gray-300' : 'bg-white'}`} onClick={() => selection.toggleSelectRecord(entry.id)} style={{ marginTop: '2px' }}>
+                            <div className="flex items-center w-[32px] self-center">
+                              <div className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${selection.isSelected(entry.id) ? 'bg-gray-300' : 'bg-white'}`} onClick={() => selection.toggleSelectRecord(entry.id)}>
                                 {selection.isSelected(entry.id) && <div className="w-2 h-2 rounded-full bg-[#09121F]"></div>}
                               </div>
                             </div>
