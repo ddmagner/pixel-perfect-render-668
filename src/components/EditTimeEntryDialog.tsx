@@ -30,8 +30,8 @@ export const EditTimeEntryDialog: React.FC<EditTimeEntryDialogProps> = ({
   });
 
   useEffect(() => {
-    console.log('EditTimeEntryDialog entry changed:', entry);
-    if (entry) {
+    console.log('EditTimeEntryDialog entry changed:', entry, 'isOpen:', isOpen);
+    if (isOpen && entry) {
       console.log('Setting form data:', {
         duration: entry.duration.toString(),
         task: entry.task,
@@ -46,16 +46,8 @@ export const EditTimeEntryDialog: React.FC<EditTimeEntryDialogProps> = ({
         project: entry.project,
         date: entry.date
       });
-    } else {
-      // Reset form when no entry
-      setFormData({
-        duration: '',
-        task: '',
-        project: '',
-        date: ''
-      });
     }
-  }, [entry, settings.taskTypes, settings.projects]);
+  }, [isOpen, entry, settings.taskTypes, settings.projects]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -113,44 +105,64 @@ export const EditTimeEntryDialog: React.FC<EditTimeEntryDialogProps> = ({
 
           <div>
             <Label htmlFor="task">Task</Label>
-            <Select key={`task-${entry?.id ?? 'none'}`} value={formData.task} onValueChange={(value) => setFormData({ ...formData, task: value })}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select a task" />
-              </SelectTrigger>
-              <SelectContent>
-                {formData.task && !settings.taskTypes.some((t) => t.name === formData.task) && (
-                  <SelectItem key={`task-current-${formData.task}`} value={formData.task}>
-                    {formData.task}
-                  </SelectItem>
-                )}
-                {settings.taskTypes.map((taskType) => (
-                  <SelectItem key={taskType.id} value={taskType.name}>
-                    {taskType.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            {settings.taskTypes.length > 0 ? (
+              <Select key={`task-${entry?.id ?? 'none'}`} value={formData.task} onValueChange={(value) => setFormData({ ...formData, task: value })}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select a task" />
+                </SelectTrigger>
+                <SelectContent>
+                  {formData.task && !settings.taskTypes.some((t) => t.name === formData.task) && (
+                    <SelectItem key={`task-current-${formData.task}`} value={formData.task}>
+                      {formData.task}
+                    </SelectItem>
+                  )}
+                  {settings.taskTypes.map((taskType) => (
+                    <SelectItem key={taskType.id} value={taskType.name}>
+                      {taskType.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            ) : (
+              <Input
+                id="task"
+                value={formData.task}
+                onChange={(e) => setFormData({ ...formData, task: e.target.value })}
+                placeholder="Enter task"
+                required
+              />
+            )}
           </div>
 
           <div>
             <Label htmlFor="project">Project</Label>
-            <Select key={`project-${entry?.id ?? 'none'}`} value={formData.project} onValueChange={(value) => setFormData({ ...formData, project: value })}>
-              <SelectTrigger>
-                <SelectValue placeholder="Select a project" />
-              </SelectTrigger>
-              <SelectContent>
-                {formData.project && !settings.projects.some((p) => p.name === formData.project) && (
-                  <SelectItem key={`project-current-${formData.project}`} value={formData.project}>
-                    {formData.project}
-                  </SelectItem>
-                )}
-                {settings.projects.map((project) => (
-                  <SelectItem key={project.id} value={project.name}>
-                    {project.name}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            {settings.projects.length > 0 ? (
+              <Select key={`project-${entry?.id ?? 'none'}`} value={formData.project} onValueChange={(value) => setFormData({ ...formData, project: value })}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select a project" />
+                </SelectTrigger>
+                <SelectContent>
+                  {formData.project && !settings.projects.some((p) => p.name === formData.project) && (
+                    <SelectItem key={`project-current-${formData.project}`} value={formData.project}>
+                      {formData.project}
+                    </SelectItem>
+                  )}
+                  {settings.projects.map((project) => (
+                    <SelectItem key={project.id} value={project.name}>
+                      {project.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            ) : (
+              <Input
+                id="project"
+                value={formData.project}
+                onChange={(e) => setFormData({ ...formData, project: e.target.value })}
+                placeholder="Enter project"
+                required
+              />
+            )}
           </div>
 
           <div>
