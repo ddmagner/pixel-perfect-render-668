@@ -276,9 +276,6 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
   return (
     <div className="flex flex-col h-full w-full font-gilroy">
       {/* Divider */}
-      <div className="w-full px-2.5 mb-6">
-        <div className="h-0.5 bg-[#09121F]" />
-      </div>
 
       {/* Header / Selection Toolbar */}
       <div className="pt-0.5 pb-1 h-[2.75rem] px-2.5">
