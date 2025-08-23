@@ -24,8 +24,6 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
     timeEntries,
     sortOption,
     setSortOption,
-    viewMode,
-    setViewMode,
     settings,
     deleteTimeEntries,
     archiveTimeEntries,
@@ -91,7 +89,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
 
   // Calculate fee for an entry
   const calculateFee = (entry: TimeEntry): number => {
-    if (viewMode !== 'invoice') return 0;
+    if (!settings.invoiceMode) return 0;
     return entry.duration * getTaskRate(entry.task);
   };
 
@@ -193,7 +191,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
         fee: totalFee
       }
     };
-  }, [activeTimeEntries, sortOption, viewMode, settings]);
+  }, [activeTimeEntries, sortOption, settings]);
 
   // Get all entry IDs for selection
   const allEntryIds = useMemo(() => {
@@ -261,40 +259,22 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
   // Get table headers based on sort option
   const getTableHeaders = () => {
     if (sortOption === 'project') {
-      return viewMode === 'invoice' ? ['Date', 'Task', 'Hours', 'Fee'] : ['Date', 'Task', 'Hours'];
+      return settings.invoiceMode ? ['Date', 'Task', 'Hours', 'Fee'] : ['Date', 'Task', 'Hours'];
     } else if (sortOption === 'date') {
-      return viewMode === 'invoice' ? ['Project', 'Task', 'Hours', 'Fee'] : ['Project', 'Task', 'Hours'];
+      return settings.invoiceMode ? ['Project', 'Task', 'Hours', 'Fee'] : ['Project', 'Task', 'Hours'];
     } else {
       // task
-      return viewMode === 'invoice' ? ['Date', 'Project', 'Hours', 'Fee'] : ['Date', 'Project', 'Hours'];
+      return settings.invoiceMode ? ['Date', 'Project', 'Hours', 'Fee'] : ['Date', 'Project', 'Hours'];
     }
   };
 
   const headers = getTableHeaders();
-  const gridCols = viewMode === 'invoice' ? 'grid-cols-4' : 'grid-cols-3';
-  const gridColsWithSelection = viewMode === 'invoice' ? 'grid-cols-5' : 'grid-cols-4';
+  const gridCols = settings.invoiceMode ? 'grid-cols-4' : 'grid-cols-3';
+  const gridColsWithSelection = settings.invoiceMode ? 'grid-cols-5' : 'grid-cols-4';
   const isAllSelected = allEntryIds.length > 0 && allEntryIds.every(id => selection.isSelected(id));
 
   return (
     <div className="flex flex-col h-full w-full font-gilroy">
-      {/* Mode Toggle */}
-      <div className="flex justify-center items-center w-full px-2.5 py-4">
-        <div className="flex items-center gap-4">
-          <span className={`text-sm font-medium ${viewMode === 'timecard' ? 'text-[#09121F]' : 'text-[#BFBFBF]'}`}>
-            Time Card Mode
-          </span>
-          <button
-            onClick={() => setViewMode(viewMode === 'timecard' ? 'invoice' : 'timecard')}
-            className={`w-12 h-6 rounded-full transition-colors ${viewMode === 'invoice' ? 'bg-[#09121F]' : 'bg-[#BFBFBF]'}`}
-          >
-            <div className={`w-5 h-5 bg-white rounded-full transition-transform ${viewMode === 'invoice' ? 'translate-x-6' : 'translate-x-0.5'}`} />
-          </button>
-          <span className={`text-sm font-medium ${viewMode === 'invoice' ? 'text-[#09121F]' : 'text-[#BFBFBF]'}`}>
-            Invoice Mode
-          </span>
-        </div>
-      </div>
-
       {/* Divider */}
       <div className="w-full px-2.5 mb-6">
         <div className="h-px bg-[#09121F]" />
@@ -393,7 +373,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
         <div 
           className={`grid ${gridColsWithSelection} h-[32px] items-center`}
           style={{
-            gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (viewMode === 'invoice' ? ' calc(40px + 50px)' : ''),
+            gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (settings.invoiceMode ? ' calc(40px + 50px)' : ''),
             gap: '0'
           }}
         >
@@ -432,7 +412,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                   <div 
                     className={`grid ${gridColsWithSelection} h-[32px] items-center font-bold text-[#09121F] text-sm -mt-px`}
                     style={{
-                      gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (viewMode === 'invoice' ? ' calc(40px + 50px)' : ''),
+                      gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (settings.invoiceMode ? ' calc(40px + 50px)' : ''),
                       gap: '0'
                     }}
                   >
@@ -440,7 +420,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                     <div className="flex items-center font-bold text-[#09121F] text-sm">{group.name}</div>
                     <div></div>
                     <div></div>
-                    {viewMode === 'invoice' && <div></div>}
+                    {settings.invoiceMode && <div></div>}
                   </div>
 
                   {/* Group Content */}
@@ -450,7 +430,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                         <div 
                           className={`grid ${gridColsWithSelection} h-[32px] items-center font-bold text-[#09121F] text-sm -mt-px`}
                           style={{
-                            gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (viewMode === 'invoice' ? ' calc(40px + 50px)' : ''),
+                            gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (settings.invoiceMode ? ' calc(40px + 50px)' : ''),
                             gap: '0'
                           }}
                         >
@@ -458,7 +438,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                           <div className="flex items-center font-bold text-[#09121F] text-sm">{project.name}</div>
                           <div></div>
                           <div></div>
-                          {viewMode === 'invoice' && <div></div>}
+                          {settings.invoiceMode && <div></div>}
                         </div>
                         
                         {project.entries.map((entry: TimeEntry) => (
@@ -466,7 +446,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                             key={entry.id} 
                             className={`grid ${gridColsWithSelection} items-start hover:bg-gray-50 py-2`}
                             style={{
-                              gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (viewMode === 'invoice' ? ' calc(40px + 50px)' : ''),
+                              gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (settings.invoiceMode ? ' calc(40px + 50px)' : ''),
                               gap: '0'
                             }}
                           >
@@ -488,7 +468,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                             <div className="text-[#09121F] text-sm leading-tight text-right flex items-start justify-end">
                               {formatHours(entry.duration)}
                             </div>
-                            {viewMode === 'invoice' && (
+                            {settings.invoiceMode && (
                               <div className="text-[#09121F] text-sm leading-tight text-right flex items-start justify-end">
                                 {hasTaskRate(entry.task) ? (
                                   `$${calculateFee(entry).toFixed(2)}`
@@ -509,7 +489,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                         <div 
                           className={`grid ${gridColsWithSelection} h-[32px] items-center`}
                           style={{
-                            gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (viewMode === 'invoice' ? ' calc(40px + 50px)' : ''),
+                            gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (settings.invoiceMode ? ' calc(40px + 50px)' : ''),
                             gap: '0'
                           }}
                         >
@@ -519,7 +499,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                           <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
                             {formatHours(project.subtotal.hours)}
                           </div>
-                          {viewMode === 'invoice' && (
+                          {settings.invoiceMode && (
                             <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
                               ${project.subtotal.fee.toFixed(2)}
                             </div>
@@ -537,7 +517,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                               key={entry.id} 
                               className={`grid ${gridColsWithSelection} items-start hover:bg-gray-50 py-2`}
                               style={{
-                                gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (viewMode === 'invoice' ? ' calc(40px + 50px)' : ''),
+                                gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (settings.invoiceMode ? ' calc(40px + 50px)' : ''),
                                 gap: '0'
                               }}
                              >
@@ -559,7 +539,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                                 <div className="text-[#09121F] text-sm leading-tight text-right flex items-start justify-end">
                                   {formatHours(entry.duration)}
                                 </div>
-                              {viewMode === 'invoice' && (
+                              {settings.invoiceMode && (
                                   <div className="text-[#09121F] text-sm leading-tight text-right flex items-start justify-end">
                                   {hasTaskRate(entry.task) ? (
                                     `$${calculateFee(entry).toFixed(2)}`
@@ -582,7 +562,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                       <div 
                         className={`grid ${gridColsWithSelection} h-[32px] items-center`}
                         style={{
-                          gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (viewMode === 'invoice' ? ' calc(40px + 50px)' : ''),
+                          gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (settings.invoiceMode ? ' calc(40px + 50px)' : ''),
                           gap: '0'
                         }}
                       >
@@ -592,7 +572,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                         <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
                           {formatHours(group.subtotal.hours)}
                         </div>
-                        {viewMode === 'invoice' && (
+                        {settings.invoiceMode && (
                           <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
                             ${group.subtotal.fee.toFixed(2)}
                           </div>
@@ -607,7 +587,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                           key={entry.id} 
                           className={`grid ${gridColsWithSelection} items-start hover:bg-gray-50 py-2`}
                           style={{
-                            gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (viewMode === 'invoice' ? ' calc(40px + 50px)' : ''),
+                            gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (settings.invoiceMode ? ' calc(40px + 50px)' : ''),
                             gap: '0'
                           }}
                          >
@@ -629,7 +609,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                           <div className="text-[#09121F] text-sm leading-tight text-right flex items-start justify-end">
                             {formatHours(entry.duration)}
                           </div>
-                          {viewMode === 'invoice' && (
+                          {settings.invoiceMode && (
                             <div className="text-[#09121F] text-sm leading-tight text-right flex items-start justify-end">
                               {hasTaskRate(entry.task) ? (
                                 `$${calculateFee(entry).toFixed(2)}`
@@ -650,7 +630,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                       <div 
                         className={`grid ${gridColsWithSelection} h-[32px] items-center`}
                         style={{
-                          gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (viewMode === 'invoice' ? ' calc(40px + 50px)' : ''),
+                          gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (settings.invoiceMode ? ' calc(40px + 50px)' : ''),
                           gap: '0'
                         }}
                       >
@@ -660,7 +640,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                         <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
                           {formatHours(group.subtotal.hours)}
                         </div>
-                        {viewMode === 'invoice' && (
+                        {settings.invoiceMode && (
                           <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
                             ${group.subtotal.fee.toFixed(2)}
                           </div>
@@ -678,7 +658,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
               <div 
                 className={`grid ${gridColsWithSelection} h-[32px] items-center`}
                 style={{
-                  gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (viewMode === 'invoice' ? ' calc(40px + 50px)' : ''),
+                  gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (settings.invoiceMode ? ' calc(40px + 50px)' : ''),
                   gap: '0'
                 }}
               >
@@ -688,7 +668,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                 <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
                   {formatHours(organizedData.total.hours)}
                 </div>
-                {viewMode === 'invoice' && (
+                {settings.invoiceMode && (
                   <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
                     ${organizedData.total.fee.toFixed(2)}
                   </div>
@@ -717,7 +697,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
         onClose={() => setIsExportDialogOpen(false)} 
         timeEntries={timeEntries} 
         settings={settings} 
-        viewMode={viewMode} 
+        viewMode={settings.invoiceMode ? 'invoice' : 'timecard'} 
       />
 
       {/* Edit Dialog */}
