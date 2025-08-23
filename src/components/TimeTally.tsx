@@ -458,17 +458,17 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                                 {selection.isSelected(entry.id) && <div className="w-2 h-2 rounded-full bg-[#09121F]"></div>}
                               </div>
                             </div>
-                            <div className="text-[#09121F] text-sm flex items-start">
+                            <div className="text-[#09121F] text-sm leading-tight flex items-start">
                               {format(new Date(entry.date), 'MM/dd')}
                             </div>
-                            <div className="text-[#09121F] text-sm flex items-start">
+                            <div className="text-[#09121F] text-sm leading-tight flex items-start">
                               {entry.task}
                             </div>
-                            <div className="text-[#09121F] text-sm text-right flex items-start justify-end">
+                            <div className="text-[#09121F] text-sm leading-tight text-right flex items-start justify-end">
                               {formatHours(entry.duration)}
                             </div>
                             {viewMode === 'invoice' && (
-                              <div className="text-[#09121F] text-sm text-right flex items-start justify-end">
+                              <div className="text-[#09121F] text-sm leading-tight text-right flex items-start justify-end">
                                 {hasTaskRate(entry.task) ? (
                                   `$${calculateFee(entry).toFixed(2)}`
                                 ) : (
@@ -528,17 +528,17 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                                   {selection.isSelected(entry.id) && <div className="w-2 h-2 rounded-full bg-[#09121F]"></div>}
                                 </div>
                               </div>
-                              <div className="text-[#09121F] text-sm flex items-start">
-                                {entry.project}
-                              </div>
-                              <div className="text-[#09121F] text-sm flex items-start">
-                                {entry.task}
-                              </div>
-                              <div className="text-[#09121F] text-sm text-right flex items-start justify-end">
-                                {formatHours(entry.duration)}
-                              </div>
+                                <div className="text-[#09121F] text-sm leading-tight flex items-start">
+                                  {entry.project}
+                                </div>
+                                <div className="text-[#09121F] text-sm leading-tight flex items-start">
+                                  {entry.task}
+                                </div>
+                                <div className="text-[#09121F] text-sm leading-tight text-right flex items-start justify-end">
+                                  {formatHours(entry.duration)}
+                                </div>
                               {viewMode === 'invoice' && (
-                                <div className="text-[#09121F] text-sm text-right flex items-start justify-end">
+                                  <div className="text-[#09121F] text-sm leading-tight text-right flex items-start justify-end">
                                   {hasTaskRate(entry.task) ? (
                                     `$${calculateFee(entry).toFixed(2)}`
                                   ) : (
@@ -597,17 +597,17 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                               {selection.isSelected(entry.id) && <div className="w-2 h-2 rounded-full bg-[#09121F]"></div>}
                             </div>
                           </div>
-                          <div className="text-[#09121F] text-sm flex items-start">
+                          <div className="text-[#09121F] text-sm leading-tight flex items-start">
                             {format(new Date(entry.date), 'MM/dd')}
                           </div>
-                          <div className="text-[#09121F] text-sm flex items-start">
+                          <div className="text-[#09121F] text-sm leading-tight flex items-start">
                             {entry.project}
                           </div>
-                          <div className="text-[#09121F] text-sm text-right flex items-start justify-end">
+                          <div className="text-[#09121F] text-sm leading-tight text-right flex items-start justify-end">
                             {formatHours(entry.duration)}
                           </div>
                           {viewMode === 'invoice' && (
-                            <div className="text-[#09121F] text-sm text-right flex items-start justify-end">
+                            <div className="text-[#09121F] text-sm leading-tight text-right flex items-start justify-end">
                               {hasTaskRate(entry.task) ? (
                                 `$${calculateFee(entry).toFixed(2)}`
                               ) : (
