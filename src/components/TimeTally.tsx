@@ -431,7 +431,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                    gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (viewMode === 'invoice' ? ' calc(40px + 50px)' : ''),
                    gap: '0'
                  }}>
-                              <div className="flex items-start w-[32px] pt-1">
+                              <div className="flex items-start w-[32px] pt-[6px]">
                                 <div className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${selection.isSelected(entry.id) ? 'bg-gray-300' : 'bg-white'}`} onClick={() => selection.toggleSelectRecord(entry.id)}>
                                   {selection.isSelected(entry.id) && <div className="w-2 h-2 rounded-full bg-[#09121F]"></div>}
                                 </div>
@@ -446,7 +446,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                                 {formatHours(entry.duration)}
                               </div>
                               {viewMode === 'invoice' && <div className="text-[#09121F] text-sm text-right py-1">
-                                  {hasTaskRate(entry.task) ? `$${calculateFee(entry).toFixed(2)}` : <div className="flex justify-end pt-0.5"><button onClick={() => handleAddRate(entry.task)} className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-gray-700 transition-colors">
+                                  {hasTaskRate(entry.task) ? `$${calculateFee(entry).toFixed(2)}` : <div className="flex justify-end pt-[5px]"><button onClick={() => handleAddRate(entry.task)} className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-gray-700 transition-colors">
                                         <Plus className="h-2.5 w-2.5" strokeWidth={3} />
                                       </button></div>}
                                 </div>}
@@ -474,7 +474,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                  gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (viewMode === 'invoice' ? ' calc(40px + 50px)' : ''),
                  gap: '0'
                }}>
-                             <div className="flex items-start w-[32px] pt-1">
+                             <div className="flex items-start w-[32px] pt-[6px]">
                                <div className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${selection.isSelected(entry.id) ? 'bg-gray-300' : 'bg-white'}`} onClick={() => selection.toggleSelectRecord(entry.id)}>
                                  {selection.isSelected(entry.id) && <div className="w-2 h-2 rounded-full bg-[#09121F]"></div>}
                                </div>
@@ -489,7 +489,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                                {formatHours(entry.duration)}
                              </div>
                              {viewMode === 'invoice' && <div className="text-[#09121F] text-sm text-right py-1">
-                                 {hasTaskRate(entry.task) ? `$${calculateFee(entry).toFixed(2)}` : <div className="flex justify-end pt-0.5"><button onClick={() => handleAddRate(entry.task)} className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-gray-700 transition-colors">
+                                 {hasTaskRate(entry.task) ? `$${calculateFee(entry).toFixed(2)}` : <div className="flex justify-end pt-[5px]"><button onClick={() => handleAddRate(entry.task)} className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-gray-700 transition-colors">
                                       <Plus className="h-2.5 w-2.5" strokeWidth={3} />
                                     </button></div>}
                                </div>}
