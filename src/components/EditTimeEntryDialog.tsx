@@ -30,7 +30,14 @@ export const EditTimeEntryDialog: React.FC<EditTimeEntryDialogProps> = ({
   });
 
   useEffect(() => {
+    console.log('EditTimeEntryDialog entry changed:', entry);
     if (entry) {
+      console.log('Setting form data:', {
+        duration: entry.duration.toString(),
+        task: entry.task,
+        project: entry.project,
+        date: entry.date
+      });
       setFormData({
         duration: entry.duration.toString(),
         task: entry.task,
