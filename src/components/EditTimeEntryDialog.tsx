@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -90,10 +90,11 @@ export const EditTimeEntryDialog: React.FC<EditTimeEntryDialogProps> = ({
   if (!entry) return null;
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-md">
+    <Dialog open={isOpen} onOpenChange={(open) => { if (!open) onClose(); }}>
+      <DialogContent key={entry?.id} className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Edit Time Entry</DialogTitle>
+          <DialogDescription>Edit the selected time entry details.</DialogDescription>
         </DialogHeader>
         
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -112,7 +113,7 @@ export const EditTimeEntryDialog: React.FC<EditTimeEntryDialogProps> = ({
 
           <div>
             <Label htmlFor="task">Task</Label>
-            <Select value={formData.task} onValueChange={(value) => setFormData({ ...formData, task: value })}>
+            <Select key={`task-${entry?.id ?? 'none'}`} value={formData.task} onValueChange={(value) => setFormData({ ...formData, task: value })}>
               <SelectTrigger>
                 <SelectValue placeholder="Select a task" />
               </SelectTrigger>
@@ -128,7 +129,7 @@ export const EditTimeEntryDialog: React.FC<EditTimeEntryDialogProps> = ({
 
           <div>
             <Label htmlFor="project">Project</Label>
-            <Select value={formData.project} onValueChange={(value) => setFormData({ ...formData, project: value })}>
+            <Select key={`project-${entry?.id ?? 'none'}`} value={formData.project} onValueChange={(value) => setFormData({ ...formData, project: value })}>
               <SelectTrigger>
                 <SelectValue placeholder="Select a project" />
               </SelectTrigger>
