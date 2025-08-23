@@ -118,6 +118,11 @@ export const EditTimeEntryDialog: React.FC<EditTimeEntryDialogProps> = ({
                 <SelectValue placeholder="Select a task" />
               </SelectTrigger>
               <SelectContent>
+                {formData.task && !settings.taskTypes.some((t) => t.name === formData.task) && (
+                  <SelectItem key={`task-current-${formData.task}`} value={formData.task}>
+                    {formData.task}
+                  </SelectItem>
+                )}
                 {settings.taskTypes.map((taskType) => (
                   <SelectItem key={taskType.id} value={taskType.name}>
                     {taskType.name}
@@ -134,6 +139,11 @@ export const EditTimeEntryDialog: React.FC<EditTimeEntryDialogProps> = ({
                 <SelectValue placeholder="Select a project" />
               </SelectTrigger>
               <SelectContent>
+                {formData.project && !settings.projects.some((p) => p.name === formData.project) && (
+                  <SelectItem key={`project-current-${formData.project}`} value={formData.project}>
+                    {formData.project}
+                  </SelectItem>
+                )}
                 {settings.projects.map((project) => (
                   <SelectItem key={project.id} value={project.name}>
                     {project.name}
