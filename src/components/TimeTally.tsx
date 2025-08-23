@@ -429,16 +429,36 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
               {organizedData.groups.map((group, groupIndex) => (
                 <div key={`${group.type}-${group.name}-${groupIndex}`}>
                   {/* Group Header */}
-                  <div className="font-bold text-[#09121F] text-sm h-[32px] flex items-center pl-8 -mt-px">
-                    {group.name}
+                  <div 
+                    className={`grid ${gridColsWithSelection} h-[32px] items-center font-bold text-[#09121F] text-sm -mt-px`}
+                    style={{
+                      gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (viewMode === 'invoice' ? ' calc(40px + 50px)' : ''),
+                      gap: '0'
+                    }}
+                  >
+                    <div></div>
+                    <div className="flex items-center">{group.name}</div>
+                    <div></div>
+                    <div></div>
+                    {viewMode === 'invoice' && <div></div>}
                   </div>
 
                   {/* Group Content */}
                   {sortOption === 'project' && group.projects ? (
                     group.projects.map((project: any, projectIndex: number) => (
                       <div key={`project-${project.name}-${projectIndex}`}>
-                        <div className="font-bold text-[#09121F] text-sm h-[32px] flex items-center pl-8 -mt-px">
-                          {project.name}
+                        <div 
+                          className={`grid ${gridColsWithSelection} h-[32px] items-center font-bold text-[#09121F] text-sm -mt-px`}
+                          style={{
+                            gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (viewMode === 'invoice' ? ' calc(40px + 50px)' : ''),
+                            gap: '0'
+                          }}
+                        >
+                          <div></div>
+                          <div className="flex items-center">{project.name}</div>
+                          <div></div>
+                          <div></div>
+                          {viewMode === 'invoice' && <div></div>}
                         </div>
                         
                         {project.entries.map((entry: TimeEntry) => (
