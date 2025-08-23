@@ -425,11 +425,11 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
           </div>
         ) : (
           <>
-            <div className="space-y-4">
+            <div className="space-y-0">
               {organizedData.groups.map((group, groupIndex) => (
                 <div key={`${group.type}-${group.name}-${groupIndex}`}>
                   {/* Group Header */}
-                  <div className="font-bold text-[#09121F] text-sm h-[32px] flex items-center pl-8">
+                  <div className="font-bold text-[#09121F] text-sm h-[32px] flex items-center pl-8 -mt-px">
                     {group.name}
                   </div>
 
@@ -437,7 +437,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                   {sortOption === 'project' && group.projects ? (
                     group.projects.map((project: any, projectIndex: number) => (
                       <div key={`project-${project.name}-${projectIndex}`}>
-                        <div className="font-bold text-[#09121F] text-sm h-[32px] flex items-center pl-8">
+                        <div className="font-bold text-[#09121F] text-sm h-[32px] flex items-center pl-8 -mt-px">
                           {project.name}
                         </div>
                         
