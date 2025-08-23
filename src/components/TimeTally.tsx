@@ -365,8 +365,11 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
         </div>
       </div>
 
+      {/* Spacing */}
+      <div className="h-6"></div>
+
       {/* Table Header */}
-      <div className="w-full px-2.5 mt-6">
+      <div className="w-full px-2.5">
         <div 
           className={`grid ${gridColsWithSelection} h-[32px] items-center`}
           style={{
