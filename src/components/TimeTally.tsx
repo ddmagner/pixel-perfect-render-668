@@ -444,13 +444,13 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                         {project.entries.map((entry: TimeEntry) => (
                           <div 
                             key={entry.id} 
-                            className={`grid ${gridColsWithSelection} h-[32px] items-center hover:bg-gray-50`}
+                            className={`grid ${gridColsWithSelection} items-start hover:bg-gray-50`}
                             style={{
                               gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (viewMode === 'invoice' ? ' calc(40px + 50px)' : ''),
                               gap: '0'
                             }}
                           >
-                            <div className="flex items-center w-[32px]">
+                            <div className="flex items-start w-[32px]">
                               <div 
                                 className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${selection.isSelected(entry.id) ? 'bg-gray-300' : 'bg-white'}`} 
                                 onClick={() => selection.toggleSelectRecord(entry.id)}
@@ -458,17 +458,17 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                                 {selection.isSelected(entry.id) && <div className="w-2 h-2 rounded-full bg-[#09121F]"></div>}
                               </div>
                             </div>
-                            <div className="text-[#09121F] text-sm flex items-center">
+                            <div className="text-[#09121F] text-sm flex items-start">
                               {format(new Date(entry.date), 'MM/dd')}
                             </div>
-                            <div className="text-[#09121F] text-sm flex items-center">
+                            <div className="text-[#09121F] text-sm flex items-start">
                               {entry.task}
                             </div>
-                            <div className="text-[#09121F] text-sm text-right flex items-center justify-end">
+                            <div className="text-[#09121F] text-sm text-right flex items-start justify-end">
                               {formatHours(entry.duration)}
                             </div>
                             {viewMode === 'invoice' && (
-                              <div className="text-[#09121F] text-sm text-right flex items-center justify-end">
+                              <div className="text-[#09121F] text-sm text-right flex items-start justify-end">
                                 {hasTaskRate(entry.task) ? (
                                   `$${calculateFee(entry).toFixed(2)}`
                                 ) : (
@@ -482,31 +482,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                               </div>
                             )}
                           </div>
-                        ))}
-                        
-                        <div className="h-px bg-[#09121F]" />
-                        <div 
-                          className={`grid ${gridColsWithSelection} h-[32px] items-center`}
-                          style={{
-                            gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (viewMode === 'invoice' ? ' calc(40px + 50px)' : ''),
-                            gap: '0'
-                          }}
-                        >
-                          <div></div>
-                          <div></div>
-                          <div className="text-[#09121F] text-sm font-bold flex items-center">Sub-total</div>
-                          <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
-                            {formatHours(project.subtotal.hours)}
-                          </div>
-                          {viewMode === 'invoice' && (
-                            <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
-                              ${project.subtotal.fee.toFixed(2)}
-                            </div>
-                          )}
-                        </div>
-                        <div className="h-px bg-[#09121F]" />
-                      </div>
-                    ))
+                        ))
                   ) : sortOption === 'date' && group.projects ? (
                     <div>
                       {group.projects.map((project: any, projectIndex: number) => (
@@ -514,13 +490,13 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                           {project.entries.map((entry: TimeEntry) => (
                             <div 
                               key={entry.id} 
-                              className={`grid ${gridColsWithSelection} h-[32px] items-center hover:bg-gray-50`}
+                              className={`grid ${gridColsWithSelection} items-start hover:bg-gray-50`}
                               style={{
                                 gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (viewMode === 'invoice' ? ' calc(40px + 50px)' : ''),
                                 gap: '0'
                               }}
                             >
-                              <div className="flex items-center w-[32px]">
+                              <div className="flex items-start w-[32px]">
                                 <div 
                                   className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${selection.isSelected(entry.id) ? 'bg-gray-300' : 'bg-white'}`} 
                                   onClick={() => selection.toggleSelectRecord(entry.id)}
@@ -528,17 +504,17 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                                   {selection.isSelected(entry.id) && <div className="w-2 h-2 rounded-full bg-[#09121F]"></div>}
                                 </div>
                               </div>
-                              <div className="text-[#09121F] text-sm flex items-center">
+                              <div className="text-[#09121F] text-sm flex items-start">
                                 {entry.project}
                               </div>
-                              <div className="text-[#09121F] text-sm flex items-center">
+                              <div className="text-[#09121F] text-sm flex items-start">
                                 {entry.task}
                               </div>
-                              <div className="text-[#09121F] text-sm text-right flex items-center justify-end">
+                              <div className="text-[#09121F] text-sm text-right flex items-start justify-end">
                                 {formatHours(entry.duration)}
                               </div>
                               {viewMode === 'invoice' && (
-                                <div className="text-[#09121F] text-sm text-right flex items-center justify-end">
+                                <div className="text-[#09121F] text-sm text-right flex items-start justify-end">
                                   {hasTaskRate(entry.task) ? (
                                     `$${calculateFee(entry).toFixed(2)}`
                                   ) : (
@@ -583,13 +559,13 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                       {group.entries.map((entry: TimeEntry) => (
                         <div 
                           key={entry.id} 
-                          className={`grid ${gridColsWithSelection} h-[32px] items-center hover:bg-gray-50`}
+                          className={`grid ${gridColsWithSelection} items-start hover:bg-gray-50`}
                           style={{
                             gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (viewMode === 'invoice' ? ' calc(40px + 50px)' : ''),
                             gap: '0'
                           }}
                         >
-                          <div className="flex items-center w-[32px]">
+                          <div className="flex items-start w-[32px]">
                             <div 
                               className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${selection.isSelected(entry.id) ? 'bg-gray-300' : 'bg-white'}`} 
                               onClick={() => selection.toggleSelectRecord(entry.id)}
@@ -597,17 +573,17 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                               {selection.isSelected(entry.id) && <div className="w-2 h-2 rounded-full bg-[#09121F]"></div>}
                             </div>
                           </div>
-                          <div className="text-[#09121F] text-sm flex items-center">
+                          <div className="text-[#09121F] text-sm flex items-start">
                             {format(new Date(entry.date), 'MM/dd')}
                           </div>
-                          <div className="text-[#09121F] text-sm flex items-center">
+                          <div className="text-[#09121F] text-sm flex items-start">
                             {entry.project}
                           </div>
-                          <div className="text-[#09121F] text-sm text-right flex items-center justify-end">
+                          <div className="text-[#09121F] text-sm text-right flex items-start justify-end">
                             {formatHours(entry.duration)}
                           </div>
                           {viewMode === 'invoice' && (
-                            <div className="text-[#09121F] text-sm text-right flex items-center justify-end">
+                            <div className="text-[#09121F] text-sm text-right flex items-start justify-end">
                               {hasTaskRate(entry.task) ? (
                                 `$${calculateFee(entry).toFixed(2)}`
                               ) : (
