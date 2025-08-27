@@ -12,6 +12,7 @@ import TermsOfUsePage from "./pages/TermsOfUse";
 import PrivacyPolicyPage from "./pages/PrivacyPolicy";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
+import ScrollToTop from "./components/ScrollToTop";
 
 const queryClient = new QueryClient();
 
@@ -22,6 +23,7 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
+          <ScrollToTop />
           <Routes>
             <Route path="/auth" element={<Auth />} />
             <Route path="/" element={
