@@ -278,7 +278,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
       {/* Divider */}
 
       {/* Header / Selection Toolbar */}
-      <div className="pt-0.5 pb-1 h-[2.75rem] px-2.5">
+      <div className="pt-0.5 pb-1 h-[2.75rem] px-2.5 mb-6">
         {selection.hasAnySelected && (
           <div className="fixed left-1/2 transform -translate-x-1/2 w-[calc(100%-1.25rem)] z-50" style={{ top: '170px' }}>
             <div 
@@ -364,9 +364,6 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
           </DropdownMenu>
         </div>
       </div>
-
-      {/* Divider */}
-      <div className="w-full px-2.5 mb-6"><div className="h-px bg-[#09121F]" /></div>
 
       {/* Table Header */}
       <div className="w-full px-2.5">
