@@ -37,7 +37,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ entries, setting
         {/* Invoice Content - Letter Size (8.5" x 11") */}
         <div className="px-[72px] py-8" style={{ aspectRatio: '8.5/11', minHeight: '11in' }}>
           {/* Invoice Header */}
-          <div className="mb-12">
+          <div className="mb-6">
             <div>
               <h1 className="text-2xl font-bold text-black mb-2">INVOICE</h1>
               <div className="text-sm text-black">
@@ -52,7 +52,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ entries, setting
           </div>
 
           {/* From/To Section */}
-          <div className="grid grid-cols-2 gap-12 mb-12">
+          <div className="grid grid-cols-2 gap-12 mb-6">
             <div>
               <h3 className="text-sm font-bold text-black uppercase tracking-wider mb-3">From</h3>
               <div className="text-sm text-black">
