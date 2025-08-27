@@ -183,7 +183,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                 <div className="col-span-12">
                   <div className="space-y-2">
                     <div className="flex justify-between py-2 border-b border-gray-200">
-                      <span className="text-sm text-black">Subtotal:</span>
+                      <span className="text-sm text-black">Subtotal: ({totalHours.toFixed(2)} hours)</span>
                       <span className="text-sm font-medium">${totalAmount.toFixed(2)}</span>
                     </div>
                     <div className="flex justify-between py-2 border-b border-gray-200">
@@ -194,9 +194,6 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                       <span className="text-sm font-bold text-black">Total Due:</span>
                       <span className="text-sm font-bold text-black">${totalAmount.toFixed(2)}</span>
                     </div>
-                  </div>
-                  <div className="mt-4 text-sm text-black">
-                    <p><strong>Total Hours:</strong> {totalHours.toFixed(2)}</p>
                   </div>
                 </div>
               </div>
