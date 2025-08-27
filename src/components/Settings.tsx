@@ -142,7 +142,6 @@ export const Settings: React.FC<SettingsProps> = ({
       {/* Invoice Preview Overlay */}
       {showInvoicePreview && (
         <InvoicePreview 
-          entries={[]} // You can add sample data here for preview
           settings={settings}
           onClose={() => setShowInvoicePreview(false)}
         />

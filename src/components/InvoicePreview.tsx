@@ -1,17 +1,73 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { TimeEntry, AppSettings } from '@/types';
 import { format } from 'date-fns';
+import { supabase } from '@/integrations/supabase/client';
+import { useToast } from '@/hooks/use-toast';
 
 interface InvoicePreviewProps {
-  entries: TimeEntry[];
   settings: AppSettings;
   onClose: () => void;
+  selectedEntries?: TimeEntry[]; // Optional pre-selected entries
 }
 
-export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ entries, settings, onClose }) => {
+export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries, settings, onClose }) => {
+  const [entries, setEntries] = useState<TimeEntry[]>([]);
+  const [loading, setLoading] = useState(true);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    const fetchTimeEntries = async () => {
+      try {
+        setLoading(true);
+        
+        if (selectedEntries) {
+          setEntries(selectedEntries);
+          return;
+        }
+
+        const { data, error } = await supabase
+          .from('time_entries')
+          .select(`
+            *,
+            task_types!left(name, hourly_rate)
+          `)
+          .eq('archived', false)
+          .order('date', { ascending: false });
+
+        if (error) throw error;
+
+        // Transform database entries to match our TimeEntry interface
+        const transformedEntries: TimeEntry[] = data.map(entry => ({
+          id: entry.id,
+          duration: Number(entry.duration),
+          task: entry.task,
+          project: entry.project,
+          client: entry.client,
+          date: entry.date,
+          submittedAt: entry.submitted_at,
+          hourlyRate: Number(entry.hourly_rate) || Number(entry.task_types?.hourly_rate) || 0,
+          archived: entry.archived
+        }));
+
+        setEntries(transformedEntries);
+      } catch (error) {
+        console.error('Error fetching time entries:', error);
+        toast({
+          title: "Error",
+          description: "Failed to load time entries for invoice",
+          variant: "destructive",
+        });
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTimeEntries();
+  }, [selectedEntries, toast]);
+
   const calculateAmount = (entry: TimeEntry): number => {
-    const taskType = settings.taskTypes.find(t => t.name === entry.task);
-    const rate = taskType?.hourlyRate || 0;
+    // Use the hourlyRate from the entry first, then fallback to task type rate
+    const rate = entry.hourlyRate || 0;
     return entry.duration * rate;
   };
 
@@ -19,6 +75,16 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ entries, setting
   const totalAmount = entries.reduce((sum, entry) => sum + calculateAmount(entry), 0);
 
   const currentDate = new Date();
+
+  if (loading) {
+    return (
+      <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
+        <div className="bg-white p-8 rounded-lg">
+          <p>Loading invoice data...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
@@ -92,12 +158,11 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ entries, setting
               {/* Table Body */}
               <div className="divide-y divide-gray-200">
                 {entries.map((entry, index) => {
-                  const taskType = settings.taskTypes.find(t => t.name === entry.task);
-                  const rate = taskType?.hourlyRate || 0;
+                  const rate = entry.hourlyRate || 0;
                   const amount = calculateAmount(entry);
                   
                   return (
-                    <div key={index} className="grid grid-cols-12 gap-4 px-6 py-4 text-sm text-black">
+                    <div key={entry.id || index} className="grid grid-cols-12 gap-4 px-6 py-4 text-sm text-black">
                       <div className="col-span-2">{format(new Date(entry.date), 'MMM d, yyyy')}</div>
                       <div className="col-span-3 font-medium">{entry.project}</div>
                       <div className="col-span-3">{entry.task}</div>
