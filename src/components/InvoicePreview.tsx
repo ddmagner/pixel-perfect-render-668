@@ -162,12 +162,12 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                   const amount = calculateAmount(entry);
                   
                   return (
-                    <div key={entry.id || index} className="grid grid-cols-12 gap-4 px-6 py-4 text-sm text-black">
+                    <div key={entry.id || index} className="grid grid-cols-12 gap-4 py-2 text-sm text-black">
                       <div className="col-span-2">{format(new Date(entry.date), 'MMM d, yyyy')}</div>
                       <div className="col-span-3 font-medium">{entry.project}</div>
-                      <div className="col-span-3">{entry.task}</div>
+                      <div className="col-span-3 -ml-[25px]">{entry.task}</div>
                       <div className="col-span-1 text-center">{entry.duration.toFixed(2)}</div>
-                      <div className="col-span-1 text-right">${rate.toFixed(2)}</div>
+                      <div className="col-span-1 text-right ml-[10px]">${rate.toFixed(2)}</div>
                       <div className="col-span-2 text-right font-medium">${amount.toFixed(2)}</div>
                     </div>
                   );
