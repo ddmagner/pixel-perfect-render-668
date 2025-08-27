@@ -199,13 +199,14 @@ export const UserProfile: React.FC = () => {
         )}
 
         {/* Add Custom Field Button */}
-        <button
-          onClick={addCustomField}
-          className="flex items-center gap-2 text-[#09121F] text-sm font-medium hover:opacity-70 transition-opacity"
-        >
-          <Plus size={16} />
-          Custom Field
-        </button>
+        <div className="flex justify-end w-full">
+          <button
+            onClick={addCustomField}
+            className="text-[#BFBFBF] text-right text-[15px] font-normal leading-5 underline decoration-solid decoration-auto underline-offset-auto"
+          >
+            + Custom Field
+          </button>
+        </div>
 
       </div>
     </div>
