@@ -92,13 +92,13 @@ export const Settings: React.FC<SettingsProps> = ({
           <div className="space-y-2">
             <button 
               onClick={() => navigate('/terms')} 
-              className="text-[#09121F] text-[15px] font-medium underline hover:opacity-70 transition-opacity block"
+              className="text-[#BFBFBF] text-xs font-normal underline hover:opacity-70 transition-opacity block"
             >
               Terms of Use
             </button>
             <button 
               onClick={() => navigate('/privacy')} 
-              className="text-[#09121F] text-[15px] font-medium underline hover:opacity-70 transition-opacity block"
+              className="text-[#BFBFBF] text-xs font-normal underline hover:opacity-70 transition-opacity block"
             >
               Privacy Policy
             </button>
