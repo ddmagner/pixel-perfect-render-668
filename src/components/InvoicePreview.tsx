@@ -118,7 +118,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
           </div>
 
           {/* From/To Section */}
-          <div className="grid grid-cols-2 gap-12 mb-6">
+          <div className="grid grid-cols-2 gap-8 mb-6">
             <div>
               <h3 className="text-sm font-bold text-black uppercase tracking-wider mb-3">From</h3>
               <div className="text-sm text-black">
