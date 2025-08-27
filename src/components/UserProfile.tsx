@@ -7,15 +7,13 @@ export const UserProfile: React.FC = () => {
   const [profile, setProfile] = useState(settings.userProfile);
 
   const handleInputChange = (field: string, value: string) => {
-    setProfile(prev => ({
-      ...prev,
+    const updatedProfile = {
+      ...profile,
       [field]: value,
-    }));
-  };
-
-  const handleSave = () => {
+    };
+    setProfile(updatedProfile);
     updateSettings({
-      userProfile: profile,
+      userProfile: updatedProfile,
     });
   };
 
@@ -122,12 +120,6 @@ export const UserProfile: React.FC = () => {
           </div>
         </div>
 
-        <button
-          onClick={handleSave}
-          className="w-full bg-[#09121F] text-white py-3.5 px-4 font-bold text-sm mt-8"
-        >
-          Save Profile
-        </button>
       </div>
     </div>
   );
