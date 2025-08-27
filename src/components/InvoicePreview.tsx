@@ -37,15 +37,13 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ entries, setting
         {/* Invoice Content - Letter Size (8.5" x 11") */}
         <div className="px-[72px] py-8" style={{ aspectRatio: '8.5/11', minHeight: '11in' }}>
           {/* Invoice Header */}
-          <div className="flex justify-between items-start mb-12">
+          <div className="mb-12">
             <div>
               <h1 className="text-2xl font-bold text-black mb-2">INVOICE</h1>
-              <div className="text-sm text-black">
+              <div className="text-sm text-black mb-4">
                 <p>Invoice Date: {format(currentDate, 'MMMM d, yyyy')}</p>
                 <p>Due Date: {format(new Date(currentDate.getTime() + 30 * 24 * 60 * 60 * 1000), 'MMMM d, yyyy')}</p>
               </div>
-            </div>
-            <div className="text-right">
               <div className="text-sm font-bold text-black mb-1">Invoice #001</div>
               <div className="text-sm text-black">
                 Period: {entries.length > 0 ? format(new Date(Math.min(...entries.map(e => new Date(e.date).getTime()))), 'MMM d') : 'N/A'} - {entries.length > 0 ? format(new Date(Math.max(...entries.map(e => new Date(e.date).getTime()))), 'MMM d, yyyy') : 'N/A'}
