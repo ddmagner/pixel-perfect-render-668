@@ -125,10 +125,13 @@ const PrivacyPolicyPage = () => {
       </div>
         
       {/* Close Button */}
-      <div className="py-6">
+      <div className="w-full px-2.5 py-5">
         <button
           onClick={handleBack}
-          className="w-full bg-[#09121F] text-white py-3 px-2.5 font-medium hover:opacity-90 transition-opacity"
+          className="w-full text-white py-3.5 font-bold text-sm transition-colors"
+          style={{
+            backgroundColor: '#09121F'
+          }}
         >
           Close
         </button>
