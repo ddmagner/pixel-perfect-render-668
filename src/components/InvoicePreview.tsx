@@ -181,8 +181,8 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
             <div className="w-full">
               <div className="grid grid-cols-12 gap-4" style={{ marginLeft: 'calc(41.666667% - 18px)' }}>
                 <div className="col-span-12">
-                  <div className="space-y-2">
-                    <div className="grid grid-cols-12 gap-4 py-2 border-b border-gray-200">
+                  <div className="space-y-0">
+                    <div className="grid grid-cols-12 gap-4 h-6 border-b border-gray-200 items-center">
                       <div className="col-span-7">
                         <span className="text-sm text-black">Subtotal:</span>
                       </div>
@@ -193,11 +193,11 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                         <span className="text-sm font-medium">${totalAmount.toFixed(2)}</span>
                       </div>
                     </div>
-                    <div className="flex justify-between py-2 border-b border-gray-200">
+                    <div className="flex justify-between h-6 border-b border-gray-200 items-center">
                       <span className="text-sm text-black">Tax (0%):</span>
                       <span className="text-sm font-medium">$0.00</span>
                     </div>
-                    <div className="flex justify-between py-3 border-t-2 border-gray-900">
+                    <div className="flex justify-between h-6 border-t-2 border-gray-900 items-center">
                       <span className="text-sm font-bold text-black">Total Due:</span>
                       <span className="text-sm font-bold text-black">${totalAmount.toFixed(2)}</span>
                     </div>
