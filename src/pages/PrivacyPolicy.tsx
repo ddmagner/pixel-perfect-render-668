@@ -24,22 +24,25 @@ const PrivacyPolicyPage = () => {
           <ChevronLeft size={20} />
           <span className="text-sm font-medium">Back</span>
         </button>
-        <div className="flex items-center gap-[9px]">
-          <div>
-            <img 
-              src="/lovable-uploads/8829a351-d8df-4d66-829d-f34b1754bd35.png" 
-              alt="Logo" 
-              className="w-[14px] h-[14px]"
-            />
-          </div>
-          <div className="w-[91px] self-stretch">
-            <img 
-              src="/lovable-uploads/21706651-e7f7-4eec-b5d7-cd8ccf2a385f.png" 
-              alt="TIME IN Logo" 
-              className="h-[14px] w-[91px]"
-            />
+        <div className="flex h-3.5 justify-center items-center">
+          <div className="flex items-center gap-[9px]">
+            <div>
+              <img 
+                src="/lovable-uploads/8829a351-d8df-4d66-829d-f34b1754bd35.png" 
+                alt="Logo" 
+                className="w-[14px] h-[14px]"
+              />
+            </div>
+            <div className="w-[91px] self-stretch">
+              <img 
+                src="/lovable-uploads/21706651-e7f7-4eec-b5d7-cd8ccf2a385f.png" 
+                alt="TIME IN Logo" 
+                className="h-[14px] w-[91px]"
+              />
+            </div>
           </div>
         </div>
+        <div className="w-16"></div> {/* Spacer to keep logo centered */}
       </nav>
 
       {/* Content */}
