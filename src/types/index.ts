@@ -29,6 +29,12 @@ export interface Client {
   address?: string;
 }
 
+export interface CustomField {
+  id: string;
+  label: string;
+  value: string;
+}
+
 export interface UserProfile {
   name: string;
   email: string;
@@ -37,6 +43,7 @@ export interface UserProfile {
   zipCode?: string;
   city?: string;
   state?: string;
+  customFields?: CustomField[];
 }
 
 export interface AppSettings {

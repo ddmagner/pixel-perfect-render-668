@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useApp } from '@/context/AppContext';
-import { Edit3 } from 'lucide-react';
+import { Edit3, Plus, X } from 'lucide-react';
+import { CustomField } from '@/types';
 
 export const UserProfile: React.FC = () => {
   const { settings, updateSettings } = useApp();
@@ -10,6 +11,48 @@ export const UserProfile: React.FC = () => {
     const updatedProfile = {
       ...profile,
       [field]: value,
+    };
+    setProfile(updatedProfile);
+    updateSettings({
+      userProfile: updatedProfile,
+    });
+  };
+
+  const handleCustomFieldChange = (id: string, field: 'label' | 'value', newValue: string) => {
+    const updatedCustomFields = (profile.customFields || []).map(customField =>
+      customField.id === id ? { ...customField, [field]: newValue } : customField
+    );
+    const updatedProfile = {
+      ...profile,
+      customFields: updatedCustomFields,
+    };
+    setProfile(updatedProfile);
+    updateSettings({
+      userProfile: updatedProfile,
+    });
+  };
+
+  const addCustomField = () => {
+    const newField: CustomField = {
+      id: Date.now().toString(),
+      label: '',
+      value: '',
+    };
+    const updatedProfile = {
+      ...profile,
+      customFields: [...(profile.customFields || []), newField],
+    };
+    setProfile(updatedProfile);
+    updateSettings({
+      userProfile: updatedProfile,
+    });
+  };
+
+  const removeCustomField = (id: string) => {
+    const updatedCustomFields = (profile.customFields || []).filter(field => field.id !== id);
+    const updatedProfile = {
+      ...profile,
+      customFields: updatedCustomFields,
     };
     setProfile(updatedProfile);
     updateSettings({
@@ -119,6 +162,50 @@ export const UserProfile: React.FC = () => {
             <Edit3 size={16} className="text-gray-400" />
           </div>
         </div>
+
+        {/* Custom Fields */}
+        {profile.customFields && profile.customFields.length > 0 && (
+          <div className="space-y-4">
+            {profile.customFields.map((customField) => (
+              <div key={customField.id} className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <input
+                    type="text"
+                    value={customField.label}
+                    onChange={(e) => handleCustomFieldChange(customField.id, 'label', e.target.value)}
+                    placeholder="Field name"
+                    className="text-[#09121F] text-sm font-medium bg-transparent border-none outline-none flex-1"
+                  />
+                  <button
+                    onClick={() => removeCustomField(customField.id)}
+                    className="text-gray-400 hover:text-red-500 ml-2"
+                  >
+                    <X size={16} />
+                  </button>
+                </div>
+                <div className="flex items-center justify-between h-5">
+                  <input
+                    type="text"
+                    value={customField.value}
+                    onChange={(e) => handleCustomFieldChange(customField.id, 'value', e.target.value)}
+                    placeholder="Field value"
+                    className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none flex-1"
+                  />
+                  <Edit3 size={16} className="text-gray-400" />
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Add Custom Field Button */}
+        <button
+          onClick={addCustomField}
+          className="flex items-center gap-2 text-[#09121F] text-sm font-medium hover:opacity-70 transition-opacity"
+        >
+          <Plus size={16} />
+          Custom Field
+        </button>
 
       </div>
     </div>
