@@ -173,6 +173,9 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                   );
                 })}
               </div>
+              
+              {/* Footer divider */}
+              <div className="border-b border-gray-200"></div>
             </div>
           </div>
 
