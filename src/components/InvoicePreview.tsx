@@ -66,7 +66,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ entries, setting
             <div>
               <h3 className="text-sm font-bold text-black uppercase tracking-wider mb-3">Bill To</h3>
               <div className="text-sm text-black">
-                <p className="font-semibold">Client Name</p>
+                <p>Client Name</p>
                 <p>Client Company</p>
                 <p>Client Address Line 1</p>
                 <p>City, State 12345</p>
