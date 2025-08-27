@@ -178,23 +178,38 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
 
           {/* Totals Section */}
           <div className="mb-12">
-            <div className="w-80" style={{ marginLeft: 'calc(41.666667% - 18px)' }}>
-              <div className="space-y-2">
-                <div className="flex justify-between py-2 border-b border-gray-200">
-                  <span className="text-sm text-black">Subtotal:</span>
-                  <span className="text-sm font-medium">${totalAmount.toFixed(2)}</span>
+            <div className="w-full grid grid-cols-12 gap-4" style={{ marginLeft: 'calc(41.666667% - 18px)' }}>
+              <div className="col-span-8">
+                <div className="space-y-2">
+                  <div className="flex justify-between py-2 border-b border-gray-200">
+                    <span className="text-sm text-black">Subtotal:</span>
+                    <span className="text-sm font-medium"></span>
+                  </div>
+                  <div className="flex justify-between py-2 border-b border-gray-200">
+                    <span className="text-sm text-black">Tax (0%):</span>
+                    <span className="text-sm font-medium"></span>
+                  </div>
+                  <div className="flex justify-between py-3 border-t-2 border-gray-900">
+                    <span className="text-sm font-bold text-black">Total Due:</span>
+                    <span className="text-sm font-bold text-black"></span>
+                  </div>
                 </div>
-                <div className="flex justify-between py-2 border-b border-gray-200">
-                  <span className="text-sm text-black">Tax (0%):</span>
-                  <span className="text-sm font-medium">$0.00</span>
-                </div>
-                <div className="flex justify-between py-3 border-t-2 border-gray-900">
-                  <span className="text-sm font-bold text-black">Total Due:</span>
-                  <span className="text-sm font-bold text-black">${totalAmount.toFixed(2)}</span>
+                <div className="mt-4 text-sm text-black">
+                  <p><strong>Total Hours:</strong> {totalHours.toFixed(2)}</p>
                 </div>
               </div>
-              <div className="mt-4 text-sm text-black">
-                <p><strong>Total Hours:</strong> {totalHours.toFixed(2)}</p>
+              <div className="col-span-2 text-right ml-[30px]">
+                <div className="space-y-2">
+                  <div className="py-2 border-b border-gray-200">
+                    <span className="text-sm font-medium">${totalAmount.toFixed(2)}</span>
+                  </div>
+                  <div className="py-2 border-b border-gray-200">
+                    <span className="text-sm font-medium">$0.00</span>
+                  </div>
+                  <div className="py-3 border-t-2 border-gray-900">
+                    <span className="text-sm font-bold text-black">${totalAmount.toFixed(2)}</span>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
