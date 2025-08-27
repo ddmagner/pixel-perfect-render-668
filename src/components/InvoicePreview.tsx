@@ -35,7 +35,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ entries, setting
         </div>
 
         {/* Invoice Content - Letter Size (8.5" x 11") */}
-        <div className="p-8" style={{ aspectRatio: '8.5/11', minHeight: '11in' }}>
+        <div className="px-[72px] py-8" style={{ aspectRatio: '8.5/11', minHeight: '11in' }}>
           {/* Invoice Header */}
           <div className="flex justify-between items-start mb-12">
             <div>
