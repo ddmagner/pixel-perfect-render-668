@@ -89,7 +89,7 @@ export const Settings: React.FC<SettingsProps> = ({
           <button onClick={handleSignOut} className="text-[#09121F] text-[15px] font-medium underline hover:opacity-70 transition-opacity">
             Sign out
           </button>
-          <div className="space-y-6">
+          <div className="space-y-3">
             <button 
               onClick={() => navigate('/terms')} 
               className="text-[#BFBFBF] text-xs font-normal underline hover:opacity-70 transition-opacity block"
