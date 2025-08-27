@@ -129,7 +129,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                 <p>Phone: (555) 123-4567</p>
               </div>
             </div>
-            <div className="col-span-3 -ml-[25px]">
+            <div className="col-span-3 -ml-[20px]">
               <h3 className="text-sm font-bold text-black uppercase tracking-wider mb-3">Bill To</h3>
               <div className="text-sm text-black">
                 <p>Client Name</p>
