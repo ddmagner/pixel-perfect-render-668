@@ -133,34 +133,6 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ entries, setting
               </div>
             </div>
           </div>
-
-          {/* Payment Terms */}
-          <div className="border-t border-gray-200 pt-8">
-            <div className="grid grid-cols-2 gap-12">
-              <div>
-                <h3 className="text-sm font-bold text-black uppercase tracking-wider mb-3">Payment Terms</h3>
-                <div className="text-sm text-black space-y-1">
-                  <p>• Payment is due within 30 days</p>
-                  <p>• Late payments subject to 1.5% monthly fee</p>
-                  <p>• Please include invoice number with payment</p>
-                </div>
-              </div>
-              <div>
-                <h3 className="text-sm font-bold text-black uppercase tracking-wider mb-3">Payment Methods</h3>
-                <div className="text-sm text-black space-y-1">
-                  <p>• Check payable to: {settings.userProfile.name || 'Your Name'}</p>
-                  <p>• Wire transfer details available upon request</p>
-                  <p>• Online payment: [Payment Portal URL]</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Footer */}
-          <div className="text-center text-sm text-black mt-12 pt-8 border-t border-gray-200">
-            <p>Thank you for your business!</p>
-            <p className="mt-2">Questions? Contact us at {settings.userProfile.email || 'your.email@example.com'}</p>
-          </div>
         </div>
       </div>
     </div>
