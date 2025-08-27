@@ -80,7 +80,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ entries, setting
           <div className="mb-12">
             <div className="border border-gray-300 rounded-lg overflow-hidden">
               {/* Table Header */}
-              <div className="bg-gray-50 border-b border-gray-300">
+              <div className="border-t border-b border-black">
                 <div className="grid grid-cols-12 gap-4 px-6 py-4 text-sm font-bold text-gray-900 uppercase tracking-wider">
                   <div className="col-span-2">Date</div>
                   <div className="col-span-3">Project</div>
