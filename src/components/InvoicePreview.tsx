@@ -44,7 +44,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ entries, setting
                 <p>Invoice Date: {format(currentDate, 'MMMM d, yyyy')}</p>
                 <p>Due Date: {format(new Date(currentDate.getTime() + 30 * 24 * 60 * 60 * 1000), 'MMMM d, yyyy')}</p>
               </div>
-              <div className="text-sm font-bold text-black mb-1">Invoice #001</div>
+              <div className="text-sm text-black mb-1">Invoice #001</div>
               <div className="text-sm text-black">
                 Period: {entries.length > 0 ? format(new Date(Math.min(...entries.map(e => new Date(e.date).getTime()))), 'MMM d') : 'N/A'} - {entries.length > 0 ? format(new Date(Math.max(...entries.map(e => new Date(e.date).getTime()))), 'MMM d, yyyy') : 'N/A'}
               </div>
