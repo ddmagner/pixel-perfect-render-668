@@ -83,12 +83,26 @@ export const Settings: React.FC<SettingsProps> = ({
         
         {/* Sign Out Section */}
         <div className="w-full px-2.5"><div className="h-px bg-[#09121F]" /></div>
-        <div className="px-2.5 py-4 pb-32 md:pb-4" style={{
+        <div className="px-2.5 py-4 pb-32 md:pb-4 space-y-3" style={{
         paddingBottom: 'max(128px, env(safe-area-inset-bottom))'
       }}>
           <button onClick={handleSignOut} className="text-[#09121F] text-[15px] font-medium underline hover:opacity-70 transition-opacity">
             Sign out
           </button>
+          <div className="space-y-2">
+            <button 
+              onClick={() => navigate('/terms')} 
+              className="text-[#09121F] text-[15px] font-medium underline hover:opacity-70 transition-opacity block"
+            >
+              Terms of Use
+            </button>
+            <button 
+              onClick={() => navigate('/privacy')} 
+              className="text-[#09121F] text-[15px] font-medium underline hover:opacity-70 transition-opacity block"
+            >
+              Privacy Policy
+            </button>
+          </div>
         </div>
       </div>
 

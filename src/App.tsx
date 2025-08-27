@@ -8,6 +8,8 @@ import { ProtectedRoute } from "./components/ProtectedRoute";
 import Index from "./pages/Index";
 import { TimeArchivePage } from "./pages/TimeArchive";
 import SettingsPage from "./pages/Settings";
+import TermsOfUsePage from "./pages/TermsOfUse";
+import PrivacyPolicyPage from "./pages/PrivacyPolicy";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 
@@ -35,6 +37,16 @@ const App = () => (
             <Route path="/settings" element={
               <ProtectedRoute>
                 <SettingsPage />
+              </ProtectedRoute>
+            } />
+            <Route path="/terms" element={
+              <ProtectedRoute>
+                <TermsOfUsePage />
+              </ProtectedRoute>
+            } />
+            <Route path="/privacy" element={
+              <ProtectedRoute>
+                <PrivacyPolicyPage />
               </ProtectedRoute>
             } />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
