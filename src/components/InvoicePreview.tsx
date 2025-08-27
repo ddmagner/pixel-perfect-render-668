@@ -39,7 +39,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ entries, setting
           {/* Invoice Header */}
           <div className="flex justify-between items-start mb-12">
             <div>
-              <h1 className="text-sm font-bold text-black mb-2">INVOICE</h1>
+              <h1 className="text-base font-bold text-black mb-2">INVOICE</h1>
               <div className="text-sm text-black">
                 <p>Invoice Date: {format(currentDate, 'MMMM d, yyyy')}</p>
                 <p>Due Date: {format(new Date(currentDate.getTime() + 30 * 24 * 60 * 60 * 1000), 'MMMM d, yyyy')}</p>
