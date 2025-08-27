@@ -177,7 +177,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
           </div>
 
           {/* Totals Section */}
-          <div className="flex justify-end mb-12">
+          <div className="mb-12">
             <div className="w-80 -ml-[25px]">
               <div className="space-y-2">
                 <div className="flex justify-between py-2 border-b border-gray-200">
