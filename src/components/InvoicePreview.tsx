@@ -150,7 +150,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                   <div className="col-span-3">Project</div>
                   <div className="col-span-3 -ml-[25px]">Task</div>
                   <div className="col-span-1 text-center">Hours</div>
-                  <div className="col-span-1 text-right">Rate</div>
+                  <div className="col-span-1 text-right ml-[10px]">Rate</div>
                   <div className="col-span-2 text-right">Amount</div>
                 </div>
               </div>
