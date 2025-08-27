@@ -4,9 +4,10 @@ import { TimeEntrySettings } from './TimeEntrySettings';
 import { UserProfile } from './UserProfile';
 import { ColorCustomization } from './ColorCustomization';
 import { TimeArchive } from './TimeArchive';
+import { InvoicePreview } from './InvoicePreview';
 import { useApp } from '@/context/AppContext';
 import { useAuth } from '@/hooks/useAuth';
-import { Clock, LogOut } from 'lucide-react';
+import { Clock, LogOut, FileText } from 'lucide-react';
 interface SettingsProps {
   highlightSection?: string | null;
 }
@@ -22,6 +23,7 @@ export const Settings: React.FC<SettingsProps> = ({
     updateSettings
   } = useApp();
   const [showColorOverlay, setShowColorOverlay] = useState(false);
+  const [showInvoicePreview, setShowInvoicePreview] = useState(false);
   const handleSignOut = async () => {
     await signOut();
     navigate('/auth');
@@ -81,6 +83,24 @@ export const Settings: React.FC<SettingsProps> = ({
           </div>
         </div>
         
+        {/* Invoice Preview Section - Only show in invoice mode */}
+        {settings.invoiceMode && (
+          <>
+            <div className="w-full px-2.5"><div className="h-px bg-[#09121F]" /></div>
+            <div className="px-2.5 py-4 pb-[22px]">
+              <div className="flex items-center justify-between cursor-pointer" onClick={() => setShowInvoicePreview(true)}>
+                <div>
+                  <h1 className="text-[#09121F] text-[28px] font-bold leading-8">Preview Invoice</h1>
+                  <p className="text-[#09121F] text-sm underline">View letter-size invoice layout</p>
+                </div>
+                <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center ml-auto">
+                  <FileText size={16} className="text-[#09121F]" />
+                </div>
+              </div>
+            </div>
+          </>
+        )}
+        
         {/* Sign Out Section */}
         <div className="w-full px-2.5"><div className="h-px bg-[#09121F]" /></div>
         <div className="px-2.5 py-6 pb-40 md:pb-8 space-y-6" style={{
@@ -118,5 +138,14 @@ export const Settings: React.FC<SettingsProps> = ({
             <ColorCustomization onClose={() => setShowColorOverlay(false)} />
           </div>
         </div>}
+
+      {/* Invoice Preview Overlay */}
+      {showInvoicePreview && (
+        <InvoicePreview 
+          entries={[]} // You can add sample data here for preview
+          settings={settings}
+          onClose={() => setShowInvoicePreview(false)}
+        />
+      )}
     </div>;
 };
