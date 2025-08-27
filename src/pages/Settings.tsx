@@ -20,16 +20,16 @@ const SettingsPage = () => {
         style={{ fontFamily: 'Gilroy, sans-serif' }}
       >
         {/* Navigation with back button */}
-        <nav className="flex justify-between items-center self-stretch px-2.5 pt-4 pb-1 bg-white">
+        <nav className="flex justify-center items-center self-stretch px-0 pt-4 pb-1 bg-white relative">
           <button 
             onClick={handleBack}
-            className="flex items-center gap-2 text-[#09121F]"
+            className="flex items-center gap-2 text-[#09121F] absolute left-2.5"
             aria-label="Go back"
           >
             <ChevronLeft size={20} />
             <span className="text-sm font-medium">Back</span>
           </button>
-          <div className="flex h-3.5 justify-center items-center">
+          <div className="flex h-3.5 justify-end items-center">
             <div className="flex items-center gap-[9px]">
               <div>
                 <img 
@@ -47,7 +47,6 @@ const SettingsPage = () => {
               </div>
             </div>
           </div>
-          <div className="w-16"></div> {/* Spacer to keep logo centered */}
         </nav>
         
         <Settings highlightSection={section} />
