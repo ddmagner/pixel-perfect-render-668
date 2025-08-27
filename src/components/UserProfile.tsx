@@ -88,7 +88,7 @@ export const UserProfile: React.FC = () => {
       <div className="pt-5 mb-3">
         <div className="flex items-baseline gap-2">
           <h1 className="text-[#09121F] text-[28px] font-bold leading-8">User profile</h1>
-          <p className="text-[#09121F] text-sm">for display on your invoice</p>
+          <p className="text-[#09121F] text-sm">for display on your {settings.invoiceMode ? 'invoice' : 'time card'}</p>
         </div>
       </div>
       
