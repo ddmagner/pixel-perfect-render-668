@@ -6,7 +6,7 @@ const PrivacyPolicyPage = () => {
   const navigate = useNavigate();
 
   const handleBack = () => {
-    navigate('/settings');
+    navigate('/?tab=settings');
   };
 
   return (

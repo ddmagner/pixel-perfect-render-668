@@ -6,7 +6,7 @@ const TermsOfUsePage = () => {
   const navigate = useNavigate();
 
   const handleBack = () => {
-    navigate('/settings');
+    navigate('/?tab=settings');
   };
 
   return (
