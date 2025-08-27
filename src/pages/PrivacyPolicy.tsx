@@ -128,7 +128,7 @@ const PrivacyPolicyPage = () => {
       <div className="py-6">
         <button
           onClick={handleBack}
-          className="w-full bg-[#09121F] text-white py-3 px-4 font-medium hover:opacity-90 transition-opacity"
+          className="w-full bg-[#09121F] text-white py-3 px-2.5 font-medium hover:opacity-90 transition-opacity"
         >
           Close
         </button>
