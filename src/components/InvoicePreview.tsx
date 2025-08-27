@@ -141,7 +141,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
           </div>
 
           {/* Services Table */}
-          <div className="mb-12">
+          <div className="mb-6">
             <div className="overflow-hidden">
               {/* Table Header */}
               <div className="border-t border-b border-black">
@@ -180,7 +180,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
           </div>
 
           {/* Totals Section */}
-          <div className="mt-6 mb-12">
+          <div className="mb-12">
             <div className="w-full">
               <div className="grid grid-cols-12 gap-4" style={{ marginLeft: 'calc(41.666667% - 18px)' }}>
                 <div className="col-span-12">
