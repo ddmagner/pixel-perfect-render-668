@@ -118,8 +118,8 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
           </div>
 
           {/* From/To Section */}
-          <div className="grid grid-cols-2 gap-8 mb-6">
-            <div>
+          <div className="grid grid-cols-5 gap-8 mb-6">
+            <div className="col-span-2">
               <h3 className="text-sm font-bold text-black uppercase tracking-wider mb-3">From</h3>
               <div className="text-sm text-black">
                 <p>{settings.userProfile.name || 'Your Name'}</p>
@@ -129,7 +129,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                 <p>Phone: (555) 123-4567</p>
               </div>
             </div>
-            <div className="-ml-[25px]">
+            <div className="col-span-3 -ml-[25px]">
               <h3 className="text-sm font-bold text-black uppercase tracking-wider mb-3">Bill To</h3>
               <div className="text-sm text-black">
                 <p>Client Name</p>
