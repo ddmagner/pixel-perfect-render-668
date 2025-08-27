@@ -200,7 +200,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                       <span className="text-sm text-black">Tax (0%):</span>
                       <span className="text-sm font-medium">$0.00</span>
                     </div>
-                    <div className="flex justify-between h-6 border-t-2 border-gray-900 items-center">
+                    <div className="flex justify-between h-6 border-t border-gray-900 items-center">
                       <span className="text-sm font-bold text-black">Total Due:</span>
                       <span className="text-sm font-bold text-black">${totalAmount.toFixed(2)}</span>
                     </div>
