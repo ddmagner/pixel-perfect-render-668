@@ -145,7 +145,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
             <div className="overflow-hidden">
               {/* Table Header */}
               <div className="border-t border-b border-black">
-                <div className="grid grid-cols-12 gap-4 pr-6 py-1 text-xs font-bold text-black uppercase tracking-wider">
+                <div className="grid grid-cols-12 gap-4 py-1 text-xs font-bold text-black uppercase tracking-wider">
                   <div className="col-span-2 text-left">Date</div>
                   <div className="col-span-3">Project</div>
                   <div className="col-span-3">Description</div>
