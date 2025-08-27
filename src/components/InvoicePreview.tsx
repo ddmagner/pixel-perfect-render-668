@@ -56,7 +56,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ entries, setting
             <div>
               <h3 className="text-sm font-bold text-black uppercase tracking-wider mb-3">From</h3>
               <div className="text-sm text-black">
-                <p className="font-semibold">{settings.userProfile.name || 'Your Name'}</p>
+                <p>{settings.userProfile.name || 'Your Name'}</p>
                 <p>{settings.userProfile.email || 'your.email@example.com'}</p>
                 <p>Your Address Line 1</p>
                 <p>City, State 12345</p>
