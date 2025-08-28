@@ -201,6 +201,36 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     if (!user) return;
     
     try {
+      // Find or create task type
+      let taskTypeId = null;
+      const existingTaskType = settings.taskTypes.find(t => t.name === entry.task);
+      
+      if (existingTaskType) {
+        // Check if task type exists in database
+        const { data: dbTaskType } = await supabase
+          .from('task_types')
+          .select('id')
+          .eq('user_id', user.id)
+          .eq('name', entry.task)
+          .single();
+          
+        if (dbTaskType) {
+          taskTypeId = dbTaskType.id;
+        } else {
+          // Create task type in database
+          const { data: newTaskType } = await supabase
+            .from('task_types')
+            .insert({
+              user_id: user.id,
+              name: existingTaskType.name,
+              hourly_rate: existingTaskType.hourlyRate || null
+            })
+            .select('id')
+            .single();
+          taskTypeId = newTaskType?.id;
+        }
+      }
+
       const newEntry = {
         user_id: user.id,
         duration: entry.duration,
@@ -209,7 +239,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         client: entry.client || null,
         date: entry.date,
         hourly_rate: entry.hourlyRate || null,
-        archived: entry.archived || false
+        archived: entry.archived || false,
+        task_type_id: taskTypeId
       };
 
       const { data, error } = await supabase
@@ -247,6 +278,22 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     
     try {
       const updatedSettings = { ...settings, ...newSettings };
+      
+      // Sync task types to database if they were updated
+      if (newSettings.taskTypes) {
+        for (const taskType of newSettings.taskTypes) {
+          await supabase
+            .from('task_types')
+            .upsert({
+              id: taskType.id,
+              user_id: user.id,
+              name: taskType.name,
+              hourly_rate: taskType.hourlyRate || null
+            }, {
+              onConflict: 'id'
+            });
+        }
+      }
       
       const { error } = await supabase
         .from('app_settings')
