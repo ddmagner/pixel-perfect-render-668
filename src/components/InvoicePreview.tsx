@@ -186,40 +186,37 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                 <div className="col-span-12">
                   <div className="space-y-0">
                     <div className="grid grid-cols-12 gap-4 h-6 items-center">
-                      <div className="col-span-2"></div>
-                      <div className="col-span-3 -ml-[25px] border-b border-gray-200">
+                      <div className="col-span-5"></div>
+                      <div className="col-span-3 -ml-[25px]">
                         <span className="text-sm text-black">Subtotal:</span>
                       </div>
-                      <div className="col-span-1 text-left border-b border-gray-200">
+                      <div className="col-span-1 text-left">
                         <span className="text-sm text-black">{totalHours.toFixed(2)}</span>
                       </div>
-                      <div className="col-span-1 border-b border-gray-200"></div>
-                      <div className="col-span-2 text-right border-b border-gray-200">
+                      <div className="col-span-1"></div>
+                      <div className="col-span-2 text-right">
                         <span className="text-sm font-medium">${totalAmount.toFixed(2)}</span>
                       </div>
-                      <div className="col-span-3 border-b border-gray-200"></div>
                     </div>
                     <div className="grid grid-cols-12 gap-4 h-6 items-center">
-                      <div className="col-span-2"></div>
-                      <div className="col-span-3 -ml-[25px] border-b border-gray-200">
+                      <div className="col-span-5"></div>
+                      <div className="col-span-3 -ml-[25px]">
                         <span className="text-sm text-black">Tax (0%):</span>
                       </div>
-                      <div className="col-span-2 border-b border-gray-200"></div>
-                      <div className="col-span-2 text-right border-b border-gray-200">
+                      <div className="col-span-2"></div>
+                      <div className="col-span-2 text-right">
                         <span className="text-sm font-medium">$0.00</span>
                       </div>
-                      <div className="col-span-3 border-b border-gray-200"></div>
                     </div>
                     <div className="grid grid-cols-12 gap-4 h-6 items-center">
-                      <div className="col-span-2"></div>
-                      <div className="col-span-3 -ml-[25px] border-t border-gray-900">
+                      <div className="col-span-5"></div>
+                      <div className="col-span-3 -ml-[25px]">
                         <span className="text-sm font-bold text-black">Total Due:</span>
                       </div>
-                      <div className="col-span-2 border-t border-gray-900"></div>
-                      <div className="col-span-2 text-right border-t border-gray-900">
+                      <div className="col-span-2"></div>
+                      <div className="col-span-2 text-right">
                         <span className="text-sm font-bold text-black">${totalAmount.toFixed(2)}</span>
                       </div>
-                      <div className="col-span-3 border-t border-gray-900"></div>
                     </div>
                   </div>
                 </div>
