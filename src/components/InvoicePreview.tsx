@@ -185,55 +185,29 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
               <div className="grid grid-cols-12 gap-4">
                 <div className="col-span-12">
                   <div className="space-y-0">
-                    <div className="grid grid-cols-12 gap-4 py-1 text-sm items-center">
+                    <div className="grid grid-cols-12 gap-4 py-1 text-sm text-black">
                       <div className="col-span-2"></div>
                       <div className="col-span-3"></div>
-                      <div className="col-span-7 border-t border-gray-300 -ml-[25px]">
-                        <div className="grid grid-cols-7 gap-4 h-5">
-                          <div className="col-span-3 flex items-center h-5">
-                            <span className="text-sm leading-5 text-black">Subtotal:</span>
-                          </div>
-                          <div className="col-span-1 text-right flex items-center justify-end h-5">
-                            <span className="text-sm leading-5 text-black">{totalHours.toFixed(2)}</span>
-                          </div>
-                          <div className="col-span-1 text-right ml-[30px]"></div>
-                          <div className="col-span-2 text-right flex items-center justify-end h-5">
-                            <span className="text-sm leading-5 font-medium">${totalAmount.toFixed(2)}</span>
-                          </div>
-                        </div>
-                      </div>
+                      <div className="col-span-3 -ml-[25px] border-t border-gray-300">Subtotal:</div>
+                      <div className="col-span-1 text-left">{totalHours.toFixed(2)}</div>
+                      <div className="col-span-1 flex justify-end pl-[75px]"></div>
+                      <div className="col-span-2 text-right font-medium">${totalAmount.toFixed(2)}</div>
                     </div>
-                    <div className="grid grid-cols-12 gap-4 py-1 text-sm items-center">
+                    <div className="grid grid-cols-12 gap-4 py-1 text-sm text-black">
                       <div className="col-span-2"></div>
                       <div className="col-span-3"></div>
-                      <div className="col-span-7 border-t border-gray-300 -ml-[25px]">
-                        <div className="grid grid-cols-7 gap-4 h-5">
-                          <div className="col-span-3 flex items-center h-5">
-                            <span className="text-sm leading-5 text-black">Tax (0%):</span>
-                          </div>
-                          <div className="col-span-1"></div>
-                          <div className="col-span-1"></div>
-                          <div className="col-span-2 text-right flex items-center justify-end h-5">
-                            <span className="text-sm leading-5 font-medium">$0.00</span>
-                          </div>
-                        </div>
-                      </div>
+                      <div className="col-span-3 -ml-[25px] border-t border-gray-300">Tax (0%):</div>
+                      <div className="col-span-1 text-left"></div>
+                      <div className="col-span-1 flex justify-end pl-[75px]"></div>
+                      <div className="col-span-2 text-right font-medium">$0.00</div>
                     </div>
-                    <div className="grid grid-cols-12 gap-4 py-1 text-sm items-center">
+                    <div className="grid grid-cols-12 gap-4 py-1 text-sm text-black border-t border-black" style={{ borderTopWidth: '1pt' }}>
                       <div className="col-span-2"></div>
                       <div className="col-span-3"></div>
-                      <div className="col-span-7 border-t border-black -ml-[25px]" style={{ borderTopWidth: '1pt' }}>
-                        <div className="grid grid-cols-7 gap-4 h-5">
-                          <div className="col-span-3 flex items-center h-5">
-                            <span className="text-sm leading-5 font-bold text-black">Total Due:</span>
-                          </div>
-                          <div className="col-span-1"></div>
-                          <div className="col-span-1"></div>
-                          <div className="col-span-2 text-right flex items-center justify-end h-5">
-                            <span className="text-sm leading-5 font-bold text-black">${totalAmount.toFixed(2)}</span>
-                          </div>
-                        </div>
-                      </div>
+                      <div className="col-span-3 -ml-[25px] font-bold">Total Due:</div>
+                      <div className="col-span-1 text-left"></div>
+                      <div className="col-span-1 flex justify-end pl-[75px]"></div>
+                      <div className="col-span-2 text-right font-bold">${totalAmount.toFixed(2)}</div>
                     </div>
                   </div>
                 </div>
