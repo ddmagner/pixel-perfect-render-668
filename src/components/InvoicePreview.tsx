@@ -186,8 +186,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                 <div className="col-span-12">
                   <div className="space-y-0">
                     <div className="grid grid-cols-12 gap-4 h-6 items-center">
-                      <div className="col-span-2"></div>
-                      <div className="col-span-3"></div>
+                      <div className="col-span-5"></div>
                       <div className="col-span-7 border-t border-gray-300 -ml-[25px]">
                         <div className="grid grid-cols-12 gap-4 h-6 items-center">
                           <div className="col-span-3">
@@ -204,8 +203,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                       </div>
                     </div>
                     <div className="grid grid-cols-12 gap-4 h-6 items-center">
-                      <div className="col-span-2"></div>
-                      <div className="col-span-3"></div>
+                      <div className="col-span-5"></div>
                       <div className="col-span-7 border-t border-gray-300 -ml-[25px]">
                         <div className="grid grid-cols-12 gap-4 h-6 items-center">
                           <div className="col-span-3">
@@ -220,8 +218,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                       </div>
                     </div>
                     <div className="grid grid-cols-12 gap-4 h-6 items-center">
-                      <div className="col-span-2"></div>
-                      <div className="col-span-3"></div>
+                      <div className="col-span-5"></div>
                       <div className="col-span-7 border-t border-black -ml-[25px]" style={{ borderTopWidth: '1pt' }}>
                         <div className="grid grid-cols-12 gap-4 h-6 items-center">
                           <div className="col-span-3">
