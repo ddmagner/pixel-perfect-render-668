@@ -182,19 +182,17 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
           {/* Totals Section */}
           <div className="mb-12">
             <div className="w-full">
-              <div className="grid grid-cols-12 gap-4" style={{ marginLeft: 'calc(41.666667% - 18px)' }}>
+              <div className="grid grid-cols-12 gap-4">
                 <div className="col-span-12">
                   <div className="space-y-0">
                     <div className="grid grid-cols-12 gap-4 h-6 border-b border-gray-200 items-center">
-                      <div className="col-span-3">
+                      <div className="col-span-8">
                         <span className="text-sm text-black">Subtotal:</span>
                       </div>
-                      <div className="col-span-3 -ml-[25px]"></div>
-                      <div className="col-span-1"></div>
                       <div className="col-span-1 text-left">
                         <span className="text-sm text-black">{totalHours.toFixed(2)}</span>
                       </div>
-                      <div className="col-span-1 text-right ml-[30px]"></div>
+                      <div className="col-span-1"></div>
                       <div className="col-span-2 text-right">
                         <span className="text-sm font-medium">${totalAmount.toFixed(2)}</span>
                       </div>
