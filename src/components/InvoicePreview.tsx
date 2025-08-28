@@ -189,15 +189,15 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                       <div className="col-span-2"></div>
                       <div className="col-span-3"></div>
                       <div className="col-span-7 border-t border-gray-300 -ml-[25px]">
-                        <div className="grid grid-cols-7 gap-4 items-center h-5">
-                          <div className="col-span-3">
+                        <div className="grid grid-cols-7 gap-4 h-5">
+                          <div className="col-span-3 flex items-center">
                             <span className="text-sm text-black">Subtotal:</span>
                           </div>
-                          <div className="col-span-1 text-right">
+                          <div className="col-span-1 text-right flex items-center justify-end">
                             <span className="text-sm text-black">{totalHours.toFixed(2)}</span>
                           </div>
                           <div className="col-span-1 text-right ml-[30px]"></div>
-                          <div className="col-span-2 text-right">
+                          <div className="col-span-2 text-right flex items-center justify-end">
                             <span className="text-sm font-medium">${totalAmount.toFixed(2)}</span>
                           </div>
                         </div>
@@ -207,13 +207,13 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                       <div className="col-span-2"></div>
                       <div className="col-span-3"></div>
                       <div className="col-span-7 border-t border-gray-300 -ml-[25px]">
-                        <div className="grid grid-cols-7 gap-4 items-center h-5">
-                          <div className="col-span-3">
+                        <div className="grid grid-cols-7 gap-4 h-5">
+                          <div className="col-span-3 flex items-center">
                             <span className="text-sm text-black">Tax (0%):</span>
                           </div>
                           <div className="col-span-1"></div>
                           <div className="col-span-1"></div>
-                          <div className="col-span-2 text-right">
+                          <div className="col-span-2 text-right flex items-center justify-end">
                             <span className="text-sm font-medium">$0.00</span>
                           </div>
                         </div>
@@ -223,13 +223,13 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                       <div className="col-span-2"></div>
                       <div className="col-span-3"></div>
                       <div className="col-span-7 border-t border-black -ml-[25px]" style={{ borderTopWidth: '1pt' }}>
-                        <div className="grid grid-cols-7 gap-4 items-center h-5">
-                          <div className="col-span-3">
+                        <div className="grid grid-cols-7 gap-4 h-5">
+                          <div className="col-span-3 flex items-center">
                             <span className="text-sm font-bold text-black">Total Due:</span>
                           </div>
                           <div className="col-span-1"></div>
                           <div className="col-span-1"></div>
-                          <div className="col-span-2 text-right">
+                          <div className="col-span-2 text-right flex items-center justify-end">
                             <span className="text-sm font-bold text-black">${totalAmount.toFixed(2)}</span>
                           </div>
                         </div>
