@@ -189,7 +189,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                       <div className="col-span-2"></div>
                       <div className="col-span-3"></div>
                       <div className="col-span-7 border-t border-gray-300 -ml-[25px]">
-                        <div className="grid grid-cols-7 gap-4 h-6 items-center">
+                        <div className="grid grid-cols-7 gap-4 py-1 items-center">
                           <div className="col-span-3">
                             <span className="text-sm text-black">Subtotal:</span>
                           </div>
@@ -207,7 +207,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                       <div className="col-span-2"></div>
                       <div className="col-span-3"></div>
                       <div className="col-span-7 border-t border-gray-300 -ml-[25px]">
-                        <div className="grid grid-cols-7 gap-4 h-6 items-center">
+                        <div className="grid grid-cols-7 gap-4 py-1 items-center">
                           <div className="col-span-3">
                             <span className="text-sm text-black">Tax (0%):</span>
                           </div>
@@ -223,7 +223,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                       <div className="col-span-2"></div>
                       <div className="col-span-3"></div>
                       <div className="col-span-7 border-t border-black -ml-[25px]" style={{ borderTopWidth: '1pt' }}>
-                        <div className="grid grid-cols-7 gap-4 h-6 items-center">
+                        <div className="grid grid-cols-7 gap-4 py-1 items-center">
                           <div className="col-span-3">
                             <span className="text-sm font-bold text-black">Total Due:</span>
                           </div>
