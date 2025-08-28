@@ -193,7 +193,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                           <div className="col-span-3">
                             <span className="text-sm text-black">Subtotal:</span>
                           </div>
-                          <div className="col-span-1 text-left">
+                          <div className="col-span-1 text-right">
                             <span className="text-sm text-black">{totalHours.toFixed(2)}</span>
                           </div>
                           <div className="col-span-1 text-right ml-[30px]"></div>
