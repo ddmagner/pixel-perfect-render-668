@@ -273,10 +273,30 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({ highlightS
           <div className="flex items-center justify-between">
             <input type="text" placeholder="Add task type" value={newTaskName} onChange={e => setNewTaskName(e.target.value)} className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none flex-1" />
             <div className="flex items-center gap-3">
-              {settings.invoiceMode && <input type="text" placeholder="$0.00" value={newTaskRate ? `$${parseFloat(newTaskRate.replace(/[^0-9.]/g, '') || '0').toFixed(2)}` : ''} onChange={(e) => {
-                const value = e.target.value.replace(/[^0-9.]/g, '');
-                setNewTaskRate(value);
-              }} className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none w-20 text-right" />}
+              {settings.invoiceMode && <input 
+                type="text" 
+                placeholder="$0.00" 
+                value={newTaskRate ? `$${newTaskRate}` : ''} 
+                onChange={(e) => {
+                  const input = e.target.value;
+                  // Remove all non-numeric characters except decimal point
+                  const numericValue = input.replace(/[^0-9.]/g, '');
+                  
+                  // Ensure only one decimal point
+                  const parts = numericValue.split('.');
+                  const formattedValue = parts.length > 2 
+                    ? parts[0] + '.' + parts.slice(1).join('') 
+                    : numericValue;
+                  
+                  // Limit to 2 decimal places
+                  const finalValue = formattedValue.includes('.') 
+                    ? formattedValue.substring(0, formattedValue.indexOf('.') + 3)
+                    : formattedValue;
+                  
+                  setNewTaskRate(finalValue);
+                }} 
+                className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none w-20 text-right" 
+              />}
               <div className="flex pl-8 justify-end w-[56px]">
                 <button onClick={handleAddTask} className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-[#09121F]/80 transition-colors">
                   <Plus className="h-2.5 w-2.5" strokeWidth={3} />
