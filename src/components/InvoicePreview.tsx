@@ -186,7 +186,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                 <div className="col-span-12">
                   <div className="space-y-0">
                     <div className="grid grid-cols-12 gap-4 h-6 border-b border-gray-200 items-center">
-                      <div className="col-span-8">
+                      <div className="col-span-3">
                         <span className="text-sm text-black">Subtotal:</span>
                       </div>
                       <div className="col-span-1 text-left">
