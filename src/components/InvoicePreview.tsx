@@ -107,12 +107,12 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
             <div>
               <h1 className="text-2xl font-bold text-black mb-2">INVOICE</h1>
               <div className="text-sm text-black">
-                <p>Invoice Date: {format(currentDate, 'MMMM d, yyyy')}</p>
-                <p>Due Date: {format(new Date(currentDate.getTime() + 30 * 24 * 60 * 60 * 1000), 'MMMM d, yyyy')}</p>
+                <p>Invoice Date: {format(currentDate, 'MM/dd/yy')}</p>
+                <p>Due Date: {format(new Date(currentDate.getTime() + 30 * 24 * 60 * 60 * 1000), 'MM/dd/yy')}</p>
               </div>
               <div className="text-sm text-black">Invoice #001</div>
               <div className="text-sm text-black">
-                Period: {entries.length > 0 ? format(new Date(Math.min(...entries.map(e => new Date(e.date).getTime()))), 'MMM d') : 'N/A'} - {entries.length > 0 ? format(new Date(Math.max(...entries.map(e => new Date(e.date).getTime()))), 'MMM d, yyyy') : 'N/A'}
+                Period: {entries.length > 0 ? format(new Date(Math.min(...entries.map(e => new Date(e.date).getTime()))), 'MM/dd/yy') : 'N/A'} - {entries.length > 0 ? format(new Date(Math.max(...entries.map(e => new Date(e.date).getTime()))), 'MM/dd/yy') : 'N/A'}
               </div>
             </div>
           </div>
@@ -163,7 +163,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                   
                   return (
                     <div key={entry.id || index} className="grid grid-cols-12 gap-4 py-1 text-sm text-black">
-                      <div className="col-span-2">{format(new Date(entry.date), 'MMM d, yyyy')}</div>
+                      <div className="col-span-2">{format(new Date(entry.date), 'MM/dd/yy')}</div>
                       <div className="col-span-3 font-medium">{entry.project}</div>
                       <div className="col-span-3 -ml-[25px]">{entry.task}</div>
                       <div className="col-span-1 text-left">{entry.duration.toFixed(2)}</div>
