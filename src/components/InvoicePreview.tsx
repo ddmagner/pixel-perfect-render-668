@@ -150,7 +150,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                   <div className="col-span-3">Project</div>
                   <div className="col-span-3 -ml-[25px]">Task</div>
                   <div className="col-span-1 text-left">Hours</div>
-                  <div className="col-span-1 text-right ml-[25px]">Rate</div>
+                  <div className="col-span-1 flex justify-end ml-[25px]">Rate</div>
                   <div className="col-span-2 text-right">Amount</div>
                 </div>
               </div>
@@ -167,7 +167,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                       <div className="col-span-3 font-medium">{entry.project}</div>
                       <div className="col-span-3 -ml-[25px]">{entry.task}</div>
                       <div className="col-span-1 text-left">{entry.duration.toFixed(2)}</div>
-                      <div className="col-span-1 text-right ml-[25px]">${rate.toFixed(2)}</div>
+                      <div className="col-span-1 flex justify-end ml-[25px]">${rate.toFixed(2)}</div>
                       <div className="col-span-2 text-right font-medium">${amount.toFixed(2)}</div>
                     </div>
                   );
