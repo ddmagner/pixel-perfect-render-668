@@ -23,7 +23,7 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({ highlightS
     const newTask: TaskType = {
       id: Date.now().toString(),
       name: newTaskName.trim(),
-      hourlyRate: newTaskRate ? parseFloat(newTaskRate) : undefined
+      hourlyRate: newTaskRate ? parseFloat(newTaskRate.replace(/[^0-9.]/g, '')) : undefined
     };
     updateSettings({
       taskTypes: [...settings.taskTypes, newTask]
@@ -234,8 +234,11 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({ highlightS
                     {editingTask?.id === task.id ? (
                       <input 
                         type="text" 
-                        value={editingTask.hourlyRate?.toString() || ''}
-                        onChange={(e) => setEditingTask({...editingTask, hourlyRate: parseFloat(e.target.value) || 0})}
+                        value={editingTask.hourlyRate ? `$${editingTask.hourlyRate.toFixed(2)}` : ''}
+                        onChange={(e) => {
+                          const value = e.target.value.replace(/[^0-9.]/g, '');
+                          setEditingTask({...editingTask, hourlyRate: parseFloat(value) || 0});
+                        }}
                         onBlur={() => {
                           handleUpdateTask(editingTask);
                         }}
@@ -270,7 +273,10 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({ highlightS
           <div className="flex items-center justify-between">
             <input type="text" placeholder="Add task type" value={newTaskName} onChange={e => setNewTaskName(e.target.value)} className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none flex-1" />
             <div className="flex items-center gap-3">
-              {settings.invoiceMode && <input type="text" placeholder="$0.00" value={newTaskRate} onChange={e => setNewTaskRate(e.target.value)} className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none w-20 text-right" />}
+              {settings.invoiceMode && <input type="text" placeholder="$0.00" value={newTaskRate ? `$${parseFloat(newTaskRate.replace(/[^0-9.]/g, '') || '0').toFixed(2)}` : ''} onChange={(e) => {
+                const value = e.target.value.replace(/[^0-9.]/g, '');
+                setNewTaskRate(value);
+              }} className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none w-20 text-right" />}
               <div className="flex pl-8 justify-end w-[56px]">
                 <button onClick={handleAddTask} className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-[#09121F]/80 transition-colors">
                   <Plus className="h-2.5 w-2.5" strokeWidth={3} />
