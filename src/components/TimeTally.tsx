@@ -325,7 +325,9 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                     <div></div>
                     <div className="text-left font-bold text-[#09121F] text-sm flex items-center gap-2">
                       {group.name}
-                      <Plus className="h-3 w-3 text-blue-600 hover:text-blue-800 cursor-pointer" />
+                      <button className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-[#09121F]/80 transition-colors">
+                        <Plus className="h-2.5 w-2.5" strokeWidth={3} />
+                      </button>
                     </div>
                     <div></div>
                     <div></div>
