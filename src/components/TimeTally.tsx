@@ -325,7 +325,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                     <div></div>
                     <div className="text-left font-bold text-[#09121F] text-sm flex items-center gap-2">
                       {group.name}
-                      <PlusCircle className="h-4 w-4 text-[#09121F] cursor-pointer hover:text-gray-600" />
+                      <Plus className="h-3 w-3 text-blue-600 hover:text-blue-800 cursor-pointer" />
                     </div>
                     <div></div>
                     <div></div>
@@ -334,13 +334,13 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
 
                   {/* Date subhead for date sorting */}
                   {sortOption === 'date' && group.entries && group.entries.length > 0 && (
-                    <div className={`grid ${gridColsWithSelection} h-[24px] items-center text-[#666666] text-xs -mt-px`} style={{
+                    <div className={`grid ${gridColsWithSelection} h-[24px] items-center -mt-px`} style={{
                       gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (settings.invoiceMode ? ' calc(40px + 50px)' : ''),
                       gap: '0'
                     }}>
                       <div></div>
-                      <div className="text-left text-[#666666] text-xs">
-                        {format(new Date(group.entries[0].date), 'MMMM dd, yyyy')}
+                      <div className="text-left font-bold text-[#09121F] text-sm">
+                        {format(new Date(group.entries[0].date), 'MM/dd/yy')}
                       </div>
                       <div></div>
                       <div></div>
