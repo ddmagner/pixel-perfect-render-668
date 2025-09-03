@@ -190,10 +190,10 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                       <div className="col-span-3"></div>
                       <div className="col-span-7 -ml-[25px] border-t border-gray-300">
                         <div className="grid grid-cols-7 gap-4 items-center text-sm text-black pt-1">
-                          <div className="col-span-1">Subtotal:</div>
+                          <div className="col-span-2">Subtotal:</div>
                           <div className="col-span-1"></div>
                           <div className="col-span-1 text-left">{totalHours.toFixed(2)}</div>
-                          <div className="col-span-2"></div>
+                          <div className="col-span-1"></div>
                           <div className="col-span-2 text-right font-medium">${totalAmount.toFixed(2)}</div>
                         </div>
                       </div>
