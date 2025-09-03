@@ -318,7 +318,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
               {organizedData.groups.map((group, groupIndex) => (
                 <div key={`${group.type}-${group.name}-${groupIndex}`}>
                   {/* Client Header - Left Aligned */}
-                  <div className={`grid ${gridColsWithSelection} h-[32px] items-center font-bold text-[#09121F] text-sm -mt-px`} style={{
+                  <div className={`grid ${gridColsWithSelection} h-[32px] items-center font-bold text-[#09121F] text-sm py-2`} style={{
                     gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (settings.invoiceMode ? ' calc(40px + 50px)' : ''),
                     gap: '0'
                   }}>
