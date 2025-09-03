@@ -237,7 +237,18 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
           <div className="mt-auto pt-8">
             <div className="text-xs text-gray-400 flex items-center gap-1">
               <span>MADE WITH</span>
-              <span className="font-semibold text-gray-500">TIME-IN</span>
+              <div className="flex items-center gap-1">
+                <img 
+                  src="/lovable-uploads/8829a351-d8df-4d66-829d-f34b1754bd35.png" 
+                  alt="Logo" 
+                  className="w-[10px] h-[10px]"
+                />
+                <img 
+                  src="/lovable-uploads/21706651-e7f7-4eec-b5d7-cd8ccf2a385f.png" 
+                  alt="TIME IN Logo" 
+                  className="h-[10px] w-auto"
+                />
+              </div>
             </div>
           </div>
         </div>
