@@ -232,6 +232,14 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
               </div>
             </div>
           </div>
+          
+          {/* Footer */}
+          <div className="mt-auto pt-8">
+            <div className="text-xs text-gray-400 flex items-center gap-1">
+              <span>MADE WITH</span>
+              <span className="font-semibold text-gray-500">TIME-IN</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
