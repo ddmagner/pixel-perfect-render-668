@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useApp } from '@/context/AppContext';
 import { TaskType, Project, Client } from '@/types';
 import { Edit3, Trash2, Plus } from 'lucide-react';
@@ -7,6 +8,7 @@ interface TimeEntrySettingsProps {
 }
 
 export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({ highlightSection }) => {
+  const navigate = useNavigate();
   const {
     settings,
     updateSettings
@@ -18,10 +20,6 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({ highlightS
   const [newTaskRate, setNewTaskRate] = useState('');
   const [newProjectName, setNewProjectName] = useState('');
   const [newClientName, setNewClientName] = useState('');
-  const [newClientAddress, setNewClientAddress] = useState('');
-  const [newClientCity, setNewClientCity] = useState('');
-  const [newClientState, setNewClientState] = useState('');
-  const [newClientZipCode, setNewClientZipCode] = useState('');
   const handleAddTask = () => {
     if (!newTaskName.trim()) return;
     const newTask: TaskType = {
@@ -66,20 +64,12 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({ highlightS
     if (!newClientName.trim()) return;
     const newClient: Client = {
       id: Date.now().toString(),
-      name: newClientName.trim(),
-      address: newClientAddress.trim() || undefined,
-      city: newClientCity.trim() || undefined,
-      state: newClientState.trim() || undefined,
-      zip_code: newClientZipCode.trim() || undefined
+      name: newClientName.trim()
     };
     updateSettings({
       clients: [...settings.clients, newClient]
     });
     setNewClientName('');
-    setNewClientAddress('');
-    setNewClientCity('');
-    setNewClientState('');
-    setNewClientZipCode('');
   };
   const handleDeleteClient = (clientId: string) => {
     updateSettings({
@@ -95,89 +85,63 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({ highlightS
         <div className="border-b border-[#09121F] mb-3"></div>
         
         <div className="space-y-3">
-          {settings.clients.map(client => <div key={client.id} className="flex items-center justify-between">
-              {editingClient?.id === client.id ? (
-                <input 
-                  type="text" 
-                  value={editingClient.name}
-                  onChange={(e) => setEditingClient({...editingClient, name: e.target.value})}
-                  onBlur={() => {
-                    updateSettings({
-                      clients: settings.clients.map(c => c.id === editingClient.id ? editingClient : c)
-                    });
-                    setEditingClient(null);
-                  }}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
+          {settings.clients.map(client => (
+            <div key={client.id} className="space-y-2">
+              <div className="flex items-center justify-between">
+                {editingClient?.id === client.id ? (
+                  <input 
+                    type="text" 
+                    value={editingClient.name}
+                    onChange={(e) => setEditingClient({...editingClient, name: e.target.value})}
+                    onBlur={() => {
                       updateSettings({
                         clients: settings.clients.map(c => c.id === editingClient.id ? editingClient : c)
                       });
                       setEditingClient(null);
-                    }
-                    if (e.key === 'Escape') {
-                      setEditingClient(null);
-                    }
-                  }}
-                  className="text-[#09121F] text-sm bg-transparent border-none outline-none flex-1"
-                  style={{ marginRight: '56px' }}
-                  autoFocus
-                />
-              ) : (
-                <span className="text-[#09121F] text-sm" style={{ marginRight: '56px' }}>{client.name}</span>
-              )}
-              <div className="flex gap-3 w-[56px] justify-end">
-                <button onClick={() => setEditingClient(client)} className="text-gray-400 hover:text-[#09121F]">
-                  <Edit3 size={16} />
-                </button>
-                <button onClick={() => handleDeleteClient(client.id)} className="text-gray-400 hover:text-red-500">
-                  <Trash2 size={16} />
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        updateSettings({
+                          clients: settings.clients.map(c => c.id === editingClient.id ? editingClient : c)
+                        });
+                        setEditingClient(null);
+                      }
+                      if (e.key === 'Escape') {
+                        setEditingClient(null);
+                      }
+                    }}
+                    className="text-[#09121F] text-sm bg-transparent border-none outline-none flex-1"
+                    style={{ marginRight: '56px' }}
+                    autoFocus
+                  />
+                ) : (
+                  <span className="text-[#09121F] text-sm" style={{ marginRight: '56px' }}>{client.name}</span>
+                )}
+                <div className="flex gap-3 w-[56px] justify-end">
+                  <button onClick={() => setEditingClient(client)} className="text-gray-400 hover:text-[#09121F]">
+                    <Edit3 size={16} />
+                  </button>
+                  <button onClick={() => handleDeleteClient(client.id)} className="text-gray-400 hover:text-red-500">
+                    <Trash2 size={16} />
+                  </button>
+                </div>
+              </div>
+              <div className="flex justify-end">
+                <button
+                  onClick={() => navigate(`/client-address?clientId=${client.id}`)}
+                  className="text-[#BFBFBF] text-right text-[15px] font-normal leading-5 underline decoration-solid decoration-auto underline-offset-auto"
+                >
+                  +/Edit Address
                 </button>
               </div>
-            </div>)}
+            </div>
+          ))}
           
-          <div className="space-y-2">
-            <div className="flex items-center justify-between">
-              <input 
-                type="text" 
-                placeholder="Add client name" 
-                value={newClientName} 
-                onChange={e => setNewClientName(e.target.value)} 
-                className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none flex-1" 
-              />
-              <button onClick={handleAddClient} className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-[#09121F]/80 transition-colors">
-                <Plus className="h-2.5 w-2.5" strokeWidth={3} />
-              </button>
-            </div>
-            <input 
-              type="text" 
-              placeholder="Address" 
-              value={newClientAddress} 
-              onChange={e => setNewClientAddress(e.target.value)} 
-              className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none w-full" 
-            />
-            <div className="flex gap-2">
-              <input 
-                type="text" 
-                placeholder="City" 
-                value={newClientCity} 
-                onChange={e => setNewClientCity(e.target.value)} 
-                className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none flex-1" 
-              />
-              <input 
-                type="text" 
-                placeholder="State" 
-                value={newClientState} 
-                onChange={e => setNewClientState(e.target.value)} 
-                className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none w-16" 
-              />
-              <input 
-                type="text" 
-                placeholder="Zip" 
-                value={newClientZipCode} 
-                onChange={e => setNewClientZipCode(e.target.value)} 
-                className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none w-20" 
-              />
-            </div>
+          <div className="flex items-center justify-between">
+            <input type="text" placeholder="Add client" value={newClientName} onChange={e => setNewClientName(e.target.value)} className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none flex-1" />
+            <button onClick={handleAddClient} className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-[#09121F]/80 transition-colors">
+              <Plus className="h-2.5 w-2.5" strokeWidth={3} />
+            </button>
           </div>
         </div>
       </section>

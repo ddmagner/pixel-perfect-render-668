@@ -8,6 +8,7 @@ import { ProtectedRoute } from "./components/ProtectedRoute";
 import Index from "./pages/Index";
 import { TimeArchivePage } from "./pages/TimeArchive";
 import SettingsPage from "./pages/Settings";
+import ClientAddressPage from "./pages/ClientAddress";
 import TermsOfUsePage from "./pages/TermsOfUse";
 import PrivacyPolicyPage from "./pages/PrivacyPolicy";
 import Auth from "./pages/Auth";
@@ -39,6 +40,11 @@ const App = () => (
             <Route path="/settings" element={
               <ProtectedRoute>
                 <SettingsPage />
+              </ProtectedRoute>
+            } />
+            <Route path="/client-address" element={
+              <ProtectedRoute>
+                <ClientAddressPage />
               </ProtectedRoute>
             } />
             <Route path="/terms" element={
