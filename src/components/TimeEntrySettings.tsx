@@ -18,6 +18,10 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({ highlightS
   const [newTaskRate, setNewTaskRate] = useState('');
   const [newProjectName, setNewProjectName] = useState('');
   const [newClientName, setNewClientName] = useState('');
+  const [newClientAddress, setNewClientAddress] = useState('');
+  const [newClientCity, setNewClientCity] = useState('');
+  const [newClientState, setNewClientState] = useState('');
+  const [newClientZipCode, setNewClientZipCode] = useState('');
   const handleAddTask = () => {
     if (!newTaskName.trim()) return;
     const newTask: TaskType = {
@@ -62,12 +66,20 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({ highlightS
     if (!newClientName.trim()) return;
     const newClient: Client = {
       id: Date.now().toString(),
-      name: newClientName.trim()
+      name: newClientName.trim(),
+      address: newClientAddress.trim() || undefined,
+      city: newClientCity.trim() || undefined,
+      state: newClientState.trim() || undefined,
+      zip_code: newClientZipCode.trim() || undefined
     };
     updateSettings({
       clients: [...settings.clients, newClient]
     });
     setNewClientName('');
+    setNewClientAddress('');
+    setNewClientCity('');
+    setNewClientState('');
+    setNewClientZipCode('');
   };
   const handleDeleteClient = (clientId: string) => {
     updateSettings({
@@ -123,11 +135,49 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({ highlightS
               </div>
             </div>)}
           
-          <div className="flex items-center justify-between">
-            <input type="text" placeholder="Add client" value={newClientName} onChange={e => setNewClientName(e.target.value)} className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none flex-1" />
-            <button onClick={handleAddClient} className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-[#09121F]/80 transition-colors">
-              <Plus className="h-2.5 w-2.5" strokeWidth={3} />
-            </button>
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <input 
+                type="text" 
+                placeholder="Add client name" 
+                value={newClientName} 
+                onChange={e => setNewClientName(e.target.value)} 
+                className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none flex-1" 
+              />
+              <button onClick={handleAddClient} className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-[#09121F]/80 transition-colors">
+                <Plus className="h-2.5 w-2.5" strokeWidth={3} />
+              </button>
+            </div>
+            <input 
+              type="text" 
+              placeholder="Address" 
+              value={newClientAddress} 
+              onChange={e => setNewClientAddress(e.target.value)} 
+              className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none w-full" 
+            />
+            <div className="flex gap-2">
+              <input 
+                type="text" 
+                placeholder="City" 
+                value={newClientCity} 
+                onChange={e => setNewClientCity(e.target.value)} 
+                className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none flex-1" 
+              />
+              <input 
+                type="text" 
+                placeholder="State" 
+                value={newClientState} 
+                onChange={e => setNewClientState(e.target.value)} 
+                className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none w-16" 
+              />
+              <input 
+                type="text" 
+                placeholder="Zip" 
+                value={newClientZipCode} 
+                onChange={e => setNewClientZipCode(e.target.value)} 
+                className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none w-20" 
+              />
+            </div>
           </div>
         </div>
       </section>
