@@ -16,7 +16,7 @@ const ClientAddressPage = () => {
   const [zipCode, setZipCode] = useState(client?.zip_code || '');
 
   const handleBack = () => {
-    navigate('/settings');
+    navigate('/?tab=settings');
   };
 
   const handleInputChange = (field: string, value: string) => {
