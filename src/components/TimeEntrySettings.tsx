@@ -86,52 +86,47 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({ highlightS
         
         <div className="space-y-3">
           {settings.clients.map(client => (
-            <div key={client.id} className="space-y-2">
-              <div className="flex items-center justify-between">
-                {editingClient?.id === client.id ? (
-                  <input 
-                    type="text" 
-                    value={editingClient.name}
-                    onChange={(e) => setEditingClient({...editingClient, name: e.target.value})}
-                    onBlur={() => {
+            <div key={client.id} className="flex items-center justify-between">
+              {editingClient?.id === client.id ? (
+                <input 
+                  type="text" 
+                  value={editingClient.name}
+                  onChange={(e) => setEditingClient({...editingClient, name: e.target.value})}
+                  onBlur={() => {
+                    updateSettings({
+                      clients: settings.clients.map(c => c.id === editingClient.id ? editingClient : c)
+                    });
+                    setEditingClient(null);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
                       updateSettings({
                         clients: settings.clients.map(c => c.id === editingClient.id ? editingClient : c)
                       });
                       setEditingClient(null);
-                    }}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter') {
-                        updateSettings({
-                          clients: settings.clients.map(c => c.id === editingClient.id ? editingClient : c)
-                        });
-                        setEditingClient(null);
-                      }
-                      if (e.key === 'Escape') {
-                        setEditingClient(null);
-                      }
-                    }}
-                    className="text-[#09121F] text-sm bg-transparent border-none outline-none flex-1"
-                    style={{ marginRight: '56px' }}
-                    autoFocus
-                  />
-                ) : (
-                  <span className="text-[#09121F] text-sm" style={{ marginRight: '56px' }}>{client.name}</span>
-                )}
-                <div className="flex gap-3 w-[56px] justify-end">
-                  <button onClick={() => setEditingClient(client)} className="text-gray-400 hover:text-[#09121F]">
-                    <Edit3 size={16} />
-                  </button>
-                  <button onClick={() => handleDeleteClient(client.id)} className="text-gray-400 hover:text-red-500">
-                    <Trash2 size={16} />
-                  </button>
-                </div>
-              </div>
-              <div className="flex justify-end">
+                    }
+                    if (e.key === 'Escape') {
+                      setEditingClient(null);
+                    }
+                  }}
+                  className="text-[#09121F] text-sm bg-transparent border-none outline-none flex-1"
+                  autoFocus
+                />
+              ) : (
+                <span className="text-[#09121F] text-sm flex-1">{client.name}</span>
+              )}
+              <div className="flex items-center gap-3">
                 <button
                   onClick={() => navigate(`/client-address?clientId=${client.id}`)}
                   className="text-[#BFBFBF] text-right text-[15px] font-normal leading-5 underline decoration-solid decoration-auto underline-offset-auto"
                 >
                   +/Edit Address
+                </button>
+                <button onClick={() => setEditingClient(client)} className="text-gray-400 hover:text-[#09121F]">
+                  <Edit3 size={16} />
+                </button>
+                <button onClick={() => handleDeleteClient(client.id)} className="text-gray-400 hover:text-red-500">
+                  <Trash2 size={16} />
                 </button>
               </div>
             </div>
