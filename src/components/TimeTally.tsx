@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { useApp } from '@/context/AppContext';
 import { TimeEntry } from '@/types';
 import { format } from 'date-fns';
-import { ChevronDown, Pencil, Trash2, Archive, Edit, X, Plus } from 'lucide-react';
+import { ChevronDown, Pencil, Trash2, Archive, Edit, X, Plus, PlusCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { ExportDialog } from '@/components/ExportDialog';
@@ -323,11 +323,30 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                     gap: '0'
                   }}>
                     <div></div>
-                    <div className="text-left font-bold text-[#09121F] text-sm">{group.name}</div>
+                    <div className="text-left font-bold text-[#09121F] text-sm flex items-center gap-2">
+                      {group.name}
+                      <PlusCircle className="h-4 w-4 text-[#09121F] cursor-pointer hover:text-gray-600" />
+                    </div>
                     <div></div>
                     <div></div>
                     {settings.invoiceMode && <div></div>}
                   </div>
+
+                  {/* Date subhead for date sorting */}
+                  {sortOption === 'date' && group.entries && group.entries.length > 0 && (
+                    <div className={`grid ${gridColsWithSelection} h-[24px] items-center text-[#666666] text-xs -mt-px`} style={{
+                      gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (settings.invoiceMode ? ' calc(40px + 50px)' : ''),
+                      gap: '0'
+                    }}>
+                      <div></div>
+                      <div className="text-left text-[#666666] text-xs">
+                        {format(new Date(group.entries[0].date), 'MMMM dd, yyyy')}
+                      </div>
+                      <div></div>
+                      <div></div>
+                      {settings.invoiceMode && <div></div>}
+                    </div>
+                  )}
 
                   {/* Entries under client */}
                   {group.entries?.map((entry: TimeEntry) => (
