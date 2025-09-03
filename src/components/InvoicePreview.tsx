@@ -241,13 +241,13 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                 <img 
                   src="/lovable-uploads/8829a351-d8df-4d66-829d-f34b1754bd35.png" 
                   alt="Logo" 
-                  className="w-[8px] h-[8px]"
+                  className="w-[9px] h-[9px]"
                   style={{ filter: 'grayscale(100%) brightness(0) invert(60%)' }}
                 />
                 <img 
                   src="/lovable-uploads/21706651-e7f7-4eec-b5d7-cd8ccf2a385f.png" 
                   alt="TIME IN Logo" 
-                  className="h-[8px] w-auto"
+                  className="h-[9px] w-auto"
                   style={{ filter: 'grayscale(100%) brightness(0) invert(60%)' }}
                 />
               </div>
