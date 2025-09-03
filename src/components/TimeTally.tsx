@@ -245,13 +245,13 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
   const getSortOptionText = () => {
     switch (sortOption) {
       case 'project':
-        return 'By Project';
+        return 'By Client/Project';
       case 'date':
         return 'By Date';
       case 'task':
         return 'By Task';
       default:
-        return 'By Project';
+        return 'By Client/Project';
     }
   };
 
@@ -317,7 +317,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="bg-white border-none shadow-lg z-50">
               <DropdownMenuItem onClick={() => setSortOption('project')} className="text-sm font-medium text-[#09121F] hover:bg-gray-50 cursor-pointer">
-                By Project
+                By Client/Project
               </DropdownMenuItem>
               <DropdownMenuItem onClick={() => setSortOption('date')} className="text-sm font-medium text-[#09121F] hover:bg-gray-50 cursor-pointer">
                 By Date
@@ -437,7 +437,10 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                                 </div>
                               </div>
                                 <div className="text-[#09121F] text-sm leading-tight flex items-start">
-                                  {entry.project}
+                                  <div>
+                                    <div className="font-bold">{getClientByProject(entry.project) || 'No Client'}</div>
+                                    <div>{entry.project}</div>
+                                  </div>
                                 </div>
                                 <div className="text-[#09121F] text-sm leading-tight flex items-start">
                                   {entry.task}
@@ -485,7 +488,10 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                             {format(new Date(entry.date), 'MM/dd')}
                           </div>
                           <div className="text-[#09121F] text-sm leading-tight flex items-start">
-                            {entry.project}
+                            <div>
+                              <div className="font-bold">{getClientByProject(entry.project) || 'No Client'}</div>
+                              <div>{entry.project}</div>
+                            </div>
                           </div>
                           <div className="text-[#09121F] text-sm leading-tight text-right flex items-start justify-end">
                             {formatHours(entry.duration)}
