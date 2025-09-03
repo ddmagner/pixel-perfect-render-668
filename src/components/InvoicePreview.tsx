@@ -234,7 +234,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
           </div>
           
           {/* Footer */}
-          <div className="mt-auto">
+          <div className="mt-8">
             <div className="text-xs text-gray-400 flex items-center gap-1">
               <span>MADE WITH</span>
               <div className="flex items-center gap-1">
