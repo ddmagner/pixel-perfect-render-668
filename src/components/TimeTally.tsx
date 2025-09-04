@@ -171,7 +171,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
       });
 
     } else if (sortOption === 'date') {
-      // By Date: Date -> Client name -> entries -> Sub-total -> TOTAL -> TOTAL-IN
+      // By Date: Date -> entries (no client subgroups)
       const dateGroups: { [key: string]: TimeEntry[] } = {};
       
       activeTimeEntries.forEach(entry => {
@@ -182,35 +182,18 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
       groups = Object.entries(dateGroups)
         .sort(([dateA], [dateB]) => compareDateStrAsc(dateA, dateB))
         .map(([date, dateEntries]) => {
-          // Group by client within date
-          const clientGroups: { [key: string]: TimeEntry[] } = {};
-          dateEntries.forEach(entry => {
-            const clientName = resolveClientName(entry);
-            if (!clientGroups[clientName]) clientGroups[clientName] = [];
-            clientGroups[clientName].push(entry);
-          });
-
-          const clientSubgroups = Object.entries(clientGroups).map(([clientName, clientEntries]) => {
-            const sortedEntries = [...clientEntries].sort((a, b) => {
-              if (a.project !== b.project) return a.project.localeCompare(b.project);
-              return a.task.localeCompare(b.task);
-            });
-
-            return {
-              type: 'client',
-              name: clientName,
-              entries: sortedEntries,
-              subtotal: {
-                hours: clientEntries.reduce((sum, e) => sum + e.duration, 0),
-                fee: clientEntries.reduce((sum, e) => sum + calculateFee(e), 0)
-              }
-            };
+          const sortedEntries = [...dateEntries].sort((a, b) => {
+            const clientA = resolveClientName(a);
+            const clientB = resolveClientName(b);
+            if (clientA !== clientB) return clientA.localeCompare(clientB);
+            if (a.project !== b.project) return a.project.localeCompare(b.project);
+            return a.task.localeCompare(b.task);
           });
 
           return {
             type: 'date',
             name: date,
-            subgroups: clientSubgroups,
+            entries: sortedEntries,
             total: {
               hours: dateEntries.reduce((sum, e) => sum + e.duration, 0),
               fee: dateEntries.reduce((sum, e) => sum + calculateFee(e), 0)
@@ -219,7 +202,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
         });
 
     } else if (sortOption === 'task') {
-      // By Task: Task name -> Client name -> entries -> Sub-total -> TOTAL -> TOTAL-IN
+      // By Task: Task name -> entries (no client subgroups)
       const taskGroups: { [key: string]: TimeEntry[] } = {};
       
       activeTimeEntries.forEach(entry => {
@@ -228,35 +211,18 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
       });
 
       groups = Object.entries(taskGroups).map(([taskName, taskEntries]) => {
-        // Group by client within task
-        const clientGroups: { [key: string]: TimeEntry[] } = {};
-        taskEntries.forEach(entry => {
-          const clientName = resolveClientName(entry);
-          if (!clientGroups[clientName]) clientGroups[clientName] = [];
-          clientGroups[clientName].push(entry);
-        });
-
-        const clientSubgroups = Object.entries(clientGroups).map(([clientName, clientEntries]) => {
-          const sortedEntries = [...clientEntries].sort((a, b) => {
-            if (a.date !== b.date) return compareDateStrAsc(a.date, b.date);
-            return a.project.localeCompare(b.project);
-          });
-
-          return {
-            type: 'client',
-            name: clientName,
-            entries: sortedEntries,
-            subtotal: {
-              hours: clientEntries.reduce((sum, e) => sum + e.duration, 0),
-              fee: clientEntries.reduce((sum, e) => sum + calculateFee(e), 0)
-            }
-          };
+        const sortedEntries = [...taskEntries].sort((a, b) => {
+          const clientA = resolveClientName(a);
+          const clientB = resolveClientName(b);
+          if (clientA !== clientB) return clientA.localeCompare(clientB);
+          if (a.date !== b.date) return compareDateStrAsc(a.date, b.date);
+          return a.project.localeCompare(b.project);
         });
 
         return {
           type: 'task',
           name: taskName,
-          subgroups: clientSubgroups,
+          entries: sortedEntries,
           total: {
             hours: taskEntries.reduce((sum, e) => sum + e.duration, 0),
             fee: taskEntries.reduce((sum, e) => sum + calculateFee(e), 0)
@@ -279,11 +245,15 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
     const ids: string[] = [];
     organizedData.groups.forEach(group => {
       if (group.subgroups) {
+        // For "By Project" view with subgroups
         group.subgroups.forEach((subgroup: any) => {
           if (subgroup.entries) {
             subgroup.entries.forEach((entry: TimeEntry) => ids.push(entry.id));
           }
         });
+      } else if (group.entries) {
+        // For "By Date" and "By Task" views with direct entries
+        group.entries.forEach((entry: TimeEntry) => ids.push(entry.id));
       }
     });
     return ids;
@@ -527,11 +497,15 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                         // Get all entry IDs for this top-level group
                         const groupEntryIds: string[] = [];
                         if (group.subgroups) {
+                          // For "By Project" view with subgroups
                           group.subgroups.forEach((subgroup: any) => {
                             if (subgroup.entries) {
                               groupEntryIds.push(...subgroup.entries.map((entry: TimeEntry) => entry.id));
                             }
                           });
+                        } else if (group.entries) {
+                          // For "By Date" and "By Task" views with direct entries
+                          groupEntryIds.push(...group.entries.map((entry: TimeEntry) => entry.id));
                         }
                         
                         const isGroupSelected = groupEntryIds.length > 0 && groupEntryIds.every(id => selection.isSelected(id));
@@ -553,7 +527,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                     {settings.invoiceMode && <div></div>}
                   </div>
 
-                  {/* Subgroups */}
+                  {/* Render subgroups for "By Project" view only */}
                   {group.subgroups?.map((subgroup: any, subIndex: number) => (
                     <div key={`${subgroup.type}-${subgroup.name}-${subIndex}`}>
                       
@@ -609,7 +583,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                         {settings.invoiceMode && <div></div>}
                       </div>
 
-                      {/* Entries */}
+                      {/* Entries within subgroup */}
                       {subgroup.entries?.map((entry: TimeEntry) => (
                         <div key={entry.id} className={`grid ${gridColsWithSelection} items-start hover:bg-gray-50 py-2`} style={{
                           gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (settings.invoiceMode ? ' calc(40px + 50px)' : ''),
@@ -631,28 +605,6 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                               </div>
                               <div className="text-[#09121F] text-sm leading-tight flex items-start">
                                 {entry.task}
-                              </div>
-                            </>
-                          )}
-                          
-                          {sortOption === 'date' && (
-                            <>
-                              <div className="text-[#09121F] text-sm leading-tight flex items-start">
-                                {entry.project} {entry.task}
-                              </div>
-                              <div className="text-[#09121F] text-sm leading-tight flex items-start">
-                                {entry.task}
-                              </div>
-                            </>
-                          )}
-                          
-                          {sortOption === 'task' && (
-                            <>
-                              <div className="text-[#09121F] text-sm leading-tight flex items-start">
-                                {formatDateLabel(entry.date)}
-                              </div>
-                              <div className="text-[#09121F] text-sm leading-tight flex items-start">
-                                {entry.project}
                               </div>
                             </>
                           )}
@@ -695,6 +647,64 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                           </div>
                         )}
                       </div>
+                    </div>
+                  ))}
+
+                  {/* Render direct entries for "By Date" and "By Task" views */}
+                  {group.entries?.map((entry: TimeEntry) => (
+                    <div key={entry.id} className={`grid ${gridColsWithSelection} items-start hover:bg-gray-50 py-2`} style={{
+                      gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (settings.invoiceMode ? ' calc(40px + 50px)' : ''),
+                      gap: '0'
+                    }}>
+                      <div className="flex items-start w-[32px] self-start mt-1">
+                        <div className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${selection.isSelected(entry.id) ? 'bg-gray-300' : 'bg-white'}`} onClick={() => selection.toggleSelectRecord(entry.id)} style={{
+                          marginTop: '-3px'
+                        }}>
+                          {selection.isSelected(entry.id) && <div className="w-2 h-2 rounded-full bg-[#09121F]"></div>}
+                        </div>
+                      </div>
+                      
+                      {/* Entry data based on sort option */}
+                      {sortOption === 'date' && (
+                        <>
+                          <div className="text-[#09121F] text-sm leading-tight flex items-start">
+                            {resolveClientName(entry)} - {entry.project}
+                          </div>
+                          <div className="text-[#09121F] text-sm leading-tight flex items-start">
+                            {entry.task}
+                          </div>
+                        </>
+                      )}
+                      
+                      {sortOption === 'task' && (
+                        <>
+                          <div className="text-[#09121F] text-sm leading-tight flex items-start">
+                            {resolveClientName(entry)} - {formatDateLabel(entry.date)}
+                          </div>
+                          <div className="text-[#09121F] text-sm leading-tight flex items-start">
+                            {entry.project}
+                          </div>
+                        </>
+                      )}
+                      
+                      <div className="text-[#09121F] text-sm leading-tight text-right flex items-start justify-end">
+                        {formatHours(entry.duration)}
+                      </div>
+                      
+                      {settings.invoiceMode && (
+                        <div className="text-[#09121F] text-sm leading-tight text-right flex items-start justify-end">
+                          {hasTaskRate(entry.task) ? (
+                            <span>${calculateFee(entry).toFixed(2)}</span>
+                          ) : (
+                            <div className="flex items-center gap-1">
+                              <span className="text-gray-400">--</span>
+                              <button onClick={() => handleAddRate(entry.task)} className="text-xs text-blue-600 hover:text-blue-800 underline">
+                                <Plus className="h-3 w-3" />
+                              </button>
+                            </div>
+                          )}
+                        </div>
+                      )}
                     </div>
                   ))}
 
