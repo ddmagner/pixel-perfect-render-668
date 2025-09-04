@@ -32,6 +32,7 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
     project: '',
     client: ''
   });
+  const [isProcessing, setIsProcessing] = useState(false);
 
   // Parse transcript and update form data
   useEffect(() => {
@@ -57,7 +58,7 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
       });
     }
   }, [transcript]);
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     // Validate that all fields have data
@@ -71,24 +72,41 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
       return;
     }
     
-    lightImpact(); // Success haptic feedback
-    onSubmit(formData);
+    if (isProcessing) return;
     
-    // Show toast notification
-    toast({
-      description: "Time added.",
-      duration: 3000,
-    });
+    setIsProcessing(true);
     
-    // Clear form fields
-    setFormData({
-      duration: '',
-      task: '',
-      project: '',
-      client: ''
-    });
+    try {
+      // Ensure auto-matching is complete for both client and project
+      await Promise.all([
+        handleClientAutoMatch(formData.client.trim()),
+        handleProjectAutoMatch(formData.project.trim())
+      ]);
+      
+      // Wait a moment for the settings to be updated
+      await new Promise(resolve => setTimeout(resolve, 100));
+      
+      lightImpact(); // Success haptic feedback
+      onSubmit(formData);
+      
+      // Show toast notification
+      toast({
+        description: "Time added.",
+        duration: 3000,
+      });
+      
+      // Clear form fields
+      setFormData({
+        duration: '',
+        task: '',
+        project: '',
+        client: ''
+      });
+    } finally {
+      setIsProcessing(false);
+    }
   };
-  const handleInputChange = async (field: keyof TimeEntryData, value: string) => {
+  const handleInputChange = (field: keyof TimeEntryData, value: string) => {
     let formattedValue = value;
     
     // Apply initial capitalization for task, project, and client fields
@@ -100,13 +118,6 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
       ...prev,
       [field]: formattedValue
     }));
-
-    // Auto-match and create clients/projects when user finishes typing
-    if (field === 'client' && formattedValue.trim()) {
-      await handleClientAutoMatch(formattedValue.trim());
-    } else if (field === 'project' && formattedValue.trim()) {
-      await handleProjectAutoMatch(formattedValue.trim());
-    }
   };
 
   const handleClientAutoMatch = async (clientName: string) => {
@@ -280,10 +291,16 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
         </div>
 
         <div className="w-full px-2.5 pt-2.5 pb-1">
-          <button type="submit" className="w-full text-white py-3.5 font-bold text-[15px] transition-colors" style={{
-          backgroundColor: '#09121F'
-        }} aria-label="Add time entry">
-            Add Time Entry
+          <button 
+            type="submit" 
+            disabled={isProcessing}
+            className="w-full text-white py-3.5 font-bold text-[15px] transition-colors disabled:opacity-70" 
+            style={{
+              backgroundColor: '#09121F'
+            }} 
+            aria-label="Add time entry"
+          >
+            {isProcessing ? 'Adding...' : 'Add Time Entry'}
           </button>
         </div>
       </form>
