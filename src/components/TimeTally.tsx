@@ -523,7 +523,28 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                     gap: '0'
                   }}>
                     <div className="flex items-center w-[32px]">
-                      <div className="w-4 h-4"></div>
+                      {(() => {
+                        // Get all entry IDs for this top-level group
+                        const groupEntryIds: string[] = [];
+                        if (group.subgroups) {
+                          group.subgroups.forEach((subgroup: any) => {
+                            if (subgroup.entries) {
+                              groupEntryIds.push(...subgroup.entries.map((entry: TimeEntry) => entry.id));
+                            }
+                          });
+                        }
+                        
+                        const isGroupSelected = groupEntryIds.length > 0 && groupEntryIds.every(id => selection.isSelected(id));
+                        
+                        return (
+                          <div 
+                            className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${isGroupSelected ? 'bg-gray-300' : 'bg-white'}`}
+                            onClick={() => selection.toggleSelectAll(groupEntryIds)}
+                          >
+                            {isGroupSelected && <div className="w-2 h-2 rounded-full bg-[#09121F]"></div>}
+                          </div>
+                        );
+                      })()}
                     </div>
                     <div className={`text-left font-bold text-[#09121F] text-sm ${settings.invoiceMode ? 'col-span-3' : 'col-span-2'}`}>
                       {sortOption === 'date' ? formatDateLabel(group.name, true) : group.name}
