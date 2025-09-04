@@ -317,7 +317,49 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
             <div className="space-y-0">
               {organizedData.groups.map((group, groupIndex) => (
                 <div key={`${group.type}-${group.name}-${groupIndex}`}>
-                  {/* Client Header - Left Aligned */}
+                  {/* Date subhead for date sorting - appears first */}
+                  {sortOption === 'date' && group.entries && group.entries.length > 0 && (
+                    <div className={`grid ${gridColsWithSelection} items-center font-bold text-[#09121F] text-sm py-2`} style={{
+                      gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (settings.invoiceMode ? ' calc(40px + 50px)' : ''),
+                      gap: '0'
+                    }}>
+                      <div></div>
+                      <div className="text-left font-bold text-[#09121F] text-sm">
+                        {format(new Date(group.entries[0].date), 'MM/dd/yy')}
+                      </div>
+                      <div></div>
+                      <div></div>
+                      <div className="flex justify-end">
+                        <button className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-[#09121F]/80 transition-colors">
+                          <Plus className="h-2.5 w-2.5" strokeWidth={3} />
+                        </button>
+                      </div>
+                      {settings.invoiceMode && <div></div>}
+                    </div>
+                  )}
+
+                  {/* Task subhead for task sorting - appears first */}
+                  {sortOption === 'task' && group.entries && group.entries.length > 0 && (
+                    <div className={`grid ${gridColsWithSelection} items-center font-bold text-[#09121F] text-sm py-2`} style={{
+                      gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (settings.invoiceMode ? ' calc(40px + 50px)' : ''),
+                      gap: '0'
+                    }}>
+                      <div></div>
+                      <div className="text-left font-bold text-[#09121F] text-sm">
+                        {group.entries[0].task}
+                      </div>
+                      <div></div>
+                      <div></div>
+                      <div className="flex justify-end">
+                        <button className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-[#09121F]/80 transition-colors">
+                          <Plus className="h-2.5 w-2.5" strokeWidth={3} />
+                        </button>
+                      </div>
+                      {settings.invoiceMode && <div></div>}
+                    </div>
+                  )}
+
+                  {/* Client Header - appears for all sort options */}
                   <div className={`grid ${gridColsWithSelection} items-center font-bold text-[#09121F] text-sm py-2`} style={{
                     gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (settings.invoiceMode ? ' calc(40px + 50px)' : ''),
                     gap: '0'
@@ -336,18 +378,23 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                     {settings.invoiceMode && <div></div>}
                   </div>
 
-                  {/* Date subhead for date sorting */}
-                  {sortOption === 'date' && group.entries && group.entries.length > 0 && (
-                    <div className={`grid ${gridColsWithSelection} h-[24px] items-center -mt-px`} style={{
+                  {/* Project subhead for project sorting - appears after client */}
+                  {sortOption === 'project' && group.entries && group.entries.length > 0 && (
+                    <div className={`grid ${gridColsWithSelection} items-center font-bold text-[#09121F] text-sm py-2`} style={{
                       gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (settings.invoiceMode ? ' calc(40px + 50px)' : ''),
                       gap: '0'
                     }}>
                       <div></div>
                       <div className="text-left font-bold text-[#09121F] text-sm">
-                        {format(new Date(group.entries[0].date), 'MM/dd/yy')}
+                        {group.entries[0].project}
                       </div>
                       <div></div>
                       <div></div>
+                      <div className="flex justify-end">
+                        <button className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-[#09121F]/80 transition-colors">
+                          <Plus className="h-2.5 w-2.5" strokeWidth={3} />
+                        </button>
+                      </div>
                       {settings.invoiceMode && <div></div>}
                     </div>
                   )}
