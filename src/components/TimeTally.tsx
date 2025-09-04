@@ -398,11 +398,8 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                        <div className={`text-left font-bold text-[#09121F] text-sm ${settings.invoiceMode ? 'col-span-3' : 'col-span-2'}`}>
                          {format(new Date(group.entries[0].date), 'MM/dd/yy')}
                        </div>
-                       <div className="flex justify-end">
-                         <button className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-[#09121F]/80 transition-colors">
-                           <Plus className="h-2.5 w-2.5" strokeWidth={3} />
-                         </button>
-                       </div>
+                        <div className="flex justify-end">
+                        </div>
                        {settings.invoiceMode && <div></div>}
                      </div>
                    )}
@@ -421,11 +418,8 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                        <div className={`text-left font-bold text-[#09121F] text-sm ${settings.invoiceMode ? 'col-span-3' : 'col-span-2'}`}>
                          {group.entries[0].task}
                        </div>
-                       <div className="flex justify-end">
-                         <button className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-[#09121F]/80 transition-colors">
-                           <Plus className="h-2.5 w-2.5" strokeWidth={3} />
-                         </button>
-                       </div>
+                        <div className="flex justify-end">
+                        </div>
                        {settings.invoiceMode && <div></div>}
                      </div>
                    )}
@@ -443,11 +437,8 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                      <div className={`text-left font-bold text-[#09121F] text-sm ${settings.invoiceMode ? 'col-span-3' : 'col-span-2'}`}>
                        {group.name}
                      </div>
-                     <div className="flex justify-end">
-                       <button className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-[#09121F]/80 transition-colors">
-                         <Plus className="h-2.5 w-2.5" strokeWidth={3} />
-                       </button>
-                     </div>
+                      <div className="flex justify-end">
+                      </div>
                      {settings.invoiceMode && <div></div>}
                    </div>
 
@@ -465,11 +456,8 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                        <div className={`text-left font-bold text-[#09121F] text-sm ${settings.invoiceMode ? 'col-span-3' : 'col-span-2'}`}>
                          {group.entries[0].project}
                        </div>
-                       <div className="flex justify-end">
-                         <button className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-[#09121F]/80 transition-colors">
-                           <Plus className="h-2.5 w-2.5" strokeWidth={3} />
-                         </button>
-                       </div>
+                        <div className="flex justify-end">
+                        </div>
                        {settings.invoiceMode && <div></div>}
                      </div>
                    )}
