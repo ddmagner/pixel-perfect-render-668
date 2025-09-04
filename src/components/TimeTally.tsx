@@ -231,6 +231,73 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
   const gridCols = settings.invoiceMode ? 'grid-cols-4' : 'grid-cols-3';
   const gridColsWithSelection = settings.invoiceMode ? 'grid-cols-5' : 'grid-cols-4';
   const isAllSelected = allEntryIds.length > 0 && allEntryIds.every(id => selection.isSelected(id));
+  
+  // Helper functions to get entry IDs for different groupings
+  const getDateGroupEntryIds = (date: string, clientName: string) => {
+    const group = organizedData.groups.find(g => g.name === clientName);
+    if (!group?.entries) return [];
+    return group.entries.filter(entry => entry.date === date).map(entry => entry.id);
+  };
+
+  const getTaskGroupEntryIds = (task: string, clientName: string) => {
+    const group = organizedData.groups.find(g => g.name === clientName);
+    if (!group?.entries) return [];
+    return group.entries.filter(entry => entry.task === task).map(entry => entry.id);
+  };
+
+  const getClientGroupEntryIds = (clientName: string) => {
+    const group = organizedData.groups.find(g => g.name === clientName);
+    return group?.entries?.map(entry => entry.id) || [];
+  };
+
+  const getProjectGroupEntryIds = (project: string, clientName: string) => {
+    const group = organizedData.groups.find(g => g.name === clientName);
+    if (!group?.entries) return [];
+    return group.entries.filter(entry => entry.project === project).map(entry => entry.id);
+  };
+
+  // Helper functions to check if groups are selected
+  const isDateGroupSelected = (date: string, clientName: string) => {
+    const entryIds = getDateGroupEntryIds(date, clientName);
+    return entryIds.length > 0 && entryIds.every(id => selection.isSelected(id));
+  };
+
+  const isTaskGroupSelected = (task: string, clientName: string) => {
+    const entryIds = getTaskGroupEntryIds(task, clientName);
+    return entryIds.length > 0 && entryIds.every(id => selection.isSelected(id));
+  };
+
+  const isClientGroupSelected = (clientName: string) => {
+    const entryIds = getClientGroupEntryIds(clientName);
+    return entryIds.length > 0 && entryIds.every(id => selection.isSelected(id));
+  };
+
+  const isProjectGroupSelected = (project: string, clientName: string) => {
+    const entryIds = getProjectGroupEntryIds(project, clientName);
+    return entryIds.length > 0 && entryIds.every(id => selection.isSelected(id));
+  };
+
+  // Helper functions to toggle group selection
+  const toggleDateGroupSelection = (date: string, clientName: string) => {
+    const entryIds = getDateGroupEntryIds(date, clientName);
+    selection.toggleSelectAll(entryIds);
+  };
+
+  const toggleTaskGroupSelection = (task: string, clientName: string) => {
+    const entryIds = getTaskGroupEntryIds(task, clientName);
+    selection.toggleSelectAll(entryIds);
+  };
+
+  const toggleClientGroupSelection = (clientName: string) => {
+    const entryIds = getClientGroupEntryIds(clientName);
+    selection.toggleSelectAll(entryIds);
+  };
+
+  const toggleProjectGroupSelection = (project: string, clientName: string) => {
+    const entryIds = getProjectGroupEntryIds(project, clientName);
+    selection.toggleSelectAll(entryIds);
+  };
+
   return <div className="flex flex-col h-full w-full font-gilroy">
       {/* Divider */}
 
@@ -317,79 +384,95 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
             <div className="space-y-0">
               {organizedData.groups.map((group, groupIndex) => (
                 <div key={`${group.type}-${group.name}-${groupIndex}`}>
-                  {/* Date subhead for date sorting - appears first */}
-                  {sortOption === 'date' && group.entries && group.entries.length > 0 && (
-                    <div className={`grid ${gridColsWithSelection} items-center font-bold text-[#09121F] text-sm py-2`} style={{
-                      gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (settings.invoiceMode ? ' calc(40px + 50px)' : ''),
-                      gap: '0'
-                    }}>
-                      <div></div>
-                      <div className={`text-left font-bold text-[#09121F] text-sm ${settings.invoiceMode ? 'col-span-3' : 'col-span-2'}`}>
-                        {format(new Date(group.entries[0].date), 'MM/dd/yy')}
-                      </div>
-                      <div className="flex justify-end">
-                        <button className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-[#09121F]/80 transition-colors">
-                          <Plus className="h-2.5 w-2.5" strokeWidth={3} />
-                        </button>
-                      </div>
-                      {settings.invoiceMode && <div></div>}
-                    </div>
-                  )}
+                   {/* Date subhead for date sorting - appears first */}
+                   {sortOption === 'date' && group.entries && group.entries.length > 0 && (
+                     <div className={`grid ${gridColsWithSelection} items-center font-bold text-[#09121F] text-sm py-2`} style={{
+                       gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (settings.invoiceMode ? ' calc(40px + 50px)' : ''),
+                       gap: '0'
+                     }}>
+                       <div className="flex items-center w-[32px]">
+                         <div className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${isDateGroupSelected(group.entries[0].date, group.name) ? 'bg-gray-300' : 'bg-white'}`} onClick={() => toggleDateGroupSelection(group.entries[0].date, group.name)}>
+                           {isDateGroupSelected(group.entries[0].date, group.name) && <div className="w-2 h-2 rounded-full bg-[#09121F]"></div>}
+                         </div>
+                       </div>
+                       <div className={`text-left font-bold text-[#09121F] text-sm ${settings.invoiceMode ? 'col-span-3' : 'col-span-2'}`}>
+                         {format(new Date(group.entries[0].date), 'MM/dd/yy')}
+                       </div>
+                       <div className="flex justify-end">
+                         <button className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-[#09121F]/80 transition-colors">
+                           <Plus className="h-2.5 w-2.5" strokeWidth={3} />
+                         </button>
+                       </div>
+                       {settings.invoiceMode && <div></div>}
+                     </div>
+                   )}
 
-                  {/* Task subhead for task sorting - appears first */}
-                  {sortOption === 'task' && group.entries && group.entries.length > 0 && (
-                    <div className={`grid ${gridColsWithSelection} items-center font-bold text-[#09121F] text-sm py-2`} style={{
-                      gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (settings.invoiceMode ? ' calc(40px + 50px)' : ''),
-                      gap: '0'
-                    }}>
-                      <div></div>
-                      <div className={`text-left font-bold text-[#09121F] text-sm ${settings.invoiceMode ? 'col-span-3' : 'col-span-2'}`}>
-                        {group.entries[0].task}
-                      </div>
-                      <div className="flex justify-end">
-                        <button className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-[#09121F]/80 transition-colors">
-                          <Plus className="h-2.5 w-2.5" strokeWidth={3} />
-                        </button>
-                      </div>
-                      {settings.invoiceMode && <div></div>}
-                    </div>
-                  )}
+                   {/* Task subhead for task sorting - appears first */}
+                   {sortOption === 'task' && group.entries && group.entries.length > 0 && (
+                     <div className={`grid ${gridColsWithSelection} items-center font-bold text-[#09121F] text-sm py-2`} style={{
+                       gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (settings.invoiceMode ? ' calc(40px + 50px)' : ''),
+                       gap: '0'
+                     }}>
+                       <div className="flex items-center w-[32px]">
+                         <div className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${isTaskGroupSelected(group.entries[0].task, group.name) ? 'bg-gray-300' : 'bg-white'}`} onClick={() => toggleTaskGroupSelection(group.entries[0].task, group.name)}>
+                           {isTaskGroupSelected(group.entries[0].task, group.name) && <div className="w-2 h-2 rounded-full bg-[#09121F]"></div>}
+                         </div>
+                       </div>
+                       <div className={`text-left font-bold text-[#09121F] text-sm ${settings.invoiceMode ? 'col-span-3' : 'col-span-2'}`}>
+                         {group.entries[0].task}
+                       </div>
+                       <div className="flex justify-end">
+                         <button className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-[#09121F]/80 transition-colors">
+                           <Plus className="h-2.5 w-2.5" strokeWidth={3} />
+                         </button>
+                       </div>
+                       {settings.invoiceMode && <div></div>}
+                     </div>
+                   )}
 
-                  {/* Client Header - appears for all sort options */}
-                  <div className={`grid ${gridColsWithSelection} items-center font-bold text-[#09121F] text-sm py-2`} style={{
-                    gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (settings.invoiceMode ? ' calc(40px + 50px)' : ''),
-                    gap: '0'
-                  }}>
-                    <div></div>
-                    <div className={`text-left font-bold text-[#09121F] text-sm ${settings.invoiceMode ? 'col-span-3' : 'col-span-2'}`}>
-                      {group.name}
-                    </div>
-                    <div className="flex justify-end">
-                      <button className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-[#09121F]/80 transition-colors">
-                        <Plus className="h-2.5 w-2.5" strokeWidth={3} />
-                      </button>
-                    </div>
-                    {settings.invoiceMode && <div></div>}
-                  </div>
+                   {/* Client Header - appears for all sort options */}
+                   <div className={`grid ${gridColsWithSelection} items-center font-bold text-[#09121F] text-sm py-2`} style={{
+                     gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (settings.invoiceMode ? ' calc(40px + 50px)' : ''),
+                     gap: '0'
+                   }}>
+                     <div className="flex items-center w-[32px]">
+                       <div className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${isClientGroupSelected(group.name) ? 'bg-gray-300' : 'bg-white'}`} onClick={() => toggleClientGroupSelection(group.name)}>
+                         {isClientGroupSelected(group.name) && <div className="w-2 h-2 rounded-full bg-[#09121F]"></div>}
+                       </div>
+                     </div>
+                     <div className={`text-left font-bold text-[#09121F] text-sm ${settings.invoiceMode ? 'col-span-3' : 'col-span-2'}`}>
+                       {group.name}
+                     </div>
+                     <div className="flex justify-end">
+                       <button className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-[#09121F]/80 transition-colors">
+                         <Plus className="h-2.5 w-2.5" strokeWidth={3} />
+                       </button>
+                     </div>
+                     {settings.invoiceMode && <div></div>}
+                   </div>
 
-                  {/* Project subhead for project sorting - appears after client */}
-                  {sortOption === 'project' && group.entries && group.entries.length > 0 && (
-                    <div className={`grid ${gridColsWithSelection} items-center font-bold text-[#09121F] text-sm py-2`} style={{
-                      gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (settings.invoiceMode ? ' calc(40px + 50px)' : ''),
-                      gap: '0'
-                    }}>
-                      <div></div>
-                      <div className={`text-left font-bold text-[#09121F] text-sm ${settings.invoiceMode ? 'col-span-3' : 'col-span-2'}`}>
-                        {group.entries[0].project}
-                      </div>
-                      <div className="flex justify-end">
-                        <button className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-[#09121F]/80 transition-colors">
-                          <Plus className="h-2.5 w-2.5" strokeWidth={3} />
-                        </button>
-                      </div>
-                      {settings.invoiceMode && <div></div>}
-                    </div>
-                  )}
+                   {/* Project subhead for project sorting - appears after client */}
+                   {sortOption === 'project' && group.entries && group.entries.length > 0 && (
+                     <div className={`grid ${gridColsWithSelection} items-center font-bold text-[#09121F] text-sm py-2`} style={{
+                       gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (settings.invoiceMode ? ' calc(40px + 50px)' : ''),
+                       gap: '0'
+                     }}>
+                       <div className="flex items-center w-[32px]">
+                         <div className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${isProjectGroupSelected(group.entries[0].project, group.name) ? 'bg-gray-300' : 'bg-white'}`} onClick={() => toggleProjectGroupSelection(group.entries[0].project, group.name)}>
+                           {isProjectGroupSelected(group.entries[0].project, group.name) && <div className="w-2 h-2 rounded-full bg-[#09121F]"></div>}
+                         </div>
+                       </div>
+                       <div className={`text-left font-bold text-[#09121F] text-sm ${settings.invoiceMode ? 'col-span-3' : 'col-span-2'}`}>
+                         {group.entries[0].project}
+                       </div>
+                       <div className="flex justify-end">
+                         <button className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-[#09121F]/80 transition-colors">
+                           <Plus className="h-2.5 w-2.5" strokeWidth={3} />
+                         </button>
+                       </div>
+                       {settings.invoiceMode && <div></div>}
+                     </div>
+                   )}
 
                   {/* Entries under client */}
                   {group.entries?.map((entry: TimeEntry) => (
