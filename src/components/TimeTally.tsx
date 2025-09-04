@@ -363,14 +363,26 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
   };
 
   const getClientGroupEntryIds = (clientName: string) => {
-    const group = organizedData.groups.find(g => g.name === clientName);
-    return group?.entries?.map(entry => entry.id) || [];
+    // Find entries for a specific client across all groups/subgroups
+    const entryIds: string[] = [];
+    organizedData.groups.forEach(group => {
+      if (group.subgroups) {
+        const subgroup = group.subgroups.find((sg: any) => sg.name === clientName);
+        if (subgroup?.entries) {
+          entryIds.push(...subgroup.entries.map((entry: TimeEntry) => entry.id));
+        }
+      }
+    });
+    return entryIds;
   };
 
-  const getProjectGroupEntryIds = (project: string, clientName: string) => {
-    const group = organizedData.groups.find(g => g.name === clientName);
-    if (!group?.entries) return [];
-    return group.entries.filter(entry => entry.project === project).map(entry => entry.id);
+  const getProjectGroupEntryIds = (projectName: string, clientName: string) => {
+    // For "By Project" view: find entries for a specific project within a client
+    const clientGroup = organizedData.groups.find(g => g.name === clientName);
+    if (!clientGroup?.subgroups) return [];
+    
+    const projectSubgroup = clientGroup.subgroups.find((sg: any) => sg.name === projectName);
+    return projectSubgroup?.entries?.map((entry: TimeEntry) => entry.id) || [];
   };
 
   // Helper functions to check if groups are selected
@@ -530,9 +542,38 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                         gap: '0'
                       }}>
                         <div className="flex items-center w-[32px]">
-                          <div className="w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center bg-white">
-                            <div className="w-2 h-2 rounded-full bg-[#09121F]"></div>
-                          </div>
+                          {(() => {
+                            let entryIds: string[] = [];
+                            let isSelected = false;
+                            
+                            if (sortOption === 'project') {
+                              entryIds = getProjectGroupEntryIds(subgroup.name, group.name);
+                              isSelected = isProjectGroupSelected(subgroup.name, group.name);
+                            } else if (sortOption === 'date') {
+                              entryIds = getClientGroupEntryIds(subgroup.name);
+                              isSelected = isClientGroupSelected(subgroup.name);
+                            } else if (sortOption === 'task') {
+                              entryIds = getClientGroupEntryIds(subgroup.name);
+                              isSelected = isClientGroupSelected(subgroup.name);
+                            }
+                            
+                            return (
+                              <div 
+                                className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${isSelected ? 'bg-gray-300' : 'bg-white'}`}
+                                onClick={() => {
+                                  if (sortOption === 'project') {
+                                    toggleProjectGroupSelection(subgroup.name, group.name);
+                                  } else if (sortOption === 'date') {
+                                    toggleClientGroupSelection(subgroup.name);
+                                  } else if (sortOption === 'task') {
+                                    toggleClientGroupSelection(subgroup.name);
+                                  }
+                                }}
+                              >
+                                {isSelected && <div className="w-2 h-2 rounded-full bg-[#09121F]"></div>}
+                              </div>
+                            );
+                          })()}
                         </div>
                         <div className={`text-left font-bold text-[#09121F] text-sm ${settings.invoiceMode ? 'col-span-3' : 'col-span-2'}`}>
                           {subgroup.name}
