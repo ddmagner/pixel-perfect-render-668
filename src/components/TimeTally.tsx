@@ -570,30 +570,19 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                             if (sortOption === 'project') {
                               entryIds = getProjectGroupEntryIds(subgroup.name, group.name);
                               isSelected = isProjectGroupSelected(subgroup.name, group.name);
-                            } else if (sortOption === 'date') {
-                              entryIds = getClientGroupEntryIds(subgroup.name);
-                              isSelected = isClientGroupSelected(subgroup.name);
-                            } else if (sortOption === 'task') {
-                              entryIds = getClientGroupEntryIds(subgroup.name);
-                              isSelected = isClientGroupSelected(subgroup.name);
+                              
+                              return (
+                                <div 
+                                  className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${isSelected ? 'bg-gray-300' : 'bg-white'}`}
+                                  onClick={() => toggleProjectGroupSelection(subgroup.name, group.name)}
+                                >
+                                  {isSelected && <div className="w-2 h-2 rounded-full bg-[#09121F]"></div>}
+                                </div>
+                              );
+                            } else {
+                              // For 'date' and 'task' views, no radio button on second-level subheads
+                              return <div className="w-4 h-4"></div>;
                             }
-                            
-                            return (
-                              <div 
-                                className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${isSelected ? 'bg-gray-300' : 'bg-white'}`}
-                                onClick={() => {
-                                  if (sortOption === 'project') {
-                                    toggleProjectGroupSelection(subgroup.name, group.name);
-                                  } else if (sortOption === 'date') {
-                                    toggleClientGroupSelection(subgroup.name);
-                                  } else if (sortOption === 'task') {
-                                    toggleClientGroupSelection(subgroup.name);
-                                  }
-                                }}
-                              >
-                                {isSelected && <div className="w-2 h-2 rounded-full bg-[#09121F]"></div>}
-                              </div>
-                            );
                           })()}
                         </div>
                         <div className={`text-left font-bold text-[#09121F] text-sm ${settings.invoiceMode ? 'col-span-3' : 'col-span-2'}`}>
