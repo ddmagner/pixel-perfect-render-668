@@ -438,6 +438,11 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                        {group.name}
                      </div>
                       <div className="flex justify-end">
+                        {group.name === 'No Client' && (
+                          <button className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-[#09121F]/80 transition-colors">
+                            <Plus className="h-2.5 w-2.5" strokeWidth={3} />
+                          </button>
+                        )}
                       </div>
                      {settings.invoiceMode && <div></div>}
                    </div>
@@ -457,6 +462,11 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                          {group.entries[0].project}
                        </div>
                         <div className="flex justify-end">
+                          {!group.entries[0].project && (
+                            <button className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-[#09121F]/80 transition-colors">
+                              <Plus className="h-2.5 w-2.5" strokeWidth={3} />
+                            </button>
+                          )}
                         </div>
                        {settings.invoiceMode && <div></div>}
                      </div>
