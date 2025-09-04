@@ -43,12 +43,16 @@ const Index = () => {
   };
 
   const handleTimeEntrySubmit = (data: { duration: string; task: string; project: string; client: string }) => {
+    // Build a local YYYY-MM-DD string to avoid timezone shifts
+    const now = new Date();
+    const localDate = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+
     addTimeEntry({
       duration: parseFloat(data.duration) || 0,
       task: data.task,
       project: data.project,
       client: data.client,
-      date: new Date().toISOString().split('T')[0],
+      date: localDate,
     });
     console.log('Time entry submitted:', data);
   };

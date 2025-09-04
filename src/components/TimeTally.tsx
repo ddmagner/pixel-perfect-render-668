@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { useApp } from '@/context/AppContext';
 import { TimeEntry } from '@/types';
-import { format } from 'date-fns';
+
 import { ChevronDown, Pencil, Trash2, Archive, Edit, X, Plus, PlusCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -53,6 +53,21 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
       return client?.name || '';
     }
     return '';
+  };
+
+  // Prefer the entry's own client, then project->client mapping, else 'No Client'
+  const resolveClientName = (entry: TimeEntry): string => {
+    const direct = (entry.client || '').trim();
+    if (direct) return direct;
+    const mapped = getClientByProject(entry.project);
+    return mapped || 'No Client';
+  };
+
+  // Date helpers: compare and format without timezone conversion
+  const compareDateStrAsc = (a: string, b: string) => a.localeCompare(b);
+  const formatDateLabel = (dateStr: string, includeYear = false) => {
+    const [y, m, d] = dateStr.split('-');
+    return includeYear ? `${m}/${d}/${y.slice(2)}` : `${m}/${d}`;
   };
 
   // Get task rate for invoice mode
@@ -125,14 +140,14 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
         // Group entries by client within this task
         const clientGroups: { [key: string]: TimeEntry[] } = {};
         entries.forEach(entry => {
-          const clientName = getClientByProject(entry.project) || 'No Client';
+          const clientName = resolveClientName(entry);
           if (!clientGroups[clientName]) clientGroups[clientName] = [];
           clientGroups[clientName].push(entry);
         });
 
         const clientSubgroups = Object.entries(clientGroups).map(([clientName, clientEntries]) => {
           const sortedEntries = [...clientEntries].sort((a, b) => {
-            if (a.date !== b.date) return new Date(a.date).getTime() - new Date(b.date).getTime();
+            if (a.date !== b.date) return compareDateStrAsc(a.date, b.date);
             return a.project.localeCompare(b.project);
           });
 
@@ -162,7 +177,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
       const clientGroups: { [key: string]: TimeEntry[] } = {};
       
       activeTimeEntries.forEach(entry => {
-        const clientName = getClientByProject(entry.project) || 'No Client';
+        const clientName = resolveClientName(entry);
         if (!clientGroups[clientName]) clientGroups[clientName] = [];
         clientGroups[clientName].push(entry);
       });
@@ -173,11 +188,11 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
         if (sortOption === 'project') {
           sortedEntries.sort((a, b) => {
             if (a.project !== b.project) return a.project.localeCompare(b.project);
-            return new Date(a.date).getTime() - new Date(b.date).getTime();
+            return compareDateStrAsc(a.date, b.date);
           });
         } else if (sortOption === 'date') {
           sortedEntries.sort((a, b) => {
-            if (a.date !== b.date) return new Date(a.date).getTime() - new Date(b.date).getTime();
+            if (a.date !== b.date) return compareDateStrAsc(a.date, b.date);
             if (a.project !== b.project) return a.project.localeCompare(b.project);
             return a.task.localeCompare(b.task);
           });
@@ -492,7 +507,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                               </div>
                               
                               <div className="text-[#09121F] text-sm leading-tight flex items-start">
-                                {format(new Date(entry.date), 'MM/dd')}
+                                {formatDateLabel(entry.date)}
                               </div>
                               <div className="text-[#09121F] text-sm leading-tight flex items-start">
                                 {entry.project}
@@ -536,7 +551,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                              </div>
                            </div>
                            <div className={`text-left font-bold text-[#09121F] text-sm ${settings.invoiceMode ? 'col-span-3' : 'col-span-2'}`}>
-                             {format(new Date(group.entries[0].date), 'MM/dd/yy')}
+                             {formatDateLabel(group.entries[0].date, true)}
                            </div>
                             <div className="flex justify-end">
                             </div>
@@ -609,7 +624,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                           {sortOption === 'project' && (
                             <>
                               <div className="text-[#09121F] text-sm leading-tight flex items-start">
-                                {format(new Date(entry.date), 'MM/dd')}
+                                {formatDateLabel(entry.date)}
                               </div>
                               <div className="text-[#09121F] text-sm leading-tight flex items-start">
                                 {entry.task}
