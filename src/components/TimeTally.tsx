@@ -834,22 +834,22 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
           Export/Share/Print
         </button>
         
-        {selection.hasAnySelected && (
-          <div className="flex gap-3">
-            <button 
-              onClick={() => setShowDeleteDialog(true)} 
-              className="flex-1 bg-white border border-[#09121F] text-[#09121F] py-3.5 font-bold text-sm transition-colors hover:bg-gray-50"
-            >
-              Delete
-            </button>
-            <button 
-              onClick={() => setShowArchiveDialog(true)} 
-              className="flex-1 bg-white border border-[#09121F] text-[#09121F] py-3.5 font-bold text-sm transition-colors hover:bg-gray-50"
-            >
-              Archive
-            </button>
-          </div>
-        )}
+        <div className="flex gap-3">
+          <button 
+            onClick={() => setShowDeleteDialog(true)} 
+            className="flex-1 bg-white border border-[#09121F] text-[#09121F] py-3.5 font-bold text-sm transition-colors hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={!selection.hasAnySelected}
+          >
+            Delete
+          </button>
+          <button 
+            onClick={() => setShowArchiveDialog(true)} 
+            className="flex-1 bg-white border border-[#09121F] text-[#09121F] py-3.5 font-bold text-sm transition-colors hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={!selection.hasAnySelected}
+          >
+            Archive
+          </button>
+        </div>
       </div>
 
       {/* Export Dialog */}
