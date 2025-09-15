@@ -9,12 +9,14 @@ import { generatePDF } from '@/utils/pdfGenerator';
 import { generateSpreadsheet } from '@/utils/spreadsheetGenerator';
 import { Share } from '@capacitor/share';
 import { format } from 'date-fns';
-import { X, Download, Mail, Printer } from 'lucide-react';
+import { X, Download, Mail, Printer, Eye } from 'lucide-react';
+import { InvoicePreview } from '@/components/InvoicePreview';
 
 interface ExportDialogProps {
   isOpen: boolean;
   onClose: () => void;
   timeEntries: TimeEntry[];
+  selectedEntries?: TimeEntry[];
   settings: AppSettings;
   viewMode: ViewMode;
 }
@@ -23,17 +25,27 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
   isOpen,
   onClose,
   timeEntries,
+  selectedEntries,
   settings,
   viewMode
 }) => {
   const [isPdfFormat, setIsPdfFormat] = useState(true);
-  const [exportMethod, setExportMethod] = useState<'download' | 'email' | 'print'>('download');
+  const [exportMethod, setExportMethod] = useState<'download' | 'email' | 'print' | 'preview'>('preview');
   const [fileName, setFileName] = useState(`${settings.userProfile.name || 'User'} Time Report ${format(new Date(), 'yyyy-MM-dd')}`);
   const [isExporting, setIsExporting] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
+
+  // Use selected entries if available, otherwise use all time entries
+  const entriesToUse = selectedEntries && selectedEntries.length > 0 ? selectedEntries : timeEntries;
 
   const handleExport = async () => {
-    if (timeEntries.length === 0) {
+    if (entriesToUse.length === 0) {
       alert('No time entries to export');
+      return;
+    }
+
+    if (exportMethod === 'preview') {
+      setShowPreview(true);
       return;
     }
 
@@ -44,10 +56,10 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
       let fileExtension: string;
 
       if (isPdfFormat) {
-        blob = await generatePDF(timeEntries, settings, viewMode);
+        blob = await generatePDF(entriesToUse, settings, viewMode);
         fileExtension = 'pdf';
       } else {
-        blob = await generateSpreadsheet(timeEntries, settings, viewMode);
+        blob = await generateSpreadsheet(entriesToUse, settings, viewMode);
         fileExtension = 'xlsx';
       }
 
@@ -144,6 +156,19 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
+                  <Eye className="h-5 w-5" />
+                  <span className="text-base">Preview document</span>
+                </div>
+                <div 
+                  className={`w-6 h-6 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${exportMethod === 'preview' ? 'bg-gray-300' : 'bg-white'}`}
+                  onClick={() => setExportMethod('preview')}
+                >
+                  {exportMethod === 'preview' && <div className="w-3 h-3 rounded-full bg-[#09121F]"></div>}
+                </div>
+              </div>
+              
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-3">
                   <Download className="h-5 w-5" />
                   <span className="text-base">Download to device</span>
                 </div>
@@ -213,11 +238,20 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
               disabled={isExporting}
               className="flex-1 h-12 text-base font-medium bg-foreground text-background hover:bg-foreground/90 rounded-none"
             >
-              {isExporting ? 'Exporting...' : 'Next'}
+              {isExporting ? 'Exporting...' : exportMethod === 'preview' ? 'Preview' : 'Next'}
             </Button>
           </div>
         </div>
       </DrawerContent>
+
+      {/* Invoice Preview */}
+      {showPreview && (
+        <InvoicePreview 
+          selectedEntries={entriesToUse}
+          settings={settings}
+          onClose={() => setShowPreview(false)}
+        />
+      )}
     </Drawer>
   );
 };
