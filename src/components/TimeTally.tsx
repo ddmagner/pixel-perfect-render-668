@@ -6,7 +6,6 @@ import { ChevronDown, Pencil, Trash2, Archive, Edit, X, Plus, PlusCircle } from 
 import { useNavigate } from 'react-router-dom';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { ExportDialog } from '@/components/ExportDialog';
-import { EditTimeEntryDialog } from '@/components/EditTimeEntryDialog';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useSelection } from '@/hooks/useSelection';
@@ -25,11 +24,13 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
     settings,
     deleteTimeEntries,
     archiveTimeEntries,
-    updateSettings
+    updateSettings,
+    updateTimeEntry
   } = useApp();
   const navigate = useNavigate();
   const [isExportDialogOpen, setIsExportDialogOpen] = useState(false);
-  const [editingEntry, setEditingEntry] = useState<TimeEntry | null>(null);
+  const [editingEntryId, setEditingEntryId] = useState<string | null>(null);
+  const [editingField, setEditingField] = useState<string | null>(null);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [showArchiveDialog, setShowArchiveDialog] = useState(false);
   const selection = useSelection();
@@ -288,14 +289,41 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
     });
     return ids;
   }, [organizedData]);
-  const handleEdit = () => {
-    if (selection.selectedCount === 1) {
-      const entryId = selection.selectedIds[0];
-      const entry = activeTimeEntries.find(e => e.id === entryId);
-      if (entry) {
-        setEditingEntry(entry);
+  const handleFieldEdit = (entryId: string, field: string) => {
+    setEditingEntryId(entryId);
+    setEditingField(field);
+  };
+
+  const handleFieldSave = async (entryId: string, field: string, value: string) => {
+    const entry = activeTimeEntries.find(e => e.id === entryId);
+    if (!entry) return;
+
+    const updates: Partial<TimeEntry> = {};
+    
+    if (field === 'date') {
+      updates.date = value;
+    } else if (field === 'task') {
+      updates.task = value;
+    } else if (field === 'duration') {
+      const numValue = parseFloat(value);
+      if (!isNaN(numValue) && numValue >= 0) {
+        updates.duration = numValue;
+      } else {
+        // Revert to original value if invalid
+        setEditingEntryId(null);
+        setEditingField(null);
+        return;
       }
     }
+
+    await updateTimeEntry(entryId, updates);
+    setEditingEntryId(null);
+    setEditingField(null);
+  };
+
+  const handleFieldCancel = () => {
+    setEditingEntryId(null);
+    setEditingField(null);
   };
   const handleDelete = () => {
     deleteTimeEntries(selection.selectedIds);
@@ -441,20 +469,9 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
               <div className="flex items-center gap-2" style={{
             paddingLeft: '32px'
           }}>
-                <Button size="sm" variant="ghost" onClick={handleEdit} disabled={selection.selectedCount !== 1} className="bg-transparent text-[#09121F] hover:text-gray-600 hover:bg-transparent border-none shadow-none pl-0 gap-1 text-xs">
-                  <Pencil className="h-3 w-3" />
-                  Edit
-                </Button>
-                
-                <Button size="sm" variant="ghost" onClick={() => setShowDeleteDialog(true)} className="bg-transparent text-[#09121F] hover:text-gray-600 hover:bg-transparent border-none shadow-none gap-1 text-xs">
-                  <Trash2 className="h-3 w-3" />
-                  Delete
-                </Button>
-                
-                <Button size="sm" variant="ghost" onClick={() => setShowArchiveDialog(true)} className="bg-transparent text-[#09121F] hover:text-gray-600 hover:bg-transparent border-none shadow-none gap-1 text-xs">
-                  <Archive className="h-3 w-3" />
-                  Archive
-                </Button>
+                <span className="text-[#09121F] text-xs font-medium">
+                  {selection.selectedCount} selected
+                </span>
               </div>
 
               <Button size="sm" variant="ghost" onClick={selection.clearSelection} className="bg-transparent text-[#09121F] hover:text-gray-600 hover:bg-transparent border-none shadow-none p-1">
@@ -616,10 +633,48 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                           {sortOption === 'project' && (
                             <>
                               <div className="text-[#09121F] text-sm leading-tight flex items-start">
-                                {formatDateLabel(entry.date)}
+                                {editingEntryId === entry.id && editingField === 'date' ? (
+                                  <input
+                                    type="date"
+                                    defaultValue={entry.date}
+                                    className="text-sm bg-transparent border-none outline-none focus:bg-white focus:border focus:border-gray-300 px-1 rounded"
+                                    autoFocus
+                                    onBlur={(e) => handleFieldSave(entry.id, 'date', e.target.value)}
+                                    onKeyDown={(e) => {
+                                      if (e.key === 'Enter') handleFieldSave(entry.id, 'date', e.currentTarget.value);
+                                      if (e.key === 'Escape') handleFieldCancel();
+                                    }}
+                                  />
+                                ) : (
+                                  <span 
+                                    className="cursor-pointer hover:bg-gray-100 px-1 rounded"
+                                    onClick={() => handleFieldEdit(entry.id, 'date')}
+                                  >
+                                    {formatDateLabel(entry.date)}
+                                  </span>
+                                )}
                               </div>
                               <div className="text-[#09121F] text-sm leading-tight flex items-start">
-                                {entry.task}
+                                {editingEntryId === entry.id && editingField === 'task' ? (
+                                  <input
+                                    type="text"
+                                    defaultValue={entry.task}
+                                    className="text-sm bg-transparent border-none outline-none focus:bg-white focus:border focus:border-gray-300 px-1 rounded w-full"
+                                    autoFocus
+                                    onBlur={(e) => handleFieldSave(entry.id, 'task', e.target.value)}
+                                    onKeyDown={(e) => {
+                                      if (e.key === 'Enter') handleFieldSave(entry.id, 'task', e.currentTarget.value);
+                                      if (e.key === 'Escape') handleFieldCancel();
+                                    }}
+                                  />
+                                ) : (
+                                  <span 
+                                    className="cursor-pointer hover:bg-gray-100 px-1 rounded"
+                                    onClick={() => handleFieldEdit(entry.id, 'task')}
+                                  >
+                                    {entry.task}
+                                  </span>
+                                )}
                               </div>
                             </>
                           )}
@@ -627,10 +682,29 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                           {sortOption === 'date' && (
                             <>
                               <div className="text-[#09121F] text-sm leading-tight flex items-start">
-                                {entry.project} {entry.task}
+                                {entry.project}
                               </div>
                               <div className="text-[#09121F] text-sm leading-tight flex items-start">
-                                {entry.task}
+                                {editingEntryId === entry.id && editingField === 'task' ? (
+                                  <input
+                                    type="text"
+                                    defaultValue={entry.task}
+                                    className="text-sm bg-transparent border-none outline-none focus:bg-white focus:border focus:border-gray-300 px-1 rounded w-full"
+                                    autoFocus
+                                    onBlur={(e) => handleFieldSave(entry.id, 'task', e.target.value)}
+                                    onKeyDown={(e) => {
+                                      if (e.key === 'Enter') handleFieldSave(entry.id, 'task', e.currentTarget.value);
+                                      if (e.key === 'Escape') handleFieldCancel();
+                                    }}
+                                  />
+                                ) : (
+                                  <span 
+                                    className="cursor-pointer hover:bg-gray-100 px-1 rounded"
+                                    onClick={() => handleFieldEdit(entry.id, 'task')}
+                                  >
+                                    {entry.task}
+                                  </span>
+                                )}
                               </div>
                             </>
                           )}
@@ -638,7 +712,26 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                           {sortOption === 'task' && (
                             <>
                               <div className="text-[#09121F] text-sm leading-tight flex items-start">
-                                {formatDateLabel(entry.date)}
+                                {editingEntryId === entry.id && editingField === 'date' ? (
+                                  <input
+                                    type="date"
+                                    defaultValue={entry.date}
+                                    className="text-sm bg-transparent border-none outline-none focus:bg-white focus:border focus:border-gray-300 px-1 rounded"
+                                    autoFocus
+                                    onBlur={(e) => handleFieldSave(entry.id, 'date', e.target.value)}
+                                    onKeyDown={(e) => {
+                                      if (e.key === 'Enter') handleFieldSave(entry.id, 'date', e.currentTarget.value);
+                                      if (e.key === 'Escape') handleFieldCancel();
+                                    }}
+                                  />
+                                ) : (
+                                  <span 
+                                    className="cursor-pointer hover:bg-gray-100 px-1 rounded"
+                                    onClick={() => handleFieldEdit(entry.id, 'date')}
+                                  >
+                                    {formatDateLabel(entry.date)}
+                                  </span>
+                                )}
                               </div>
                               <div className="text-[#09121F] text-sm leading-tight flex items-start">
                                 {entry.project}
@@ -647,7 +740,28 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                           )}
                           
                           <div className="text-[#09121F] text-sm leading-tight text-right flex items-start justify-end">
-                            {formatHours(entry.duration)}
+                            {editingEntryId === entry.id && editingField === 'duration' ? (
+                              <input
+                                type="number"
+                                step="0.01"
+                                min="0"
+                                defaultValue={entry.duration.toString()}
+                                className="text-sm bg-transparent border-none outline-none focus:bg-white focus:border focus:border-gray-300 px-1 rounded w-16 text-right"
+                                autoFocus
+                                onBlur={(e) => handleFieldSave(entry.id, 'duration', e.target.value)}
+                                onKeyDown={(e) => {
+                                  if (e.key === 'Enter') handleFieldSave(entry.id, 'duration', e.currentTarget.value);
+                                  if (e.key === 'Escape') handleFieldCancel();
+                                }}
+                              />
+                            ) : (
+                              <span 
+                                className="cursor-pointer hover:bg-gray-100 px-1 rounded"
+                                onClick={() => handleFieldEdit(entry.id, 'duration')}
+                              >
+                                {formatHours(entry.duration)}
+                              </span>
+                            )}
                           </div>
                           
                           {settings.invoiceMode && (
@@ -731,20 +845,35 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
         )}
       </div>
 
-      {/* Export Button */}
-      <div className="w-full px-2.5 py-5">
+      {/* Action Buttons */}
+      <div className="w-full px-2.5 py-5 space-y-3">
         <button onClick={handleExport} className="w-full text-white py-3.5 font-bold text-sm transition-colors" style={{
         backgroundColor: '#09121F'
       }}>
           Export/Share/Print
         </button>
+        
+        {selection.hasAnySelected && (
+          <div className="flex gap-3">
+            <button 
+              onClick={() => setShowDeleteDialog(true)} 
+              className="flex-1 bg-white border border-[#09121F] text-[#09121F] py-3.5 font-bold text-sm transition-colors hover:bg-gray-50"
+            >
+              Delete
+            </button>
+            <button 
+              onClick={() => setShowArchiveDialog(true)} 
+              className="flex-1 bg-white border border-[#09121F] text-[#09121F] py-3.5 font-bold text-sm transition-colors hover:bg-gray-50"
+            >
+              Archive
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Export Dialog */}
       <ExportDialog isOpen={isExportDialogOpen} onClose={() => setIsExportDialogOpen(false)} timeEntries={timeEntries} settings={settings} viewMode={settings.invoiceMode ? 'invoice' : 'timecard'} />
 
-      {/* Edit Dialog */}
-      <EditTimeEntryDialog isOpen={!!editingEntry} onClose={() => setEditingEntry(null)} entry={editingEntry} />
 
       {/* Delete Confirmation Dialog */}
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
