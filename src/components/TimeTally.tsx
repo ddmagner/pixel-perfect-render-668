@@ -341,9 +341,12 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
     });
   };
   const handleExport = async () => {
+    console.log('Export button clicked');
     const entriesToUse = selection.selectedIds.length > 0 
       ? activeTimeEntries.filter(entry => selection.selectedIds.includes(entry.id)) 
       : activeTimeEntries;
+    
+    console.log('Entries to use:', entriesToUse.length);
     
     if (entriesToUse.length === 0) {
       alert('No time entries to export');
@@ -351,12 +354,24 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
     }
 
     try {
+      console.log('Starting PDF generation...');
       const { generatePDF } = await import('@/utils/pdfGenerator');
+      console.log('PDF generator imported');
+      
       const blob = await generatePDF(entriesToUse, settings, settings.invoiceMode ? 'invoice' : 'timecard');
+      console.log('PDF blob generated:', blob.size, 'bytes');
+      
       const url = URL.createObjectURL(blob);
+      console.log('Blob URL created:', url);
+      
       const newWindow = window.open(url, '_blank');
+      console.log('New window opened:', newWindow);
+      
       if (newWindow) {
         newWindow.document.title = `${settings.invoiceMode ? 'Invoice' : 'Time Report'} Preview`;
+        console.log('Window title set');
+      } else {
+        console.error('Failed to open new window - popup blocked?');
       }
     } catch (error) {
       console.error('Error generating PDF:', error);

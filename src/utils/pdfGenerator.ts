@@ -8,7 +8,14 @@ export async function generatePDF(
   settings: AppSettings,
   viewMode: ViewMode
 ): Promise<Blob> {
+  console.log('PDF Generator - Starting generation with:', { 
+    entriesCount: entries.length, 
+    viewMode, 
+    userProfile: settings.userProfile 
+  });
+  
   const doc = new jsPDF();
+  console.log('jsPDF instance created');
   
   // Add title
   doc.setFontSize(20);
@@ -62,5 +69,8 @@ export async function generatePDF(
     doc.text(`Total Amount: ${formatCurrency(totalAmount)}`, 120, yPos);
   }
   
-  return doc.output('blob');
+  console.log('PDF generation complete, creating blob...');
+  const blob = doc.output('blob');
+  console.log('Blob created with size:', blob.size);
+  return blob;
 }
