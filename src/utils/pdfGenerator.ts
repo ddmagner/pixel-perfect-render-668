@@ -1,6 +1,7 @@
 import jsPDF from 'jspdf';
 import { TimeEntry, AppSettings, ViewMode } from '@/types';
 import { format } from 'date-fns';
+import { formatCurrency, formatHours } from '@/lib/utils';
 
 export async function generatePDF(
   entries: TimeEntry[],
@@ -40,7 +41,7 @@ export async function generatePDF(
     doc.text(`${entry.task} - ${entry.project}`, 20, yPos);
     doc.text(`${entry.duration}h`, 120, yPos);
     if (viewMode === 'invoice') {
-      doc.text(`$${amount.toFixed(2)}`, 160, yPos);
+      doc.text(formatCurrency(amount), 160, yPos);
     }
     doc.text(format(new Date(entry.date), 'MMM d, yyyy'), 200, yPos);
     yPos += 10;
@@ -56,9 +57,9 @@ export async function generatePDF(
   }, 0);
   
   doc.setFontSize(12);
-  doc.text(`Total Hours: ${totalHours.toFixed(2)}`, 20, yPos);
+  doc.text(`Total Hours: ${formatHours(totalHours)}`, 20, yPos);
   if (viewMode === 'invoice') {
-    doc.text(`Total Amount: $${totalAmount.toFixed(2)}`, 120, yPos);
+    doc.text(`Total Amount: ${formatCurrency(totalAmount)}`, 120, yPos);
   }
   
   return doc.output('blob');

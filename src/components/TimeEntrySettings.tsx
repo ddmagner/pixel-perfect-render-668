@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useApp } from '@/context/AppContext';
 import { TaskType, Project, Client } from '@/types';
 import { Edit3, Trash2, Plus } from 'lucide-react';
+import { formatCurrency } from '@/lib/utils';
 interface TimeEntrySettingsProps {
   highlightSection?: string | null;
 }
@@ -243,7 +244,7 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({ highlightS
                     {editingTask?.id === task.id ? (
                       <input 
                         type="text" 
-                        value={editingTask.hourlyRate ? `$${editingTask.hourlyRate.toFixed(2)}` : ''}
+                        value={editingTask.hourlyRate ? formatCurrency(editingTask.hourlyRate) : ''}
                         onChange={(e) => {
                           const value = e.target.value.replace(/[^0-9.]/g, '');
                           setEditingTask({...editingTask, hourlyRate: parseFloat(value) || 0});
@@ -263,7 +264,7 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({ highlightS
                       />
                     ) : (
                       <span className="text-[#09121F] text-sm leading-5">
-                        ${(task.hourlyRate || 0).toFixed(2)}
+                        {formatCurrency(task.hourlyRate || 0)}
                       </span>
                     )}
                   </div>

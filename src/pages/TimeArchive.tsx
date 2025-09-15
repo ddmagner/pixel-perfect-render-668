@@ -8,6 +8,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { useSelection } from '@/hooks/useSelection';
 import { useToast } from '@/hooks/use-toast';
+import { formatCurrency, formatHours } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
 import { ExportDialog } from '@/components/ExportDialog';
 import { Navigation, TabNavigation } from '@/components/Navigation';
@@ -409,7 +410,7 @@ export const TimeArchivePage: React.FC = () => {
                                {viewMode === 'invoice' && (
                                  <div className="text-[#09121F] text-sm leading-tight text-right flex items-start justify-end">
                                    {hasTaskRate(entry.task) ? (
-                                     `$${calculateFee(entry).toFixed(2)}`
+                                     formatCurrency(calculateFee(entry))
                                    ) : (
                                      <button 
                                        onClick={() => handleAddRate(entry.task)}
@@ -436,7 +437,7 @@ export const TimeArchivePage: React.FC = () => {
                             </div>
                             {viewMode === 'invoice' && (
                               <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
-                                ${project.subtotal.fee.toFixed(2)}
+                                {formatCurrency(project.subtotal.fee)}
                               </div>
                             )}
                           </div>
@@ -469,7 +470,7 @@ export const TimeArchivePage: React.FC = () => {
                                  {viewMode === 'invoice' && (
                                    <div className="text-[#09121F] text-sm leading-tight text-right flex items-start justify-end">
                                      {hasTaskRate(entry.task) ? (
-                                       `$${calculateFee(entry).toFixed(2)}`
+                                       formatCurrency(calculateFee(entry))
                                      ) : (
                                        <button 
                                          onClick={() => handleAddRate(entry.task)}
@@ -498,7 +499,7 @@ export const TimeArchivePage: React.FC = () => {
                           </div>
                           {viewMode === 'invoice' && (
                             <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
-                              ${group.subtotal.fee.toFixed(2)}
+                              {formatCurrency(group.subtotal.fee)}
                             </div>
                           )}
                         </div>
@@ -528,7 +529,7 @@ export const TimeArchivePage: React.FC = () => {
                              {viewMode === 'invoice' && (
                                <div className="text-[#09121F] text-sm leading-tight text-right flex items-start justify-end">
                                  {hasTaskRate(entry.task) ? (
-                                   `$${calculateFee(entry).toFixed(2)}`
+                                   formatCurrency(calculateFee(entry))
                                  ) : (
                                    <button 
                                      onClick={() => handleAddRate(entry.task)}
@@ -555,7 +556,7 @@ export const TimeArchivePage: React.FC = () => {
                           </div>
                           {viewMode === 'invoice' && (
                             <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
-                              ${group.subtotal.fee.toFixed(2)}
+                              {formatCurrency(group.subtotal.fee)}
                             </div>
                           )}
                         </div>

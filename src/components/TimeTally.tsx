@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { useApp } from '@/context/AppContext';
 import { TimeEntry } from '@/types';
+import { formatCurrency, formatHours } from '@/lib/utils';
 
 import { ChevronDown, Pencil, Trash2, Archive, Edit, X, Plus, PlusCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
@@ -41,10 +42,6 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
   // Filter out archived entries
   const activeTimeEntries = timeEntries.filter(entry => !entry.archived);
 
-  // Format hours as decimal
-  const formatHours = (hours: number): string => {
-    return hours.toFixed(2);
-  };
 
   // Get client name by project
   const getClientByProject = (projectName: string): string => {
@@ -748,7 +745,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                           {settings.invoiceMode && (
                             <div className="text-[#09121F] text-sm leading-tight text-right flex items-start justify-end">
                               {hasTaskRate(entry.task) ? (
-                                <span>${calculateFee(entry).toFixed(2)}</span>
+                                <span>{formatCurrency(calculateFee(entry))}</span>
                               ) : (
                                 <div className="flex items-center gap-1">
                                   <span className="text-gray-400">--</span>
@@ -775,7 +772,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                         </div>
                         {settings.invoiceMode && (
                           <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
-                            ${subgroup.subtotal.fee.toFixed(2)}
+                            {formatCurrency(subgroup.subtotal.fee)}
                           </div>
                         )}
                       </div>
@@ -795,7 +792,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                     </div>
                     {settings.invoiceMode && (
                       <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
-                        ${group.total.fee.toFixed(2)}
+                        {formatCurrency(group.total.fee)}
                       </div>
                     )}
                   </div>
@@ -817,7 +814,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                 </div>
                 {settings.invoiceMode && (
                   <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
-                    ${organizedData.totalIn.fee.toFixed(2)}
+                    {formatCurrency(organizedData.totalIn.fee)}
                   </div>
                 )}
               </div>

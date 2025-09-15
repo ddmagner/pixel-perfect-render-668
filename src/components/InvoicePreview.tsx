@@ -3,6 +3,7 @@ import { TimeEntry, AppSettings } from '@/types';
 import { format } from 'date-fns';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { formatCurrency, formatHours } from '@/lib/utils';
 
 interface InvoicePreviewProps {
   settings: AppSettings;
@@ -166,9 +167,9 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                       <div className="col-span-2">{format(new Date(entry.date), 'MM/dd/yy')}</div>
                       <div className="col-span-3 font-medium">{entry.project}</div>
                       <div className="col-span-3 -ml-[25px]">{entry.task}</div>
-                      <div className="col-span-1 text-left">{entry.duration.toFixed(2)}</div>
-                      <div className="col-span-1 flex justify-end pl-[75px]">${rate.toFixed(2)}</div>
-                      <div className="col-span-2 text-right font-medium">${amount.toFixed(2)}</div>
+                      <div className="col-span-1 text-left">{formatHours(entry.duration)}</div>
+                      <div className="col-span-1 flex justify-end pl-[75px]">{formatCurrency(rate)}</div>
+                      <div className="col-span-2 text-right font-medium">{formatCurrency(amount)}</div>
                     </div>
                   );
                 })}
@@ -192,9 +193,9 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                         <div className="ml-[25px]">
                           <div className="grid grid-cols-7 gap-4 items-center text-sm text-black pt-1">
                             <div className="col-span-3 -ml-[25px]">Subtotal:</div>
-                            <div className="col-span-1 text-left">{totalHours.toFixed(2)}</div>
+                            <div className="col-span-1 text-left">{formatHours(totalHours)}</div>
                             <div className="col-span-1"></div>
-                            <div className="col-span-2 text-right font-medium">${totalAmount.toFixed(2)}</div>
+                            <div className="col-span-2 text-right font-medium">{formatCurrency(totalAmount)}</div>
                           </div>
                         </div>
                       </div>
@@ -222,7 +223,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                             <div className="col-span-3 -ml-[25px] font-bold">Total Due:</div>
                             <div className="col-span-1"></div>
                             <div className="col-span-1"></div>
-                            <div className="col-span-2 text-right font-bold">${totalAmount.toFixed(2)}</div>
+                            <div className="col-span-2 text-right font-bold">{formatCurrency(totalAmount)}</div>
                           </div>
                         </div>
                       </div>
