@@ -6,7 +6,7 @@ import { formatCurrency, formatHours } from '@/lib/utils';
 import { ChevronDown, Pencil, Trash2, Archive, Edit, X, Plus, PlusCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-import { ExportDialog } from '@/components/ExportDialog';
+
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useSelection } from '@/hooks/useSelection';
@@ -29,7 +29,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
     updateTimeEntry
   } = useApp();
   const navigate = useNavigate();
-  const [isExportDialogOpen, setIsExportDialogOpen] = useState(false);
+  
   const [editingEntryId, setEditingEntryId] = useState<string | null>(null);
   const [editingField, setEditingField] = useState<string | null>(null);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
@@ -340,8 +340,28 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
       description: `${selection.selectedCount} ${selection.selectedCount === 1 ? 'entry' : 'entries'} moved to archive`
     });
   };
-  const handleExport = () => {
-    setIsExportDialogOpen(true);
+  const handleExport = async () => {
+    const entriesToUse = selection.selectedIds.length > 0 
+      ? activeTimeEntries.filter(entry => selection.selectedIds.includes(entry.id)) 
+      : activeTimeEntries;
+    
+    if (entriesToUse.length === 0) {
+      alert('No time entries to export');
+      return;
+    }
+
+    try {
+      const { generatePDF } = await import('@/utils/pdfGenerator');
+      const blob = await generatePDF(entriesToUse, settings, settings.invoiceMode ? 'invoice' : 'timecard');
+      const url = URL.createObjectURL(blob);
+      const newWindow = window.open(url, '_blank');
+      if (newWindow) {
+        newWindow.document.title = `${settings.invoiceMode ? 'Invoice' : 'Time Report'} Preview`;
+      }
+    } catch (error) {
+      console.error('Error generating PDF:', error);
+      alert('Error generating PDF. Please try again.');
+    }
   };
 
   // Get sort option display text
@@ -848,17 +868,6 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
           </button>
         </div>
       </div>
-
-      {/* Export Dialog */}
-      <ExportDialog 
-        isOpen={isExportDialogOpen} 
-        onClose={() => setIsExportDialogOpen(false)} 
-        timeEntries={timeEntries} 
-        selectedEntries={selection.selectedIds.length > 0 ? activeTimeEntries.filter(entry => selection.selectedIds.includes(entry.id)) : undefined}
-        settings={settings} 
-        viewMode={settings.invoiceMode ? 'invoice' : 'timecard'} 
-      />
-
 
       {/* Delete Confirmation Dialog */}
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
