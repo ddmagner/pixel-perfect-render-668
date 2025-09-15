@@ -460,25 +460,6 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
 
       {/* Header / Selection Toolbar */}
       <div className="pt-0.5 pb-1 h-[2.75rem] px-2.5 mb-6">
-        {selection.hasAnySelected && <div className="fixed left-1/2 transform -translate-x-1/2 w-[calc(100%-1.25rem)] z-50" style={{
-        top: '170px'
-      }}>
-            <div className="flex items-center gap-2 bg-gray-50 h-[2.75rem] py-2 pl-0 pr-3 justify-between rounded" style={{
-          boxShadow: '0 -3px 8px -1px rgba(0, 0, 0, 0.2), 0 3px 8px -1px rgba(0, 0, 0, 0.2)'
-        }}>
-              <div className="flex items-center gap-2" style={{
-            paddingLeft: '32px'
-          }}>
-                <span className="text-[#09121F] text-xs font-medium">
-                  {selection.selectedCount} selected
-                </span>
-              </div>
-
-              <Button size="sm" variant="ghost" onClick={selection.clearSelection} className="bg-transparent text-[#09121F] hover:text-gray-600 hover:bg-transparent border-none shadow-none p-1">
-                <X className="h-4 w-4" />
-              </Button>
-            </div>
-          </div>}
         
         <div className="flex items-baseline justify-between h-full py-[20px]">
           <h1 className="text-[#09121F] text-[28px] font-bold leading-8">Where the time went</h1>
