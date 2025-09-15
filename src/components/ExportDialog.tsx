@@ -10,7 +10,6 @@ import { generateSpreadsheet } from '@/utils/spreadsheetGenerator';
 import { Share } from '@capacitor/share';
 import { format } from 'date-fns';
 import { X, Download, Mail, Printer, Eye } from 'lucide-react';
-import { InvoicePreview } from '@/components/InvoicePreview';
 
 interface ExportDialogProps {
   isOpen: boolean;
@@ -33,7 +32,6 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
   const [exportMethod, setExportMethod] = useState<'download' | 'email' | 'print' | 'preview'>('preview');
   const [fileName, setFileName] = useState(`${settings.userProfile.name || 'User'} Time Report ${format(new Date(), 'yyyy-MM-dd')}`);
   const [isExporting, setIsExporting] = useState(false);
-  const [showPreview, setShowPreview] = useState(false);
 
   // Use selected entries if available, otherwise use all time entries
   const entriesToUse = selectedEntries && selectedEntries.length > 0 ? selectedEntries : timeEntries;
@@ -45,7 +43,21 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
     }
 
     if (exportMethod === 'preview') {
-      setShowPreview(true);
+      setIsExporting(true);
+      try {
+        const blob = await generatePDF(entriesToUse, settings, viewMode);
+        const url = URL.createObjectURL(blob);
+        const newWindow = window.open(url, '_blank');
+        if (newWindow) {
+          newWindow.document.title = `${viewMode === 'invoice' ? 'Invoice' : 'Time Report'} Preview`;
+        }
+        onClose();
+      } catch (error) {
+        console.error('Error generating preview:', error);
+        alert('Error generating preview. Please try again.');
+      } finally {
+        setIsExporting(false);
+      }
       return;
     }
 
@@ -243,15 +255,6 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
           </div>
         </div>
       </DrawerContent>
-
-      {/* Invoice Preview */}
-      {showPreview && (
-        <InvoicePreview 
-          selectedEntries={entriesToUse}
-          settings={settings}
-          onClose={() => setShowPreview(false)}
-        />
-      )}
     </Drawer>
   );
 };
