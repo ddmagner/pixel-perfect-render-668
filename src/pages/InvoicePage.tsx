@@ -97,9 +97,22 @@ const InvoicePage: React.FC = () => {
       {/* Print styles */}
       <style>{`
         @media print {
-          @page { margin: 0.5in; }
+          @page { 
+            size: letter portrait;
+            margin: 0.75in 0.5in;
+          }
           body { -webkit-print-color-adjust: exact; }
           .no-print { display: none !important; }
+          .invoice-content { 
+            width: 7.5in !important;
+            max-width: 7.5in !important;
+          }
+        }
+        @media screen {
+          .invoice-content {
+            width: 7.5in;
+            max-width: 7.5in;
+          }
         }
       `}</style>
 
@@ -114,7 +127,7 @@ const InvoicePage: React.FC = () => {
       </div>
 
       {/* Invoice Content - Letter Size (8.5" x 11") */}
-      <div className="px-[72px] py-8 max-w-[8.5in] mx-auto">
+      <div className="invoice-content mx-auto bg-white" style={{ minHeight: '11in', padding: '0.75in 0.5in' }}>
         {/* Invoice Header */}
         <div className="mb-6">
           <div>
