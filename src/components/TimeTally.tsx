@@ -607,7 +607,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                         );
                       })()}
                     </div>
-                    <div className={`text-left font-bold text-[#09121F] text-sm ${settings.invoiceMode ? 'col-span-3' : 'col-span-2'}`}>
+                    <div className={`text-left font-bold text-[#09121F] text-sm`} style={{ gridColumn: '2 / span 2' }}>
                       {sortOption === 'date' ? formatDateLabel(group.name, true) : group.name}
                     </div>
                     <div className="flex justify-end"></div>
@@ -648,7 +648,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                             }
                           })()}
                         </div>
-                        <div className={`text-left font-bold text-[#09121F] text-sm ${settings.invoiceMode ? 'col-span-3' : 'col-span-2'}`}>
+                        <div className={`text-left font-bold text-[#09121F] text-sm`} style={{ gridColumn: '2 / span 2' }}>
                           {subgroup.name}
                         </div>
                         <div className="flex justify-end">
