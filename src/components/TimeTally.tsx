@@ -394,6 +394,14 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
       console.log('PDF URL ready:', url.substring(0, 60) + '...');
       
       if (previewWindow) {
+        try {
+          previewWindow.location.href = url;
+          previewWindow.focus();
+          console.log('Navigated preview window to PDF directly');
+          return;
+        } catch (e) {
+          console.warn('Direct navigation failed, will inject HTML shell', e);
+        }
         // Inject an HTML shell that embeds the PDF to avoid navigation issues (Safari-friendly)
         const html = `<!doctype html>
 <html>
@@ -418,7 +426,9 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
       <span>— If the preview looks blank, use one of the links above.</span>
     </header>
     <div class="viewer">
-      <embed src="${url}" type="application/pdf" />
+      <object data="${url}" type="application/pdf" width="100%" height="100%">
+        <iframe src="${url}" width="100%" height="100%" style="border:0;" title="PDF Preview"></iframe>
+      </object>
     </div>
   </div>
 </body>
