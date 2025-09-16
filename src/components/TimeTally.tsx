@@ -547,10 +547,12 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
       {/* Table Header */}
       <div className="w-full px-2.5">
         <div className={`grid ${gridColsWithSelection} h-[32px] items-center`} style={{
-        gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (settings.invoiceMode ? ' calc(40px + 50px)' : ''),
-        gap: '0'
-      }}>
-          <div className="flex items-center w-[32px]">
+          gridTemplateColumns: settings.invoiceMode 
+            ? '32px 1fr 1fr 60px 90px' 
+            : '32px 1fr 1fr 60px',
+          gap: '12px'
+        }}>
+          <div className="flex items-center justify-start">
             <div className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${isAllSelected ? 'bg-gray-300' : 'bg-white'}`} onClick={() => selection.toggleSelectAll(allEntryIds)}>
               {isAllSelected && <div className="w-2 h-2 rounded-full bg-[#09121F]"></div>}
             </div>
@@ -576,10 +578,12 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                   
                   {/* Top Level Header */}
                   <div className={`grid ${gridColsWithSelection} items-center font-bold text-[#09121F] text-sm py-2`} style={{
-                    gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (settings.invoiceMode ? ' calc(40px + 50px)' : ''),
-                    gap: '0'
+                    gridTemplateColumns: settings.invoiceMode 
+                      ? '32px 1fr 1fr 60px 90px' 
+                      : '32px 1fr 1fr 60px',
+                    gap: '12px'
                   }}>
-                    <div className="flex items-center w-[32px]">
+                    <div className="flex items-center justify-start">
                       {(() => {
                         // Get all entry IDs for this top-level group
                         const groupEntryIds: string[] = [];
@@ -616,10 +620,12 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                       
                       {/* Subgroup Header */}
                       <div className={`grid ${gridColsWithSelection} items-center font-bold text-[#09121F] text-sm py-2`} style={{
-                        gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (settings.invoiceMode ? ' calc(40px + 50px)' : ''),
-                        gap: '0'
+                        gridTemplateColumns: settings.invoiceMode 
+                          ? '32px 1fr 1fr 60px 90px' 
+                          : '32px 1fr 1fr 60px',
+                        gap: '12px'
                       }}>
-                        <div className="flex items-center w-[32px]">
+                        <div className="flex items-center justify-start">
                           {(() => {
                             let entryIds: string[] = [];
                             let isSelected = false;
@@ -658,10 +664,12 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                       {/* Entries */}
                       {subgroup.entries?.map((entry: TimeEntry) => (
                         <div key={entry.id} className={`grid ${gridColsWithSelection} items-start hover:bg-gray-50 py-2`} style={{
-                          gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (settings.invoiceMode ? ' calc(40px + 50px)' : ''),
-                          gap: '0'
+                          gridTemplateColumns: settings.invoiceMode 
+                            ? '32px 1fr 1fr 60px 90px' 
+                            : '32px 1fr 1fr 60px',
+                          gap: '12px'
                         }}>
-                          <div className="flex items-start w-[32px] self-start mt-1">
+                          <div className="flex items-start justify-start self-start mt-1">
                             <div className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${selection.isSelected(entry.id) ? 'bg-gray-300' : 'bg-white'}`} onClick={() => selection.toggleSelectRecord(entry.id)} style={{
                               marginTop: '-3px'
                             }}>
@@ -823,8 +831,10 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
 
                       {/* Sub-total */}
                       <div className={`grid ${gridColsWithSelection} h-[32px] items-center`} style={{
-                        gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (settings.invoiceMode ? ' calc(40px + 50px)' : ''),
-                        gap: '0'
+                        gridTemplateColumns: settings.invoiceMode 
+                          ? '32px 1fr 1fr 60px 90px' 
+                          : '32px 1fr 1fr 60px',
+                        gap: '12px'
                       }}>
                         <div className="flex items-center"></div>
                         <div className="flex items-center"></div>
@@ -843,8 +853,10 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
 
                   {/* TOTAL for this group */}
                   <div className={`grid ${gridColsWithSelection} h-[32px] items-center`} style={{
-                    gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (settings.invoiceMode ? ' calc(40px + 50px)' : ''),
-                    gap: '0'
+                    gridTemplateColumns: settings.invoiceMode 
+                      ? '32px 1fr 1fr 60px 90px' 
+                      : '32px 1fr 1fr 60px',
+                    gap: '12px'
                   }}>
                     <div className="flex items-center"></div>
                     <div className="flex items-center"></div>
@@ -865,8 +877,10 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
             {/* TOTAL-IN */}
             <div className="w-full border-t-2 border-[#09121F] mt-4">
               <div className={`grid ${gridColsWithSelection} h-[32px] items-center`} style={{
-                gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (settings.invoiceMode ? ' calc(40px + 50px)' : ''),
-                gap: '0'
+                gridTemplateColumns: settings.invoiceMode 
+                  ? '32px 1fr 1fr 60px 90px' 
+                  : '32px 1fr 1fr 60px',
+                gap: '12px'
               }}>
                 <div className="flex items-center"></div>
                 <div className="flex items-center"></div>
