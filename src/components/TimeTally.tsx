@@ -349,110 +349,45 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
     console.log('Entries to use:', entriesToUse.length);
     
     if (entriesToUse.length === 0) {
-      alert('No time entries to export');
+      toast({
+        title: "No entries selected",
+        description: "Please select some time entries to export.",
+        variant: "destructive",
+      });
       return;
     }
 
-    // Open a blank window synchronously to avoid popup blockers
-    const title = `${settings.invoiceMode ? 'Invoice' : 'Time Report'} Preview`;
-    const previewWindow = window.open('', '_blank');
-    console.log('Pre-opened preview window:', previewWindow);
-    if (previewWindow) {
-      try {
-        previewWindow.document.open();
-        previewWindow.document.write(`<!doctype html>
-<html>
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>${title}</title>
-  <style>
-    html, body { height:100%; margin:0; font-family: -apple-system,system-ui,Segoe UI,Roboto,sans-serif; }
-    .wrap { height:100%; display:flex; align-items:center; justify-content:center; }
-    .msg { padding:16px; color:#222; }
-  </style>
-</head>
-<body>
-  <div class="wrap"><div class="msg" id="status">Generating PDF…</div></div>
-  <script>
-    window.name = 'TimeInPDFPreview';
-    window.addEventListener('message', function(event) {
-      try {
-        var data = event.data || {};
-        if (data.type === 'PDF_URL' && typeof data.url === 'string') {
-          var s = document.getElementById('status');
-          if (s) s.textContent = 'Loading PDF...';
-          location.replace(data.url);
-        }
-      } catch (err) {}
-    }, false);
-  </script>
-</body>
-</html>`);
-        previewWindow.document.close();
-      } catch (e) {
-        console.warn('Unable to write loading shell to preview window', e);
-      }
-    }
-
     try {
-      console.log('Starting PDF generation...');
-      const { generatePDF } = await import('@/utils/pdfGenerator');
-      console.log('PDF generator imported');
+      console.log('Opening invoice preview in new window...');
       
-      const blob = await generatePDF(entriesToUse, settings, settings.invoiceMode ? 'invoice' : 'timecard');
-      console.log('PDF blob generated:', blob.size, 'bytes');
+      // Prepare data for the invoice page
+      const entriesData = encodeURIComponent(JSON.stringify(entriesToUse));
+      const settingsData = encodeURIComponent(JSON.stringify(settings));
       
-      // Create a URL for the PDF; Safari prefers data URLs for embedded PDFs
-      const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
-      let url = URL.createObjectURL(blob);
-      if (isSafari) {
-        try {
-          url = await new Promise<string>((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = () => resolve(reader.result as string);
-            reader.onerror = () => reject(reader.error);
-            reader.readAsDataURL(blob); // data:application/pdf;base64,...
-          });
-          console.log('Generated data URL for Safari');
-        } catch (e) {
-          console.warn('Failed to create data URL, falling back to blob URL', e);
-        }
+      // Create invoice page URL with data
+      const invoiceUrl = `/invoice?entries=${entriesData}&settings=${settingsData}`;
+      
+      // Open in new window
+      const previewWindow = window.open(invoiceUrl, '_blank', 'width=900,height=700,scrollbars=yes');
+      
+      if (!previewWindow) {
+        toast({
+          title: "Popup blocked",
+          description: "Please allow popups for this site to preview the invoice.",
+          variant: "destructive",
+        });
+        return;
       }
-      console.log('PDF URL ready:', url.substring(0, 60) + '...');
-      
-      if (previewWindow) {
-        try {
-          // Tell the pre-opened window to navigate itself (Safari-safe)
-          previewWindow.postMessage({ type: 'PDF_URL', url }, '*');
-          console.log('Sent PDF URL to preview window via postMessage');
 
-          // Backup: try direct navigation shortly after
-          setTimeout(() => {
-            try {
-              previewWindow.location.replace(url);
-              console.log('Fallback direct navigation to PDF');
-            } catch (err) {
-              console.warn('Fallback navigation failed', err);
-            }
-          }, 200);
-        } catch (e) {
-          console.warn('Could not communicate with preview window, falling back to anchor');
-          const a = document.createElement('a');
-          a.href = url;
-          a.target = '_blank';
-          a.rel = 'noopener';
-          a.click();
-          console.log('Fallback anchor click triggered');
-        }
-      }
+      console.log('Invoice preview opened successfully');
+      
     } catch (error) {
-      console.error('Error generating PDF:', error);
-      if (previewWindow) {
-        previewWindow.document.body.innerHTML = '<div style="padding:16px;font-family:-apple-system,system-ui,Segoe UI,Roboto,sans-serif">Failed to generate PDF. Please try again.</div>';
-      } else {
-        alert('Error generating PDF. Please try again.');
-      }
+      console.error('Error opening invoice preview:', error);
+      toast({
+        title: "Error",
+        description: "Failed to open invoice preview",
+        variant: "destructive",
+      });
     }
   };
 

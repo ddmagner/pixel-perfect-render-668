@@ -14,6 +14,7 @@ import PrivacyPolicyPage from "./pages/PrivacyPolicy";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
 import ScrollToTop from "./components/ScrollToTop";
+import InvoicePage from "./pages/InvoicePage";
 
 const queryClient = new QueryClient();
 
@@ -57,6 +58,7 @@ const App = () => (
                 <PrivacyPolicyPage />
               </ProtectedRoute>
             } />
+            <Route path="/invoice" element={<InvoicePage />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
