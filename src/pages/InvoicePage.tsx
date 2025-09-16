@@ -101,11 +101,32 @@ const InvoicePage: React.FC = () => {
             size: letter portrait;
             margin: 0.75in 0.5in;
           }
-          body { -webkit-print-color-adjust: exact; }
+          * { 
+            -webkit-print-color-adjust: exact !important;
+            color-adjust: exact !important;
+            print-color-adjust: exact !important;
+          }
+          body { 
+            margin: 0 !important;
+            padding: 0 !important;
+            background: white !important;
+          }
           .no-print { display: none !important; }
           .invoice-content { 
             width: 7.5in !important;
             max-width: 7.5in !important;
+            margin: 0 !important;
+            padding: 0.75in 0.5in !important;
+            background: white !important;
+            color: black !important;
+            font-size: 12pt !important;
+            line-height: 1.4 !important;
+          }
+          .print-text {
+            color: black !important;
+          }
+          .print-border {
+            border-color: black !important;
           }
         }
         @media screen {
@@ -131,13 +152,13 @@ const InvoicePage: React.FC = () => {
         {/* Invoice Header */}
         <div className="mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-black mb-2">INVOICE</h1>
-            <div className="text-sm text-black">
+            <h1 className="text-2xl font-bold text-black print-text mb-2">INVOICE</h1>
+            <div className="text-sm text-black print-text">
               <p>Invoice Date: {format(currentDate, 'MM/dd/yy')}</p>
               <p>Due Date: {format(new Date(currentDate.getTime() + 30 * 24 * 60 * 60 * 1000), 'MM/dd/yy')}</p>
             </div>
-            <div className="text-sm text-black">Invoice #001</div>
-            <div className="text-sm text-black">
+            <div className="text-sm text-black print-text">Invoice #001</div>
+            <div className="text-sm text-black print-text">
               Period: {entries.length > 0 ? format(new Date(Math.min(...entries.map(e => new Date(e.date).getTime()))), 'MM/dd/yy') : 'N/A'} - {entries.length > 0 ? format(new Date(Math.max(...entries.map(e => new Date(e.date).getTime()))), 'MM/dd/yy') : 'N/A'}
             </div>
           </div>
@@ -146,8 +167,8 @@ const InvoicePage: React.FC = () => {
         {/* From/To Section */}
         <div className="grid grid-cols-5 gap-6 mb-6">
           <div className="col-span-2">
-            <h3 className="text-sm font-bold text-black uppercase tracking-wider mb-1.5">From</h3>
-            <div className="text-sm text-black">
+            <h3 className="text-sm font-bold text-black print-text uppercase tracking-wider mb-1.5">From</h3>
+            <div className="text-sm text-black print-text">
               <p>{settings.userProfile.name || 'Your Name'}</p>
               <p>{settings.userProfile.email || 'your.email@example.com'}</p>
               {settings.userProfile.address && <p>{settings.userProfile.address}</p>}
@@ -163,8 +184,8 @@ const InvoicePage: React.FC = () => {
             </div>
           </div>
           <div className="col-span-3 -ml-[15px]">
-            <h3 className="text-sm font-bold text-black uppercase tracking-wider mb-1.5">Bill To</h3>
-            <div className="text-sm text-black">
+            <h3 className="text-sm font-bold text-black print-text uppercase tracking-wider mb-1.5">Bill To</h3>
+            <div className="text-sm text-black print-text">
               <p>Client Name</p>
               <p>Client Company</p>
               <p>Client Address Line 1</p>
@@ -177,8 +198,8 @@ const InvoicePage: React.FC = () => {
         <div className="mb-6">
           <div className="overflow-hidden">
             {/* Table Header */}
-            <div className="border-t border-b border-black">
-              <div className="grid grid-cols-12 gap-4 py-1 text-xs font-bold text-black uppercase tracking-wider">
+            <div className="border-t border-b border-black print-border">
+              <div className="grid grid-cols-12 gap-4 py-1 text-xs font-bold text-black print-text uppercase tracking-wider">
                 <div className="col-span-2 text-left">Date</div>
                 <div className="col-span-3">Project</div>
                 <div className="col-span-3 -ml-[25px]">Task</div>
@@ -195,7 +216,7 @@ const InvoicePage: React.FC = () => {
                 const amount = calculateAmount(entry);
                 
                 return (
-                  <div key={entry.id || index} className="grid grid-cols-12 gap-4 py-1 text-sm text-black">
+                  <div key={entry.id || index} className="grid grid-cols-12 gap-4 py-1 text-sm text-black print-text">
                     <div className="col-span-2">{format(new Date(entry.date), 'MM/dd/yy')}</div>
                     <div className="col-span-3 font-medium">{entry.project}</div>
                     <div className="col-span-3 -ml-[25px]">{entry.task}</div>
