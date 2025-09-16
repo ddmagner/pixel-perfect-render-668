@@ -101,15 +101,25 @@ const InvoicePage: React.FC = () => {
             size: letter portrait;
             margin: 0.75in 0.5in;
           }
+          /* Reset problematic global styles for print */
+          html, body, #root {
+            position: static !important;
+            width: auto !important;
+            height: auto !important;
+            min-height: auto !important;
+            overflow: visible !important;
+            background: white !important;
+          }
           * { 
             -webkit-print-color-adjust: exact !important;
             color-adjust: exact !important;
             print-color-adjust: exact !important;
+            box-shadow: none !important;
+            filter: none !important;
           }
           body { 
             margin: 0 !important;
             padding: 0 !important;
-            background: white !important;
           }
           .no-print { display: none !important; }
           .invoice-content { 
