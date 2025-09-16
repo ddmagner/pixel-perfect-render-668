@@ -394,14 +394,6 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
       console.log('PDF URL ready:', url.substring(0, 60) + '...');
       
       if (previewWindow) {
-        try {
-          previewWindow.location.href = url;
-          previewWindow.focus();
-          console.log('Navigated preview window to PDF directly');
-          return;
-        } catch (e) {
-          console.warn('Direct navigation failed, will inject HTML shell', e);
-        }
         // Inject an HTML shell that embeds the PDF to avoid navigation issues (Safari-friendly)
         const html = `<!doctype html>
 <html>
@@ -421,13 +413,13 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
 <body>
   <div class="container">
     <header>
-      <a class="btn" href="${url}" download>Download</a>
-      <a class="btn" href="${url}" target="_blank" rel="noopener">Open in new tab</a>
-      <span>— If the preview looks blank, use one of the links above.</span>
+      <a id="dlLink" class="btn" href="#" download>Download</a>
+      <a id="openLink" class="btn" href="#" target="_blank" rel="noopener">Open in new tab</a>
+      <span id="status">Generating PDF…</span>
     </header>
     <div class="viewer">
-      <object data="${url}" type="application/pdf" width="100%" height="100%">
-        <iframe src="${url}" width="100%" height="100%" style="border:0;" title="PDF Preview"></iframe>
+      <object id="pdfObject" data="" type="application/pdf" width="100%" height="100%">
+        <iframe id="pdfIframe" src="" width="100%" height="100%" style="border:0;" title="PDF Preview"></iframe>
       </object>
     </div>
   </div>
@@ -437,6 +429,22 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
           previewWindow.document.open();
           previewWindow.document.write(html);
           previewWindow.document.close();
+          try {
+            const d = previewWindow.document;
+            const obj = d.getElementById('pdfObject') as HTMLObjectElement | null;
+            const iframe = d.getElementById('pdfIframe') as HTMLIFrameElement | null;
+            const dl = d.getElementById('dlLink') as HTMLAnchorElement | null;
+            const open = d.getElementById('openLink') as HTMLAnchorElement | null;
+            const statusEl = d.getElementById('status') as HTMLElement | null;
+            if (obj) obj.setAttribute('data', url);
+            if (iframe) iframe.src = url;
+            if (dl) dl.href = url;
+            if (open) open.href = url;
+            if (statusEl) statusEl.textContent = 'Preview ready';
+            console.log('PDF URL injected into viewer');
+          } catch (e) {
+            console.warn('Failed to inject URL into viewer', e);
+          }
           previewWindow.focus();
           console.log('Injected PDF embed into preview window');
         } catch (e) {
