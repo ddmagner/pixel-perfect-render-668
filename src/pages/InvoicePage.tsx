@@ -27,10 +27,34 @@ const InvoicePage: React.FC = () => {
     setLoading(false);
   }, []);
 
-  const calculateAmount = (entry: TimeEntry): number => {
-    const rate = entry.hourlyRate || 0;
-    return entry.duration * rate;
+  // Also support receiving data via postMessage from the opener window
+  useEffect(() => {
+    const handleMessage = (event: MessageEvent) => {
+      if (event.origin !== window.location.origin) return;
+      const data = event.data;
+      if (data && data.type === 'invoice-data' && data.payload) {
+        try {
+          const { entries: incomingEntries, settings: incomingSettings } = data.payload;
+          if (Array.isArray(incomingEntries) && incomingSettings) {
+            setEntries(incomingEntries);
+            setSettings(incomingSettings);
+            setLoading(false);
+          }
+        } catch (e) {
+          console.error('Error handling invoice-data message:', e);
+        }
+      }
+    };
+    window.addEventListener('message', handleMessage);
+    return () => window.removeEventListener('message', handleMessage);
+  }, []);
+
+  const getRate = (entry: TimeEntry): number => {
+    const rate = settings?.taskTypes?.find(t => t.name === entry.task)?.hourlyRate ?? 0;
+    return rate;
   };
+
+  const calculateAmount = (entry: TimeEntry): number => entry.duration * getRate(entry);
 
   const totalHours = entries.reduce((sum, entry) => sum + entry.duration, 0);
   const totalAmount = entries.reduce((sum, entry) => sum + calculateAmount(entry), 0);
@@ -130,7 +154,7 @@ const InvoicePage: React.FC = () => {
             {/* Table Body */}
             <div className="divide-y divide-gray-200">
               {entries.map((entry, index) => {
-                const rate = entry.hourlyRate || 0;
+                const rate = getRate(entry);
                 const amount = calculateAmount(entry);
                 
                 return (

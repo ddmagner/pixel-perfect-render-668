@@ -360,14 +360,8 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
     try {
       console.log('Opening invoice preview in new window...');
       
-      // Prepare data for the invoice page
-      const entriesData = encodeURIComponent(JSON.stringify(entriesToUse));
-      const settingsData = encodeURIComponent(JSON.stringify(settings));
-      
-      // Create invoice page URL with data
-      const invoiceUrl = `/invoice?entries=${entriesData}&settings=${settingsData}`;
-      
-      // Open in new window
+      // Open invoice shell page
+      const invoiceUrl = `/invoice`;
       const previewWindow = window.open(invoiceUrl, '_blank', 'width=900,height=700,scrollbars=yes');
       
       if (!previewWindow) {
@@ -378,6 +372,17 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
         });
         return;
       }
+
+      // Send data via postMessage for reliability (avoids long URLs / Safari issues)
+      const payload = { entries: entriesToUse, settings };
+      setTimeout(() => {
+        try {
+          previewWindow.postMessage({ type: 'invoice-data', payload }, window.location.origin);
+          console.log('Sent invoice data to invoice window via postMessage');
+        } catch (e) {
+          console.error('Failed to postMessage to invoice window', e);
+        }
+      }, 300);
 
       console.log('Invoice preview opened successfully');
       
