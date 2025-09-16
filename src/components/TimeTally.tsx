@@ -548,9 +548,9 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
       <div className="w-full px-2.5">
         <div className={`grid ${gridColsWithSelection} h-[32px] items-center`} style={{
           gridTemplateColumns: settings.invoiceMode 
-            ? '32px 1fr 4fr 80px 90px' 
-            : '32px 1fr 4fr 80px',
-          gap: '2px'
+            ? '32px 1fr 6fr 70px 80px' 
+            : '32px 1fr 6fr 70px',
+          gap: '1px'
         }}>
           <div className="flex items-center justify-start">
             <div className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${isAllSelected ? 'bg-gray-300' : 'bg-white'}`} onClick={() => selection.toggleSelectAll(allEntryIds)}>
@@ -579,9 +579,9 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                   {/* Top Level Header */}
                   <div className={`grid ${gridColsWithSelection} items-center font-bold text-[#09121F] text-sm py-2`} style={{
                     gridTemplateColumns: settings.invoiceMode 
-                      ? '32px 1fr 4fr 80px 90px' 
-                      : '32px 1fr 4fr 80px',
-                    gap: '2px'
+                      ? '32px 1fr 6fr 70px 80px' 
+                      : '32px 1fr 6fr 70px',
+                    gap: '1px'
                   }}>
                     <div className="flex items-center justify-start">
                       {(() => {
@@ -621,9 +621,9 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                       {/* Subgroup Header */}
                       <div className={`grid ${gridColsWithSelection} items-center font-bold text-[#09121F] text-sm py-2`} style={{
                         gridTemplateColumns: settings.invoiceMode 
-                          ? '32px 1fr 4fr 80px 90px' 
-                          : '32px 1fr 4fr 80px',
-                        gap: '2px'
+                          ? '32px 1fr 6fr 70px 80px' 
+                          : '32px 1fr 6fr 70px',
+                        gap: '1px'
                       }}>
                         <div className="flex items-center justify-start">
                           {(() => {
@@ -665,9 +665,9 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                       {subgroup.entries?.map((entry: TimeEntry) => (
                         <div key={entry.id} className={`grid ${gridColsWithSelection} items-start hover:bg-gray-50 py-2`} style={{
                           gridTemplateColumns: settings.invoiceMode 
-                            ? '32px 1fr 4fr 80px 90px' 
-                            : '32px 1fr 4fr 80px',
-                          gap: '2px'
+                            ? '32px 1fr 6fr 70px 80px' 
+                            : '32px 1fr 6fr 70px',
+                          gap: '1px'
                         }}>
                           <div className="flex items-start justify-start self-start mt-1">
                             <div className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${selection.isSelected(entry.id) ? 'bg-gray-300' : 'bg-white'}`} onClick={() => selection.toggleSelectRecord(entry.id)} style={{
@@ -832,13 +832,13 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                       {/* Sub-total */}
                       <div className={`grid ${gridColsWithSelection} h-[32px] items-center`} style={{
                         gridTemplateColumns: settings.invoiceMode 
-                          ? '32px 1fr 4fr 80px 90px' 
-                          : '32px 1fr 4fr 80px',
-                        gap: '2px'
+                          ? '32px 1fr 6fr 70px 80px' 
+                          : '32px 1fr 6fr 70px',
+                        gap: '1px'
                       }}>
                         <div className="flex items-center"></div>
                         <div className="flex items-center"></div>
-                        <div className="text-[#09121F] text-sm font-bold flex items-center">Sub-total</div>
+                        <div className="text-[#09121F] text-sm font-bold flex items-center text-left">Sub-total</div>
                         <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
                           {formatHours(subgroup.subtotal.hours)}
                         </div>
@@ -854,13 +854,13 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                   {/* TOTAL for this group */}
                   <div className={`grid ${gridColsWithSelection} h-[32px] items-center`} style={{
                     gridTemplateColumns: settings.invoiceMode 
-                      ? '32px 1fr 4fr 80px 90px' 
-                      : '32px 1fr 4fr 80px',
-                    gap: '2px'
+                      ? '32px 1fr 6fr 70px 80px' 
+                      : '32px 1fr 6fr 70px',
+                    gap: '1px'
                   }}>
                     <div className="flex items-center"></div>
                     <div className="flex items-center"></div>
-                    <div className="text-[#09121F] text-sm font-bold flex items-center">TOTAL</div>
+                    <div className="text-[#09121F] text-sm font-bold flex items-center text-left">TOTAL</div>
                     <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
                       {formatHours(group.total.hours)}
                     </div>
@@ -878,13 +878,13 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
             <div className="w-full border-t-2 border-[#09121F] mt-4">
               <div className={`grid ${gridColsWithSelection} h-[32px] items-center`} style={{
                 gridTemplateColumns: settings.invoiceMode 
-                  ? '32px 1fr 4fr 80px 90px' 
-                  : '32px 1fr 4fr 80px',
-                gap: '2px'
+                  ? '32px 1fr 6fr 70px 80px' 
+                  : '32px 1fr 6fr 70px',
+                gap: '1px'
               }}>
                 <div className="flex items-center"></div>
                 <div className="flex items-center"></div>
-                <div className="text-[#09121F] text-sm font-bold flex items-center">TOTAL-IN</div>
+                <div className="text-[#09121F] text-sm font-bold flex items-center text-left">TOTAL-IN</div>
                 <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
                   {formatHours(organizedData.totalIn.hours)}
                 </div>
