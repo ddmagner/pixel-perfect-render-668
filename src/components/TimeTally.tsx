@@ -359,11 +359,39 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
     console.log('Pre-opened preview window:', previewWindow);
     if (previewWindow) {
       try {
-        previewWindow.document.title = title;
-        previewWindow.document.body.style.margin = '0';
-        previewWindow.document.body.innerHTML = '<div style="padding:16px;font-family:-apple-system,system-ui,Segoe UI,Roboto,sans-serif">Generating PDF…</div>';
+        previewWindow.document.open();
+        previewWindow.document.write(`<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>${title}</title>
+  <style>
+    html, body { height:100%; margin:0; font-family: -apple-system,system-ui,Segoe UI,Roboto,sans-serif; }
+    .wrap { height:100%; display:flex; align-items:center; justify-content:center; }
+    .msg { padding:16px; color:#222; }
+  </style>
+</head>
+<body>
+  <div class="wrap"><div class="msg" id="status">Generating PDF…</div></div>
+  <script>
+    window.name = 'TimeInPDFPreview';
+    window.addEventListener('message', function(event) {
+      try {
+        var data = event.data || {};
+        if (data.type === 'PDF_URL' && typeof data.url === 'string') {
+          var s = document.getElementById('status');
+          if (s) s.textContent = 'Loading PDF...';
+          location.replace(data.url);
+        }
+      } catch (err) {}
+    }, false);
+  </script>
+</body>
+</html>`);
+        previewWindow.document.close();
       } catch (e) {
-        console.warn('Unable to write loading message to preview window', e);
+        console.warn('Unable to write loading shell to preview window', e);
       }
     }
 
@@ -394,74 +422,29 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
       console.log('PDF URL ready:', url.substring(0, 60) + '...');
       
       if (previewWindow) {
-        // First try direct navigation (most reliable across browsers including Safari)
         try {
-          previewWindow.location.replace(url);
-          previewWindow.focus();
-          console.log('Navigated preview window to PDF directly');
-          return;
-        } catch (e) {
-          console.warn('Direct navigation failed, will inject HTML shell', e);
-        }
-        // Inject an HTML shell that embeds the PDF to avoid navigation issues (Safari-friendly)
-        const html = `<!doctype html>
-<html>
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>${title}</title>
-  <style>
-    html, body { height: 100%; margin: 0; }
-    .container { height: 100%; display: flex; flex-direction: column; }
-    header { padding: 8px 12px; font-family: -apple-system,system-ui,Segoe UI,Roboto,sans-serif; background: #f5f5f5; border-bottom: 1px solid #e5e5e5; }
-    .viewer { flex: 1; }
-    .viewer embed, .viewer iframe, .viewer object { width: 100%; height: 100%; border: 0; }
-    a.btn { display:inline-block; margin-right:8px; }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <header>
-      <a id="dlLink" class="btn" href="#" download>Download</a>
-      <a id="openLink" class="btn" href="#" target="_blank" rel="noopener">Open in new tab</a>
-      <span id="status">Generating PDF…</span>
-    </header>
-    <div class="viewer">
-      <object id="pdfObject" data="" type="application/pdf" width="100%" height="100%">
-        <iframe id="pdfIframe" src="" width="100%" height="100%" style="border:0;" title="PDF Preview"></iframe>
-      </object>
-    </div>
-  </div>
-</body>
-</html>`;
-        try {
-          previewWindow.document.open();
-          previewWindow.document.write(html);
-          previewWindow.document.close();
-          try {
-            const d = previewWindow.document;
-            const obj = d.getElementById('pdfObject') as HTMLObjectElement | null;
-            const iframe = d.getElementById('pdfIframe') as HTMLIFrameElement | null;
-            const dl = d.getElementById('dlLink') as HTMLAnchorElement | null;
-            const open = d.getElementById('openLink') as HTMLAnchorElement | null;
-            const statusEl = d.getElementById('status') as HTMLElement | null;
-            if (obj) obj.setAttribute('data', url);
-            if (iframe) iframe.src = url;
-            if (dl) dl.href = url;
-            if (open) open.href = url;
-            if (statusEl) statusEl.textContent = 'Preview ready';
-            console.log('PDF URL injected into viewer');
-          } catch (e) {
-            console.warn('Failed to inject URL into viewer', e);
-          }
-          previewWindow.focus();
-          console.log('Injected PDF embed into preview window');
-        } catch (e) {
-          console.warn('Failed to write PDF HTML, falling back to location.href', e);
-          previewWindow.location.href = url;
-        }
+          // Tell the pre-opened window to navigate itself (Safari-safe)
+          previewWindow.postMessage({ type: 'PDF_URL', url }, '*');
+          console.log('Sent PDF URL to preview window via postMessage');
 
-        console.log('Fallback anchor click triggered');
+          // Backup: try direct navigation shortly after
+          setTimeout(() => {
+            try {
+              previewWindow.location.replace(url);
+              console.log('Fallback direct navigation to PDF');
+            } catch (err) {
+              console.warn('Fallback navigation failed', err);
+            }
+          }, 200);
+        } catch (e) {
+          console.warn('Could not communicate with preview window, falling back to anchor');
+          const a = document.createElement('a');
+          a.href = url;
+          a.target = '_blank';
+          a.rel = 'noopener';
+          a.click();
+          console.log('Fallback anchor click triggered');
+        }
       }
     } catch (error) {
       console.error('Error generating PDF:', error);
