@@ -9,8 +9,32 @@ const InvoicePage: React.FC = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Get data from URL parameters
+    // Prefer data via localStorage key for reliability across mobile browsers
     const urlParams = new URLSearchParams(window.location.search);
+    const keyParam = urlParams.get('k') || urlParams.get('key');
+
+    if (keyParam) {
+      const storageKey = `invoice:${keyParam}`;
+      try {
+        const stored = localStorage.getItem(storageKey) || localStorage.getItem(keyParam);
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (parsed?.entries && parsed?.settings) {
+            setEntries(parsed.entries);
+            setSettings(parsed.settings);
+            setLoading(false);
+            // Clean up
+            localStorage.removeItem(storageKey);
+            localStorage.removeItem(keyParam);
+            return; // Done
+          }
+        }
+      } catch (e) {
+        console.error('Error loading invoice data from localStorage:', e);
+      }
+    }
+
+    // Fallback: Get data from URL parameters (legacy)
     const entriesParam = urlParams.get('entries');
     const settingsParam = urlParams.get('settings');
 

@@ -360,8 +360,19 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
     try {
       console.log('Opening invoice preview in new window...');
       
-      // Open invoice shell page
-      const invoiceUrl = `/invoice`;
+      const payload = { entries: entriesToUse, settings };
+      const id = (window.crypto && 'randomUUID' in window.crypto)
+        ? (window.crypto as any).randomUUID()
+        : `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
+      const storageKey = `invoice:${id}`;
+
+      try {
+        localStorage.setItem(storageKey, JSON.stringify(payload));
+      } catch (e) {
+        console.warn('Failed to write invoice payload to localStorage', e);
+      }
+      
+      const invoiceUrl = `/invoice?k=${encodeURIComponent(id)}`;
       const previewWindow = window.open(invoiceUrl, '_blank', 'width=900,height=700,scrollbars=yes');
       
       if (!previewWindow) {
@@ -373,8 +384,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
         return;
       }
 
-      // Send data via postMessage for reliability (avoids long URLs / Safari issues)
-      const payload = { entries: entriesToUse, settings };
+      // Also send via postMessage as a fallback on some browsers
       setTimeout(() => {
         try {
           previewWindow.postMessage({ type: 'invoice-data', payload }, window.location.origin);
@@ -382,7 +392,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
         } catch (e) {
           console.error('Failed to postMessage to invoice window', e);
         }
-      }, 300);
+      }, 500);
 
       console.log('Invoice preview opened successfully');
       
