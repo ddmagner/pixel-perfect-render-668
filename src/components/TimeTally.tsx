@@ -375,14 +375,64 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
       const blob = await generatePDF(entriesToUse, settings, settings.invoiceMode ? 'invoice' : 'timecard');
       console.log('PDF blob generated:', blob.size, 'bytes');
       
-      const url = URL.createObjectURL(blob);
-      console.log('Blob URL created:', url);
+      // Create a URL for the PDF; Safari prefers data URLs for embedded PDFs
+      const isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+      let url = URL.createObjectURL(blob);
+      if (isSafari) {
+        try {
+          url = await new Promise<string>((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(reader.result as string);
+            reader.onerror = () => reject(reader.error);
+            reader.readAsDataURL(blob); // data:application/pdf;base64,...
+          });
+          console.log('Generated data URL for Safari');
+        } catch (e) {
+          console.warn('Failed to create data URL, falling back to blob URL', e);
+        }
+      }
+      console.log('PDF URL ready:', url.substring(0, 60) + '...');
       
       if (previewWindow) {
-        // Navigate the pre-opened window to the PDF URL so the browser's viewer handles it
-        previewWindow.location.href = url;
-        try { previewWindow.focus(); } catch {}
-        console.log('Navigated preview window to PDF');
+        // Inject an HTML shell that embeds the PDF to avoid navigation issues (Safari-friendly)
+        const html = `<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>${title}</title>
+  <style>
+    html, body { height: 100%; margin: 0; }
+    .container { height: 100%; display: flex; flex-direction: column; }
+    header { padding: 8px 12px; font-family: -apple-system,system-ui,Segoe UI,Roboto,sans-serif; background: #f5f5f5; border-bottom: 1px solid #e5e5e5; }
+    .viewer { flex: 1; }
+    .viewer embed, .viewer iframe, .viewer object { width: 100%; height: 100%; border: 0; }
+    a.btn { display:inline-block; margin-right:8px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <a class="btn" href="${url}" download>Download</a>
+      <a class="btn" href="${url}" target="_blank" rel="noopener">Open in new tab</a>
+      <span>— If the preview looks blank, use one of the links above.</span>
+    </header>
+    <div class="viewer">
+      <embed src="${url}" type="application/pdf" />
+    </div>
+  </div>
+</body>
+</html>`;
+        try {
+          previewWindow.document.open();
+          previewWindow.document.write(html);
+          previewWindow.document.close();
+          previewWindow.focus();
+          console.log('Injected PDF embed into preview window');
+        } catch (e) {
+          console.warn('Failed to write PDF HTML, falling back to location.href', e);
+          previewWindow.location.href = url;
+        }
       } else {
         // Fallback: programmatically open via anchor (in case popup was blocked)
         const a = document.createElement('a');
