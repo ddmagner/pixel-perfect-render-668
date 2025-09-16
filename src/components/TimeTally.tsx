@@ -353,6 +353,20 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
       return;
     }
 
+    // Open a blank window synchronously to avoid popup blockers
+    const title = `${settings.invoiceMode ? 'Invoice' : 'Time Report'} Preview`;
+    const previewWindow = window.open('', '_blank');
+    console.log('Pre-opened preview window:', previewWindow);
+    if (previewWindow) {
+      try {
+        previewWindow.document.title = title;
+        previewWindow.document.body.style.margin = '0';
+        previewWindow.document.body.innerHTML = '<div style="padding:16px;font-family:-apple-system,system-ui,Segoe UI,Roboto,sans-serif">Generating PDF…</div>';
+      } catch (e) {
+        console.warn('Unable to write loading message to preview window', e);
+      }
+    }
+
     try {
       console.log('Starting PDF generation...');
       const { generatePDF } = await import('@/utils/pdfGenerator');
@@ -364,18 +378,27 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
       const url = URL.createObjectURL(blob);
       console.log('Blob URL created:', url);
       
-      const newWindow = window.open(url, '_blank');
-      console.log('New window opened:', newWindow);
-      
-      if (newWindow) {
-        newWindow.document.title = `${settings.invoiceMode ? 'Invoice' : 'Time Report'} Preview`;
-        console.log('Window title set');
+      if (previewWindow) {
+        // Navigate the pre-opened window to the PDF URL so the browser's viewer handles it
+        previewWindow.location.href = url;
+        try { previewWindow.focus(); } catch {}
+        console.log('Navigated preview window to PDF');
       } else {
-        console.error('Failed to open new window - popup blocked?');
+        // Fallback: programmatically open via anchor (in case popup was blocked)
+        const a = document.createElement('a');
+        a.href = url;
+        a.target = '_blank';
+        a.rel = 'noopener';
+        a.click();
+        console.log('Fallback anchor click triggered');
       }
     } catch (error) {
       console.error('Error generating PDF:', error);
-      alert('Error generating PDF. Please try again.');
+      if (previewWindow) {
+        previewWindow.document.body.innerHTML = '<div style="padding:16px;font-family:-apple-system,system-ui,Segoe UI,Roboto,sans-serif">Failed to generate PDF. Please try again.</div>';
+      } else {
+        alert('Error generating PDF. Please try again.');
+      }
     }
   };
 
