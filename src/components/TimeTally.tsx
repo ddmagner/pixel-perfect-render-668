@@ -394,6 +394,15 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
       console.log('PDF URL ready:', url.substring(0, 60) + '...');
       
       if (previewWindow) {
+        // First try direct navigation (most reliable across browsers including Safari)
+        try {
+          previewWindow.location.replace(url);
+          previewWindow.focus();
+          console.log('Navigated preview window to PDF directly');
+          return;
+        } catch (e) {
+          console.warn('Direct navigation failed, will inject HTML shell', e);
+        }
         // Inject an HTML shell that embeds the PDF to avoid navigation issues (Safari-friendly)
         const html = `<!doctype html>
 <html>
@@ -451,13 +460,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
           console.warn('Failed to write PDF HTML, falling back to location.href', e);
           previewWindow.location.href = url;
         }
-      } else {
-        // Fallback: programmatically open via anchor (in case popup was blocked)
-        const a = document.createElement('a');
-        a.href = url;
-        a.target = '_blank';
-        a.rel = 'noopener';
-        a.click();
+
         console.log('Fallback anchor click triggered');
       }
     } catch (error) {
