@@ -745,6 +745,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                               <div className="text-[#09121F] text-sm leading-tight flex items-start">
                                 {entry.project}
                               </div>
+                              <div></div>
                               <div className="text-[#09121F] text-sm leading-tight flex items-start">
                                 {editingEntryId === entry.id && editingField === 'task' ? (
                                   <input
@@ -798,7 +799,6 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                               <div className="text-[#09121F] text-sm leading-tight flex items-start">
                                 {entry.project}
                               </div>
-                              <div></div>
                             </>
                           )}
                           
