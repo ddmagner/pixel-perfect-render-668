@@ -543,7 +543,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
       </div>
 
       {/* Table Header */}
-      <div className="w-full px-1">
+      <div className="w-full px-2.5">
         <div className="grid h-[32px] items-center" style={{
           gridTemplateColumns: settings.invoiceMode 
             ? '16px 8px 1fr 8px 1fr 8px 50px 8px 60px' 
@@ -573,7 +573,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-y-auto w-full px-1">
+      <div className="flex-1 overflow-y-auto w-full px-2.5">
         {organizedData.groups.length === 0 ? (
           <div className="text-center py-8">
             <p className="text-[#BFBFBF] text-lg">No time entered yet. Get busy.</p>
