@@ -543,34 +543,37 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
       </div>
 
       {/* Table Header */}
-      <div className="w-full px-2.5">
+      <div className="w-full px-1">
         <div className="grid h-[32px] items-center" style={{
           gridTemplateColumns: settings.invoiceMode 
-            ? '20px 140px 140px 60px 80px' 
-            : '20px 140px 140px 60px',
-          gap: '16px'
+            ? '16px 8px 1fr 8px 1fr 8px 50px 8px 60px' 
+            : '16px 8px 1fr 8px 1fr 8px 50px',
+          gap: '0'
         }}>
           <div className="flex items-center justify-start">
             <div className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${isAllSelected ? 'bg-gray-300' : 'bg-white'}`} onClick={() => selection.toggleSelectAll(allEntryIds)}>
               {isAllSelected && <div className="w-2 h-2 rounded-full bg-[#09121F]"></div>}
             </div>
           </div>
+          <div></div>
           {headers.map((header, index) => (
-            <span
-              key={header}
-              className={`text-[#09121F] text-sm font-bold ${
-                header === 'Fee' ? 'text-right' : 'text-left'
-              }`}
-            >
-              {header}
-            </span>
+            <React.Fragment key={header}>
+              <span
+                className={`text-[#09121F] text-sm font-bold ${
+                  header === 'Fee' ? 'text-right' : 'text-left'
+                }`}
+              >
+                {header}
+              </span>
+              {index < headers.length - 1 && <div></div>}
+            </React.Fragment>
           ))}
         </div>
         <div className="h-px bg-[#09121F]" />
       </div>
 
       {/* Content */}
-      <div className="flex-1 overflow-y-auto w-full px-2.5">
+      <div className="flex-1 overflow-y-auto w-full px-1">
         {organizedData.groups.length === 0 ? (
           <div className="text-center py-8">
             <p className="text-[#BFBFBF] text-lg">No time entered yet. Get busy.</p>
@@ -584,9 +587,9 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                   {/* Top Level Header */}
                   <div className="grid items-center font-bold text-[#09121F] text-sm py-2" style={{
                     gridTemplateColumns: settings.invoiceMode 
-                      ? '20px 140px 140px 60px 80px' 
-                      : '20px 140px 140px 60px',
-                    gap: '16px'
+                      ? '16px 8px 1fr 8px 1fr 8px 50px 8px 60px' 
+                      : '16px 8px 1fr 8px 1fr 8px 50px',
+                    gap: '0'
                   }}>
                     <div className="flex items-center justify-start">
                       {(() => {
@@ -612,10 +615,10 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                         );
                       })()}
                     </div>
-                    <div className="text-left font-bold text-[#09121F] text-sm col-span-2">
+                    <div></div>
+                    <div className="text-left font-bold text-[#09121F] text-sm col-span-5">
                       {sortOption === 'date' ? formatDateLabel(group.name, true) : group.name}
                     </div>
-                    <div className="flex justify-end"></div>
                     {settings.invoiceMode && <div></div>}
                   </div>
 
@@ -626,9 +629,9 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                       {/* Subgroup Header */}
                       <div className="grid items-center font-bold text-[#09121F] text-sm py-2" style={{
                         gridTemplateColumns: settings.invoiceMode 
-                          ? '20px 140px 140px 60px 80px' 
-                          : '20px 140px 140px 60px',
-                        gap: '16px'
+                          ? '16px 8px 1fr 8px 1fr 8px 50px 8px 60px' 
+                          : '16px 8px 1fr 8px 1fr 8px 50px',
+                        gap: '0'
                       }}>
                         <div className="flex items-center justify-start">
                           {(() => {
@@ -653,26 +656,28 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                             }
                           })()}
                         </div>
-                        <div className="text-left font-bold text-[#09121F] text-sm col-span-2">
-                          {subgroup.name}
-                        </div>
-                        <div className="flex justify-end">
-                          {subgroup.name === 'No Client' && (
-                            <button className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-[#09121F]/80 transition-colors">
-                              <Plus className="h-2.5 w-2.5" strokeWidth={3} />
-                            </button>
-                          )}
-                        </div>
-                        {settings.invoiceMode && <div></div>}
+                         <div></div>
+                         <div className="text-left font-bold text-[#09121F] text-sm col-span-3">
+                           {subgroup.name}
+                         </div>
+                         <div></div>
+                         <div className="flex justify-end">
+                           {subgroup.name === 'No Client' && (
+                             <button className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-[#09121F]/80 transition-colors">
+                               <Plus className="h-2.5 w-2.5" strokeWidth={3} />
+                             </button>
+                           )}
+                         </div>
+                         {settings.invoiceMode && <div></div>}
                       </div>
 
                       {/* Entries */}
                       {subgroup.entries?.map((entry: TimeEntry) => (
                         <div key={entry.id} className="grid items-start hover:bg-gray-50 py-2" style={{
                           gridTemplateColumns: settings.invoiceMode 
-                            ? '20px 140px 140px 60px 80px' 
-                            : '20px 140px 140px 60px',
-                          gap: '16px'
+                            ? '16px 8px 1fr 8px 1fr 8px 50px 8px 60px' 
+                            : '16px 8px 1fr 8px 1fr 8px 50px',
+                          gap: '0'
                         }}>
                           <div className="flex items-start justify-start self-start mt-1">
                             <div className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${selection.isSelected(entry.id) ? 'bg-gray-300' : 'bg-white'}`} onClick={() => selection.toggleSelectRecord(entry.id)} style={{
@@ -681,6 +686,8 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                               {selection.isSelected(entry.id) && <div className="w-2 h-2 rounded-full bg-[#09121F]"></div>}
                             </div>
                           </div>
+                          
+                          <div></div>
                           
                           {/* Entry data based on sort option */}
                           {sortOption === 'project' && (
@@ -707,6 +714,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                                   </span>
                                 )}
                               </div>
+                              <div></div>
                               <div className="text-[#09121F] text-sm leading-tight flex items-start">
                                 {editingEntryId === entry.id && editingField === 'task' ? (
                                   <input
@@ -786,12 +794,15 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                                   </span>
                                 )}
                               </div>
+                              <div></div>
                               <div className="text-[#09121F] text-sm leading-tight flex items-start">
                                 {entry.project}
                               </div>
+                              <div></div>
                             </>
                           )}
                           
+                          <div></div>
                           <div className="text-[#09121F] text-sm leading-tight text-left flex items-start">
                             {editingEntryId === entry.id && editingField === 'duration' ? (
                               <input
@@ -818,7 +829,9 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                           </div>
                           
                           {settings.invoiceMode && (
-                            <div className="text-[#09121F] text-sm leading-tight flex items-start justify-end">
+                            <>
+                              <div></div>
+                              <div className="text-[#09121F] text-sm leading-tight flex items-start justify-end">
                               {hasTaskRate(entry.task) ? (
                                 <span>{formatCurrency(calculateFee(entry))}</span>
                               ) : (
@@ -829,7 +842,8 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                                   </button>
                                 </div>
                               )}
-                            </div>
+                              </div>
+                            </>
                           )}
                         </div>
                       ))}
@@ -837,20 +851,26 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                       {/* Sub-total */}
                       <div className="grid h-[32px] items-center" style={{
                         gridTemplateColumns: settings.invoiceMode 
-                          ? '20px 140px 140px 60px 80px' 
-                          : '20px 140px 140px 60px',
-                        gap: '16px'
+                          ? '16px 8px 1fr 8px 1fr 8px 50px 8px 60px' 
+                          : '16px 8px 1fr 8px 1fr 8px 50px',
+                        gap: '0'
                       }}>
                         <div></div>
                         <div></div>
+                        <div></div>
+                        <div></div>
                         <div className="text-[#09121F] text-sm font-bold text-left">Sub-total</div>
+                        <div></div>
                         <div className="text-[#09121F] text-sm font-bold text-left">
                           {formatHours(subgroup.subtotal.hours)}
                         </div>
                         {settings.invoiceMode && (
-                          <div className="text-[#09121F] text-sm font-bold text-right">
-                            {formatCurrency(subgroup.subtotal.fee)}
-                          </div>
+                          <>
+                            <div></div>
+                            <div className="text-[#09121F] text-sm font-bold text-right">
+                              {formatCurrency(subgroup.subtotal.fee)}
+                            </div>
+                          </>
                         )}
                       </div>
                     </div>
@@ -859,20 +879,26 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                   {/* TOTAL for this group */}
                   <div className="grid h-[32px] items-center" style={{
                     gridTemplateColumns: settings.invoiceMode 
-                      ? '20px 140px 140px 60px 80px' 
-                      : '20px 140px 140px 60px',
-                    gap: '16px'
+                      ? '16px 8px 1fr 8px 1fr 8px 50px 8px 60px' 
+                      : '16px 8px 1fr 8px 1fr 8px 50px',
+                    gap: '0'
                   }}>
                     <div></div>
                     <div></div>
+                    <div></div>
+                    <div></div>
                     <div className="text-[#09121F] text-sm font-bold text-left">TOTAL</div>
+                    <div></div>
                     <div className="text-[#09121F] text-sm font-bold text-left">
                       {formatHours(group.total.hours)}
                     </div>
                     {settings.invoiceMode && (
-                      <div className="text-[#09121F] text-sm font-bold text-right">
-                        {formatCurrency(group.total.fee)}
-                      </div>
+                      <>
+                        <div></div>
+                        <div className="text-[#09121F] text-sm font-bold text-right">
+                          {formatCurrency(group.total.fee)}
+                        </div>
+                      </>
                     )}
                   </div>
                 </div>
@@ -883,20 +909,26 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
             <div className="w-full border-t-2 border-[#09121F] mt-4">
               <div className="grid h-[32px] items-center" style={{
                 gridTemplateColumns: settings.invoiceMode 
-                  ? '20px 140px 140px 60px 80px' 
-                  : '20px 140px 140px 60px',
-                gap: '16px'
+                  ? '16px 8px 1fr 8px 1fr 8px 50px 8px 60px' 
+                  : '16px 8px 1fr 8px 1fr 8px 50px',
+                gap: '0'
               }}>
                 <div></div>
                 <div></div>
+                <div></div>
+                <div></div>
                 <div className="text-[#09121F] text-sm font-bold text-left">TOTAL-IN</div>
+                <div></div>
                 <div className="text-[#09121F] text-sm font-bold text-left">
                   {formatHours(organizedData.totalIn.hours)}
                 </div>
                 {settings.invoiceMode && (
-                  <div className="text-[#09121F] text-sm font-bold text-right">
-                    {formatCurrency(organizedData.totalIn.fee)}
-                  </div>
+                  <>
+                    <div></div>
+                    <div className="text-[#09121F] text-sm font-bold text-right">
+                      {formatCurrency(organizedData.totalIn.fee)}
+                    </div>
+                  </>
                 )}
               </div>
             </div>
