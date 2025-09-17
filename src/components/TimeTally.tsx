@@ -774,7 +774,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                                   />
                                 ) : (
                                   <span 
-                                    className="cursor-pointer hover:bg-gray-100 px-1 rounded"
+                                    className="cursor-pointer hover:bg-gray-100 pr-1 rounded"
                                     onClick={() => handleFieldEdit(entry.id, 'date')}
                                   >
                                     {formatDateLabel(entry.date)}
