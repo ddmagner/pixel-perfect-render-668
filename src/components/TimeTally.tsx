@@ -560,7 +560,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
 {headers.map((header, index) => (
   <span
     key={header}
-    className={`text-[#09121F] text-sm font-bold ${header === 'Hours' || header === 'Fee' ? 'text-right' : 'text-left'} ${header === 'Task' ? 'pl-1' : ''}`}
+    className={`text-[#09121F] text-sm font-bold ${header === 'Hours' || header === 'Fee' ? 'text-left' : 'text-left'} ${header === 'Task' ? 'pl-1' : ''}`}
   >
     {header}
   </span>
@@ -792,14 +792,14 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                             </>
                           )}
                           
-                          <div className="text-[#09121F] text-sm leading-tight text-right flex items-start justify-end">
+                           <div className="text-[#09121F] text-sm leading-tight text-left flex items-start justify-start">
                             {editingEntryId === entry.id && editingField === 'duration' ? (
                               <input
                                 type="number"
                                 step="0.01"
                                 min="0"
-                                defaultValue={entry.duration.toString()}
-                                className="text-sm bg-transparent border-none outline-none focus:bg-white focus:border focus:border-gray-300 px-1 rounded w-16 text-right"
+                                 defaultValue={entry.duration.toString()}
+                                 className="text-sm bg-transparent border-none outline-none focus:bg-white focus:border focus:border-gray-300 px-1 rounded w-16 text-left"
                                 autoFocus
                                 onBlur={(e) => handleFieldSave(entry.id, 'duration', e.target.value)}
                                 onKeyDown={(e) => {
@@ -844,7 +844,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                         <div className="flex items-center"></div>
                         <div className="flex items-center"></div>
                         <div className="text-[#09121F] text-sm font-bold flex items-center text-left pl-[6px]">Sub-total</div>
-                        <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
+                         <div className="text-[#09121F] text-sm font-bold text-left flex items-center justify-start">
                           {formatHours(subgroup.subtotal.hours)}
                         </div>
                         {settings.invoiceMode && (
@@ -866,7 +866,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                     <div className="flex items-center"></div>
                     <div className="flex items-center"></div>
                     <div className="text-[#09121F] text-sm font-bold flex items-center text-left pl-[6px]">TOTAL</div>
-                    <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
+                     <div className="text-[#09121F] text-sm font-bold text-left flex items-center justify-start">
                       {formatHours(group.total.hours)}
                     </div>
                     {settings.invoiceMode && (
@@ -890,7 +890,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                 <div className="flex items-center"></div>
                 <div className="flex items-center"></div>
                 <div className="text-[#09121F] text-sm font-bold flex items-center text-left pl-[6px]">TOTAL-IN</div>
-                <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
+                 <div className="text-[#09121F] text-sm font-bold text-left flex items-center justify-start">
                   {formatHours(organizedData.totalIn.hours)}
                 </div>
                 {settings.invoiceMode && (
