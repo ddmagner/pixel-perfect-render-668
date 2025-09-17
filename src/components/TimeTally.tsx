@@ -557,9 +557,14 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
               {isAllSelected && <div className="w-2 h-2 rounded-full bg-[#09121F]"></div>}
             </div>
           </div>
-          {headers.map((header, index) => <span key={header} className={`text-[#09121F] text-sm font-bold ${header === 'Hours' || header === 'Fee' ? 'text-right' : 'text-left'} ${header !== 'Hours' && header !== 'Fee' ? 'pl-0' : ''}`}>
-              {header}
-            </span>)}
+{headers.map((header, index) => (
+  <span
+    key={header}
+    className={`text-[#09121F] text-sm font-bold ${header === 'Hours' || header === 'Fee' ? 'text-right' : 'text-left'} ${header === 'Task' ? 'pl-1' : ''}`}
+  >
+    {header}
+  </span>
+))}
         </div>
         <div className="h-px bg-[#09121F]" />
       </div>
@@ -838,7 +843,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                       }}>
                         <div className="flex items-center"></div>
                         <div className="flex items-center"></div>
-                        <div className="text-[#09121F] text-sm font-bold flex items-center text-left pl-0">Sub-total</div>
+                        <div className={`text-[#09121F] text-sm font-bold flex items-center text-left ${sortOption !== 'task' ? 'pl-1' : ''}`}>Sub-total</div>
                         <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
                           {formatHours(subgroup.subtotal.hours)}
                         </div>
@@ -860,7 +865,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                   }}>
                     <div className="flex items-center"></div>
                     <div className="flex items-center"></div>
-                    <div className="text-[#09121F] text-sm font-bold flex items-center text-left pl-0">TOTAL</div>
+                    <div className={`text-[#09121F] text-sm font-bold flex items-center text-left ${sortOption !== 'task' ? 'pl-1' : ''}`}>TOTAL</div>
                     <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
                       {formatHours(group.total.hours)}
                     </div>
@@ -884,7 +889,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
               }}>
                 <div className="flex items-center"></div>
                 <div className="flex items-center"></div>
-                <div className="text-[#09121F] text-sm font-bold flex items-center text-left pl-0">TOTAL-IN</div>
+                <div className={`text-[#09121F] text-sm font-bold flex items-center text-left ${sortOption !== 'task' ? 'pl-1' : ''}`}>TOTAL-IN</div>
                 <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
                   {formatHours(organizedData.totalIn.hours)}
                 </div>
