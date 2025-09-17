@@ -546,9 +546,9 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
       <div className="w-full px-2.5">
         <div className="grid h-[32px] items-center" style={{
           gridTemplateColumns: settings.invoiceMode 
-            ? '20px 1fr 1fr 60px 80px' 
-            : '20px 1fr 1fr 60px',
-          gap: '12px'
+            ? '20px 140px 140px 60px 80px' 
+            : '20px 140px 140px 60px',
+          gap: '16px'
         }}>
           <div className="flex items-center justify-start">
             <div className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${isAllSelected ? 'bg-gray-300' : 'bg-white'}`} onClick={() => selection.toggleSelectAll(allEntryIds)}>
@@ -584,9 +584,9 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                   {/* Top Level Header */}
                   <div className="grid items-center font-bold text-[#09121F] text-sm py-2" style={{
                     gridTemplateColumns: settings.invoiceMode 
-                      ? '20px 1fr 1fr 60px 80px' 
-                      : '20px 1fr 1fr 60px',
-                    gap: '12px'
+                      ? '20px 140px 140px 60px 80px' 
+                      : '20px 140px 140px 60px',
+                    gap: '16px'
                   }}>
                     <div className="flex items-center justify-start">
                       {(() => {
@@ -626,9 +626,9 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                       {/* Subgroup Header */}
                       <div className="grid items-center font-bold text-[#09121F] text-sm py-2" style={{
                         gridTemplateColumns: settings.invoiceMode 
-                          ? '20px 1fr 1fr 60px 80px' 
-                          : '20px 1fr 1fr 60px',
-                        gap: '12px'
+                          ? '20px 140px 140px 60px 80px' 
+                          : '20px 140px 140px 60px',
+                        gap: '16px'
                       }}>
                         <div className="flex items-center justify-start">
                           {(() => {
@@ -670,9 +670,9 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                       {subgroup.entries?.map((entry: TimeEntry) => (
                         <div key={entry.id} className="grid items-start hover:bg-gray-50 py-2" style={{
                           gridTemplateColumns: settings.invoiceMode 
-                            ? '20px 1fr 1fr 60px 80px' 
-                            : '20px 1fr 1fr 60px',
-                          gap: '12px'
+                            ? '20px 140px 140px 60px 80px' 
+                            : '20px 140px 140px 60px',
+                          gap: '16px'
                         }}>
                           <div className="flex items-start justify-start self-start mt-1">
                             <div className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${selection.isSelected(entry.id) ? 'bg-gray-300' : 'bg-white'}`} onClick={() => selection.toggleSelectRecord(entry.id)} style={{
@@ -837,9 +837,9 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                       {/* Sub-total */}
                       <div className="grid h-[32px] items-center" style={{
                         gridTemplateColumns: settings.invoiceMode 
-                          ? '20px 1fr 1fr 60px 80px' 
-                          : '20px 1fr 1fr 60px',
-                        gap: '12px'
+                          ? '20px 140px 140px 60px 80px' 
+                          : '20px 140px 140px 60px',
+                        gap: '16px'
                       }}>
                         <div></div>
                         <div></div>
@@ -859,9 +859,9 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                   {/* TOTAL for this group */}
                   <div className="grid h-[32px] items-center" style={{
                     gridTemplateColumns: settings.invoiceMode 
-                      ? '20px 1fr 1fr 60px 80px' 
-                      : '20px 1fr 1fr 60px',
-                    gap: '12px'
+                      ? '20px 140px 140px 60px 80px' 
+                      : '20px 140px 140px 60px',
+                    gap: '16px'
                   }}>
                     <div></div>
                     <div></div>
@@ -883,9 +883,9 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
             <div className="w-full border-t-2 border-[#09121F] mt-4">
               <div className="grid h-[32px] items-center" style={{
                 gridTemplateColumns: settings.invoiceMode 
-                  ? '20px 1fr 1fr 60px 80px' 
-                  : '20px 1fr 1fr 60px',
-                gap: '12px'
+                  ? '20px 140px 140px 60px 80px' 
+                  : '20px 140px 140px 60px',
+                gap: '16px'
               }}>
                 <div></div>
                 <div></div>
