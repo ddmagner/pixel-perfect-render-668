@@ -843,7 +843,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                        }}>
                         <div className="flex items-center"></div>
                         <div className="flex items-center"></div>
-                        <div className="text-[#09121F] text-sm font-bold flex items-center text-left pl-[38px]">Sub-total</div>
+                        <div className="text-[#09121F] text-sm font-bold flex items-center text-left pl-[6px]">Sub-total</div>
                         <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
                           {formatHours(subgroup.subtotal.hours)}
                         </div>
@@ -865,7 +865,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                    }}>
                     <div className="flex items-center"></div>
                     <div className="flex items-center"></div>
-                    <div className="text-[#09121F] text-sm font-bold flex items-center text-left pl-[38px]">TOTAL</div>
+                    <div className="text-[#09121F] text-sm font-bold flex items-center text-left pl-[6px]">TOTAL</div>
                     <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
                       {formatHours(group.total.hours)}
                     </div>
@@ -889,7 +889,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                }}>
                 <div className="flex items-center"></div>
                 <div className="flex items-center"></div>
-                <div className="text-[#09121F] text-sm font-bold flex items-center text-left pl-[38px]">TOTAL-IN</div>
+                <div className="text-[#09121F] text-sm font-bold flex items-center text-left pl-[6px]">TOTAL-IN</div>
                 <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
                   {formatHours(organizedData.totalIn.hours)}
                 </div>
