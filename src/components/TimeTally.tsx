@@ -560,7 +560,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
             <React.Fragment key={header}>
               <span
                 className={`text-[#09121F] text-sm font-bold ${
-                  header === 'Fee' ? 'text-right' : 'text-left'
+                  header === 'Hours' || header === 'Fee' ? 'text-right' : 'text-left'
                 }`}
               >
                 {header}
@@ -803,14 +803,14 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                           )}
                           
                           <div></div>
-                          <div className="text-[#09121F] text-sm leading-tight text-left flex items-start">
+                          <div className="text-[#09121F] text-sm leading-tight text-right flex items-start justify-end">
                             {editingEntryId === entry.id && editingField === 'duration' ? (
                               <input
                                 type="number"
                                 step="0.01"
                                 min="0"
                                 defaultValue={entry.duration.toString()}
-                                className="text-sm bg-transparent border-none outline-none focus:bg-white focus:border focus:border-gray-300 px-1 rounded w-12 text-left"
+                                className="text-sm bg-transparent border-none outline-none focus:bg-white focus:border focus:border-gray-300 px-1 rounded w-12 text-right"
                                 autoFocus
                                 onBlur={(e) => handleFieldSave(entry.id, 'duration', e.target.value)}
                                 onKeyDown={(e) => {
@@ -820,7 +820,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                               />
                             ) : (
                               <span 
-                                className="cursor-pointer hover:bg-gray-100 rounded text-left"
+                                className="cursor-pointer hover:bg-gray-100 rounded text-right"
                                 onClick={() => handleFieldEdit(entry.id, 'duration')}
                               >
                                 {formatHours(entry.duration)}
@@ -857,9 +857,9 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                       }}>
                         <div></div>
                         <div></div>
-                        <div></div>
-                        <div></div>
                         <div className="text-[#09121F] text-sm font-bold text-left">Sub-total</div>
+                        <div></div>
+                        <div></div>
                         <div></div>
                         <div className="text-[#09121F] text-sm font-bold text-right">
                           {formatHours(subgroup.subtotal.hours)}
@@ -885,11 +885,11 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                   }}>
                     <div></div>
                     <div></div>
-                    <div></div>
-                    <div></div>
                     <div className="text-[#09121F] text-sm font-bold text-left">TOTAL</div>
                     <div></div>
-                    <div className="text-[#09121F] text-sm font-bold text-left">
+                    <div></div>
+                    <div></div>
+                    <div className="text-[#09121F] text-sm font-bold text-right">
                       {formatHours(group.total.hours)}
                     </div>
                     {settings.invoiceMode && (
@@ -915,11 +915,11 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
               }}>
                 <div></div>
                 <div></div>
-                <div></div>
-                <div></div>
                 <div className="text-[#09121F] text-sm font-bold text-left">TOTAL-IN</div>
                 <div></div>
-                <div className="text-[#09121F] text-sm font-bold text-left">
+                <div></div>
+                <div></div>
+                <div className="text-[#09121F] text-sm font-bold text-right">
                   {formatHours(organizedData.totalIn.hours)}
                 </div>
                 {settings.invoiceMode && (
