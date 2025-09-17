@@ -423,12 +423,12 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
   // Get table headers based on sort option
   const getTableHeaders = () => {
     if (sortOption === 'project') {
-      return settings.invoiceMode ? ['Date', 'Hours', 'Task', 'Fee'] : ['Date', 'Hours', 'Task'];
+      return settings.invoiceMode ? ['Date', 'Task', 'Hours', 'Fee'] : ['Date', 'Task', 'Hours'];
     } else if (sortOption === 'date') {
-      return settings.invoiceMode ? ['Project', 'Hours', 'Task', 'Fee'] : ['Project', 'Hours', 'Task'];
+      return settings.invoiceMode ? ['Project', 'Task', 'Hours', 'Fee'] : ['Project', 'Task', 'Hours'];
     } else {
       // task
-      return settings.invoiceMode ? ['Date', 'Hours', 'Project', 'Fee'] : ['Date', 'Hours', 'Project'];
+      return settings.invoiceMode ? ['Date', 'Project', 'Hours', 'Fee'] : ['Date', 'Project', 'Hours'];
     }
   };
   const headers = getTableHeaders();
@@ -560,7 +560,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
 {headers.map((header, index) => (
   <span
     key={header}
-    className={`text-[#09121F] text-sm font-bold ${header === 'Hours' || header === 'Fee' ? 'text-left' : 'text-left'} ${header === 'Task' ? 'pl-1' : ''}`}
+    className={`text-[#09121F] text-sm font-bold ${header === 'Hours' ? 'text-left' : header === 'Fee' ? 'text-right' : 'text-left'} ${header === 'Task' ? 'pl-1' : ''}`}
   >
     {header}
   </span>
@@ -682,7 +682,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                             </div>
                           </div>
                           
-                           {/* Entry data based on sort option */}
+                          {/* Entry data based on sort option */}
                           {sortOption === 'project' && (
                             <>
                               <div className="text-[#09121F] text-sm leading-tight flex items-start">
@@ -704,30 +704,6 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                                     onClick={() => handleFieldEdit(entry.id, 'date')}
                                   >
                                     {formatDateLabel(entry.date)}
-                                  </span>
-                                )}
-                              </div>
-                              <div className="text-[#09121F] text-sm leading-tight text-left flex items-start justify-start">
-                                {editingEntryId === entry.id && editingField === 'duration' ? (
-                                  <input
-                                    type="number"
-                                    step="0.01"
-                                    min="0"
-                                     defaultValue={entry.duration.toString()}
-                                     className="text-sm bg-transparent border-none outline-none focus:bg-white focus:border focus:border-gray-300 px-1 rounded w-16 text-left"
-                                    autoFocus
-                                    onBlur={(e) => handleFieldSave(entry.id, 'duration', e.target.value)}
-                                    onKeyDown={(e) => {
-                                      if (e.key === 'Enter') handleFieldSave(entry.id, 'duration', e.currentTarget.value);
-                                      if (e.key === 'Escape') handleFieldCancel();
-                                    }}
-                                  />
-                                ) : (
-                                   <span 
-                                     className="cursor-pointer hover:bg-gray-100 rounded"
-                                     onClick={() => handleFieldEdit(entry.id, 'duration')}
-                                   >
-                                    {formatHours(entry.duration)}
                                   </span>
                                 )}
                               </div>
@@ -760,30 +736,6 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                             <>
                               <div className="text-[#09121F] text-sm leading-tight flex items-start">
                                 {entry.project}
-                              </div>
-                              <div className="text-[#09121F] text-sm leading-tight text-left flex items-start justify-start">
-                                {editingEntryId === entry.id && editingField === 'duration' ? (
-                                  <input
-                                    type="number"
-                                    step="0.01"
-                                    min="0"
-                                     defaultValue={entry.duration.toString()}
-                                     className="text-sm bg-transparent border-none outline-none focus:bg-white focus:border focus:border-gray-300 px-1 rounded w-16 text-left"
-                                    autoFocus
-                                    onBlur={(e) => handleFieldSave(entry.id, 'duration', e.target.value)}
-                                    onKeyDown={(e) => {
-                                      if (e.key === 'Enter') handleFieldSave(entry.id, 'duration', e.currentTarget.value);
-                                      if (e.key === 'Escape') handleFieldCancel();
-                                    }}
-                                  />
-                                ) : (
-                                   <span 
-                                     className="cursor-pointer hover:bg-gray-100 rounded"
-                                     onClick={() => handleFieldEdit(entry.id, 'duration')}
-                                   >
-                                    {formatHours(entry.duration)}
-                                  </span>
-                                )}
                               </div>
                               <div className="text-[#09121F] text-sm leading-tight flex items-start">
                                 {editingEntryId === entry.id && editingField === 'task' ? (
@@ -834,51 +786,51 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                                   </span>
                                 )}
                               </div>
-                              <div className="text-[#09121F] text-sm leading-tight text-left flex items-start justify-start">
-                                {editingEntryId === entry.id && editingField === 'duration' ? (
-                                  <input
-                                    type="number"
-                                    step="0.01"
-                                    min="0"
-                                     defaultValue={entry.duration.toString()}
-                                     className="text-sm bg-transparent border-none outline-none focus:bg-white focus:border focus:border-gray-300 px-1 rounded w-16 text-left"
-                                    autoFocus
-                                    onBlur={(e) => handleFieldSave(entry.id, 'duration', e.target.value)}
-                                    onKeyDown={(e) => {
-                                      if (e.key === 'Enter') handleFieldSave(entry.id, 'duration', e.currentTarget.value);
-                                      if (e.key === 'Escape') handleFieldCancel();
-                                    }}
-                                  />
-                                ) : (
-                                   <span 
-                                     className="cursor-pointer hover:bg-gray-100 rounded"
-                                     onClick={() => handleFieldEdit(entry.id, 'duration')}
-                                   >
-                                    {formatHours(entry.duration)}
-                                  </span>
-                                )}
-                              </div>
                               <div className="text-[#09121F] text-sm leading-tight flex items-start">
                                 {entry.project}
                               </div>
                             </>
                           )}
                           
-                          
-                          {settings.invoiceMode && (
-                            <div className="text-[#09121F] text-sm leading-tight text-right flex items-start justify-end">
-                              {hasTaskRate(entry.task) ? (
-                                <span>{formatCurrency(calculateFee(entry))}</span>
-                              ) : (
-                                <div className="flex items-center gap-1">
-                                  <span className="text-gray-400">--</span>
-                                  <button onClick={() => handleAddRate(entry.task)} className="text-xs text-blue-600 hover:text-blue-800 underline">
-                                    <Plus className="h-3 w-3" />
-                                  </button>
-                                </div>
-                              )}
-                            </div>
-                          )}
+                           {settings.invoiceMode && (
+                             <div className="text-[#09121F] text-sm leading-tight text-left flex items-start justify-start">
+                               {hasTaskRate(entry.task) ? (
+                                 <span>{formatCurrency(calculateFee(entry))}</span>
+                               ) : (
+                                 <div className="flex items-center gap-1">
+                                   <span className="text-gray-400">--</span>
+                                   <button onClick={() => handleAddRate(entry.task)} className="text-xs text-blue-600 hover:text-blue-800 underline">
+                                     <Plus className="h-3 w-3" />
+                                   </button>
+                                 </div>
+                               )}
+                             </div>
+                           )}
+                           
+                           <div className="text-[#09121F] text-sm leading-tight text-right flex items-start justify-end">
+                             {editingEntryId === entry.id && editingField === 'duration' ? (
+                               <input
+                                 type="number"
+                                 step="0.01"
+                                 min="0"
+                                 defaultValue={entry.duration.toString()}
+                                 className="text-sm bg-transparent border-none outline-none focus:bg-white focus:border focus:border-gray-300 px-1 rounded w-16 text-right"
+                                 autoFocus
+                                 onBlur={(e) => handleFieldSave(entry.id, 'duration', e.target.value)}
+                                 onKeyDown={(e) => {
+                                   if (e.key === 'Enter') handleFieldSave(entry.id, 'duration', e.currentTarget.value);
+                                   if (e.key === 'Escape') handleFieldCancel();
+                                 }}
+                               />
+                             ) : (
+                               <span 
+                                 className="cursor-pointer hover:bg-gray-100 rounded"
+                                 onClick={() => handleFieldEdit(entry.id, 'duration')}
+                               >
+                                 {formatHours(entry.duration)}
+                               </span>
+                             )}
+                           </div>
                         </div>
                       ))}
 
@@ -893,13 +845,13 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                         <div className="flex items-center"></div>
                         <div className="text-[#09121F] text-sm font-bold flex items-center text-left pl-[6px]">Sub-total</div>
                          <div className="text-[#09121F] text-sm font-bold text-left flex items-center justify-start">
-                          {formatHours(subgroup.subtotal.hours)}
-                        </div>
-                        {settings.invoiceMode && (
-                          <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
-                            {formatCurrency(subgroup.subtotal.fee)}
-                          </div>
-                        )}
+                           {formatHours(subgroup.subtotal.hours)}
+                         </div>
+                         {settings.invoiceMode && (
+                           <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
+                             {formatCurrency(subgroup.subtotal.fee)}
+                           </div>
+                         )}
                       </div>
                     </div>
                   ))}
@@ -915,13 +867,13 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                     <div className="flex items-center"></div>
                     <div className="text-[#09121F] text-sm font-bold flex items-center text-left pl-[6px]">TOTAL</div>
                      <div className="text-[#09121F] text-sm font-bold text-left flex items-center justify-start">
-                      {formatHours(group.total.hours)}
-                    </div>
-                    {settings.invoiceMode && (
-                      <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
-                        {formatCurrency(group.total.fee)}
-                      </div>
-                    )}
+                       {formatHours(group.total.hours)}
+                     </div>
+                     {settings.invoiceMode && (
+                       <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
+                         {formatCurrency(group.total.fee)}
+                       </div>
+                     )}
                   </div>
                 </div>
               ))}
@@ -939,13 +891,13 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                 <div className="flex items-center"></div>
                 <div className="text-[#09121F] text-sm font-bold flex items-center text-left pl-[6px]">TOTAL-IN</div>
                  <div className="text-[#09121F] text-sm font-bold text-left flex items-center justify-start">
-                  {formatHours(organizedData.totalIn.hours)}
-                </div>
-                {settings.invoiceMode && (
-                  <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
-                    {formatCurrency(organizedData.totalIn.fee)}
-                  </div>
-                )}
+                   {formatHours(organizedData.totalIn.hours)}
+                 </div>
+                 {settings.invoiceMode && (
+                   <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
+                     {formatCurrency(organizedData.totalIn.fee)}
+                   </div>
+                 )}
               </div>
             </div>
           </>
