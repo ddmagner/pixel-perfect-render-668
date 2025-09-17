@@ -616,7 +616,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                       })()}
                     </div>
                     <div></div>
-                    <div className="text-left font-bold text-[#09121F] text-sm col-span-5">
+                    <div className="text-left font-bold text-[#09121F] text-sm col-span-3">
                       {sortOption === 'date' ? formatDateLabel(group.name, true) : group.name}
                     </div>
                     {settings.invoiceMode && <div></div>}
@@ -656,19 +656,19 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                             }
                           })()}
                         </div>
-                         <div></div>
-                         <div className="text-left font-bold text-[#09121F] text-sm col-span-3">
-                           {subgroup.name}
-                         </div>
-                         <div></div>
-                         <div className="flex justify-end">
-                           {subgroup.name === 'No Client' && (
-                             <button className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-[#09121F]/80 transition-colors">
-                               <Plus className="h-2.5 w-2.5" strokeWidth={3} />
-                             </button>
-                           )}
-                         </div>
-                         {settings.invoiceMode && <div></div>}
+                        <div></div>
+                        <div className="text-left font-bold text-[#09121F] text-sm col-span-3">
+                          {subgroup.name}
+                        </div>
+                        <div></div>
+                        <div className="flex justify-end">
+                          {subgroup.name === 'No Client' && (
+                            <button className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-[#09121F]/80 transition-colors">
+                              <Plus className="h-2.5 w-2.5" strokeWidth={3} />
+                            </button>
+                          )}
+                        </div>
+                        {settings.invoiceMode && <div></div>}
                       </div>
 
                       {/* Entries */}
