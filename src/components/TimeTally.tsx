@@ -423,12 +423,12 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
   // Get table headers based on sort option
   const getTableHeaders = () => {
     if (sortOption === 'project') {
-      return settings.invoiceMode ? ['Date', 'Task', 'Hours', 'Fee'] : ['Date', 'Task', 'Hours'];
+      return settings.invoiceMode ? ['Date', 'Hours', 'Task', 'Fee'] : ['Date', 'Hours', 'Task'];
     } else if (sortOption === 'date') {
-      return settings.invoiceMode ? ['Project', 'Task', 'Hours', 'Fee'] : ['Project', 'Task', 'Hours'];
+      return settings.invoiceMode ? ['Project', 'Hours', 'Task', 'Fee'] : ['Project', 'Hours', 'Task'];
     } else {
       // task
-      return settings.invoiceMode ? ['Date', 'Project', 'Hours', 'Fee'] : ['Date', 'Project', 'Hours'];
+      return settings.invoiceMode ? ['Date', 'Hours', 'Project', 'Fee'] : ['Date', 'Hours', 'Project'];
     }
   };
   const headers = getTableHeaders();
@@ -682,7 +682,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                             </div>
                           </div>
                           
-                          {/* Entry data based on sort option */}
+                           {/* Entry data based on sort option */}
                           {sortOption === 'project' && (
                             <>
                               <div className="text-[#09121F] text-sm leading-tight flex items-start">
@@ -704,6 +704,30 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                                     onClick={() => handleFieldEdit(entry.id, 'date')}
                                   >
                                     {formatDateLabel(entry.date)}
+                                  </span>
+                                )}
+                              </div>
+                              <div className="text-[#09121F] text-sm leading-tight text-left flex items-start justify-start">
+                                {editingEntryId === entry.id && editingField === 'duration' ? (
+                                  <input
+                                    type="number"
+                                    step="0.01"
+                                    min="0"
+                                     defaultValue={entry.duration.toString()}
+                                     className="text-sm bg-transparent border-none outline-none focus:bg-white focus:border focus:border-gray-300 px-1 rounded w-16 text-left"
+                                    autoFocus
+                                    onBlur={(e) => handleFieldSave(entry.id, 'duration', e.target.value)}
+                                    onKeyDown={(e) => {
+                                      if (e.key === 'Enter') handleFieldSave(entry.id, 'duration', e.currentTarget.value);
+                                      if (e.key === 'Escape') handleFieldCancel();
+                                    }}
+                                  />
+                                ) : (
+                                   <span 
+                                     className="cursor-pointer hover:bg-gray-100 rounded"
+                                     onClick={() => handleFieldEdit(entry.id, 'duration')}
+                                   >
+                                    {formatHours(entry.duration)}
                                   </span>
                                 )}
                               </div>
@@ -736,6 +760,30 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                             <>
                               <div className="text-[#09121F] text-sm leading-tight flex items-start">
                                 {entry.project}
+                              </div>
+                              <div className="text-[#09121F] text-sm leading-tight text-left flex items-start justify-start">
+                                {editingEntryId === entry.id && editingField === 'duration' ? (
+                                  <input
+                                    type="number"
+                                    step="0.01"
+                                    min="0"
+                                     defaultValue={entry.duration.toString()}
+                                     className="text-sm bg-transparent border-none outline-none focus:bg-white focus:border focus:border-gray-300 px-1 rounded w-16 text-left"
+                                    autoFocus
+                                    onBlur={(e) => handleFieldSave(entry.id, 'duration', e.target.value)}
+                                    onKeyDown={(e) => {
+                                      if (e.key === 'Enter') handleFieldSave(entry.id, 'duration', e.currentTarget.value);
+                                      if (e.key === 'Escape') handleFieldCancel();
+                                    }}
+                                  />
+                                ) : (
+                                   <span 
+                                     className="cursor-pointer hover:bg-gray-100 rounded"
+                                     onClick={() => handleFieldEdit(entry.id, 'duration')}
+                                   >
+                                    {formatHours(entry.duration)}
+                                  </span>
+                                )}
                               </div>
                               <div className="text-[#09121F] text-sm leading-tight flex items-start">
                                 {editingEntryId === entry.id && editingField === 'task' ? (
@@ -786,36 +834,36 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                                   </span>
                                 )}
                               </div>
+                              <div className="text-[#09121F] text-sm leading-tight text-left flex items-start justify-start">
+                                {editingEntryId === entry.id && editingField === 'duration' ? (
+                                  <input
+                                    type="number"
+                                    step="0.01"
+                                    min="0"
+                                     defaultValue={entry.duration.toString()}
+                                     className="text-sm bg-transparent border-none outline-none focus:bg-white focus:border focus:border-gray-300 px-1 rounded w-16 text-left"
+                                    autoFocus
+                                    onBlur={(e) => handleFieldSave(entry.id, 'duration', e.target.value)}
+                                    onKeyDown={(e) => {
+                                      if (e.key === 'Enter') handleFieldSave(entry.id, 'duration', e.currentTarget.value);
+                                      if (e.key === 'Escape') handleFieldCancel();
+                                    }}
+                                  />
+                                ) : (
+                                   <span 
+                                     className="cursor-pointer hover:bg-gray-100 rounded"
+                                     onClick={() => handleFieldEdit(entry.id, 'duration')}
+                                   >
+                                    {formatHours(entry.duration)}
+                                  </span>
+                                )}
+                              </div>
                               <div className="text-[#09121F] text-sm leading-tight flex items-start">
                                 {entry.project}
                               </div>
                             </>
                           )}
                           
-                           <div className="text-[#09121F] text-sm leading-tight text-left flex items-start justify-start">
-                            {editingEntryId === entry.id && editingField === 'duration' ? (
-                              <input
-                                type="number"
-                                step="0.01"
-                                min="0"
-                                 defaultValue={entry.duration.toString()}
-                                 className="text-sm bg-transparent border-none outline-none focus:bg-white focus:border focus:border-gray-300 px-1 rounded w-16 text-left"
-                                autoFocus
-                                onBlur={(e) => handleFieldSave(entry.id, 'duration', e.target.value)}
-                                onKeyDown={(e) => {
-                                  if (e.key === 'Enter') handleFieldSave(entry.id, 'duration', e.currentTarget.value);
-                                  if (e.key === 'Escape') handleFieldCancel();
-                                }}
-                              />
-                            ) : (
-                               <span 
-                                 className="cursor-pointer hover:bg-gray-100 rounded"
-                                 onClick={() => handleFieldEdit(entry.id, 'duration')}
-                               >
-                                {formatHours(entry.duration)}
-                              </span>
-                            )}
-                          </div>
                           
                           {settings.invoiceMode && (
                             <div className="text-[#09121F] text-sm leading-tight text-right flex items-start justify-end">
