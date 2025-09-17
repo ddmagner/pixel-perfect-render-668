@@ -808,10 +808,10 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                                 }}
                               />
                             ) : (
-                              <span 
-                                className="cursor-pointer hover:bg-gray-100 px-1 rounded"
-                                onClick={() => handleFieldEdit(entry.id, 'duration')}
-                              >
+                               <span 
+                                 className="cursor-pointer hover:bg-gray-100 rounded"
+                                 onClick={() => handleFieldEdit(entry.id, 'duration')}
+                               >
                                 {formatHours(entry.duration)}
                               </span>
                             )}
