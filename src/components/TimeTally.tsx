@@ -843,7 +843,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                       }}>
                         <div className="flex items-center"></div>
                         <div className="flex items-center"></div>
-                        <div className={`text-[#09121F] text-sm font-bold flex items-center text-left ${sortOption !== 'task' ? 'pl-1' : ''}`}>Sub-total</div>
+                        <div className="text-[#09121F] text-sm font-bold flex items-center text-left pl-2">Sub-total</div>
                         <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
                           {formatHours(subgroup.subtotal.hours)}
                         </div>
