@@ -196,7 +196,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                     <div className="grid grid-cols-12 gap-4 py-1 text-sm text-black items-center">
                       <div className="col-span-2"></div>
                       <div className="col-span-3"></div>
-                      <div className="col-span-7 -ml-[25px] border-t border-gray-300">
+                      <div className="col-span-7 -ml-[25px] border-t border-gray-300 flex items-center">
                         <div className="ml-[25px]">
                           <div className="grid grid-cols-7 gap-4 items-center text-sm text-black">{/**removed pt-1**/}
                             <div className="col-span-3 -ml-[25px] flex items-center">Subtotal:</div>
@@ -210,7 +210,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                     <div className="grid grid-cols-12 gap-4 py-1 text-sm text-black items-center">
                       <div className="col-span-2"></div>
                       <div className="col-span-3"></div>
-                      <div className="col-span-7 -ml-[25px] border-t border-gray-300">
+                      <div className="col-span-7 -ml-[25px] border-t border-gray-300 flex items-center">
                         <div className="ml-[25px]">
                           <div className="grid grid-cols-7 gap-4 items-center text-sm text-black">{/**removed pt-1**/}
                             <div className="col-span-3 -ml-[25px] flex items-center">Tax (0%):</div>
@@ -224,7 +224,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                     <div className="grid grid-cols-12 gap-4 py-1 text-sm text-black items-center">
                       <div className="col-span-2"></div>
                       <div className="col-span-3"></div>
-                      <div className="col-span-7 -ml-[25px] border-t border-black" style={{ borderTopWidth: '1pt' }}>
+                      <div className="col-span-7 -ml-[25px] border-t border-black flex items-center" style={{ borderTopWidth: '1pt' }}>
                         <div className="ml-[25px]">
                           <div className="grid grid-cols-7 gap-4 items-center text-sm text-black">{/**removed pt-1**/}
                             <div className="col-span-3 -ml-[25px] font-bold flex items-center">Total Due:</div>
