@@ -4,6 +4,7 @@ import { useApp } from '@/context/AppContext';
 interface SpeechRecognitionHook {
   isListening: boolean;
   transcript: string;
+  finalTranscript: string;
   startListening: () => void;
   stopListening: () => void;
   resetTranscript: () => void;
@@ -14,6 +15,7 @@ export function useSpeechRecognition(): SpeechRecognitionHook {
   const { hasMicrophonePermission } = useApp();
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState('');
+  const [finalTranscript, setFinalTranscript] = useState('');
   const recognition = useRef<SpeechRecognition | null>(null);
 
   // Check if speech recognition is supported and we have microphone permission
@@ -32,19 +34,25 @@ export function useSpeechRecognition(): SpeechRecognitionHook {
     recognition.current.lang = 'en-US';
 
     recognition.current.onresult = (event: any) => {
-      let finalTranscript = '';
+      let currentFinalTranscript = '';
       let interimTranscript = '';
 
       for (let i = event.resultIndex; i < event.results.length; i++) {
         const transcript = event.results[i][0].transcript;
         if (event.results[i].isFinal) {
-          finalTranscript += transcript;
+          currentFinalTranscript += transcript;
         } else {
           interimTranscript += transcript;
         }
       }
 
-      setTranscript(finalTranscript + interimTranscript);
+      // Update the final transcript when we have finalized speech
+      if (currentFinalTranscript) {
+        setFinalTranscript(prev => prev + currentFinalTranscript);
+      }
+
+      // Show both final and interim for UI display
+      setTranscript(finalTranscript + currentFinalTranscript + interimTranscript);
     };
 
     recognition.current.onstart = () => {
@@ -81,11 +89,13 @@ export function useSpeechRecognition(): SpeechRecognitionHook {
 
   const resetTranscript = () => {
     setTranscript('');
+    setFinalTranscript('');
   };
 
   return {
     isListening,
     transcript,
+    finalTranscript,
     startListening,
     stopListening,
     resetTranscript,

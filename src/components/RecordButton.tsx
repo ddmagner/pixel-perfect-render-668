@@ -7,16 +7,19 @@ interface RecordButtonProps {
   onRecordStop: () => void;
   isRecording: boolean;
   onTranscript: (transcript: string) => void;
+  onFinalTranscript: (transcript: string) => void;
 }
 export const RecordButton: React.FC<RecordButtonProps> = ({
   onRecordStart,
   onRecordStop,
   isRecording,
-  onTranscript
+  onTranscript,
+  onFinalTranscript
 }) => {
   const [isPressed, setIsPressed] = useState(false);
   const {
     transcript,
+    finalTranscript,
     startListening,
     stopListening,
     resetTranscript,
@@ -34,6 +37,12 @@ export const RecordButton: React.FC<RecordButtonProps> = ({
       onTranscript(transcript);
     }
   }, [transcript, onTranscript]);
+
+  useEffect(() => {
+    if (finalTranscript) {
+      onFinalTranscript(finalTranscript);
+    }
+  }, [finalTranscript, onFinalTranscript]);
   // Unified Pointer Events to avoid mouse/touch conflicts and long-press issues
   const handlePointerDown = (e: React.PointerEvent<HTMLButtonElement>) => {
     e.preventDefault();

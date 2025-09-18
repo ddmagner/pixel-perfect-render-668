@@ -14,10 +14,12 @@ interface TimeEntryData {
 interface TimeEntryFormProps {
   onSubmit: (data: TimeEntryData) => void;
   transcript?: string;
+  finalTranscript?: string;
 }
 export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
   onSubmit,
-  transcript
+  transcript,
+  finalTranscript
 }) => {
   const navigate = useNavigate();
   const {
@@ -34,7 +36,7 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
   });
   const [isProcessing, setIsProcessing] = useState(false);
 
-  // Parse transcript and update form data
+  // Parse transcript for display (interim + final)
   useEffect(() => {
     if (transcript) {
       console.log('Processing transcript:', transcript);
@@ -58,6 +60,33 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
       });
     }
   }, [transcript]);
+
+  // Process final transcript for auto-matching (only when speech is finalized)
+  useEffect(() => {
+    if (finalTranscript) {
+      console.log('Processing final transcript for auto-matching:', finalTranscript);
+      const parsed = parseTimeEntryFromSpeech(finalTranscript);
+      
+      // Only trigger auto-matching when we have finalized speech
+      if (parsed.project || parsed.client) {
+        setFormData(prev => {
+          const newFormData = { ...prev };
+          
+          if (parsed.project) {
+            // Will trigger auto-matching in handleSubmit
+            newFormData.project = parsed.project.replace(/\b\w/g, char => char.toUpperCase());
+          }
+          
+          if (parsed.client) {
+            // Will trigger auto-matching in handleSubmit
+            newFormData.client = parsed.client.replace(/\b\w/g, char => char.toUpperCase());
+          }
+          
+          return newFormData;
+        });
+      }
+    }
+  }, [finalTranscript]);
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     

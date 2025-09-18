@@ -14,6 +14,7 @@ const Index = () => {
   const [activeTab, setActiveTab] = useState('enter-time');
   const [isRecording, setIsRecording] = useState(false);
   const [currentTranscript, setCurrentTranscript] = useState('');
+  const [finalTranscript, setFinalTranscript] = useState('');
   const { timeEntries, addTimeEntry } = useApp();
 
   // Handle navigation from TimeArchive
@@ -40,6 +41,10 @@ const Index = () => {
 
   const handleTranscript = (transcript: string) => {
     setCurrentTranscript(transcript);
+  };
+
+  const handleFinalTranscript = (transcript: string) => {
+    setFinalTranscript(transcript);
   };
 
   const handleTimeEntrySubmit = (data: { duration: string; task: string; project: string; client: string }) => {
@@ -80,11 +85,12 @@ const Index = () => {
               onRecordStop={handleRecordStop}
               isRecording={isRecording}
               onTranscript={handleTranscript}
+              onFinalTranscript={handleFinalTranscript}
             />
             
             <Divider />
             
-            <TimeEntryForm onSubmit={handleTimeEntrySubmit} transcript={currentTranscript} />
+            <TimeEntryForm onSubmit={handleTimeEntrySubmit} transcript={currentTranscript} finalTranscript={finalTranscript} />
           </>
         )}
 
