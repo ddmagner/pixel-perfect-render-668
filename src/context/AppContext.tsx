@@ -125,6 +125,12 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         .select('*')
         .eq('user_id', user.id);
 
+      // Load tax types
+      const { data: taxTypesData, error: taxTypesError } = await supabase
+        .from('tax_types')
+        .select('*')
+        .eq('user_id', user.id);
+
       if (taskTypesError) throw taskTypesError;
 
       // Load profile
@@ -155,7 +161,11 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
           name: task.name,
           hourlyRate: task.hourly_rate ? Number(task.hourly_rate) : undefined
         })) : defaultSettings.taskTypes,
-        taxTypes: defaultSettings.taxTypes, // Initialize empty for now
+        taxTypes: (taxTypesData || []).length > 0 ? (taxTypesData || []).map(tax => ({
+          id: tax.id,
+          name: tax.name,
+          rate: tax.rate ? Number(tax.rate) : undefined
+        })) : defaultSettings.taxTypes,
         projects: (projectsData || []).length > 0 ? (projectsData || []).map(project => ({
           id: project.id,
           name: project.name,
@@ -292,6 +302,22 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
               user_id: user.id,
               name: taskType.name,
               hourly_rate: taskType.hourlyRate || null
+            }, {
+              onConflict: 'id'
+            });
+        }
+      }
+
+      // Sync tax types to database if they were updated
+      if (newSettings.taxTypes) {
+        for (const taxType of newSettings.taxTypes) {
+          await supabase
+            .from('tax_types')
+            .upsert({
+              id: taxType.id,
+              user_id: user.id,
+              name: taxType.name,
+              rate: taxType.rate || null
             }, {
               onConflict: 'id'
             });

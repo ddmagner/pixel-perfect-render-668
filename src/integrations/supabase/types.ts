@@ -184,6 +184,33 @@ export type Database = {
         }
         Relationships: []
       }
+      tax_types: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          rate: number | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          rate?: number | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          rate?: number | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       time_entries: {
         Row: {
           archived: boolean | null
