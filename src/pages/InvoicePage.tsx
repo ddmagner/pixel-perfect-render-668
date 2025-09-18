@@ -90,6 +90,41 @@ const taxCalculations = (settings?.taxTypes || []).map(taxType => ({
 }));
 const totalTaxAmount = taxCalculations.reduce((sum, t) => sum + t.amount, 0);
 const totalAmount = subtotalAmount + totalTaxAmount;
+
+// Determine primary client for BILL TO section
+const primaryClient = React.useMemo(() => {
+  if (entries.length === 0 || !settings) return null;
+  
+  // Get all unique clients from entries
+  const clientCounts: { [key: string]: number } = {};
+  entries.forEach(entry => {
+    let clientName = entry.client || '';
+    
+    // If no direct client, try to find via project mapping
+    if (!clientName) {
+      const project = settings.projects.find(p => p.name === entry.project);
+      if (project?.clientId) {
+        const client = settings.clients.find(c => c.id === project.clientId);
+        clientName = client?.name || '';
+      }
+    }
+    
+    if (clientName) {
+      clientCounts[clientName] = (clientCounts[clientName] || 0) + 1;
+    }
+  });
+  
+  // Find the client with the most entries (primary client)
+  const primaryClientName = Object.keys(clientCounts).reduce((a, b) => 
+    clientCounts[a] > clientCounts[b] ? a : b, '');
+  
+  if (primaryClientName) {
+    return settings.clients.find(c => c.name === primaryClientName) || null;
+  }
+  
+  return null;
+}, [entries, settings?.clients, settings?.projects]);
+
 const currentDate = new Date();
 
   if (loading || !settings) {
@@ -204,10 +239,28 @@ const currentDate = new Date();
           <div className="col-span-3 -ml-[15px]">
             <h3 className="text-sm font-bold text-black print-text uppercase tracking-wider mb-1.5">Bill To</h3>
             <div className="text-sm text-black print-text">
-              <p>Client Name</p>
-              <p>Client Company</p>
-              <p>Client Address Line 1</p>
-              <p>City, State 12345</p>
+              {primaryClient ? (
+                <>
+                  <p>{primaryClient.name}</p>
+                  {primaryClient.email && <p>{primaryClient.email}</p>}
+                  {primaryClient.address && <p>{primaryClient.address}</p>}
+                  {(primaryClient.city || primaryClient.state || primaryClient.zip_code) && (
+                    <p>
+                      {primaryClient.city && primaryClient.city}
+                      {primaryClient.city && primaryClient.state && ', '}
+                      {primaryClient.state && primaryClient.state}
+                      {primaryClient.zip_code && ` ${primaryClient.zip_code}`}
+                    </p>
+                  )}
+                </>
+              ) : (
+                <>
+                  <p>Client Name</p>
+                  <p>Client Company</p>
+                  <p>Client Address Line 1</p>
+                  <p>City, State 12345</p>
+                </>
+              )}
             </div>
           </div>
         </div>
