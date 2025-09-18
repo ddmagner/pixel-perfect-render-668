@@ -29,6 +29,7 @@ const defaultSettings: AppSettings = {
   accentColor: 'hsl(0, 0%, 85%)', // Light gray as default secondary color
   invoiceMode: false,
   taskTypes: [],
+  taxTypes: [],
   projects: [],
   clients: [],
   userProfile: {
@@ -154,6 +155,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
           name: task.name,
           hourlyRate: task.hourly_rate ? Number(task.hourly_rate) : undefined
         })) : defaultSettings.taskTypes,
+        taxTypes: defaultSettings.taxTypes, // Initialize empty for now
         projects: (projectsData || []).length > 0 ? (projectsData || []).map(project => ({
           id: project.id,
           name: project.name,

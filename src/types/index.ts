@@ -16,6 +16,12 @@ export interface TaskType {
   hourlyRate?: number;
 }
 
+export interface TaxType {
+  id: string;
+  name: string;
+  rate?: number; // percentage rate
+}
+
 export interface Project {
   id: string;
   name: string;
@@ -53,6 +59,7 @@ export interface AppSettings {
   accentColor: string;
   invoiceMode: boolean;
   taskTypes: TaskType[];
+  taxTypes: TaxType[];
   projects: Project[];
   clients: Client[];
   userProfile: UserProfile;
