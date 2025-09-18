@@ -560,7 +560,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
             <React.Fragment key={header}>
               <span
                 className={`text-[#09121F] text-sm font-bold ${
-                  header === 'Hours' || header === 'Fee' ? 'text-right' : 'text-left'
+                  header === 'Fee' ? 'text-right' : 'text-left'
                 }`}
               >
                 {header}
