@@ -10,6 +10,7 @@ const ClientAddressPage = () => {
   const clientId = searchParams.get('clientId');
   
   const client = settings.clients.find(c => c.id === clientId);
+  const [attention, setAttention] = useState(client?.attention || '');
   const [address, setAddress] = useState(client?.address || '');
   const [city, setCity] = useState(client?.city || '');
   const [state, setState] = useState(client?.state || '');
@@ -20,6 +21,7 @@ const ClientAddressPage = () => {
   };
 
   const handleInputChange = (field: string, value: string) => {
+    if (field === 'attention') setAttention(value);
     if (field === 'address') setAddress(value);
     if (field === 'city') setCity(value);
     if (field === 'state') setState(value);
@@ -31,6 +33,7 @@ const ClientAddressPage = () => {
         c.id === clientId 
           ? { 
               ...c, 
+              attention: field === 'attention' ? value : attention,
               address: field === 'address' ? value : address,
               city: field === 'city' ? value : city,
               state: field === 'state' ? value : state,
@@ -116,6 +119,20 @@ const ClientAddressPage = () => {
         </div>
         
         <div className="space-y-4">
+          <div>
+            <h3 className="text-[#09121F] text-sm font-medium mb-2">Attention</h3>
+            <div className="flex items-center justify-between h-5">
+              <input
+                type="text"
+                value={attention}
+                onChange={(e) => handleInputChange('attention', e.target.value)}
+                placeholder="Name"
+                className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none flex-1"
+              />
+              <Edit3 size={16} className="text-gray-400" />
+            </div>
+          </div>
+
           <div>
             <h3 className="text-[#09121F] text-sm font-medium mb-2">Address</h3>
             <div className="flex items-center justify-between h-5">

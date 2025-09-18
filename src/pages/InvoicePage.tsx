@@ -239,11 +239,12 @@ const currentDate = new Date();
           <div className="col-span-3 -ml-[15px]">
             <h3 className="text-sm font-bold text-black print-text uppercase tracking-wider mb-1.5">Bill To</h3>
             <div className="text-sm text-black print-text">
-              {primaryClient ? (
-                <>
-                  <p>{primaryClient.name}</p>
-                  {primaryClient.email && <p>{primaryClient.email}</p>}
-                  {primaryClient.address && <p>{primaryClient.address}</p>}
+                 {primaryClient ? (
+                   <>
+                     <p>{primaryClient.name}</p>
+                     {primaryClient.attention && <p>Attention: {primaryClient.attention}</p>}
+                     {primaryClient.email && <p>{primaryClient.email}</p>}
+                     {primaryClient.address && <p>{primaryClient.address}</p>}
                   {(primaryClient.city || primaryClient.state || primaryClient.zip_code) && (
                     <p>
                       {primaryClient.city && primaryClient.city}

@@ -32,6 +32,7 @@ export interface Client {
   id: string;
   name: string;
   email?: string;
+  attention?: string;
   address?: string;
   city?: string;
   state?: string;
