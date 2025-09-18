@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { useMicrophonePermission } from '@/hooks/useMicrophonePermission';
-import { TimeEntry, AppSettings, SortOption, ViewMode } from '@/types';
+import { TimeEntry, AppSettings, SortOption, ViewMode, TaxType } from '@/types';
 import { useToast } from '@/hooks/use-toast';
 
 interface AppContextType {
@@ -132,6 +132,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         .eq('user_id', user.id);
 
       if (taskTypesError) throw taskTypesError;
+      if (taxTypesError) throw taxTypesError;
 
       // Load profile
       const { data: profileData, error: profileError } = await supabase
@@ -164,7 +165,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         taxTypes: (taxTypesData || []).length > 0 ? (taxTypesData || []).map(tax => ({
           id: tax.id,
           name: tax.name,
-          rate: tax.rate ? Number(tax.rate) : undefined
+          rate: tax.rate == null ? undefined : Number(tax.rate)
         })) : defaultSettings.taxTypes,
         projects: (projectsData || []).length > 0 ? (projectsData || []).map(project => ({
           id: project.id,
@@ -321,7 +322,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
               id: taxType.id,
               user_id: user.id,
               name: taxType.name,
-              rate: taxType.rate || null
+               rate: taxType.rate == null ? null : taxType.rate
             }, {
               onConflict: 'id'
             });
