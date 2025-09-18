@@ -431,6 +431,27 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
       return settings.invoiceMode ? ['Date', 'Project', 'Hours', 'Fee'] : ['Date', 'Project', 'Hours'];
     }
   };
+
+  // Helper to get grid template for headers and entry rows (with narrow date column for project/task views)
+  const getEntryGridTemplate = (invoice: boolean) => {
+    const hasDateColumn = sortOption === 'project' || sortOption === 'task';
+    if (hasDateColumn) {
+      return invoice
+        ? '16px 8px 0.5fr 8px 1.5fr 8px 50px 8px 60px'
+        : '16px 8px 0.5fr 8px 1.5fr 8px 50px';
+    } else {
+      return invoice
+        ? '16px 8px 1fr 8px 1fr 8px 50px 8px 60px'
+        : '16px 8px 1fr 8px 1fr 8px 50px';
+    }
+  };
+
+  // Helper to get grid template for sub-total/total rows (always use equal columns)
+  const getRegularGridTemplate = (invoice: boolean) => {
+    return invoice
+      ? '16px 8px 1fr 8px 1fr 8px 50px 8px 60px'
+      : '16px 8px 1fr 8px 1fr 8px 50px';
+  };
   const headers = getTableHeaders();
   // Compute fixed widths for the two content columns at half their previous width
   const gridRef = React.useRef<HTMLDivElement | null>(null);
@@ -579,9 +600,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
       {/* Table Header */}
       <div className="w-full px-2.5">
         <div className="grid h-[32px] items-center" style={{
-          gridTemplateColumns: settings.invoiceMode 
-            ? '16px 8px 1fr 8px 1fr 8px 50px 8px 60px' 
-            : '16px 8px 1fr 8px 1fr 8px 50px',
+          gridTemplateColumns: getEntryGridTemplate(settings.invoiceMode),
           gap: '0'
         }}>
           <div className="flex items-center justify-start">
@@ -618,13 +637,11 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
               {organizedData.groups.map((group, groupIndex) => (
                 <div key={`${group.type}-${group.name}-${groupIndex}`}>
                   
-                  {/* Top Level Header */}
-                  <div className="grid items-center font-bold text-[#09121F] text-sm py-2" style={{
-                    gridTemplateColumns: settings.invoiceMode 
-                      ? '16px 8px 1fr 8px 1fr 8px 50px 8px 60px' 
-                      : '16px 8px 1fr 8px 1fr 8px 50px',
-                    gap: '0'
-                  }}>
+                   {/* Top Level Header */}
+                   <div className="grid items-center font-bold text-[#09121F] text-sm py-2" style={{
+                     gridTemplateColumns: getRegularGridTemplate(settings.invoiceMode),
+                     gap: '0'
+                   }}>
                     <div className="flex items-center justify-start">
                       {(() => {
                         // Get all entry IDs for this top-level group
@@ -660,13 +677,11 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                   {group.subgroups?.map((subgroup: any, subIndex: number) => (
                     <div key={`${subgroup.type}-${subgroup.name}-${subIndex}`}>
                       
-                      {/* Subgroup Header */}
-                      <div className="grid items-center font-bold text-[#09121F] text-sm py-2" style={{
-                        gridTemplateColumns: settings.invoiceMode 
-                          ? '16px 8px 1fr 8px 1fr 8px 50px 8px 60px' 
-                          : '16px 8px 1fr 8px 1fr 8px 50px',
-                        gap: '0'
-                      }}>
+                       {/* Subgroup Header */}
+                       <div className="grid items-center font-bold text-[#09121F] text-sm py-2" style={{
+                         gridTemplateColumns: getRegularGridTemplate(settings.invoiceMode),
+                         gap: '0'
+                       }}>
                         <div className="flex items-center justify-start">
                           {(() => {
                             let entryIds: string[] = [];
@@ -705,14 +720,12 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                         {settings.invoiceMode && <div></div>}
                       </div>
 
-                      {/* Entries */}
-                      {subgroup.entries?.map((entry: TimeEntry) => (
-                        <div key={entry.id} className="grid items-start hover:bg-gray-50 py-2" style={{
-                          gridTemplateColumns: settings.invoiceMode 
-                            ? '16px 8px 1fr 8px 1fr 8px 50px 8px 60px' 
-                            : '16px 8px 1fr 8px 1fr 8px 50px',
-                          gap: '0'
-                        }}>
+                       {/* Entries */}
+                       {subgroup.entries?.map((entry: TimeEntry) => (
+                         <div key={entry.id} className="grid items-start hover:bg-gray-50 py-2" style={{
+                           gridTemplateColumns: getEntryGridTemplate(settings.invoiceMode),
+                           gap: '0'
+                         }}>
                           <div className="flex items-start justify-start self-start mt-1">
                             <div className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${selection.isSelected(entry.id) ? 'bg-gray-300' : 'bg-white'}`} onClick={() => selection.toggleSelectRecord(entry.id)} style={{
                               marginTop: '-3px'
@@ -882,13 +895,11 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                         </div>
                       ))}
 
-                      {/* Sub-total */}
-                      <div className="grid h-[32px] items-center" style={{
-                        gridTemplateColumns: settings.invoiceMode 
-                          ? '16px 8px 1fr 8px 1fr 8px 50px 8px 60px' 
-                          : '16px 8px 1fr 8px 1fr 8px 50px',
-                        gap: '0'
-                      }}>
+                       {/* Sub-total */}
+                       <div className="grid h-[32px] items-center" style={{
+                         gridTemplateColumns: getRegularGridTemplate(settings.invoiceMode),
+                         gap: '0'
+                       }}>
                         <div></div>
                         <div></div>
                         <div className="text-[#09121F] text-sm font-bold text-left">Sub-total</div>
@@ -910,13 +921,11 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                     </div>
                   ))}
 
-                  {/* TOTAL for this group */}
-                  <div className="grid h-[32px] items-center" style={{
-                    gridTemplateColumns: settings.invoiceMode 
-                      ? '16px 8px 1fr 8px 1fr 8px 50px 8px 60px' 
-                      : '16px 8px 1fr 8px 1fr 8px 50px',
-                    gap: '0'
-                  }}>
+                   {/* TOTAL for this group */}
+                   <div className="grid h-[32px] items-center" style={{
+                     gridTemplateColumns: getRegularGridTemplate(settings.invoiceMode),
+                     gap: '0'
+                   }}>
                     <div></div>
                     <div></div>
                     <div className="text-[#09121F] text-sm font-bold text-left">TOTAL</div>
@@ -939,14 +948,12 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
               ))}
             </div>
 
-            {/* TOTAL-IN */}
-            <div className="w-full border-t-2 border-[#09121F] mt-4">
-              <div className="grid h-[32px] items-center" style={{
-                gridTemplateColumns: settings.invoiceMode 
-                  ? '16px 8px 1fr 8px 1fr 8px 50px 8px 60px' 
-                  : '16px 8px 1fr 8px 1fr 8px 50px',
-                gap: '0'
-              }}>
+             {/* TOTAL-IN */}
+             <div className="w-full border-t-2 border-[#09121F] mt-4">
+               <div className="grid h-[32px] items-center" style={{
+                 gridTemplateColumns: getRegularGridTemplate(settings.invoiceMode),
+                 gap: '0'
+               }}>
                 <div></div>
                 <div></div>
                 <div className="text-[#09121F] text-sm font-bold text-left">TOTAL-IN</div>
