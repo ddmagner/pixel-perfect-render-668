@@ -74,11 +74,15 @@ export const UserProfile: React.FC = () => {
 
       const location = zipToLocation[profile.zipCode];
       if (location) {
-        setProfile(prev => ({
-          ...prev,
+        const updatedProfile = {
+          ...profile,
           city: location.city,
           state: location.state,
-        }));
+        };
+        setProfile(updatedProfile);
+        updateSettings({
+          userProfile: updatedProfile,
+        });
       }
     }
   }, [profile.zipCode]);
