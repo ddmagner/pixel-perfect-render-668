@@ -287,7 +287,11 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   };
 
   const updateSettings = async (newSettings: Partial<AppSettings>) => {
-    if (!user) return;
+    if (!user) {
+      // Update locally when not authenticated
+      setSettings(prev => ({ ...prev, ...newSettings }));
+      return;
+    }
     
     try {
       const updatedSettings = { ...settings, ...newSettings };
