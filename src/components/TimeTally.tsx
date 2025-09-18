@@ -432,6 +432,40 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
     }
   };
   const headers = getTableHeaders();
+  // Compute fixed widths for the two content columns at half their previous width
+  const gridRef = React.useRef<HTMLDivElement | null>(null);
+  const [contentColWidth, setContentColWidth] = useState<number>(0);
+
+  // Sum of fixed tracks and gaps (px)
+  const fixedBaseWidth = settings.invoiceMode ? 158 : 90; // 16 + 8 + 8 + 8 + 50 (+ 8 + 60 when invoice)
+
+  const recomputeWidths = React.useCallback(() => {
+    const el = gridRef.current;
+    if (!el) return;
+    const containerWidth = el.clientWidth;
+    const remaining = Math.max(0, containerWidth - fixedBaseWidth);
+    // Each 1fr used to be remaining/2, half of that is remaining/4
+    const halfOfEach = Math.floor(remaining / 4);
+    setContentColWidth(halfOfEach);
+  }, [fixedBaseWidth]);
+
+  React.useEffect(() => {
+    recomputeWidths();
+    window.addEventListener('resize', recomputeWidths);
+    return () => window.removeEventListener('resize', recomputeWidths);
+  }, [recomputeWidths, sortOption]);
+
+  const buildCols = (invoice: boolean) => {
+    if (contentColWidth > 0) {
+      return invoice
+        ? `16px 8px ${contentColWidth}px 8px ${contentColWidth}px 8px 50px 8px 60px`
+        : `16px 8px ${contentColWidth}px 8px ${contentColWidth}px 8px 50px`;
+    }
+    return invoice
+      ? '16px 8px 1fr 8px 1fr 8px 50px 8px 60px'
+      : '16px 8px 1fr 8px 1fr 8px 50px';
+  };
+
   const isAllSelected = allEntryIds.length > 0 && allEntryIds.every(id => selection.isSelected(id));
   
   // Helper functions to get entry IDs for different groupings
