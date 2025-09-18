@@ -60,10 +60,31 @@ export const UserProfile: React.FC = () => {
     });
   };
 
-  // Auto-populate city and state based on zip code (simplified version)
+  // Auto-populate city and state based on zip code (enhanced with API lookup)
   useEffect(() => {
-    if (profile.zipCode && profile.zipCode.length === 5) {
-      // This is a simplified example. In a real app, you'd use a zip code API
+    const fetchLocation = async (zip: string) => {
+      try {
+        // Try public ZIP API first
+        const res = await fetch(`https://api.zippopotam.us/us/${zip}`);
+        if (res.ok) {
+          const data = await res.json();
+          const place = data?.places?.[0];
+          if (place) {
+            const updatedProfile = {
+              ...profile,
+              city: place['place name'] || profile.city || '',
+              state: place['state abbreviation'] || profile.state || '',
+            };
+            setProfile(updatedProfile);
+            updateSettings({ userProfile: updatedProfile });
+            return;
+          }
+        }
+      } catch (e) {
+        console.warn('ZIP API lookup failed, falling back to local map', e);
+      }
+
+      // Fallback: simple local map
       const zipToLocation: { [key: string]: { city: string; state: string } } = {
         '10001': { city: 'New York', state: 'NY' },
         '90210': { city: 'Beverly Hills', state: 'CA' },
@@ -72,20 +93,16 @@ export const UserProfile: React.FC = () => {
         '33101': { city: 'Miami', state: 'FL' },
       };
 
-      const location = zipToLocation[profile.zipCode];
+      const location = zipToLocation[zip];
       if (location) {
-        console.log('Auto-populating city/state:', location);
-        const updatedProfile = {
-          ...profile,
-          city: location.city,
-          state: location.state,
-        };
-        console.log('Updated profile with city/state:', updatedProfile);
+        const updatedProfile = { ...profile, city: location.city, state: location.state };
         setProfile(updatedProfile);
-        updateSettings({
-          userProfile: updatedProfile,
-        });
+        updateSettings({ userProfile: updatedProfile });
       }
+    };
+
+    if (profile.zipCode && profile.zipCode.length === 5) {
+      fetchLocation(profile.zipCode);
     }
   }, [profile.zipCode]);
 
