@@ -73,7 +73,17 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
   };
 
   const totalHours = entries.reduce((sum, entry) => sum + entry.duration, 0);
-  const totalAmount = entries.reduce((sum, entry) => sum + calculateAmount(entry), 0);
+  const subtotalAmount = entries.reduce((sum, entry) => sum + calculateAmount(entry), 0);
+  
+  // Calculate tax amounts
+  const taxCalculations = (settings.taxTypes || []).map(taxType => ({
+    name: taxType.name,
+    rate: taxType.rate || 0,
+    amount: subtotalAmount * (taxType.rate || 0) / 100
+  }));
+  
+  const totalTaxAmount = taxCalculations.reduce((sum, tax) => sum + tax.amount, 0);
+  const totalAmount = subtotalAmount + totalTaxAmount;
 
   const currentDate = new Date();
 
@@ -199,8 +209,19 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                       <div className="col-span-3 -ml-[25px]">Subtotal:</div>
                       <div className="col-span-1 text-left">{formatHours(totalHours)}</div>
                       <div className="col-span-1"></div>
-                      <div className="col-span-2 text-right font-medium">{formatCurrency(totalAmount)}</div>
+                      <div className="col-span-2 text-right font-medium">{formatCurrency(subtotalAmount)}</div>
                     </div>
+                    {taxCalculations.map((tax, index) => (
+                      <div key={index} className="grid grid-cols-12 gap-4 py-1 text-sm text-black items-center border-t border-gray-300">
+                        <div className="col-span-2"></div>
+                        <div className="col-span-3"></div>
+                        <div className="col-span-3 -ml-[25px]">{tax.name} ({tax.rate}%):</div>
+                        <div className="col-span-1"></div>
+                        <div className="col-span-1"></div>
+                        <div className="col-span-2 text-right font-medium">{formatCurrency(tax.amount)}</div>
+                      </div>
+                    ))}
+                    {taxCalculations.length === 0 && (
                     <div className="grid grid-cols-12 gap-4 py-1 text-sm text-black items-center border-t border-gray-300">
                       <div className="col-span-2"></div>
                       <div className="col-span-3"></div>
@@ -209,6 +230,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                       <div className="col-span-1"></div>
                       <div className="col-span-2 text-right font-medium">$0.00</div>
                     </div>
+                    )}
                     <div className="grid grid-cols-12 gap-4 py-1 text-sm text-black items-center border-t border-black" style={{ borderTopWidth: '1pt' }}>
                       <div className="col-span-2"></div>
                       <div className="col-span-3"></div>
