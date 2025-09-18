@@ -803,14 +803,14 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                           )}
                           
                           <div></div>
-                          <div className="text-[#09121F] text-sm leading-tight text-right flex items-start justify-end">
+                          <div className="text-[#09121F] text-sm leading-tight text-left flex items-start justify-start">
                             {editingEntryId === entry.id && editingField === 'duration' ? (
                               <input
                                 type="number"
                                 step="0.01"
                                 min="0"
                                 defaultValue={entry.duration.toString()}
-                                className="text-sm bg-transparent border-none outline-none focus:bg-white focus:border focus:border-gray-300 px-1 rounded w-12 text-right"
+                                className="text-sm bg-transparent border-none outline-none focus:bg-white focus:border focus:border-gray-300 px-1 rounded w-12 text-left"
                                 autoFocus
                                 onBlur={(e) => handleFieldSave(entry.id, 'duration', e.target.value)}
                                 onKeyDown={(e) => {
@@ -820,7 +820,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                               />
                             ) : (
                               <span 
-                                className="cursor-pointer hover:bg-gray-100 rounded text-right"
+                                className="cursor-pointer hover:bg-gray-100 rounded text-left"
                                 onClick={() => handleFieldEdit(entry.id, 'duration')}
                               >
                                 {formatHours(entry.duration)}
