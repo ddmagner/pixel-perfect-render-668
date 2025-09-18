@@ -296,7 +296,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         }
       }
       
-      const { error } = await supabase
+      // Update app settings
+      const { error: settingsError } = await supabase
         .from('app_settings')
         .upsert({
           user_id: user.id,
@@ -306,7 +307,28 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
           onConflict: 'user_id'
         });
 
-      if (error) throw error;
+      if (settingsError) throw settingsError;
+
+      // Update user profile if it was changed
+      if (newSettings.userProfile) {
+        const { error: profileError } = await supabase
+          .from('profiles')
+          .upsert({
+            user_id: user.id,
+            name: updatedSettings.userProfile.name,
+            email: updatedSettings.userProfile.email,
+            phone: updatedSettings.userProfile.phone,
+            address: updatedSettings.userProfile.address,
+            zip_code: updatedSettings.userProfile.zipCode,
+            city: updatedSettings.userProfile.city,
+            state: updatedSettings.userProfile.state
+          }, {
+            onConflict: 'user_id'
+          });
+
+        if (profileError) throw profileError;
+      }
+
       setSettings(updatedSettings);
       
       // Update viewMode when invoiceMode setting changes

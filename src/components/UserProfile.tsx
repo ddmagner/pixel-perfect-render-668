@@ -74,11 +74,13 @@ export const UserProfile: React.FC = () => {
 
       const location = zipToLocation[profile.zipCode];
       if (location) {
+        console.log('Auto-populating city/state:', location);
         const updatedProfile = {
           ...profile,
           city: location.city,
           state: location.state,
         };
+        console.log('Updated profile with city/state:', updatedProfile);
         setProfile(updatedProfile);
         updateSettings({
           userProfile: updatedProfile,
