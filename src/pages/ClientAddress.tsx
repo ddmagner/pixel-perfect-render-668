@@ -114,7 +114,7 @@ const ClientAddressPage = () => {
         <div className="pt-5 mb-3">
           <div className="flex items-baseline gap-2">
             <h1 className="text-[#09121F] text-[28px] font-bold leading-8">{client.name}</h1>
-            <p className="text-[#09121F] text-sm">address details</p>
+            <p className="text-[#09121F] text-sm">contact details</p>
           </div>
         </div>
         
