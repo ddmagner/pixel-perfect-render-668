@@ -31,23 +31,23 @@ export async function generateSpreadsheet(
       paperSize: 'LETTER' as any, 
       orientation: 'portrait', 
       margins: { 
-        left: 0.7, 
-        right: 0.7, 
-        top: 0.7, 
-        bottom: 0.7,
-        header: 0.3,
-        footer: 0.3
+        left: 1,
+        right: 1,
+        top: 1,
+        bottom: 1,
+        header: 0.5,
+        footer: 0.5
       } 
     },
     views: [{ showGridLines: false }],
   });
 
   // Fonts
-  const fontTitle: Partial<ExcelJS.Font> = { name: 'Helvetica', bold: true, size: 16, color: { argb: 'FF000000' } };
-  const fontMeta: Partial<ExcelJS.Font> = { name: 'Helvetica', size: 10, color: { argb: 'FF000000' } };
-  const fontHeader: Partial<ExcelJS.Font> = { name: 'Helvetica', bold: true, size: 8, color: { argb: 'FF000000' } };
-  const fontBody: Partial<ExcelJS.Font> = { name: 'Helvetica', size: 10, color: { argb: 'FF000000' } };
-  const fontFooter: Partial<ExcelJS.Font> = { name: 'Helvetica', size: 8, color: { argb: 'FF999999' } };
+  const fontTitle: Partial<ExcelJS.Font> = { name: 'Helvetica', bold: true, size: 24, color: { argb: 'FF000000' } };
+  const fontMeta: Partial<ExcelJS.Font> = { name: 'Helvetica', size: 12, color: { argb: 'FF737373' } };
+  const fontHeader: Partial<ExcelJS.Font> = { name: 'Helvetica', bold: true, size: 10, color: { argb: 'FF737373' } };
+  const fontBody: Partial<ExcelJS.Font> = { name: 'Helvetica', size: 12, color: { argb: 'FF000000' } };
+  const fontFooter: Partial<ExcelJS.Font> = { name: 'Helvetica', size: 8, color: { argb: 'FF9CA3AF' } };
 
   const currentDate = new Date();
   const minDate = entries.length > 0 ? new Date(Math.min(...entries.map(e => new Date(e.date).getTime()))) : currentDate;
@@ -89,7 +89,7 @@ export async function generateSpreadsheet(
   if (settings.userProfile.city || settings.userProfile.state || settings.userProfile.zipCode) {
     fromLines.push(`${settings.userProfile.city || ''}${settings.userProfile.city && settings.userProfile.state ? ', ' : ''}${settings.userProfile.state || ''}${settings.userProfile.zipCode ? ` ${settings.userProfile.zipCode}` : ''}`);
   }
-  if (settings.userProfile.phone) fromLines.push(`Phone: ${settings.userProfile.phone}`);
+  if (settings.userProfile.phone) fromLines.push(`${settings.userProfile.phone}`);
 
   fromLines.forEach((l) => {
     sheet.getCell(rowIdx, fromCol).value = l;
@@ -142,19 +142,19 @@ export async function generateSpreadsheet(
   // Table columns (approximate spans using widths)
   if (isInvoice) {
     sheet.columns = [
-      { header: 'DATE', key: 'date', width: 12 },
-      { header: 'PROJECT', key: 'project', width: 18 },
+      { header: 'DATE', key: 'date', width: 16 },
+      { header: 'PROJECT', key: 'project', width: 24 },
       { header: 'TASK', key: 'task', width: 24 },
-      { header: 'HOURS', key: 'hours', width: 10 },
-      { header: 'RATE', key: 'rate', width: 10 },
-      { header: 'AMOUNT', key: 'amount', width: 12 },
+      { header: 'HOURS', key: 'hours', width: 8 },
+      { header: 'RATE', key: 'rate', width: 8 },
+      { header: 'AMOUNT', key: 'amount', width: 16 },
     ];
   } else {
     sheet.columns = [
-      { header: 'DATE', key: 'date', width: 14 },
-      { header: 'PROJECT', key: 'project', width: 22 },
-      { header: 'TASK', key: 'task', width: 18 },
-      { header: 'HOURS', key: 'hours', width: 12 },
+      { header: 'DATE', key: 'date', width: 16 },
+      { header: 'PROJECT', key: 'project', width: 24 },
+      { header: 'TASK', key: 'task', width: 16 },
+      { header: 'HOURS', key: 'hours', width: 8 },
     ];
   }
 
@@ -167,7 +167,7 @@ export async function generateSpreadsheet(
     cell.alignment = { horizontal: idx >= (isInvoice ? 4 : 3) ? 'right' : 'left', vertical: 'middle' };
     cell.border = { top: { style: 'thin', color: { argb: 'FF000000' } }, bottom: { style: 'thin', color: { argb: 'FF000000' } } };
   });
-  headerRow.height = 16;
+  headerRow.height = 20;
   rowIdx++;
 
   // Body rows
@@ -201,7 +201,7 @@ export async function generateSpreadsheet(
       if (isInvoice && (i === 4 || i === 5)) c.alignment = { horizontal: 'right' };
       else if (!isInvoice && i === 3) c.alignment = { horizontal: 'left' };
     });
-    row.height = 16;
+    row.height = 20;
     rowIdx++;
   });
 

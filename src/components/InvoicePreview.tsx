@@ -148,7 +148,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
         </div>
 
         {/* Invoice Content - Letter Size (8.5" x 11") */}
-        <div className="px-[72px] py-8" style={{ aspectRatio: '8.5/11', minHeight: '11in' }}>
+        <div id="document-preview" className="px-[72px] py-8" style={{ aspectRatio: '8.5/11', minHeight: '11in' }}>
           {/* Header */}
           <div className="mb-6">
             <div>

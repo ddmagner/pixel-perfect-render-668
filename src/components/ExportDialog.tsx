@@ -5,7 +5,7 @@ import { Switch } from '@/components/ui/switch';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Input } from '@/components/ui/input';
 import { TimeEntry, AppSettings, ViewMode } from '@/types';
-import { generatePDF } from '@/utils/pdfGenerator';
+import { createPdfFromPreview } from '@/utils/domPdf';
 import { generateSpreadsheet } from '@/utils/spreadsheetGenerator';
 import { InvoicePreview } from '@/components/InvoicePreview';
 import { Share } from '@capacitor/share';
@@ -57,7 +57,7 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
       let fileExtension: string;
 
       if (isPdfFormat) {
-        blob = await generatePDF(entriesToUse, settings, viewMode);
+        blob = await createPdfFromPreview(entriesToUse, settings, viewMode);
         fileExtension = 'pdf';
       } else {
         blob = await generateSpreadsheet(entriesToUse, settings, viewMode);
