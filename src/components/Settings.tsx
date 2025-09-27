@@ -69,7 +69,7 @@ export const Settings: React.FC<SettingsProps> = ({
         
         {/* Time Archive Section */}
         <div className="w-full h-[10px] bg-[#E5E5E5]" />
-        <div className="px-2.5 pt-4 pb-1.5">
+        <div className="px-2.5 pt-4 pb-[22px]">
           <TimeArchive />
         </div>
         
