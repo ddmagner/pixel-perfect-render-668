@@ -342,70 +342,17 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
       description: `${selection.selectedCount} ${selection.selectedCount === 1 ? 'entry' : 'entries'} moved to archive`
     });
   };
-  const handleExport = async () => {
-    console.log('Export button clicked');
-    const entriesToUse = selection.selectedIds.length > 0 
-      ? activeTimeEntries.filter(entry => selection.selectedIds.includes(entry.id)) 
-      : activeTimeEntries;
-    
-    console.log('Entries to use:', entriesToUse.length);
-    
-    if (entriesToUse.length === 0) {
+  const handleExport = () => {
+    if (activeTimeEntries.length === 0) {
       toast({
-        title: "No entries selected",
-        description: "Please select some time entries to export.",
+        title: "No entries to export",
+        description: "Please add some time entries first.",
         variant: "destructive",
       });
       return;
     }
-
-    try {
-      console.log('Opening invoice preview in new window...');
-      
-      const payload = { entries: entriesToUse, settings };
-      const id = (window.crypto && 'randomUUID' in window.crypto)
-        ? (window.crypto as any).randomUUID()
-        : `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
-      const storageKey = `invoice:${id}`;
-
-      try {
-        localStorage.setItem(storageKey, JSON.stringify(payload));
-      } catch (e) {
-        console.warn('Failed to write invoice payload to localStorage', e);
-      }
-      
-      const invoiceUrl = `/invoice?k=${encodeURIComponent(id)}`;
-      const previewWindow = window.open(invoiceUrl, '_blank', 'width=900,height=700,scrollbars=yes');
-      
-      if (!previewWindow) {
-        toast({
-          title: "Popup blocked",
-          description: "Please allow popups for this site to preview the invoice.",
-          variant: "destructive",
-        });
-        return;
-      }
-
-      // Also send via postMessage as a fallback on some browsers
-      setTimeout(() => {
-        try {
-          previewWindow.postMessage({ type: 'invoice-data', payload }, window.location.origin);
-          console.log('Sent invoice data to invoice window via postMessage');
-        } catch (e) {
-          console.error('Failed to postMessage to invoice window', e);
-        }
-      }, 500);
-
-      console.log('Invoice preview opened successfully');
-      
-    } catch (error) {
-      console.error('Error opening invoice preview:', error);
-      toast({
-        title: "Error",
-        description: "Failed to open invoice preview",
-        variant: "destructive",
-      });
-    }
+    
+    setIsExportDialogOpen(true);
   };
 
   // Get sort option display text
