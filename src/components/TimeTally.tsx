@@ -912,7 +912,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                         {settings.invoiceMode && (
                           <>
                             <div></div>
-                            <div className="text-[#09121F] text-sm font-bold text-right">
+                            <div className="text-[#09121F] text-sm font-bold flex items-center justify-end pr-1">
                               {formatCurrency(subgroup.subtotal.fee)}
                             </div>
                           </>
@@ -938,7 +938,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                     {settings.invoiceMode && (
                       <>
                         <div></div>
-                        <div className="text-[#09121F] text-sm font-bold text-right">
+                        <div className="text-[#09121F] text-sm font-bold flex items-center justify-end pr-1">
                           {formatCurrency(group.total.fee)}
                         </div>
                       </>
@@ -966,7 +966,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                 {settings.invoiceMode && (
                   <>
                     <div></div>
-                    <div className="text-[#09121F] text-sm font-bold text-right">
+                    <div className="text-[#09121F] text-sm font-bold flex items-center justify-end pr-1">
                       {formatCurrency(organizedData.totalIn.fee)}
                     </div>
                   </>
