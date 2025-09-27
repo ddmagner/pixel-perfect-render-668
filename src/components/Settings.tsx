@@ -100,15 +100,13 @@ export const Settings: React.FC<SettingsProps> = ({
             <button onClick={handleSignOut} className="text-[#09121F] text-[15px] font-medium underline hover:opacity-70 transition-opacity">
               Sign out
             </button>
-            {/* Invoice Preview Link - Only show in invoice mode */}
-            {settings.invoiceMode && (
-              <button 
-                onClick={() => setShowInvoicePreview(true)}
-                className="text-[#BFBFBF] text-xs font-normal underline hover:opacity-70 transition-opacity block"
-              >
-                Invoice Preview
-              </button>
-            )}
+            {/* Preview Link - Show in both modes with different text */}
+            <button 
+              onClick={() => setShowInvoicePreview(true)}
+              className="text-[#BFBFBF] text-xs font-normal underline hover:opacity-70 transition-opacity block"
+            >
+              {settings.invoiceMode ? 'Invoice Preview' : 'Time Card Preview'}
+            </button>
             <div className="space-y-6">
               <button 
                 onClick={() => navigate('/terms')} 
