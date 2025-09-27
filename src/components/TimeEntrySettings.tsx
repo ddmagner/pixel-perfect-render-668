@@ -348,7 +348,7 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({ highlightS
       </section>
 
       {/* Tax */}
-      <section className="px-2.5">
+      <section className="px-2.5 pb-4">
         <div className="pt-5 mb-3">
           <div className="flex justify-between items-center">
             <h3 className="text-[#09121F] text-sm font-bold">Tax</h3>
