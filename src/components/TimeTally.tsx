@@ -12,6 +12,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { useSelection } from '@/hooks/useSelection';
 import { useToast } from '@/hooks/use-toast';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
+import { ExportDialog } from '@/components/ExportDialog';
 interface TimeTallyProps {
   onSwitchToSettings?: () => void;
 }
@@ -34,6 +35,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
   const [editingField, setEditingField] = useState<string | null>(null);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [showArchiveDialog, setShowArchiveDialog] = useState(false);
+  const [isExportDialogOpen, setIsExportDialogOpen] = useState(false);
   const selection = useSelection();
   const {
     toast
@@ -1038,5 +1040,18 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+
+      {/* Export Dialog */}
+      <ExportDialog
+        isOpen={isExportDialogOpen}
+        onClose={() => setIsExportDialogOpen(false)}
+        timeEntries={activeTimeEntries}
+        selectedEntries={selection.selectedIds.length > 0 
+          ? activeTimeEntries.filter(entry => selection.selectedIds.includes(entry.id))
+          : undefined
+        }
+        settings={settings}
+        viewMode={settings.invoiceMode ? 'invoice' : 'timecard'}
+      />
     </div>;
 };
