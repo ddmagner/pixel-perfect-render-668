@@ -176,7 +176,11 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
           id: client.id,
           name: client.name,
           email: client.email || undefined,
-          address: client.address || undefined
+          address: client.address || undefined,
+          city: client.city || undefined,
+          state: client.state || undefined,
+          zip_code: client.zip_code || undefined,
+          attention: client.attention || undefined
         })) : defaultSettings.clients,
         userProfile: {
           name: profileData?.name || '',
@@ -323,6 +327,42 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
               user_id: user.id,
               name: taxType.name,
                rate: taxType.rate == null ? null : taxType.rate
+            }, {
+              onConflict: 'id'
+            });
+        }
+      }
+
+      // Sync clients to database if they were updated
+      if (newSettings.clients) {
+        for (const client of newSettings.clients) {
+          await supabase
+            .from('clients')
+            .upsert({
+              id: client.id,
+              user_id: user.id,
+              name: client.name,
+              email: client.email || null,
+              address: client.address || null,
+              city: client.city || null,
+              state: client.state || null,
+              zip_code: client.zip_code || null
+            }, {
+              onConflict: 'id'
+            });
+        }
+      }
+
+      // Sync projects to database if they were updated
+      if (newSettings.projects) {
+        for (const project of newSettings.projects) {
+          await supabase
+            .from('projects')
+            .upsert({
+              id: project.id,
+              user_id: user.id,
+              name: project.name,
+              client_id: project.clientId || null
             }, {
               onConflict: 'id'
             });
