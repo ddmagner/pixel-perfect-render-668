@@ -76,7 +76,7 @@ export const Settings: React.FC<SettingsProps> = ({
         {/* Coloring Time Section */}
         <div className="w-full h-[10px] bg-[#E5E5E5]" />
         <div className="px-2.5 pt-0.5 pb-1">
-          <div className="py-4 pb-[22px]">
+          <div className="py-4 pb-4">
             <div className="flex items-center justify-between cursor-pointer" onClick={() => setShowColorOverlay(true)}>
               <div>
                 <h1 className="text-[#09121F] text-[28px] font-bold leading-8">Coloring time</h1>
