@@ -189,6 +189,19 @@ const ClientAddressPage = () => {
             </div>
           </div>
         </div>
+
+        <div className="w-full px-2.5 pt-2.5 pb-1">
+          <button 
+            type="button" 
+            className="w-full text-white py-3.5 font-bold text-[15px] transition-colors" 
+            style={{
+              backgroundColor: '#09121F'
+            }} 
+            aria-label="Save client details"
+          >
+            Save
+          </button>
+        </div>
       </div>
     </div>
   );
