@@ -16,14 +16,14 @@ const SettingsPage = () => {
   return (
     <>
       <div
-        className="flex w-full max-w-sm mx-auto flex-col items-start relative bg-white overflow-x-hidden"
+        className="flex w-full flex-col items-start relative bg-white overflow-x-hidden min-h-screen"
         style={{ fontFamily: 'Gilroy, sans-serif' }}
       >
         {/* Navigation with back button */}
-        <nav className="flex justify-center items-center self-stretch px-0 pt-4 pb-1 bg-white relative">
+        <nav className="flex justify-center items-center self-stretch px-4 pt-4 pb-1 bg-white relative">
           <button 
             onClick={handleBack}
-            className="flex items-center gap-2 text-[#09121F] absolute left-2.5"
+            className="flex items-center gap-2 text-[#09121F] absolute left-4"
             aria-label="Go back"
           >
             <ChevronLeft size={20} />
