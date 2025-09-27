@@ -60,23 +60,6 @@ const ClientAddressPage = () => {
     if (field === 'city') setCity(value);
     if (field === 'state') setState(value);
     if (field === 'zipCode') setZipCode(value);
-
-    // Update client data
-    if (client) {
-      const updatedClients = settings.clients.map(c => 
-        c.id === clientId 
-          ? { 
-              ...c, 
-              attention: field === 'attention' ? value : attention,
-              address: field === 'address' ? value : address,
-              city: field === 'city' ? value : city,
-              state: field === 'state' ? value : state,
-              zip_code: field === 'zipCode' ? value : zipCode
-            }
-          : c
-      );
-      updateSettings({ clients: updatedClients });
-    }
   };
 
   // Auto-populate city and state based on zip code
