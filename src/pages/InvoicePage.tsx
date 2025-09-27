@@ -136,7 +136,7 @@ const currentDate = new Date();
   }
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="bg-white">{/* Removed min-h-screen to hug content */}
       {/* Print styles */}
       <style>{`
         @media print {
@@ -201,7 +201,7 @@ const currentDate = new Date();
       </div>
 
       {/* Invoice Content - Letter Size (8.5" x 11") */}
-      <div className="invoice-content mx-auto bg-white" style={{ minHeight: '11in', padding: '0.75in 0.5in' }}>
+      <div className="invoice-content mx-auto bg-white" style={{ padding: '0.75in 0.5in' }}>{/* Removed minHeight: '11in' to hug content */}
         {/* Invoice Header */}
         <div className="mb-6">
           <div>
@@ -306,7 +306,7 @@ const currentDate = new Date();
         </div>
 
         {/* Totals Section */}
-        <div className="mb-12">
+        <div className="mb-6">{/* Reduced bottom margin from mb-12 to mb-6 */}
           <div className="w-full">
             <div className="grid grid-cols-12 gap-4">
               <div className="col-span-12">
