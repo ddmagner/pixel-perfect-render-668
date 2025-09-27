@@ -124,7 +124,7 @@ export const UserProfile: React.FC = () => {
               value={profile.name || ''}
               onChange={(e) => handleInputChange('name', e.target.value)}
               placeholder="Full name"
-              className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none flex-1"
+              className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none flex-1 min-w-0"
             />
             <Edit3 size={16} className="text-gray-400" />
           </div>
@@ -138,7 +138,7 @@ export const UserProfile: React.FC = () => {
               value={profile.address || ''}
               onChange={(e) => handleInputChange('address', e.target.value)}
               placeholder="Address"
-              className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none flex-1"
+              className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none flex-1 min-w-0"
             />
             <Edit3 size={16} className="text-gray-400" />
           </div>
@@ -152,7 +152,7 @@ export const UserProfile: React.FC = () => {
               value={profile.zipCode || ''}
               onChange={(e) => handleInputChange('zipCode', e.target.value)}
               placeholder="Zip code"
-              className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none flex-1"
+              className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none flex-1 min-w-0"
             />
             <Edit3 size={16} className="text-gray-400" />
           </div>
@@ -166,7 +166,7 @@ export const UserProfile: React.FC = () => {
               value={profile.email || ''}
               onChange={(e) => handleInputChange('email', e.target.value)}
               placeholder="Email"
-              className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none flex-1"
+              className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none flex-1 min-w-0"
             />
             <Edit3 size={16} className="text-gray-400" />
           </div>
@@ -180,7 +180,7 @@ export const UserProfile: React.FC = () => {
               value={profile.phone || ''}
               onChange={(e) => handleInputChange('phone', e.target.value)}
               placeholder="000-000-0000"
-              className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none flex-1"
+              className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none flex-1 min-w-0"
             />
             <Edit3 size={16} className="text-gray-400" />
           </div>
@@ -197,7 +197,7 @@ export const UserProfile: React.FC = () => {
                     value={customField.label}
                     onChange={(e) => handleCustomFieldChange(customField.id, 'label', e.target.value)}
                     placeholder="Field name"
-                    className="text-[#09121F] text-sm font-medium bg-transparent border-none outline-none flex-1"
+                    className="text-[#09121F] text-sm font-medium bg-transparent border-none outline-none flex-1 min-w-0"
                   />
                   <button
                     onClick={() => removeCustomField(customField.id)}

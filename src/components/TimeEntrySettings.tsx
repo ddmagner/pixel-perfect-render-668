@@ -133,7 +133,7 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
             if (e.key === 'Escape') {
               setEditingClient(null);
             }
-          }} className="text-[#09121F] text-sm bg-transparent border-none outline-none flex-1" autoFocus /> : <span className="text-[#09121F] text-sm flex-1">{client.name}</span>}
+          }} className="text-[#09121F] text-sm bg-transparent border-none outline-none flex-1 min-w-0" autoFocus /> : <span className="text-[#09121F] text-sm flex-1 min-w-0">{client.name}</span>}
               <div className="flex items-center gap-3">
                 <button onClick={() => navigate(`/client-address?clientId=${client.id}`)} className="text-[#BFBFBF] text-right text-[15px] font-normal leading-5 underline decoration-solid decoration-auto underline-offset-auto">
                   +/Edit Address
@@ -148,7 +148,7 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
             </div>)}
           
           <div className="flex items-center justify-between">
-            <input type="text" placeholder="Add client" value={newClientName} onChange={e => setNewClientName(e.target.value)} className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none flex-1" />
+            <input type="text" placeholder="Add client" value={newClientName} onChange={e => setNewClientName(e.target.value)} className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none flex-1 min-w-0" />
             <button onClick={handleAddClient} className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-[#09121F]/80 transition-colors">
               <Plus className="h-2.5 w-2.5" strokeWidth={3} />
             </button>
@@ -183,7 +183,7 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
             if (e.key === 'Escape') {
               setEditingProject(null);
             }
-          }} className="text-[#09121F] text-sm bg-transparent border-none outline-none flex-1" style={{
+          }} className="text-[#09121F] text-sm bg-transparent border-none outline-none flex-1 min-w-0" style={{
             marginRight: '56px'
           }} autoFocus /> : <span className="text-[#09121F] text-sm" style={{
             marginRight: '56px'
@@ -199,7 +199,7 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
             </div>)}
           
           <div className="flex items-center justify-between">
-            <input type="text" placeholder="Add project" value={newProjectName} onChange={e => setNewProjectName(e.target.value)} className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none flex-1" />
+            <input type="text" placeholder="Add project" value={newProjectName} onChange={e => setNewProjectName(e.target.value)} className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none flex-1 min-w-0" />
             <button onClick={handleAddProject} className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-[#09121F]/80 transition-colors">
               <Plus className="h-2.5 w-2.5" strokeWidth={3} />
             </button>
@@ -222,7 +222,7 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
         
         <div className="space-y-3">
           {settings.taskTypes.map(task => <div key={task.id} className="flex items-center justify-between min-h-[20px]">
-              <div className="flex-1 flex items-center">
+              <div className="flex-1 min-w-0 flex items-center">
                 {editingTask?.id === task.id ? <input type="text" value={editingTask.name} onChange={e => setEditingTask({
               ...editingTask,
               name: e.target.value
@@ -235,7 +235,7 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
               if (e.key === 'Escape') {
                 setEditingTask(null);
               }
-            }} className="text-[#09121F] text-sm bg-transparent border-none outline-none flex-1 leading-5" autoFocus /> : <span className="text-[#09121F] text-sm flex-1 leading-5">{task.name}</span>}
+            }} className="text-[#09121F] text-sm bg-transparent border-none outline-none flex-1 min-w-0 leading-5" autoFocus /> : <span className="text-[#09121F] text-sm flex-1 min-w-0 leading-5">{task.name}</span>}
               </div>
               <div className="flex items-center gap-3">
                 {settings.invoiceMode && <div className="min-w-[60px] text-right">
@@ -270,7 +270,7 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
             </div>)}
           
           <div className="flex items-center justify-between">
-            <input type="text" placeholder="Add task type" value={newTaskName} onChange={e => setNewTaskName(e.target.value)} className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none flex-1" />
+            <input type="text" placeholder="Add task type" value={newTaskName} onChange={e => setNewTaskName(e.target.value)} className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none flex-1 min-w-0" />
             <div className="flex items-center gap-3">
               {settings.invoiceMode && <input type="text" placeholder="$0.00" value={newTaskRate ? `$${newTaskRate}` : ''} onChange={e => {
               const input = e.target.value;
@@ -310,7 +310,7 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
         
         <div className="space-y-3">
           {(settings.taxTypes || []).map(tax => <div key={tax.id} className="flex items-center justify-between min-h-[20px]">
-              <div className="flex-1 flex items-center">
+              <div className="flex-1 min-w-0 flex items-center">
                 {editingTax?.id === tax.id ? <input type="text" value={editingTax.name} onChange={e => setEditingTax({
               ...editingTax,
               name: e.target.value
@@ -323,7 +323,7 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
               if (e.key === 'Escape') {
                 setEditingTax(null);
               }
-            }} className="text-[#09121F] text-sm bg-transparent border-none outline-none flex-1 leading-5" autoFocus /> : <span className="text-[#09121F] text-sm flex-1 leading-5">{tax.name}</span>}
+            }} className="text-[#09121F] text-sm bg-transparent border-none outline-none flex-1 min-w-0 leading-5" autoFocus /> : <span className="text-[#09121F] text-sm flex-1 min-w-0 leading-5">{tax.name}</span>}
               </div>
               <div className="flex items-center gap-3">
                 {settings.invoiceMode && <div className="min-w-[60px] text-right">
@@ -358,7 +358,7 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
             </div>)}
           
           <div className="flex items-center justify-between">
-            <input type="text" placeholder="Add tax type" value={newTaxName} onChange={e => setNewTaxName(e.target.value)} className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none flex-1" />
+            <input type="text" placeholder="Add tax type" value={newTaxName} onChange={e => setNewTaxName(e.target.value)} className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none flex-1 min-w-0" />
             <div className="flex items-center gap-3">
               {settings.invoiceMode && <input type="text" placeholder="0.00%" value={newTaxRate ? `${newTaxRate}%` : ''} onChange={e => {
               const input = e.target.value;
