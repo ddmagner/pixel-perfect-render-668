@@ -136,7 +136,9 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
       <div className="bg-white w-full max-w-4xl h-full max-h-[90vh] overflow-auto rounded-lg shadow-2xl">
         {/* Header Controls */}
         <div className="sticky top-0 bg-white border-b border-gray-200 p-4 flex justify-between items-center">
-          <h2 className="text-xl font-bold text-gray-900">Invoice Preview (Letter Size)</h2>
+          <h2 className="text-xl font-bold text-gray-900">
+            {settings.invoiceMode ? 'Invoice Preview (Letter Size)' : 'Time Card Preview (Letter Size)'}
+          </h2>
           <button 
             onClick={onClose}
             className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-gray-700 font-medium"
@@ -147,15 +149,21 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
 
         {/* Invoice Content - Letter Size (8.5" x 11") */}
         <div className="px-[72px] py-8" style={{ aspectRatio: '8.5/11', minHeight: '11in' }}>
-          {/* Invoice Header */}
+          {/* Header */}
           <div className="mb-6">
             <div>
-              <h1 className="text-2xl font-bold text-black mb-2">INVOICE</h1>
-              <div className="text-sm text-black">
-                <p>Invoice Date: {format(currentDate, 'MM/dd/yy')}</p>
-                <p>Due Date: {format(new Date(currentDate.getTime() + 30 * 24 * 60 * 60 * 1000), 'MM/dd/yy')}</p>
-              </div>
-              <div className="text-sm text-black">Invoice #001</div>
+              <h1 className="text-2xl font-bold text-black mb-2">
+                {settings.invoiceMode ? 'INVOICE' : 'TIME CARD'}
+              </h1>
+              {settings.invoiceMode && (
+                <>
+                  <div className="text-sm text-black">
+                    <p>Invoice Date: {format(currentDate, 'MM/dd/yy')}</p>
+                    <p>Due Date: {format(new Date(currentDate.getTime() + 30 * 24 * 60 * 60 * 1000), 'MM/dd/yy')}</p>
+                  </div>
+                  <div className="text-sm text-black">Invoice #001</div>
+                </>
+              )}
               <div className="text-sm text-black">
                 Period: {entries.length > 0 ? format(new Date(Math.min(...entries.map(e => new Date(e.date).getTime()))), 'MM/dd/yy') : 'N/A'} - {entries.length > 0 ? format(new Date(Math.max(...entries.map(e => new Date(e.date).getTime()))), 'MM/dd/yy') : 'N/A'}
               </div>
@@ -216,14 +224,23 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
             <div className="overflow-hidden">
               {/* Table Header */}
               <div className="border-t border-b border-black">
-                <div className="grid grid-cols-12 gap-4 py-1 text-xs font-bold text-black uppercase tracking-wider">
-                  <div className="col-span-2 text-left">Date</div>
-                  <div className="col-span-3">Project</div>
-                  <div className="col-span-3 -ml-[25px]">Task</div>
-                  <div className="col-span-1 text-left">Hours</div>
-                  <div className="col-span-1 flex justify-end pl-[75px]">Rate</div>
-                  <div className="col-span-2 text-right">Amount</div>
-                </div>
+                {settings.invoiceMode ? (
+                  <div className="grid grid-cols-12 gap-4 py-1 text-xs font-bold text-black uppercase tracking-wider">
+                    <div className="col-span-2 text-left">Date</div>
+                    <div className="col-span-3">Project</div>
+                    <div className="col-span-3 -ml-[25px]">Task</div>
+                    <div className="col-span-1 text-left">Hours</div>
+                    <div className="col-span-1 flex justify-end pl-[75px]">Rate</div>
+                    <div className="col-span-2 text-right">Amount</div>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-8 gap-4 py-1 text-xs font-bold text-black uppercase tracking-wider">
+                    <div className="col-span-2 text-left">Date</div>
+                    <div className="col-span-3">Project</div>
+                    <div className="col-span-2">Task</div>
+                    <div className="col-span-1 text-left">Hours</div>
+                  </div>
+                )}
               </div>
               
               {/* Table Body */}
@@ -232,7 +249,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                   const rate = entry.hourlyRate || 0;
                   const amount = calculateAmount(entry);
                   
-                  return (
+                  return settings.invoiceMode ? (
                     <div key={entry.id || index} className="grid grid-cols-12 gap-4 py-1 text-sm text-black">
                       <div className="col-span-2">{format(new Date(entry.date), 'MM/dd/yy')}</div>
                       <div className="col-span-3 font-medium">{entry.project}</div>
@@ -240,6 +257,13 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                       <div className="col-span-1 text-left">{formatHours(entry.duration)}</div>
                       <div className="col-span-1 flex justify-end pl-[75px]">{formatCurrency(rate)}</div>
                       <div className="col-span-2 text-right font-medium">{formatCurrency(amount)}</div>
+                    </div>
+                  ) : (
+                    <div key={entry.id || index} className="grid grid-cols-8 gap-4 py-1 text-sm text-black">
+                      <div className="col-span-2">{format(new Date(entry.date), 'MM/dd/yy')}</div>
+                      <div className="col-span-3 font-medium">{entry.project}</div>
+                      <div className="col-span-2">{entry.task}</div>
+                      <div className="col-span-1 text-left">{formatHours(entry.duration)}</div>
                     </div>
                   );
                 })}
@@ -253,48 +277,61 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
           {/* Totals Section */}
           <div className="mb-12">
             <div className="w-full">
-              <div className="grid grid-cols-12 gap-4">
-                <div className="col-span-12">
-                  <div className="space-y-0">
-                    <div className="grid grid-cols-12 gap-4 py-1 text-sm text-black items-center border-t border-gray-300">
-                      <div className="col-span-2"></div>
-                      <div className="col-span-3"></div>
-                      <div className="col-span-3 -ml-[25px]">Subtotal:</div>
-                      <div className="col-span-1 text-left">{formatHours(totalHours)}</div>
-                      <div className="col-span-1"></div>
-                      <div className="col-span-2 text-right font-medium">{formatCurrency(subtotalAmount)}</div>
-                    </div>
-                    {taxCalculations.map((tax, index) => (
-                      <div key={index} className="grid grid-cols-12 gap-4 py-1 text-sm text-black items-center border-t border-gray-300">
+              {settings.invoiceMode ? (
+                <div className="grid grid-cols-12 gap-4">
+                  <div className="col-span-12">
+                    <div className="space-y-0">
+                      <div className="grid grid-cols-12 gap-4 py-1 text-sm text-black items-center border-t border-gray-300">
                         <div className="col-span-2"></div>
                         <div className="col-span-3"></div>
-                        <div className="col-span-3 -ml-[25px]">{tax.name} ({tax.rate}%):</div>
+                        <div className="col-span-3 -ml-[25px]">Subtotal:</div>
+                        <div className="col-span-1 text-left">{formatHours(totalHours)}</div>
                         <div className="col-span-1"></div>
-                        <div className="col-span-1"></div>
-                        <div className="col-span-2 text-right font-medium">{formatCurrency(tax.amount)}</div>
+                        <div className="col-span-2 text-right font-medium">{formatCurrency(subtotalAmount)}</div>
                       </div>
-                    ))}
-                    {taxCalculations.length === 0 && (
-                    <div className="grid grid-cols-12 gap-4 py-1 text-sm text-black items-center border-t border-gray-300">
-                      <div className="col-span-2"></div>
-                      <div className="col-span-3"></div>
-                      <div className="col-span-3 -ml-[25px]">Tax (0%):</div>
-                      <div className="col-span-1"></div>
-                      <div className="col-span-1"></div>
-                      <div className="col-span-2 text-right font-medium">$0.00</div>
-                    </div>
-                    )}
-                    <div className="grid grid-cols-12 gap-4 py-1 text-sm text-black items-center border-t border-black" style={{ borderTopWidth: '1pt' }}>
-                      <div className="col-span-2"></div>
-                      <div className="col-span-3"></div>
-                      <div className="col-span-3 -ml-[25px] font-bold">Total Due:</div>
-                      <div className="col-span-1"></div>
-                      <div className="col-span-1"></div>
-                      <div className="col-span-2 text-right font-bold">{formatCurrency(totalAmount)}</div>
+                      {taxCalculations.map((tax, index) => (
+                        <div key={index} className="grid grid-cols-12 gap-4 py-1 text-sm text-black items-center border-t border-gray-300">
+                          <div className="col-span-2"></div>
+                          <div className="col-span-3"></div>
+                          <div className="col-span-3 -ml-[25px]">{tax.name} ({tax.rate}%):</div>
+                          <div className="col-span-1"></div>
+                          <div className="col-span-1"></div>
+                          <div className="col-span-2 text-right font-medium">{formatCurrency(tax.amount)}</div>
+                        </div>
+                      ))}
+                      {taxCalculations.length === 0 && (
+                      <div className="grid grid-cols-12 gap-4 py-1 text-sm text-black items-center border-t border-gray-300">
+                        <div className="col-span-2"></div>
+                        <div className="col-span-3"></div>
+                        <div className="col-span-3 -ml-[25px]">Tax (0%):</div>
+                        <div className="col-span-1"></div>
+                        <div className="col-span-1"></div>
+                        <div className="col-span-2 text-right font-medium">$0.00</div>
+                      </div>
+                      )}
+                      <div className="grid grid-cols-12 gap-4 py-1 text-sm text-black items-center border-t border-black" style={{ borderTopWidth: '1pt' }}>
+                        <div className="col-span-2"></div>
+                        <div className="col-span-3"></div>
+                        <div className="col-span-3 -ml-[25px] font-bold">Total Due:</div>
+                        <div className="col-span-1"></div>
+                        <div className="col-span-1"></div>
+                        <div className="col-span-2 text-right font-bold">{formatCurrency(totalAmount)}</div>
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
+              ) : (
+                <div className="grid grid-cols-8 gap-4">
+                  <div className="col-span-8">
+                    <div className="grid grid-cols-8 gap-4 py-1 text-sm text-black items-center border-t border-black" style={{ borderTopWidth: '1pt' }}>
+                      <div className="col-span-2"></div>
+                      <div className="col-span-3"></div>
+                      <div className="col-span-2 font-bold">Total Hours:</div>
+                      <div className="col-span-1 text-left font-bold">{formatHours(totalHours)}</div>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
             
             {/* Footer */}
