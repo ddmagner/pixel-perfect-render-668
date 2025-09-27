@@ -212,7 +212,7 @@ export const UserProfile: React.FC = () => {
                     value={customField.value}
                     onChange={(e) => handleCustomFieldChange(customField.id, 'value', e.target.value)}
                     placeholder="Field value"
-                    className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none flex-1"
+                    className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none flex-1 min-w-0"
                   />
                   <Edit3 size={16} className="text-gray-400" />
                 </div>

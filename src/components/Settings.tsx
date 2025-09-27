@@ -58,7 +58,7 @@ export const Settings: React.FC<SettingsProps> = ({
       </div>
 
       {/* Settings Content */}
-      <div className="flex-1 overflow-y-auto w-full">
+      <div className="flex-1 overflow-y-auto overflow-x-hidden w-full">
         <TimeEntrySettings highlightSection={highlightSection} />
         
         {/* User Profile Section */}
