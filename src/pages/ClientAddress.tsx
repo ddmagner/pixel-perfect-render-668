@@ -190,7 +190,7 @@ const ClientAddressPage = () => {
           </div>
         </div>
 
-        <div className="w-full px-2.5 pt-2.5 pb-1">
+        <div className="w-full pt-4 pb-1">
           <button 
             type="button" 
             className="w-full text-white py-3.5 font-bold text-[15px] transition-colors" 
