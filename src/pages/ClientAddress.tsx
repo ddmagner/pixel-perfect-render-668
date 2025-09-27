@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { useApp } from '@/context/AppContext';
 import { ChevronLeft, Edit3 } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
 
 const ClientAddressPage = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { settings, updateSettings } = useApp();
+  const { toast } = useToast();
   const clientId = searchParams.get('clientId');
   
   const client = settings.clients.find(c => c.id === clientId);
@@ -18,6 +20,38 @@ const ClientAddressPage = () => {
 
   const handleBack = () => {
     navigate('/?tab=settings');
+  };
+
+  const handleSave = async () => {
+    if (client) {
+      const updatedClients = settings.clients.map(c => 
+        c.id === clientId 
+          ? { 
+              ...c, 
+              attention,
+              address,
+              city,
+              state,
+              zip_code: zipCode
+            }
+          : c
+      );
+      
+      try {
+        await updateSettings({ clients: updatedClients });
+        toast({
+          title: "Success",
+          description: "Client details saved successfully",
+        });
+        navigate('/?tab=settings');
+      } catch (error) {
+        toast({
+          title: "Error",
+          description: "Failed to save client details",
+          variant: "destructive",
+        });
+      }
+    }
   };
 
   const handleInputChange = (field: string, value: string) => {
@@ -193,6 +227,7 @@ const ClientAddressPage = () => {
         <div className="w-full pt-[22px] pb-1">
           <button 
             type="button" 
+            onClick={handleSave}
             className="w-full text-white py-3.5 font-bold text-[15px] transition-colors" 
             style={{
               backgroundColor: '#09121F'

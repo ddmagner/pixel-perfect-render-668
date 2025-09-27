@@ -180,7 +180,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
           city: client.city || undefined,
           state: client.state || undefined,
           zip_code: client.zip_code || undefined,
-          attention: client.attention || undefined
+          attention: (client as any).attention || undefined
         })) : defaultSettings.clients,
         userProfile: {
           name: profileData?.name || '',
@@ -346,7 +346,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
               address: client.address || null,
               city: client.city || null,
               state: client.state || null,
-              zip_code: client.zip_code || null
+              zip_code: client.zip_code || null,
+              attention: client.attention || null
             }, {
               onConflict: 'id'
             });
