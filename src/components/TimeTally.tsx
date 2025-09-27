@@ -897,7 +897,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
 
                        {/* Sub-total */}
                        <div className="grid h-[32px] items-center" style={{
-                         gridTemplateColumns: getRegularGridTemplate(settings.invoiceMode),
+                         gridTemplateColumns: getEntryGridTemplate(settings.invoiceMode),
                          gap: '0'
                        }}>
                         <div></div>
@@ -923,7 +923,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
 
                    {/* TOTAL for this group */}
                    <div className="grid h-[32px] items-center" style={{
-                     gridTemplateColumns: getRegularGridTemplate(settings.invoiceMode),
+                     gridTemplateColumns: getEntryGridTemplate(settings.invoiceMode),
                      gap: '0'
                    }}>
                     <div></div>
@@ -951,7 +951,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
              {/* TOTAL-IN */}
              <div className="w-full border-t-2 border-[#09121F] mt-4">
                <div className="grid h-[32px] items-center" style={{
-                 gridTemplateColumns: getRegularGridTemplate(settings.invoiceMode),
+                 gridTemplateColumns: getEntryGridTemplate(settings.invoiceMode),
                  gap: '0'
                }}>
                 <div></div>
