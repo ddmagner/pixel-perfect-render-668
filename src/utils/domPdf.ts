@@ -90,7 +90,7 @@ export async function createPdfFromPreview(
   document.body.appendChild(container);
 
   // Ensure correct mode
-  const injectedSettings: AppSettings = { ...settings, invoiceMode: viewMode === 'invoice' } as AppSettings;
+  const injectedSettings: AppSettings = { ...settings, invoiceMode: viewMode as string === 'invoice' } as AppSettings;
 
   const root = createRoot(container);
   root.render(
