@@ -190,15 +190,6 @@ const currentDate = new Date();
         }
       `}</style>
 
-      {/* Print button */}
-      <div className="no-print fixed top-4 right-4 z-10">
-        <button 
-          onClick={() => window.print()}
-          className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
-        >
-          Print Invoice
-        </button>
-      </div>
 
       {/* Invoice Content - Letter Size (8.5" x 11") */}
       <div className="invoice-content mx-auto bg-white" style={{ padding: '0.75in 0.5in' }}>{/* Removed minHeight: '11in' to hug content */}
