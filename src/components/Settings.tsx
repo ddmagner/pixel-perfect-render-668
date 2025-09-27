@@ -35,7 +35,7 @@ export const Settings: React.FC<SettingsProps> = ({
   };
   return <div className="flex flex-col h-full w-full bg-white">
       {/* Mode Toggle */}
-      <div className="flex justify-center items-center w-full px-4 py-4">
+      <div className="flex justify-center items-center w-full px-2.5 py-4">
         <div className="flex items-center gap-4">
           <span className={`text-sm font-medium ${!settings.invoiceMode ? 'text-[#09121F]' : 'text-[#BFBFBF]'}`}>
             Time Card Mode
@@ -50,10 +50,10 @@ export const Settings: React.FC<SettingsProps> = ({
       </div>
 
       {/* Divider */}
-      <div className="w-full px-4 mb-6"><div className="h-px bg-[#09121F]" /></div>
+      <div className="w-full px-2.5 mb-6"><div className="h-px bg-[#09121F]" /></div>
 
       {/* Header */}
-      <div className="flex items-baseline justify-between px-4 pt-0.5 pb-1">
+      <div className="flex items-baseline justify-between px-2.5 pt-0.5 pb-1">
         <h1 className="text-[#09121F] text-[28px] font-bold leading-8">Time In settings</h1>
       </div>
 
@@ -69,13 +69,13 @@ export const Settings: React.FC<SettingsProps> = ({
         
         {/* Time Archive Section */}
         <div className="w-full h-[10px] bg-[#E5E5E5]" />
-        <div className="px-4 pt-4 pb-4">
+        <div className="px-2.5 pt-4 pb-4">
           <TimeArchive />
         </div>
         
         {/* Coloring Time Section */}
         <div className="w-full h-[10px] bg-[#E5E5E5]" />
-        <div className="px-4 pt-0.5 pb-1">
+        <div className="px-2.5 pt-0.5 pb-1">
           <div className="py-4 pb-4">
             <div className="flex items-center justify-between cursor-pointer" onClick={() => setShowColorOverlay(true)}>
               <div>
@@ -93,7 +93,7 @@ export const Settings: React.FC<SettingsProps> = ({
         
         {/* Sign Out Section */}
         <div className="w-full h-[10px] bg-[#E5E5E5]" />
-        <div className="px-4 pt-0.5 pb-1">
+        <div className="px-2.5 pt-0.5 pb-1">
           <div className="py-6 pb-40 md:pb-8 space-y-6" style={{
           paddingBottom: 'max(160px, env(safe-area-inset-bottom))'
         }}>

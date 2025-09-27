@@ -107,7 +107,7 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
   };
   return <div>
       {/* Clients */}
-      <section className="px-4">
+      <section className="px-2.5">
         <div className="pt-1.5 mb-3">
           <h3 className="text-[#09121F] text-sm font-bold">Clients</h3>
         </div>
@@ -157,7 +157,7 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
       </section>
 
       {/* Projects */}
-      <section className="px-4">
+      <section className="px-2.5">
         <div className="pt-5 mb-3">
           <h3 className="text-[#09121F] text-sm font-bold">Projects</h3>
         </div>
@@ -208,7 +208,7 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
       </section>
 
       {/* Tasks */}
-      <section className="px-4">
+      <section className="px-2.5">
         <div className="pt-5 mb-3">
           <div className="flex justify-between items-center">
             <h3 className="text-[#09121F] text-sm font-bold">Tasks</h3>
@@ -296,7 +296,7 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
       </section>
 
       {/* Tax */}
-      <section className="px-4 pb-[22px]">
+      <section className="px-2.5 pb-[22px]">
         <div className="pt-5 mb-3">
           <div className="flex justify-between items-center">
             <h3 className="text-[#09121F] text-sm font-bold">Tax</h3>
