@@ -27,7 +27,18 @@ export async function generateSpreadsheet(
 
   const workbook = new ExcelJS.Workbook();
   const sheet = workbook.addWorksheet(isInvoice ? 'Invoice' : 'Time Card', {
-    pageSetup: { paperSize: 1, orientation: 'portrait', margins: { left: 0.7, right: 0.7, top: 0.7, bottom: 0.7 } },
+    pageSetup: { 
+      paperSize: 'LETTER' as any, 
+      orientation: 'portrait', 
+      margins: { 
+        left: 0.7, 
+        right: 0.7, 
+        top: 0.7, 
+        bottom: 0.7,
+        header: 0.3,
+        footer: 0.3
+      } 
+    },
     views: [{ showGridLines: false }],
   });
 
