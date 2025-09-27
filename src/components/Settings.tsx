@@ -60,15 +60,19 @@ export const Settings: React.FC<SettingsProps> = ({
       {/* Settings Content */}
       <div className="flex-1 overflow-y-auto w-full">
         <TimeEntrySettings highlightSection={highlightSection} />
+        
+        {/* User Profile Section */}
+        <div className="w-full h-[5px] bg-[#BFBFBF]" />
         <UserProfile />
         
         {/* Time Archive Section */}
+        <div className="w-full h-[5px] bg-[#BFBFBF]" />
         <div className="px-2.5 pt-4 pb-1.5">
           <TimeArchive />
         </div>
         
         {/* Coloring Time Section */}
-        <div className="w-full px-2.5"><div className="h-px bg-[#09121F]" /></div>
+        <div className="w-full h-[5px] bg-[#BFBFBF]" />
         <div className="px-2.5 py-4 pb-[22px]">
           <div className="flex items-center justify-between cursor-pointer" onClick={() => setShowColorOverlay(true)}>
             <div>
@@ -84,7 +88,7 @@ export const Settings: React.FC<SettingsProps> = ({
         </div>
         
         {/* Sign Out Section */}
-        <div className="w-full px-2.5"><div className="h-px bg-[#09121F]" /></div>
+        <div className="w-full h-[5px] bg-[#BFBFBF]" />
         <div className="px-2.5 py-6 pb-40 md:pb-8 space-y-6" style={{
         paddingBottom: 'max(160px, env(safe-area-inset-bottom))'
       }}>
