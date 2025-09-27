@@ -97,7 +97,7 @@ export const Settings: React.FC<SettingsProps> = ({
               onClick={() => setShowInvoicePreview(true)}
               className="text-[#BFBFBF] text-xs font-normal underline hover:opacity-70 transition-opacity block"
             >
-              Invoice preview
+              Invoice Preview
             </button>
           )}
           <div className="space-y-6">
