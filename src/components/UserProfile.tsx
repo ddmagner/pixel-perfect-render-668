@@ -115,7 +115,7 @@ export const UserProfile: React.FC = () => {
         </div>
       </div>
       
-      <div className="space-y-4">
+      <div className="space-y-4 pb-4">
         <div>
           <h3 className="text-[#09121F] text-sm font-medium mb-2">Name</h3>
           <div className="flex items-center justify-between h-5">
