@@ -190,7 +190,9 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
               </div>
             </div>
             <div className="col-span-3 -ml-[15px]">
-              <h3 className="text-sm font-bold text-black uppercase tracking-wider mb-1.5">Bill To</h3>
+              <h3 className="text-sm font-bold text-black uppercase tracking-wider mb-1.5">
+                {settings.invoiceMode ? 'Bill To' : 'To'}
+              </h3>
               <div className="text-sm text-black">
                  {primaryClient ? (
                    <>
