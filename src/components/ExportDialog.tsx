@@ -31,7 +31,7 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
 }) => {
   const [isPdfFormat, setIsPdfFormat] = useState(true);
   const [exportMethod, setExportMethod] = useState<'download' | 'email' | 'print' | 'preview'>('preview');
-  const [fileName, setFileName] = useState(`${settings.userProfile.name || 'User'} Time Report ${format(new Date(), 'yyyy-MM-dd')}`);
+  const [fileName, setFileName] = useState(`${settings.userProfile.name || 'User'} ${viewMode === 'invoice' ? 'Invoice' : 'Time Card'} ${format(new Date(), 'yyyy-MM-dd')}`);
   const [isExporting, setIsExporting] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
 
