@@ -81,7 +81,7 @@ const ClientAddressPage = () => {
       style={{ fontFamily: 'Gilroy, sans-serif' }}
     >
       {/* Navigation with back button */}
-      <nav className="flex justify-center items-center self-stretch px-0 pt-4 pb-1 bg-white relative">
+      <nav className="flex justify-center items-center self-stretch px-4 pt-4 pb-1 bg-white relative">
         <button 
           onClick={handleBack}
           className="flex items-center gap-2 text-[#09121F] absolute left-2.5"
@@ -190,7 +190,7 @@ const ClientAddressPage = () => {
           </div>
         </div>
 
-        <div className="w-full px-2.5 pt-2.5 pb-1">
+        <div className="flex w-full px-4 pt-2.5 pb-1">
           <button 
             type="button" 
             className="w-full text-white py-3.5 font-bold text-[15px] transition-colors" 
