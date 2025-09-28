@@ -77,7 +77,7 @@ export async function createPdfFromPreview(
           const el = (doc?.querySelector('.invoice-content') as HTMLElement) || (doc?.body as HTMLElement);
           if (!el) throw new Error('Invoice content not found');
 
-          const canvas = await html2canvas(el, { scale: 2, backgroundColor: '#ffffff', useCORS: true });
+          const canvas = await html2canvas(el, { scale: 2, backgroundColor: '#ffffff', useCORS: true, letterRendering: true } as any);
           const pdfBlob = await canvasToPdfBlob(canvas);
           resolve(pdfBlob);
         } catch (e) {
@@ -126,7 +126,29 @@ export async function createPdfFromPreview(
     throw new Error('Document preview element not found');
   }
 
-  const canvas = await html2canvas(el, { scale: 2, backgroundColor: '#ffffff', useCORS: true });
+  try {
+    // Wait for web fonts
+    // @ts-ignore
+    if (document.fonts && typeof document.fonts.ready?.then === 'function') {
+      // @ts-ignore
+      await document.fonts.ready;
+    }
+    // Wait for images inside the preview
+    const imgs = Array.from(el.querySelectorAll('img')) as HTMLImageElement[];
+    await Promise.all(
+      imgs.map((img) =>
+        img.complete
+          ? Promise.resolve()
+          : new Promise<void>((res) => {
+              const done = () => res();
+              img.onload = done;
+              img.onerror = done;
+            })
+      )
+    );
+  } catch {}
+
+  const canvas = await html2canvas(el, { scale: 2, backgroundColor: '#ffffff', useCORS: true, letterRendering: true } as any);
   const blob = await canvasToPdfBlob(canvas);
 
   root.unmount();
