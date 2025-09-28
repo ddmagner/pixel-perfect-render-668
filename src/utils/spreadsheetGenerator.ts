@@ -2,7 +2,7 @@ import ExcelJS from 'exceljs';
 import { TimeEntry, AppSettings, ViewMode } from '@/types';
 import { format } from 'date-fns';
 import { formatCurrency, formatHours } from '@/lib/utils';
-import { BRAND } from '@/utils/documentLayout';
+import { BRAND, FONTS } from '@/utils/documentLayout';
 
 async function fetchAsBase64(url: string): Promise<string> {
   const res = await fetch(url);
@@ -31,23 +31,23 @@ export async function generateSpreadsheet(
       paperSize: 'LETTER' as any, 
       orientation: 'portrait', 
       margins: { 
-        left: 1,
-        right: 1,
-        top: 1,
-        bottom: 1,
+        left: 0.5,
+        right: 0.5,
+        top: 0.75,
+        bottom: 0.75,
         header: 0.5,
-        footer: 0.5
+        footer: 0.5,
       } 
     },
     views: [{ showGridLines: false }],
   });
 
   // Fonts
-  const fontTitle: Partial<ExcelJS.Font> = { name: 'Helvetica', bold: true, size: 24, color: { argb: 'FF000000' } };
-  const fontMeta: Partial<ExcelJS.Font> = { name: 'Helvetica', size: 12, color: { argb: 'FF737373' } };
-  const fontHeader: Partial<ExcelJS.Font> = { name: 'Helvetica', bold: true, size: 10, color: { argb: 'FF737373' } };
-  const fontBody: Partial<ExcelJS.Font> = { name: 'Helvetica', size: 12, color: { argb: 'FF000000' } };
-  const fontFooter: Partial<ExcelJS.Font> = { name: 'Helvetica', size: 8, color: { argb: 'FF9CA3AF' } };
+  const fontTitle: Partial<ExcelJS.Font> = { name: 'Helvetica', bold: true, size: FONTS.title, color: { argb: 'FF000000' } };
+  const fontMeta: Partial<ExcelJS.Font> = { name: 'Helvetica', size: FONTS.meta, color: { argb: 'FF000000' } };
+  const fontHeader: Partial<ExcelJS.Font> = { name: 'Helvetica', bold: true, size: FONTS.header, color: { argb: 'FF000000' } };
+  const fontBody: Partial<ExcelJS.Font> = { name: 'Helvetica', size: FONTS.body, color: { argb: 'FF000000' } };
+  const fontFooter: Partial<ExcelJS.Font> = { name: 'Helvetica', size: FONTS.footer, color: { argb: 'FF9CA3AF' } };
 
   const currentDate = new Date();
   const minDate = entries.length > 0 ? new Date(Math.min(...entries.map(e => new Date(e.date).getTime()))) : currentDate;
@@ -89,7 +89,7 @@ export async function generateSpreadsheet(
   if (settings.userProfile.city || settings.userProfile.state || settings.userProfile.zipCode) {
     fromLines.push(`${settings.userProfile.city || ''}${settings.userProfile.city && settings.userProfile.state ? ', ' : ''}${settings.userProfile.state || ''}${settings.userProfile.zipCode ? ` ${settings.userProfile.zipCode}` : ''}`);
   }
-  if (settings.userProfile.phone) fromLines.push(`${settings.userProfile.phone}`);
+  if (settings.userProfile.phone) fromLines.push(`Phone: ${settings.userProfile.phone}`);
 
   fromLines.forEach((l) => {
     sheet.getCell(rowIdx, fromCol).value = l;
@@ -212,7 +212,7 @@ export async function generateSpreadsheet(
   // Separator line (top border)
   const sepRow = sheet.getRow(rowIdx);
   for (let i = 1; i <= (sheet.columns?.length || 0); i++) {
-    sepRow.getCell(i).border = { top: { style: 'thin', color: { argb: 'FFCCCCCC' } } };
+    sepRow.getCell(i).border = { top: { style: 'thin', color: { argb: 'FFE5E7EB' } } };
   }
   rowIdx++;
 

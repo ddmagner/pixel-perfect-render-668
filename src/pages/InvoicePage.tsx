@@ -73,6 +73,46 @@ const InvoicePage: React.FC = () => {
     return () => window.removeEventListener('message', handleMessage);
   }, []);
 
+  // Notify parent (domPdf) when invoice is fully ready for capture
+  useEffect(() => {
+    if (loading || !settings) return;
+
+    const waitForReady = async () => {
+      try {
+        // Wait for web fonts to be ready (if supported)
+        // @ts-ignore
+        if (document.fonts && typeof document.fonts.ready?.then === 'function') {
+          // @ts-ignore
+          await document.fonts.ready;
+        }
+      } catch {}
+
+      // Wait for all images within the invoice content to finish loading
+      const container = document.querySelector('.invoice-content') as HTMLElement | null;
+      const imgs = Array.from(container?.querySelectorAll('img') || []);
+      await Promise.all(
+        imgs.map((img) =>
+          img.complete
+            ? Promise.resolve()
+            : new Promise<void>((res) => {
+                const done = () => res();
+                img.onload = done;
+                img.onerror = done;
+              })
+        )
+      );
+
+      // Double RAF to ensure layout is fully flushed before capture
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          window.parent?.postMessage({ type: 'invoice-ready' }, window.location.origin);
+        });
+      });
+    };
+
+    waitForReady();
+  }, [loading, settings]);
+
   const getRate = (entry: TimeEntry): number => {
     const rate = settings?.taskTypes?.find(t => t.name === entry.task)?.hourlyRate ?? 0;
     return rate;

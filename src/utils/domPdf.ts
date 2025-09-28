@@ -56,10 +56,25 @@ export async function createPdfFromPreview(
     const blob = await new Promise<Blob>((resolve, reject) => {
       iframe.onload = async () => {
         try {
-          // Small delay to ensure fonts/images
-          await new Promise(r => setTimeout(r, 300));
+          // Wait for the invoice page to signal readiness (fonts/images rendered)
+          await new Promise<void>((done) => {
+            const onMessage = (e: MessageEvent) => {
+              if (e.origin !== window.location.origin) return;
+              if (e.data && e.data.type === 'invoice-ready') {
+                window.removeEventListener('message', onMessage);
+                done();
+              }
+            };
+            window.addEventListener('message', onMessage);
+            // Fallback timeout in case message doesn't arrive
+            window.setTimeout(() => {
+              window.removeEventListener('message', onMessage);
+              done();
+            }, 6000);
+          });
+
           const doc = iframe.contentDocument || iframe.contentWindow?.document;
-          const el = (doc?.querySelector('.invoice-content') as HTMLElement) || doc?.body as HTMLElement;
+          const el = (doc?.querySelector('.invoice-content') as HTMLElement) || (doc?.body as HTMLElement);
           if (!el) throw new Error('Invoice content not found');
 
           const canvas = await html2canvas(el, { scale: 2, backgroundColor: '#ffffff', useCORS: true });
