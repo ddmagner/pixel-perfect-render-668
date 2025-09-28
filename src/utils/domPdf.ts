@@ -12,15 +12,18 @@ async function canvasToPdfBlob(canvas: HTMLCanvasElement): Promise<Blob> {
 
   const imgData = canvas.toDataURL('image/png');
 
-  // Fit image within page bounds preserving aspect ratio (no clipping)
+  // Fit image within page bounds preserving aspect ratio with a tiny safety inset
   const cW = canvas.width;
   const cH = canvas.height;
-  const scale = Math.min(pageWidth / cW, pageHeight / cH);
-  const drawW = cW * scale;
-  const drawH = cH * scale;
+  const safety = 2; // pt inset to avoid right-edge clipping due to rounding
+  const maxW = pageWidth - safety * 2;
+  const maxH = pageHeight - safety * 2;
+  const scale = Math.min(maxW / cW, maxH / cH);
+  const drawW = Math.floor(cW * scale);
+  const drawH = Math.floor(cH * scale);
 
-  const x = (pageWidth - drawW) / 2;
-  const y = 0; // top-align to preserve intended top margins inside the capture
+  const x = Math.round((pageWidth - drawW) / 2);
+  const y = Math.round((pageHeight - drawH) / 2);
 
   pdf.addImage(imgData, 'PNG', x, y, drawW, drawH);
 
@@ -56,7 +59,7 @@ export async function createPdfFromPreview(
       );
     } catch {}
 
-    const canvas = await html2canvas(liveEl, { scale: 2, backgroundColor: '#ffffff', useCORS: true, foreignObjectRendering: true, scrollX: 0, scrollY: 0, width: 816, height: 1056, onclone: (doc: Document) => { const el = (doc.querySelector('#document-preview') as HTMLElement) || (doc.querySelector('.invoice-content') as HTMLElement); if (el) { el.style.width = '816px'; el.style.height = '1056px'; el.style.maxWidth = '816px'; el.style.boxShadow = 'none'; el.style.transform = 'none'; el.style.margin = '0 auto'; } } } as any);
+    const canvas = await html2canvas(liveEl, { scale: 2, backgroundColor: '#ffffff', useCORS: true, foreignObjectRendering: true, scrollX: 0, scrollY: 0, width: 816, height: 1056, onclone: (doc: Document) => { const el = (doc.querySelector('#document-preview') as HTMLElement) || (doc.querySelector('.invoice-content') as HTMLElement); if (el) { el.style.width = '816px'; el.style.height = '1056px'; el.style.maxWidth = '816px'; el.style.boxShadow = 'none'; el.style.transform = 'none'; el.style.margin = '0 auto'; el.style.boxSizing = 'border-box'; el.style.overflow = 'hidden'; } } } as any);
     return canvasToPdfBlob(canvas);
   }
 
@@ -103,7 +106,7 @@ export async function createPdfFromPreview(
           const el = (doc?.querySelector('.invoice-content') as HTMLElement) || (doc?.body as HTMLElement);
           if (!el) throw new Error('Invoice content not found');
 
-          const canvas = await html2canvas(el, { scale: 2, backgroundColor: '#ffffff', useCORS: true, letterRendering: true, foreignObjectRendering: true, scrollX: 0, scrollY: 0, width: 816, height: 1056, onclone: (doc: Document) => { const n = (doc.querySelector('#document-preview') as HTMLElement) || (doc.querySelector('.invoice-content') as HTMLElement); if (n) { n.style.width = '816px'; n.style.height = '1056px'; n.style.maxWidth = '816px'; n.style.boxShadow = 'none'; n.style.transform = 'none'; n.style.margin = '0 auto'; } } } as any);
+          const canvas = await html2canvas(el, { scale: 2, backgroundColor: '#ffffff', useCORS: true, letterRendering: true, foreignObjectRendering: true, scrollX: 0, scrollY: 0, width: 816, height: 1056, onclone: (doc: Document) => { const n = (doc.querySelector('#document-preview') as HTMLElement) || (doc.querySelector('.invoice-content') as HTMLElement); if (n) { n.style.width = '816px'; n.style.height = '1056px'; n.style.maxWidth = '816px'; n.style.boxShadow = 'none'; n.style.transform = 'none'; n.style.margin = '0 auto'; n.style.boxSizing = 'border-box'; n.style.overflow = 'hidden'; } } } as any);
           const pdfBlob = await canvasToPdfBlob(canvas);
           resolve(pdfBlob);
         } catch (e) {
@@ -174,7 +177,7 @@ export async function createPdfFromPreview(
     );
   } catch {}
 
-  const canvas = await html2canvas(el, { scale: 2, backgroundColor: '#ffffff', useCORS: true, letterRendering: true, foreignObjectRendering: true, scrollX: 0, scrollY: 0, width: 816, height: 1056, onclone: (doc: Document) => { const n = (doc.querySelector('#document-preview') as HTMLElement) || (doc.querySelector('.invoice-content') as HTMLElement); if (n) { n.style.width = '816px'; n.style.height = '1056px'; n.style.maxWidth = '816px'; n.style.boxShadow = 'none'; n.style.transform = 'none'; n.style.margin = '0 auto'; } } } as any);
+  const canvas = await html2canvas(el, { scale: 2, backgroundColor: '#ffffff', useCORS: true, letterRendering: true, foreignObjectRendering: true, scrollX: 0, scrollY: 0, width: 816, height: 1056, onclone: (doc: Document) => { const n = (doc.querySelector('#document-preview') as HTMLElement) || (doc.querySelector('.invoice-content') as HTMLElement); if (n) { n.style.width = '816px'; n.style.height = '1056px'; n.style.maxWidth = '816px'; n.style.boxShadow = 'none'; n.style.transform = 'none'; n.style.margin = '0 auto'; n.style.boxSizing = 'border-box'; n.style.overflow = 'hidden'; } } } as any);
   const blob = await canvasToPdfBlob(canvas);
 
   root.unmount();
