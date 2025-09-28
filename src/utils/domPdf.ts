@@ -11,20 +11,18 @@ async function canvasToPdfBlob(canvas: HTMLCanvasElement): Promise<Blob> {
   const pageHeight = pdf.internal.pageSize.getHeight(); // 792pt
 
   const imgData = canvas.toDataURL('image/png');
-  const imgWidth = pageWidth;
-  const imgHeight = (canvas.height / canvas.width) * imgWidth;
 
-  // If taller than one page, scale to page height instead and center horizontally
-  if (imgHeight > pageHeight) {
-    const scaleToHeight = pageHeight;
-    const scaledWidth = (canvas.width / canvas.height) * scaleToHeight;
-    const x = (pageWidth - scaledWidth) / 2;
-    pdf.addImage(imgData, 'PNG', x, 0, scaledWidth, scaleToHeight);
-  } else {
-    // Center vertically if shorter than page height
-    const y = 0; // align to top for consistent margins embedded in the capture
-    pdf.addImage(imgData, 'PNG', 0, y, imgWidth, imgHeight);
-  }
+  // Fit image within page bounds preserving aspect ratio (no clipping)
+  const cW = canvas.width;
+  const cH = canvas.height;
+  const scale = Math.min(pageWidth / cW, pageHeight / cH);
+  const drawW = cW * scale;
+  const drawH = cH * scale;
+
+  const x = (pageWidth - drawW) / 2;
+  const y = 0; // top-align to preserve intended top margins inside the capture
+
+  pdf.addImage(imgData, 'PNG', x, y, drawW, drawH);
 
   return pdf.output('blob');
 }
