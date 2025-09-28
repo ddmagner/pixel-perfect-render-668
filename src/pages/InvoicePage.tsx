@@ -302,12 +302,12 @@ const currentDate = new Date();
           <div className="overflow-hidden">
             {/* Table Header */}
             <div className="border-t border-b border-black print-border">
-              <div className="grid grid-cols-12 gap-4 py-1 text-xs font-bold text-black print-text uppercase tracking-wider">
+              <div className="grid grid-cols-12 gap-4 py-1 text-xs font-bold text-black print-text uppercase tracking-wider items-center">
                 <div className="col-span-2 text-left">Date</div>
                 <div className="col-span-3">Project</div>
                 <div className="col-span-3 -ml-[25px]">Task</div>
                 <div className="col-span-1 text-left">Hours</div>
-                <div className="col-span-1 flex justify-end pl-[75px]">Rate</div>
+                <div className="col-span-1 flex items-center justify-end pl-[75px]">Rate</div>
                 <div className="col-span-2 text-right">Amount</div>
               </div>
             </div>
@@ -319,12 +319,12 @@ const currentDate = new Date();
                 const amount = calculateAmount(entry);
                 
                 return (
-                  <div key={entry.id || index} className="grid grid-cols-12 gap-4 py-1 text-sm text-black print-text">
+                  <div key={entry.id || index} className="grid grid-cols-12 gap-4 py-1 text-sm text-black print-text items-center">
                     <div className="col-span-2">{format(new Date(entry.date), 'MM/dd/yy')}</div>
                     <div className="col-span-3 font-medium">{entry.project}</div>
                     <div className="col-span-3 -ml-[25px]">{entry.task}</div>
                     <div className="col-span-1 text-left">{formatHours(entry.duration)}</div>
-                    <div className="col-span-1 flex justify-end pl-[75px]">{formatCurrency(rate)}</div>
+                    <div className="col-span-1 flex items-center justify-end pl-[75px]">{formatCurrency(rate)}</div>
                     <div className="col-span-2 text-right font-medium">{formatCurrency(amount)}</div>
                   </div>
                 );
@@ -410,22 +410,20 @@ const currentDate = new Date();
           
           {/* Footer */}
           <div className="mt-4">
-            <div className="text-xs text-gray-400 flex items-center gap-1">
-              <span>MADE WITH</span>
-              <div className="flex items-center gap-1">
-                <img 
-                  src="/lovable-uploads/8829a351-d8df-4d66-829d-f34b1754bd35.png" 
-                  alt="Logo" 
-                  className="w-[9px] h-[9px]"
-                  style={{ filter: 'grayscale(100%) brightness(0) invert(60%)' }}
-                />
-                <img 
-                  src="/lovable-uploads/21706651-e7f7-4eec-b5d7-cd8ccf2a385f.png" 
-                  alt="TIME IN Logo" 
-                  className="h-[9px] w-auto"
-                  style={{ filter: 'grayscale(100%) brightness(0) invert(60%)' }}
-                />
-              </div>
+            <div className="text-xs text-gray-400 flex items-baseline gap-1">
+              <span className="leading-4">MADE WITH</span>
+              <img 
+                src="/lovable-uploads/8829a351-d8df-4d66-829d-f34b1754bd35.png" 
+                alt="Time In icon" 
+                className="w-[9px] h-[9px] align-baseline"
+                style={{ filter: 'grayscale(100%) brightness(0) invert(60%)' }}
+              />
+              <img 
+                src="/lovable-uploads/21706651-e7f7-4eec-b5d7-cd8ccf2a385f.png" 
+                alt="TIME IN wordmark" 
+                className="h-[9px] w-auto align-baseline"
+                style={{ filter: 'grayscale(100%) brightness(0) invert(60%)' }}
+              />
             </div>
           </div>
         </div>

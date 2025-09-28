@@ -198,8 +198,9 @@ export async function generateSpreadsheet(
       const c = row.getCell(i + 1);
       c.value = v as any;
       c.font = fontBody;
-      if (isInvoice && (i === 4 || i === 5)) c.alignment = { horizontal: 'right' };
-      else if (!isInvoice && i === 3) c.alignment = { horizontal: 'left' };
+      const align: Partial<ExcelJS.Alignment> = { vertical: 'middle', horizontal: 'left' };
+      if (isInvoice && (i === 4 || i === 5)) align.horizontal = 'right';
+      c.alignment = align as ExcelJS.Alignment;
     });
     row.height = 20;
     rowIdx++;
@@ -276,6 +277,7 @@ export async function generateSpreadsheet(
   // Footer brand: MADE WITH [icon][wordmark]
   sheet.getCell(rowIdx, 1).value = 'MADE WITH';
   sheet.getCell(rowIdx, 1).font = fontFooter;
+  sheet.getRow(rowIdx).height = 14; // ensure enough height for 9px images
 
   try {
     const [iconB64, wordmarkB64] = await Promise.all([
@@ -286,15 +288,14 @@ export async function generateSpreadsheet(
     const iconId = workbook.addImage({ base64: iconB64, extension: 'png' });
     const wordmarkId = workbook.addImage({ base64: wordmarkB64, extension: 'png' });
 
-    // Place images to the right of the text in rowIdx
-    // Estimate column positions in pixels; ExcelJS uses native pixels for ext
+    // Position images to align with text baseline and slight gap
     sheet.addImage(iconId, {
-      tl: { col: 1.2, row: rowIdx - 0.6 },
+      tl: { col: 1.65, row: rowIdx - 0.70 },
       ext: { width: 9, height: 9 },
       editAs: 'twoCell',
     });
     sheet.addImage(wordmarkId, {
-      tl: { col: 1.5, row: rowIdx - 0.6 },
+      tl: { col: 1.86, row: rowIdx - 0.70 },
       ext: { width: 48, height: 9 },
       editAs: 'twoCell',
     });
