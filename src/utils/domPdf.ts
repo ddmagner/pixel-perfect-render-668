@@ -34,6 +34,34 @@ export async function createPdfFromPreview(
   settings: AppSettings,
   viewMode: ViewMode
 ): Promise<Blob> {
+  // If a live preview is visible on the page, capture it directly for a pixel-perfect match
+  const liveEl = (document.querySelector('#document-preview') as HTMLElement | null) || (document.querySelector('.invoice-content') as HTMLElement | null);
+  if (liveEl) {
+    try {
+      // Ensure fonts and images are fully ready before capture
+      // @ts-ignore
+      if (document.fonts && typeof document.fonts.ready?.then === 'function') {
+        // @ts-ignore
+        await document.fonts.ready;
+      }
+      const imgs = Array.from(liveEl.querySelectorAll('img')) as HTMLImageElement[];
+      await Promise.all(
+        imgs.map((img) =>
+          img.complete
+            ? Promise.resolve()
+            : new Promise<void>((res) => {
+                const done = () => res();
+                img.onload = done;
+                img.onerror = done;
+              })
+        )
+      );
+    } catch {}
+
+    const canvas = await html2canvas(liveEl, { scale: 2, backgroundColor: '#ffffff', useCORS: true } as any);
+    return canvasToPdfBlob(canvas);
+  }
+
   if (viewMode === 'invoice') {
     // Load the dedicated invoice page in a hidden iframe for pixel-perfect capture
     const key = `key_${Date.now()}_${Math.random().toString(36).slice(2)}`;
