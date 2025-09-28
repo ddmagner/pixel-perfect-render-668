@@ -58,7 +58,7 @@ export async function createPdfFromPreview(
       );
     } catch {}
 
-    const canvas = await html2canvas(liveEl, { scale: 2, backgroundColor: '#ffffff', useCORS: true } as any);
+    const canvas = await html2canvas(liveEl, { scale: 2, backgroundColor: '#ffffff', useCORS: true, foreignObjectRendering: true, scrollX: 0, scrollY: 0 } as any);
     return canvasToPdfBlob(canvas);
   }
 
@@ -105,7 +105,7 @@ export async function createPdfFromPreview(
           const el = (doc?.querySelector('.invoice-content') as HTMLElement) || (doc?.body as HTMLElement);
           if (!el) throw new Error('Invoice content not found');
 
-          const canvas = await html2canvas(el, { scale: 2, backgroundColor: '#ffffff', useCORS: true, letterRendering: true } as any);
+          const canvas = await html2canvas(el, { scale: 2, backgroundColor: '#ffffff', useCORS: true, letterRendering: true, foreignObjectRendering: true, scrollX: 0, scrollY: 0 } as any);
           const pdfBlob = await canvasToPdfBlob(canvas);
           resolve(pdfBlob);
         } catch (e) {
@@ -176,7 +176,7 @@ export async function createPdfFromPreview(
     );
   } catch {}
 
-  const canvas = await html2canvas(el, { scale: 2, backgroundColor: '#ffffff', useCORS: true, letterRendering: true } as any);
+  const canvas = await html2canvas(el, { scale: 2, backgroundColor: '#ffffff', useCORS: true, letterRendering: true, foreignObjectRendering: true, scrollX: 0, scrollY: 0 } as any);
   const blob = await canvasToPdfBlob(canvas);
 
   root.unmount();
