@@ -361,7 +361,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
             </div>
             
             {/* Footer */}
-            <div className="mt-4">
+            <div className="mt-4" data-pdf-context="footer">
               <div className="text-xs text-muted-foreground">
                 <span className="inline-flex items-baseline gap-1 leading-4 align-baseline">
                   <span>MADE WITH</span>
@@ -374,7 +374,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                   <img 
                     src="/lovable-uploads/21706651-e7f7-4eec-b5d7-cd8ccf2a385f.png" 
                     alt="TIME IN wordmark" 
-                    className="relative inline-block h-[9px] w-auto align-baseline top-[1px]"
+                    className="inline-block h-[9px] w-auto align-baseline pdf-wordmark-offset"
                     style={{ filter: 'grayscale(100%) brightness(0) invert(60%)' }}
                   />
                 </span>

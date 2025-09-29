@@ -177,6 +177,13 @@ export async function createPdfFromPreview(
             // Remove box shadow
             el.style.boxShadow = 'none';
 
+            // Apply PDF-specific styles
+            const pdfWordmarkOffset = el.querySelector('.pdf-wordmark-offset') as HTMLElement;
+            if (pdfWordmarkOffset) {
+              pdfWordmarkOffset.style.position = 'relative';
+              pdfWordmarkOffset.style.top = '2px';
+            }
+
             // PRE-PROCESS LOGO IMAGES: Convert to grey at pixel level
             const logoImages = Array.from(el.querySelectorAll('img')) as HTMLImageElement[];
             for (const img of logoImages) {
@@ -411,6 +418,13 @@ export async function createPdfFromPreview(
         try {
           // Remove box shadow
           n.style.boxShadow = 'none';
+          
+          // Apply PDF-specific styles
+          const pdfWordmarkOffset = n.querySelector('.pdf-wordmark-offset') as HTMLElement;
+          if (pdfWordmarkOffset) {
+            pdfWordmarkOffset.style.position = 'relative';
+            pdfWordmarkOffset.style.top = '2px';
+          }
           
           // PRE-PROCESS LOGO IMAGES: Convert to grey at pixel level
           const logoImages = Array.from(n.querySelectorAll('img')) as HTMLImageElement[];
