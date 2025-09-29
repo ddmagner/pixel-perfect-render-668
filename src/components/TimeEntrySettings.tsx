@@ -254,7 +254,7 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
                 if (e.key === 'Escape') {
                   setEditingTask(null);
                 }
-              }} className="text-[#09121F] text-sm bg-transparent border-none outline-none w-full text-right leading-5" autoFocus onFocus={e => e.target.select()} /> : <span className="text-[#09121F] text-sm leading-5">
+              }} className="text-[#09121F] text-sm bg-transparent border-none outline-none w-full text-right leading-5" onFocus={e => e.target.select()} /> : <span className="text-[#09121F] text-sm leading-5">
                         {formatCurrency(task.hourlyRate || 0)}
                       </span>}
                   </div>}
@@ -345,7 +345,7 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
                 if (e.key === 'Escape') {
                   setEditingTax(null);
                 }
-              }} className="text-[#09121F] text-sm bg-transparent border-none outline-none w-full text-right leading-5" autoFocus onFocus={e => e.target.select()} /> : <span className="text-[#09121F] text-sm leading-5">
+              }} className="text-[#09121F] text-sm bg-transparent border-none outline-none w-full text-right leading-5" onFocus={e => e.target.select()} /> : <span className="text-[#09121F] text-sm leading-5">
                         {tax.rate ? `${tax.rate}%` : '0.00%'}
                       </span>}
                   </div>}
