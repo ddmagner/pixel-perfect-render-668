@@ -124,25 +124,25 @@ export async function createPdfFromPreview(
               if (computed.backgroundColor) htmlEl.style.backgroundColor = computed.backgroundColor;
               if (computed.opacity) htmlEl.style.opacity = computed.opacity;
               
-              // Force muted-foreground to exact grey - check class or if color is in the grey range
-              const isGreyText = htmlEl.classList?.contains('text-muted-foreground') || 
-                                 /rgb\(19[0-2],\s*19[0-2],\s*19[0-2]\)/.test(currentColor) ||
-                                 currentColor === 'rgb(191, 191, 191)';
-              if (isGreyText) {
+              // Force muted-foreground to exact grey using RGB value
+              if (htmlEl.classList?.contains('text-muted-foreground')) {
                 htmlEl.style.setProperty('color', 'rgb(191, 191, 191)', 'important');
               }
               
-              // Force grey filter for logo images to prevent black rendering
+              // Images: preserve inline filter exactly, or apply from computed if none inline
               if (htmlEl.tagName === 'IMG') {
-                const src = htmlEl.getAttribute('src') || '';
-                if (src.includes('8829a351-d8df-4d66-829d-f34b1754bd35') || src.includes('21706651-e7f7-4eec-b5d7-cd8ccf2a385f')) {
-                  htmlEl.style.setProperty('filter', 'grayscale(100%) brightness(0) invert(75%)', 'important');
+                const inlineFilter = htmlEl.style.filter;
+                if (inlineFilter) {
+                  // Keep the exact inline filter from the component
+                  htmlEl.style.setProperty('filter', inlineFilter, 'important');
+                } else if (computed.filter && computed.filter !== 'none') {
+                  htmlEl.style.setProperty('filter', computed.filter, 'important');
                 }
-              }
-              
-              // Preserve filters (for the logo)
-              if (computed.filter && computed.filter !== 'none') {
-                htmlEl.style.filter = computed.filter;
+              } else {
+                // For non-images, preserve computed filters
+                if (computed.filter && computed.filter !== 'none') {
+                  htmlEl.style.filter = computed.filter;
+                }
               }
               
             // Force exact text rendering properties to prevent any shifting
@@ -152,17 +152,17 @@ export async function createPdfFromPreview(
             if (computed.fontFamily) htmlEl.style.fontFamily = computed.fontFamily;
             if (computed.lineHeight) htmlEl.style.lineHeight = computed.lineHeight;
             
-            // Force letter-spacing to exact value always (never "normal") to prevent kerning shifts
-            const letterSpace = computed.letterSpacing === 'normal' ? '0px' : computed.letterSpacing;
-            htmlEl.style.setProperty('letter-spacing', letterSpace, 'important');
+            // Completely disable letter spacing to prevent kerning issues
+            htmlEl.style.setProperty('letter-spacing', '0', 'important');
+            htmlEl.style.setProperty('font-feature-settings', '"kern" 0', 'important');
+            htmlEl.style.setProperty('font-kerning', 'none', 'important');
             
             if (computed.textTransform) htmlEl.style.textTransform = computed.textTransform;
             if (computed.textDecoration) htmlEl.style.textDecoration = computed.textDecoration;
             if (computed.whiteSpace) htmlEl.style.whiteSpace = computed.whiteSpace;
             
-            // Force word-spacing to exact value always
-            const wordSpace = computed.wordSpacing === 'normal' ? '0px' : computed.wordSpacing;
-            htmlEl.style.setProperty('word-spacing', wordSpace, 'important');
+            // Disable word spacing variations
+            htmlEl.style.setProperty('word-spacing', '0', 'important');
             
             if (computed.textShadow && computed.textShadow !== 'none') htmlEl.style.textShadow = computed.textShadow;
             if (computed.textIndent && computed.textIndent !== '0px') htmlEl.style.textIndent = computed.textIndent;
@@ -342,25 +342,25 @@ export async function createPdfFromPreview(
             if (computed.backgroundColor) htmlEl.style.backgroundColor = computed.backgroundColor;
             if (computed.opacity) htmlEl.style.opacity = computed.opacity;
             
-            // Force muted-foreground to exact grey - check class or if color is in the grey range
-            const isGreyText = htmlEl.classList?.contains('text-muted-foreground') || 
-                               /rgb\(19[0-2],\s*19[0-2],\s*19[0-2]\)/.test(currentColor) ||
-                               currentColor === 'rgb(191, 191, 191)';
-            if (isGreyText) {
+            // Force muted-foreground to exact grey using RGB value
+            if (htmlEl.classList?.contains('text-muted-foreground')) {
               htmlEl.style.setProperty('color', 'rgb(191, 191, 191)', 'important');
             }
             
-            // Force grey filter for logo images to prevent black rendering
+            // Images: preserve inline filter exactly, or apply from computed if none inline
             if (htmlEl.tagName === 'IMG') {
-              const src = htmlEl.getAttribute('src') || '';
-              if (src.includes('8829a351-d8df-4d66-829d-f34b1754bd35') || src.includes('21706651-e7f7-4eec-b5d7-cd8ccf2a385f')) {
-                htmlEl.style.setProperty('filter', 'grayscale(100%) brightness(0) invert(75%)', 'important');
+              const inlineFilter = htmlEl.style.filter;
+              if (inlineFilter) {
+                // Keep the exact inline filter from the component
+                htmlEl.style.setProperty('filter', inlineFilter, 'important');
+              } else if (computed.filter && computed.filter !== 'none') {
+                htmlEl.style.setProperty('filter', computed.filter, 'important');
               }
-            }
-            
-            // Preserve filters (for the logo)
-            if (computed.filter && computed.filter !== 'none') {
-              htmlEl.style.filter = computed.filter;
+            } else {
+              // For non-images, preserve computed filters
+              if (computed.filter && computed.filter !== 'none') {
+                htmlEl.style.filter = computed.filter;
+              }
             }
             
             // Force exact text rendering properties to prevent any shifting
@@ -370,17 +370,17 @@ export async function createPdfFromPreview(
             if (computed.fontFamily) htmlEl.style.fontFamily = computed.fontFamily;
             if (computed.lineHeight) htmlEl.style.lineHeight = computed.lineHeight;
             
-            // Force letter-spacing to exact value always (never "normal") to prevent kerning shifts
-            const letterSpace = computed.letterSpacing === 'normal' ? '0px' : computed.letterSpacing;
-            htmlEl.style.setProperty('letter-spacing', letterSpace, 'important');
+            // Completely disable letter spacing to prevent kerning issues
+            htmlEl.style.setProperty('letter-spacing', '0', 'important');
+            htmlEl.style.setProperty('font-feature-settings', '"kern" 0', 'important');
+            htmlEl.style.setProperty('font-kerning', 'none', 'important');
             
             if (computed.textTransform) htmlEl.style.textTransform = computed.textTransform;
             if (computed.textDecoration) htmlEl.style.textDecoration = computed.textDecoration;
             if (computed.whiteSpace) htmlEl.style.whiteSpace = computed.whiteSpace;
             
-            // Force word-spacing to exact value always
-            const wordSpace = computed.wordSpacing === 'normal' ? '0px' : computed.wordSpacing;
-            htmlEl.style.setProperty('word-spacing', wordSpace, 'important');
+            // Disable word spacing variations
+            htmlEl.style.setProperty('word-spacing', '0', 'important');
             
             if (computed.textShadow && computed.textShadow !== 'none') htmlEl.style.textShadow = computed.textShadow;
             if (computed.textIndent && computed.textIndent !== '0px') htmlEl.style.textIndent = computed.textIndent;
