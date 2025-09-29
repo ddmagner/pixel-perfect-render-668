@@ -137,6 +137,8 @@ export async function createPdfFromPreview(
             if (computed.textDecoration) htmlEl.style.textDecoration = computed.textDecoration;
             if (computed.whiteSpace) htmlEl.style.whiteSpace = computed.whiteSpace;
             if (computed.wordSpacing) htmlEl.style.wordSpacing = computed.wordSpacing;
+            if (computed.textShadow) htmlEl.style.textShadow = computed.textShadow;
+            if (computed.textIndent) htmlEl.style.textIndent = computed.textIndent;
               
               // Preserve spacing and positioning
               if (computed.padding) htmlEl.style.padding = computed.padding;
@@ -326,6 +328,8 @@ export async function createPdfFromPreview(
             if (computed.textDecoration) htmlEl.style.textDecoration = computed.textDecoration;
             if (computed.whiteSpace) htmlEl.style.whiteSpace = computed.whiteSpace;
             if (computed.wordSpacing) htmlEl.style.wordSpacing = computed.wordSpacing;
+            if (computed.textShadow) htmlEl.style.textShadow = computed.textShadow;
+            if (computed.textIndent) htmlEl.style.textIndent = computed.textIndent;
             
             // Preserve spacing and positioning
             if (computed.padding) htmlEl.style.padding = computed.padding;
