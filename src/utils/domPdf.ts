@@ -177,11 +177,18 @@ export async function createPdfFromPreview(
             // Remove box shadow
             el.style.boxShadow = 'none';
 
-            // Apply PDF-specific styles
+            // Apply PDF-specific styles for logo alignment
             const pdfWordmarkOffset = el.querySelector('.pdf-wordmark-offset') as HTMLElement;
             if (pdfWordmarkOffset) {
               pdfWordmarkOffset.style.position = 'relative';
-              pdfWordmarkOffset.style.top = '2px';
+              pdfWordmarkOffset.style.top = '-2px';
+            }
+            
+            // Lower the icon by 1px in PDF
+            const logoIcon = el.querySelector('img[alt="Time In icon"]') as HTMLElement;
+            if (logoIcon) {
+              logoIcon.style.position = 'relative';
+              logoIcon.style.top = '1px';
             }
 
             // PRE-PROCESS LOGO IMAGES: Convert to grey at pixel level
@@ -419,11 +426,18 @@ export async function createPdfFromPreview(
           // Remove box shadow
           n.style.boxShadow = 'none';
           
-          // Apply PDF-specific styles
+          // Apply PDF-specific styles for logo alignment
           const pdfWordmarkOffset = n.querySelector('.pdf-wordmark-offset') as HTMLElement;
           if (pdfWordmarkOffset) {
             pdfWordmarkOffset.style.position = 'relative';
-            pdfWordmarkOffset.style.top = '2px';
+            pdfWordmarkOffset.style.top = '-2px';
+          }
+          
+          // Lower the icon by 1px in PDF
+          const logoIcon = n.querySelector('img[alt="Time In icon"]') as HTMLElement;
+          if (logoIcon) {
+            logoIcon.style.position = 'relative';
+            logoIcon.style.top = '1px';
           }
           
           // PRE-PROCESS LOGO IMAGES: Convert to grey at pixel level
