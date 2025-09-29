@@ -119,14 +119,25 @@ export async function createPdfFromPreview(
               .invoice-content .-ml-\\[25px\\] { margin-left: 0 !important; }
               .invoice-content .-ml-\\[15px\\] { margin-left: 0 !important; }
               .invoice-content .pl-\\[75px\\] { padding-left: 0 !important; }
-              .invoice-content img { max-width: 100% !important; height: auto !important; object-fit: contain !important; }
+              .invoice-content img { object-fit: contain !important; }
             `;
             doc.head.appendChild(style);
 
-            // Sanitize images for html2canvas
+            // Sanitize images for html2canvas and preserve original dimensions
             const imgs = Array.from(el.querySelectorAll('img')) as HTMLImageElement[];
             imgs.forEach((img) => {
               try {
+                // Capture original computed dimensions from the live preview
+                const originalImg = document.querySelector(`img[src="${img.src}"]`) as HTMLImageElement;
+                let originalWidth = img.width + 'px';
+                let originalHeight = img.height + 'px';
+                
+                if (originalImg) {
+                  const computedStyle = window.getComputedStyle(originalImg);
+                  originalWidth = computedStyle.width;
+                  originalHeight = computedStyle.height;
+                }
+                
                 const raw = img.getAttribute('src') || '';
                 if (raw.startsWith('/')) {
                   img.src = window.location.origin + raw;
@@ -139,6 +150,15 @@ export async function createPdfFromPreview(
                     img.crossOrigin = 'anonymous';
                   }
                 } catch {}
+                
+                // Preserve exact original dimensions to prevent scaling
+                img.style.width = originalWidth;
+                img.style.height = originalHeight;
+                img.style.maxWidth = originalWidth;
+                img.style.maxHeight = originalHeight;
+                img.style.minWidth = originalWidth;
+                img.style.minHeight = originalHeight;
+                img.style.objectFit = 'contain';
                 img.style.filter = 'none';
               } catch {}
             });
@@ -265,7 +285,7 @@ export async function createPdfFromPreview(
             .invoice-content .-ml-\\[25px\\] { margin-left: 0 !important; }
             .invoice-content .-ml-\\[15px\\] { margin-left: 0 !important; }
             .invoice-content .pl-\\[75px\\] { padding-left: 0 !important; }
-            .invoice-content img { max-width: 100% !important; height: auto !important; object-fit: contain !important; }
+            .invoice-content img { object-fit: contain !important; }
           `;
           doc.head.appendChild(style);
         } catch {}
@@ -273,6 +293,17 @@ export async function createPdfFromPreview(
           const imgs = Array.from(n.querySelectorAll('img')) as HTMLImageElement[];
           imgs.forEach((img) => {
             try {
+              // Capture original computed dimensions from the live preview
+              const originalImg = document.querySelector(`img[src="${img.src}"]`) as HTMLImageElement;
+              let originalWidth = img.width + 'px';
+              let originalHeight = img.height + 'px';
+              
+              if (originalImg) {
+                const computedStyle = window.getComputedStyle(originalImg);
+                originalWidth = computedStyle.width;
+                originalHeight = computedStyle.height;
+              }
+              
               const raw = img.getAttribute('src') || '';
               if (raw.startsWith('/')) {
                 img.src = window.location.origin + raw;
@@ -285,6 +316,15 @@ export async function createPdfFromPreview(
                   img.crossOrigin = 'anonymous';
                 }
               } catch {}
+              
+              // Preserve exact original dimensions to prevent scaling
+              img.style.width = originalWidth;
+              img.style.height = originalHeight;
+              img.style.maxWidth = originalWidth;
+              img.style.maxHeight = originalHeight;
+              img.style.minWidth = originalWidth;
+              img.style.minHeight = originalHeight;
+              img.style.objectFit = 'contain';
               img.style.filter = 'none';
             } catch {}
           });
