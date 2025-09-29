@@ -50,6 +50,13 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
       return;
     }
 
+    // Store current tab before export
+    try {
+      localStorage.setItem('activeTab', 'time-tally');
+    } catch (error) {
+      console.warn('Could not save tab state:', error);
+    }
+
     setIsExporting(true);
     
     try {

@@ -11,7 +11,13 @@ import { useApp } from '@/context/AppContext';
 
 const Index = () => {
   const [searchParams] = useSearchParams();
-  const [activeTab, setActiveTab] = useState('enter-time');
+  const [activeTab, setActiveTab] = useState(() => {
+    try {
+      return localStorage.getItem('activeTab') || 'enter-time';
+    } catch {
+      return 'enter-time';
+    }
+  });
   const [isRecording, setIsRecording] = useState(false);
   const [currentTranscript, setCurrentTranscript] = useState('');
   const [finalTranscript, setFinalTranscript] = useState('');
