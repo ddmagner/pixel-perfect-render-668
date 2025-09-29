@@ -38,17 +38,34 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
         if (error) throw error;
 
         // Transform database entries to match our TimeEntry interface
-        const transformedEntries: TimeEntry[] = data.map(entry => ({
-          id: entry.id,
-          duration: Number(entry.duration),
-          task: entry.task,
-          project: entry.project,
-          client: entry.client,
-          date: entry.date,
-          submittedAt: entry.submitted_at,
-          hourlyRate: Number(entry.hourly_rate) || Number(entry.task_types?.hourly_rate) || 0,
-          archived: entry.archived
-        }));
+        const transformedEntries: TimeEntry[] = data.map(entry => {
+          // Get rate from entry first, then from linked task type, then from settings task types by name
+          let hourlyRate = Number(entry.hourly_rate) || 0;
+          
+          if (!hourlyRate && entry.task_types?.hourly_rate) {
+            hourlyRate = Number(entry.task_types.hourly_rate);
+          }
+          
+          // If still no rate, try to find in settings by task name
+          if (!hourlyRate) {
+            const taskType = settings.taskTypes.find(t => t.name === entry.task);
+            if (taskType?.hourlyRate) {
+              hourlyRate = Number(taskType.hourlyRate);
+            }
+          }
+          
+          return {
+            id: entry.id,
+            duration: Number(entry.duration),
+            task: entry.task,
+            project: entry.project,
+            client: entry.client,
+            date: entry.date,
+            submittedAt: entry.submitted_at,
+            hourlyRate,
+            archived: entry.archived
+          };
+        });
 
         setEntries(transformedEntries);
       } catch (error) {
@@ -67,8 +84,15 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
   }, [selectedEntries, toast]);
 
   const calculateAmount = (entry: TimeEntry): number => {
-    // Use the hourlyRate from the entry first, then fallback to task type rate
-    const rate = entry.hourlyRate || 0;
+    // Use the hourlyRate from the entry first, then fallback to task type rate from settings
+    let rate = entry.hourlyRate || 0;
+    
+    // Additional fallback: try to find rate from settings by task name
+    if (!rate) {
+      const taskType = settings.taskTypes.find(t => t.name === entry.task);
+      rate = taskType?.hourlyRate || 0;
+    }
+    
     return entry.duration * rate;
   };
 
