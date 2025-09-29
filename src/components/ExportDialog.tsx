@@ -88,7 +88,9 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
         await new Promise(r => setTimeout(r, 350));
 
         try {
-          blob = await createPdfFromPreview(entriesToUse, settings, viewMode);
+          const el = container.querySelector('#document-preview') as HTMLElement | null;
+          if (!el) throw new Error('Document preview element not found');
+          blob = await createPdfFromPreview(entriesToUse, settings, viewMode, el);
         } finally {
           root.unmount();
           container.remove();
