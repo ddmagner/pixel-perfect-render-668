@@ -30,6 +30,31 @@ async function canvasToPdfBlob(canvas: HTMLCanvasElement): Promise<Blob> {
   return pdf.output('blob');
 }
 
+async function canvasesToPdfBlob(canvases: HTMLCanvasElement[]): Promise<Blob> {
+  const pdf = new jsPDF({ unit: 'pt', format: 'letter' });
+  const pageWidth = pdf.internal.pageSize.getWidth();
+  const pageHeight = pdf.internal.pageSize.getHeight();
+
+  canvases.forEach((canvas, idx) => {
+    const imgData = canvas.toDataURL('image/png');
+    const cW = canvas.width;
+    const cH = canvas.height;
+    const safety = 2;
+    const maxW = pageWidth - safety * 2;
+    const maxH = pageHeight - safety * 2;
+    const scale = Math.min(maxW / cW, maxH / cH);
+    const drawW = Math.floor(cW * scale);
+    const drawH = Math.floor(cH * scale);
+    const x = Math.round((pageWidth - drawW) / 2);
+    const y = Math.round((pageHeight - drawH) / 2);
+
+    if (idx > 0) pdf.addPage();
+    pdf.addImage(imgData, 'PNG', x, y, drawW, drawH);
+  });
+
+  return pdf.output('blob');
+}
+
 export async function createPdfFromPreview(
   entries: TimeEntry[],
   settings: AppSettings,
@@ -60,56 +85,68 @@ export async function createPdfFromPreview(
       );
     } catch {}
 
-    const canvas = await html2canvas(liveEl, {
-      scale: 2,
-      backgroundColor: '#ffffff',
-      useCORS: true,
-      allowTaint: true,
-      imageTimeout: 15000,
-      foreignObjectRendering: true,
-      scrollX: 0,
-      scrollY: 0,
-      width: 816,
-      height: 1056,
-      onclone: (doc: Document) => {
-        const el = (doc.querySelector('#document-preview') as HTMLElement) || (doc.querySelector('.invoice-content') as HTMLElement);
-        if (el) {
-          el.style.width = '816px';
-          el.style.height = '1056px';
-          el.style.maxWidth = '816px';
-          el.style.boxShadow = 'none';
-          el.style.transform = 'none';
-          el.style.margin = '0 auto';
-          el.style.boxSizing = 'border-box';
-          el.style.padding = '72px 48px';
-          el.style.overflow = 'hidden';
-          try {
-            const style = doc.createElement('style');
-            style.innerHTML = `
-        .invoice-content { box-sizing: border-box !important; max-width: 816px !important; width: 816px !important; padding: 72px 48px !important; overflow: hidden !important; }
+    const PAGE_W = 816;
+    const PAGE_H = 1056;
+    const totalHeight = Math.max(liveEl.scrollHeight, liveEl.offsetHeight, liveEl.clientHeight);
+    const totalPages = Math.max(1, Math.ceil(totalHeight / PAGE_H));
+
+    const canvases: HTMLCanvasElement[] = [];
+    for (let i = 0; i < totalPages; i++) {
+      const canvas = await html2canvas(liveEl, {
+        scale: 2,
+        backgroundColor: '#ffffff',
+        useCORS: true,
+        allowTaint: true,
+        imageTimeout: 15000,
+        foreignObjectRendering: true,
+        scrollX: 0,
+        scrollY: 0,
+        width: PAGE_W,
+        height: PAGE_H,
+        onclone: (doc: Document) => {
+          const el = (doc.querySelector('#document-preview') as HTMLElement) || (doc.querySelector('.invoice-content') as HTMLElement);
+          if (el) {
+            try {
+              const style = doc.createElement('style');
+              style.innerHTML = `
+        .invoice-content { box-sizing: border-box !important; max-width: ${PAGE_W}px !important; width: ${PAGE_W}px !important; padding: 72px 48px !important; overflow: hidden !important; }
         .invoice-content .-ml-\\[25px\\] { margin-left: 0 !important; }
         .invoice-content .-ml-\\[15px\\] { margin-left: 0 !important; }
         .invoice-content .pl-\\[75px\\] { padding-left: 0 !important; }
         .invoice-content .grid { overflow: hidden !important; }
         .invoice-content img { max-width: 100% !important; height: auto !important; object-fit: contain !important; }
       `;
-            doc.head.appendChild(style);
-          } catch {}
-          const imgs = Array.from(el.querySelectorAll('img')) as HTMLImageElement[];
-          imgs.forEach((img) => {
-            try {
-              const raw = img.getAttribute('src') || '';
-              if (raw.startsWith('/')) {
-                img.src = window.location.origin + raw;
-              }
-              img.crossOrigin = 'anonymous';
-              img.style.filter = 'none';
+              doc.head.appendChild(style);
             } catch {}
-          });
+
+            el.style.width = `${PAGE_W}px`;
+            el.style.maxWidth = `${PAGE_W}px`;
+            el.style.boxShadow = 'none';
+            el.style.transform = `translateY(-${i * PAGE_H}px)`;
+            el.style.margin = '0 auto';
+            el.style.boxSizing = 'border-box';
+            el.style.padding = '72px 48px';
+            el.style.overflow = 'hidden';
+            el.style.height = `${totalHeight}px`;
+
+            const imgs = Array.from(el.querySelectorAll('img')) as HTMLImageElement[];
+            imgs.forEach((img) => {
+              try {
+                const raw = img.getAttribute('src') || '';
+                if (raw.startsWith('/')) {
+                  img.src = window.location.origin + raw;
+                }
+                img.crossOrigin = 'anonymous';
+                img.style.filter = 'none';
+              } catch {}
+            });
+          }
         }
-      }
-    } as any);
-    return canvasToPdfBlob(canvas);
+      } as any);
+      canvases.push(canvas);
+    }
+
+    return canvasesToPdfBlob(canvases);
   }
 
   // Skip iframe capture to ensure the downloaded PDF matches the on-screen preview.
@@ -168,57 +205,67 @@ export async function createPdfFromPreview(
     );
   } catch {}
 
-  const canvas = await html2canvas(el, {
-    scale: 2,
-    backgroundColor: '#ffffff',
-    useCORS: true,
-    allowTaint: true,
-    imageTimeout: 15000,
-    letterRendering: true,
-    foreignObjectRendering: true,
-    scrollX: 0,
-    scrollY: 0,
-    width: 816,
-    height: 1056,
-    onclone: (doc: Document) => {
-      const n = (doc.querySelector('#document-preview') as HTMLElement) || (doc.querySelector('.invoice-content') as HTMLElement);
-      if (n) {
-        n.style.width = '816px';
-        n.style.height = '1056px';
-        n.style.maxWidth = '816px';
-        n.style.boxShadow = 'none';
-        n.style.transform = 'none';
-        n.style.margin = '0 auto';
-        n.style.boxSizing = 'border-box';
-        n.style.padding = '72px 48px';
-        n.style.overflow = 'hidden';
-        try {
-          const style = doc.createElement('style');
-          style.innerHTML = `
-      .invoice-content { box-sizing: border-box !important; max-width: 816px !important; width: 816px !important; padding: 72px 48px !important; overflow: hidden !important; }
+  const PAGE_W = 816;
+  const PAGE_H = 1056;
+
+  const totalHeight = Math.max(el.scrollHeight, el.offsetHeight, el.clientHeight);
+  const totalPages = Math.max(1, Math.ceil(totalHeight / PAGE_H));
+
+  const canvases: HTMLCanvasElement[] = [];
+  for (let i = 0; i < totalPages; i++) {
+    const canvas = await html2canvas(el, {
+      scale: 2,
+      backgroundColor: '#ffffff',
+      useCORS: true,
+      allowTaint: true,
+      imageTimeout: 15000,
+      letterRendering: true,
+      foreignObjectRendering: true,
+      scrollX: 0,
+      scrollY: 0,
+      width: PAGE_W,
+      height: PAGE_H,
+      onclone: (doc: Document) => {
+        const n = (doc.querySelector('#document-preview') as HTMLElement) || (doc.querySelector('.invoice-content') as HTMLElement);
+        if (n) {
+          n.style.width = `${PAGE_W}px`;
+          n.style.maxWidth = `${PAGE_W}px`;
+          n.style.boxShadow = 'none';
+          n.style.transform = `translateY(-${i * PAGE_H}px)`;
+          n.style.margin = '0 auto';
+          n.style.boxSizing = 'border-box';
+          n.style.padding = '72px 48px';
+          n.style.overflow = 'hidden';
+          n.style.height = `${totalHeight}px`;
+          try {
+            const style = doc.createElement('style');
+            style.innerHTML = `
+      .invoice-content { box-sizing: border-box !important; max-width: ${PAGE_W}px !important; width: ${PAGE_W}px !important; padding: 72px 48px !important; overflow: hidden !important; }
       .invoice-content .-ml-\\[25px\\] { margin-left: 0 !important; }
       .invoice-content .-ml-\\[15px\\] { margin-left: 0 !important; }
       .invoice-content .pl-\\[75px\\] { padding-left: 0 !important; }
       .invoice-content .grid { overflow: hidden !important; }
       .invoice-content img { max-width: 100% !important; height: auto !important; object-fit: contain !important; }
     `;
-          doc.head.appendChild(style);
-        } catch {}
-        const imgs = Array.from(n.querySelectorAll('img')) as HTMLImageElement[];
-        imgs.forEach((img) => {
-          try {
-            const raw = img.getAttribute('src') || '';
-            if (raw.startsWith('/')) {
-              img.src = window.location.origin + raw;
-            }
-            img.crossOrigin = 'anonymous';
-            img.style.filter = 'none';
+            doc.head.appendChild(style);
           } catch {}
-        });
+          const imgs = Array.from(n.querySelectorAll('img')) as HTMLImageElement[];
+          imgs.forEach((img) => {
+            try {
+              const raw = img.getAttribute('src') || '';
+              if (raw.startsWith('/')) {
+                img.src = window.location.origin + raw;
+              }
+              img.crossOrigin = 'anonymous';
+              img.style.filter = 'none';
+            } catch {}
+          });
+        }
       }
-    }
-  } as any);
-  const blob = await canvasToPdfBlob(canvas);
+    } as any);
+    canvases.push(canvas);
+  }
+  const blob = await canvasesToPdfBlob(canvases);
 
   root.unmount();
   container.remove();
