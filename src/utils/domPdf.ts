@@ -116,27 +116,47 @@ export async function createPdfFromPreview(
               const htmlEl = element as HTMLElement;
               const computed = window.getComputedStyle(element);
               
-              // Preserve color, especially for text-gray-400
-              if (computed.color) {
-                htmlEl.style.color = computed.color;
-              }
+              // Preserve all color properties
+              if (computed.color) htmlEl.style.color = computed.color;
+              if (computed.backgroundColor) htmlEl.style.backgroundColor = computed.backgroundColor;
+              if (computed.opacity) htmlEl.style.opacity = computed.opacity;
               
               // Preserve filters (for the logo)
               if (computed.filter && computed.filter !== 'none') {
                 htmlEl.style.filter = computed.filter;
               }
               
-              // Preserve text alignment
-              if (computed.textAlign) {
-                htmlEl.style.textAlign = computed.textAlign;
-              }
-              
-              // Preserve font properties
+              // Preserve text properties
+              if (computed.textAlign) htmlEl.style.textAlign = computed.textAlign;
               if (computed.fontSize) htmlEl.style.fontSize = computed.fontSize;
               if (computed.fontWeight) htmlEl.style.fontWeight = computed.fontWeight;
               if (computed.fontFamily) htmlEl.style.fontFamily = computed.fontFamily;
               if (computed.lineHeight) htmlEl.style.lineHeight = computed.lineHeight;
               if (computed.letterSpacing) htmlEl.style.letterSpacing = computed.letterSpacing;
+              
+              // Preserve spacing and positioning
+              if (computed.padding) htmlEl.style.padding = computed.padding;
+              if (computed.paddingTop) htmlEl.style.paddingTop = computed.paddingTop;
+              if (computed.paddingBottom) htmlEl.style.paddingBottom = computed.paddingBottom;
+              if (computed.paddingLeft) htmlEl.style.paddingLeft = computed.paddingLeft;
+              if (computed.paddingRight) htmlEl.style.paddingRight = computed.paddingRight;
+              if (computed.margin) htmlEl.style.margin = computed.margin;
+              if (computed.marginTop) htmlEl.style.marginTop = computed.marginTop;
+              if (computed.marginBottom) htmlEl.style.marginBottom = computed.marginBottom;
+              if (computed.marginLeft) htmlEl.style.marginLeft = computed.marginLeft;
+              if (computed.marginRight) htmlEl.style.marginRight = computed.marginRight;
+              
+              // Preserve layout properties
+              if (computed.display) htmlEl.style.display = computed.display;
+              if (computed.verticalAlign) htmlEl.style.verticalAlign = computed.verticalAlign;
+              if (computed.alignItems) htmlEl.style.alignItems = computed.alignItems;
+              if (computed.justifyContent) htmlEl.style.justifyContent = computed.justifyContent;
+              if (computed.gap) htmlEl.style.gap = computed.gap;
+              if (computed.flexDirection) htmlEl.style.flexDirection = computed.flexDirection;
+              
+              // Preserve dimensions
+              if (computed.width && computed.width !== 'auto') htmlEl.style.width = computed.width;
+              if (computed.height && computed.height !== 'auto') htmlEl.style.height = computed.height;
             });
 
             // Fix image URLs for CORS
@@ -281,27 +301,47 @@ export async function createPdfFromPreview(
             const htmlEl = element as HTMLElement;
             const computed = window.getComputedStyle(element);
             
-            // Preserve color, especially for text-gray-400
-            if (computed.color) {
-              htmlEl.style.color = computed.color;
-            }
+            // Preserve all color properties
+            if (computed.color) htmlEl.style.color = computed.color;
+            if (computed.backgroundColor) htmlEl.style.backgroundColor = computed.backgroundColor;
+            if (computed.opacity) htmlEl.style.opacity = computed.opacity;
             
             // Preserve filters (for the logo)
             if (computed.filter && computed.filter !== 'none') {
               htmlEl.style.filter = computed.filter;
             }
             
-            // Preserve text alignment
-            if (computed.textAlign) {
-              htmlEl.style.textAlign = computed.textAlign;
-            }
-            
-            // Preserve font properties
+            // Preserve text properties
+            if (computed.textAlign) htmlEl.style.textAlign = computed.textAlign;
             if (computed.fontSize) htmlEl.style.fontSize = computed.fontSize;
             if (computed.fontWeight) htmlEl.style.fontWeight = computed.fontWeight;
             if (computed.fontFamily) htmlEl.style.fontFamily = computed.fontFamily;
             if (computed.lineHeight) htmlEl.style.lineHeight = computed.lineHeight;
             if (computed.letterSpacing) htmlEl.style.letterSpacing = computed.letterSpacing;
+            
+            // Preserve spacing and positioning
+            if (computed.padding) htmlEl.style.padding = computed.padding;
+            if (computed.paddingTop) htmlEl.style.paddingTop = computed.paddingTop;
+            if (computed.paddingBottom) htmlEl.style.paddingBottom = computed.paddingBottom;
+            if (computed.paddingLeft) htmlEl.style.paddingLeft = computed.paddingLeft;
+            if (computed.paddingRight) htmlEl.style.paddingRight = computed.paddingRight;
+            if (computed.margin) htmlEl.style.margin = computed.margin;
+            if (computed.marginTop) htmlEl.style.marginTop = computed.marginTop;
+            if (computed.marginBottom) htmlEl.style.marginBottom = computed.marginBottom;
+            if (computed.marginLeft) htmlEl.style.marginLeft = computed.marginLeft;
+            if (computed.marginRight) htmlEl.style.marginRight = computed.marginRight;
+            
+            // Preserve layout properties
+            if (computed.display) htmlEl.style.display = computed.display;
+            if (computed.verticalAlign) htmlEl.style.verticalAlign = computed.verticalAlign;
+            if (computed.alignItems) htmlEl.style.alignItems = computed.alignItems;
+            if (computed.justifyContent) htmlEl.style.justifyContent = computed.justifyContent;
+            if (computed.gap) htmlEl.style.gap = computed.gap;
+            if (computed.flexDirection) htmlEl.style.flexDirection = computed.flexDirection;
+            
+            // Preserve dimensions
+            if (computed.width && computed.width !== 'auto') htmlEl.style.width = computed.width;
+            if (computed.height && computed.height !== 'auto') htmlEl.style.height = computed.height;
           });
 
           // Fix image URLs for CORS
