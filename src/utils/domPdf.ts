@@ -119,13 +119,17 @@ export async function createPdfFromPreview(
               const computed = window.getComputedStyle(element);
               
               // Preserve all color properties with exact values
-              if (computed.color) htmlEl.style.color = computed.color;
+              const currentColor = computed.color || '';
+              if (currentColor) htmlEl.style.color = currentColor;
               if (computed.backgroundColor) htmlEl.style.backgroundColor = computed.backgroundColor;
               if (computed.opacity) htmlEl.style.opacity = computed.opacity;
               
-              // Force muted-foreground to exact HSL value
-              if (htmlEl.classList?.contains('text-muted-foreground') || computed.color === 'rgb(191, 191, 191)') {
-                htmlEl.style.color = 'hsl(0, 0%, 75%)';
+              // Force muted-foreground to exact grey - check class or if color is in the grey range (75% lightness)
+              const isGreyText = htmlEl.classList?.contains('text-muted-foreground') || 
+                                 currentColor.match(/rgb\(19[0-2],\s*19[0-2],\s*19[0-2]\)/) ||
+                                 currentColor === 'rgb(191, 191, 191)';
+              if (isGreyText) {
+                htmlEl.style.setProperty('color', 'rgb(191, 191, 191)', 'important');
               }
               
               // Preserve filters (for the logo)
@@ -133,17 +137,21 @@ export async function createPdfFromPreview(
                 htmlEl.style.filter = computed.filter;
               }
               
-            // Preserve text properties
+            // Preserve text properties with !important for letter spacing to prevent shifting
             if (computed.textAlign) htmlEl.style.textAlign = computed.textAlign;
             if (computed.fontSize) htmlEl.style.fontSize = computed.fontSize;
             if (computed.fontWeight) htmlEl.style.fontWeight = computed.fontWeight;
             if (computed.fontFamily) htmlEl.style.fontFamily = computed.fontFamily;
             if (computed.lineHeight) htmlEl.style.lineHeight = computed.lineHeight;
-            if (computed.letterSpacing) htmlEl.style.letterSpacing = computed.letterSpacing;
+            if (computed.letterSpacing && computed.letterSpacing !== 'normal') {
+              htmlEl.style.setProperty('letter-spacing', computed.letterSpacing, 'important');
+            }
             if (computed.textTransform) htmlEl.style.textTransform = computed.textTransform;
             if (computed.textDecoration) htmlEl.style.textDecoration = computed.textDecoration;
             if (computed.whiteSpace) htmlEl.style.whiteSpace = computed.whiteSpace;
-            if (computed.wordSpacing) htmlEl.style.wordSpacing = computed.wordSpacing;
+            if (computed.wordSpacing && computed.wordSpacing !== 'normal') {
+              htmlEl.style.setProperty('word-spacing', computed.wordSpacing, 'important');
+            }
             if (computed.textShadow) htmlEl.style.textShadow = computed.textShadow;
             if (computed.textIndent) htmlEl.style.textIndent = computed.textIndent;
               
@@ -317,13 +325,17 @@ export async function createPdfFromPreview(
             const computed = window.getComputedStyle(element);
             
             // Preserve all color properties with exact values
-            if (computed.color) htmlEl.style.color = computed.color;
+            const currentColor = computed.color || '';
+            if (currentColor) htmlEl.style.color = currentColor;
             if (computed.backgroundColor) htmlEl.style.backgroundColor = computed.backgroundColor;
             if (computed.opacity) htmlEl.style.opacity = computed.opacity;
             
-            // Force muted-foreground to exact HSL value
-            if (htmlEl.classList?.contains('text-muted-foreground') || computed.color === 'rgb(191, 191, 191)') {
-              htmlEl.style.color = 'hsl(0, 0%, 75%)';
+            // Force muted-foreground to exact grey - check class or if color is in the grey range (75% lightness)
+            const isGreyText = htmlEl.classList?.contains('text-muted-foreground') || 
+                               currentColor.match(/rgb\(19[0-2],\s*19[0-2],\s*19[0-2]\)/) ||
+                               currentColor === 'rgb(191, 191, 191)';
+            if (isGreyText) {
+              htmlEl.style.setProperty('color', 'rgb(191, 191, 191)', 'important');
             }
             
             // Preserve filters (for the logo)
@@ -331,17 +343,21 @@ export async function createPdfFromPreview(
               htmlEl.style.filter = computed.filter;
             }
             
-            // Preserve text properties
+            // Preserve text properties with !important for letter spacing to prevent shifting
             if (computed.textAlign) htmlEl.style.textAlign = computed.textAlign;
             if (computed.fontSize) htmlEl.style.fontSize = computed.fontSize;
             if (computed.fontWeight) htmlEl.style.fontWeight = computed.fontWeight;
             if (computed.fontFamily) htmlEl.style.fontFamily = computed.fontFamily;
             if (computed.lineHeight) htmlEl.style.lineHeight = computed.lineHeight;
-            if (computed.letterSpacing) htmlEl.style.letterSpacing = computed.letterSpacing;
+            if (computed.letterSpacing && computed.letterSpacing !== 'normal') {
+              htmlEl.style.setProperty('letter-spacing', computed.letterSpacing, 'important');
+            }
             if (computed.textTransform) htmlEl.style.textTransform = computed.textTransform;
             if (computed.textDecoration) htmlEl.style.textDecoration = computed.textDecoration;
             if (computed.whiteSpace) htmlEl.style.whiteSpace = computed.whiteSpace;
-            if (computed.wordSpacing) htmlEl.style.wordSpacing = computed.wordSpacing;
+            if (computed.wordSpacing && computed.wordSpacing !== 'normal') {
+              htmlEl.style.setProperty('word-spacing', computed.wordSpacing, 'important');
+            }
             if (computed.textShadow) htmlEl.style.textShadow = computed.textShadow;
             if (computed.textIndent) htmlEl.style.textIndent = computed.textIndent;
             
