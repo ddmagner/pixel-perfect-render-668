@@ -374,7 +374,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                   <img 
                     src="/lovable-uploads/21706651-e7f7-4eec-b5d7-cd8ccf2a385f.png" 
                     alt="TIME IN wordmark" 
-                    className="inline-block h-[9px] w-auto align-baseline"
+                    className="relative inline-block h-[9px] w-auto align-baseline top-[1px]"
                     style={{ filter: 'grayscale(100%) brightness(0) invert(60%)' }}
                   />
                 </span>
