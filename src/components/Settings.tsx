@@ -101,23 +101,12 @@ export const Settings: React.FC<SettingsProps> = ({
               Sign out
             </button>
             {/* Preview Link - Show in both modes with different text */}
-            <button 
-              onClick={() => setShowInvoicePreview(true)}
-              className="text-[#BFBFBF] text-xs font-normal underline hover:opacity-70 transition-opacity block"
-            >
-              {settings.invoiceMode ? 'Invoice Preview' : 'Time Card Preview'}
-            </button>
+            
             <div className="space-y-6">
-              <button 
-                onClick={() => navigate('/terms')} 
-                className="text-[#BFBFBF] text-xs font-normal underline hover:opacity-70 transition-opacity block"
-              >
+              <button onClick={() => navigate('/terms')} className="text-[#BFBFBF] text-xs font-normal underline hover:opacity-70 transition-opacity block">
                 Terms of Use
               </button>
-              <button 
-                onClick={() => navigate('/privacy')} 
-                className="text-[#BFBFBF] text-xs font-normal underline hover:opacity-70 transition-opacity block"
-              >
+              <button onClick={() => navigate('/privacy')} className="text-[#BFBFBF] text-xs font-normal underline hover:opacity-70 transition-opacity block">
                 Privacy Policy
               </button>
             </div>
@@ -139,11 +128,6 @@ export const Settings: React.FC<SettingsProps> = ({
         </div>}
 
       {/* Invoice Preview Overlay */}
-      {showInvoicePreview && (
-        <InvoicePreview 
-          settings={settings}
-          onClose={() => setShowInvoicePreview(false)}
-        />
-      )}
+      {showInvoicePreview && <InvoicePreview settings={settings} onClose={() => setShowInvoicePreview(false)} />}
     </div>;
 };
