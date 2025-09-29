@@ -96,7 +96,7 @@ export async function createPdfFromPreview(
       allowTaint: false,
       imageTimeout: 15000,
       letterRendering: true,
-      foreignObjectRendering: true,
+      foreignObjectRendering: false,
       scrollX: 0,
       scrollY: 0,
       onclone: (doc: Document) => {
@@ -104,12 +104,24 @@ export async function createPdfFromPreview(
         if (el) {
           try {
             // Ensure predictable width; keep natural height
-            el.style.width = `${PAGE_W}px`;
-            el.style.maxWidth = `${PAGE_W}px`;
+            el.style.width = `${PAGE_W - 2}px`;
+            el.style.maxWidth = `${PAGE_W - 2}px`;
             el.style.boxShadow = 'none';
             el.style.margin = '0 auto';
             el.style.boxSizing = 'border-box';
+            el.style.padding = '72px 48px';
             el.style.overflow = 'visible';
+
+            // Normalize layout to avoid negative margin/padding clipping
+            const style = doc.createElement('style');
+            style.innerHTML = `
+              .invoice-content { box-sizing: border-box !important; max-width: ${PAGE_W - 2}px !important; width: ${PAGE_W - 2}px !important; padding: 72px 48px !important; }
+              .invoice-content .-ml-\\[25px\\] { margin-left: 0 !important; }
+              .invoice-content .-ml-\\[15px\\] { margin-left: 0 !important; }
+              .invoice-content .pl-\\[75px\\] { padding-left: 0 !important; }
+              .invoice-content img { max-width: 100% !important; height: auto !important; object-fit: contain !important; }
+            `;
+            doc.head.appendChild(style);
 
             // Sanitize images for html2canvas
             const imgs = Array.from(el.querySelectorAll('img')) as HTMLImageElement[];
@@ -233,18 +245,30 @@ export async function createPdfFromPreview(
     allowTaint: false,
     imageTimeout: 15000,
     letterRendering: true,
-    foreignObjectRendering: true,
+    foreignObjectRendering: false,
     scrollX: 0,
     scrollY: 0,
     onclone: (doc: Document) => {
       const n = (doc.querySelector('#document-preview') as HTMLElement) || (doc.querySelector('.invoice-content') as HTMLElement);
       if (n) {
-        n.style.width = `${PAGE_W}px`;
-        n.style.maxWidth = `${PAGE_W}px`;
+        n.style.width = `${PAGE_W - 2}px`;
+        n.style.maxWidth = `${PAGE_W - 2}px`;
         n.style.boxShadow = 'none';
         n.style.margin = '0 auto';
         n.style.boxSizing = 'border-box';
+        n.style.padding = '72px 48px';
         n.style.overflow = 'visible';
+        try {
+          const style = doc.createElement('style');
+          style.innerHTML = `
+            .invoice-content { box-sizing: border-box !important; max-width: ${PAGE_W - 2}px !important; width: ${PAGE_W - 2}px !important; padding: 72px 48px !important; }
+            .invoice-content .-ml-\\[25px\\] { margin-left: 0 !important; }
+            .invoice-content .-ml-\\[15px\\] { margin-left: 0 !important; }
+            .invoice-content .pl-\\[75px\\] { padding-left: 0 !important; }
+            .invoice-content img { max-width: 100% !important; height: auto !important; object-fit: contain !important; }
+          `;
+          doc.head.appendChild(style);
+        } catch {}
         try {
           const imgs = Array.from(n.querySelectorAll('img')) as HTMLImageElement[];
           imgs.forEach((img) => {
