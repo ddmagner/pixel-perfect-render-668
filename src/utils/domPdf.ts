@@ -61,82 +61,13 @@ export async function createPdfFromPreview(
 
     const canvas = await html2canvas(liveEl, { scale: 2, backgroundColor: '#ffffff', useCORS: true, foreignObjectRendering: true, scrollX: 0, scrollY: 0, width: 816, height: 1056, onclone: (doc: Document) => { const el = (doc.querySelector('#document-preview') as HTMLElement) || (doc.querySelector('.invoice-content') as HTMLElement); if (el) { el.style.width = '816px'; el.style.height = '1056px'; el.style.maxWidth = '816px'; el.style.boxShadow = 'none'; el.style.transform = 'none'; el.style.margin = '0 auto'; el.style.boxSizing = 'border-box'; el.style.padding = '72px 48px'; el.style.overflow = 'hidden'; try { const style = doc.createElement('style'); style.innerHTML = `
       .invoice-content { box-sizing: border-box !important; max-width: 816px !important; width: 816px !important; padding: 72px 48px !important; overflow: hidden !important; }
-      .invoice-content .-ml-\\[25px\\] { margin-left: 0 !important; }
-      .invoice-content .-ml-\\[15px\\] { margin-left: 0 !important; }
-      .invoice-content .pl-\\[75px\\] { padding-left: 0 !important; }
-      .invoice-content img { max-width: 100% !important; height: auto !important; object-fit: contain !important; filter: none !important; }
-      .invoice-content .grid { overflow: hidden !important; }
-    `; doc.head.appendChild(style); } catch {} const imgs = Array.from(el.querySelectorAll('img')) as HTMLImageElement[]; imgs.forEach((img) => { try { (img as any).crossOrigin = 'anonymous'; img.setAttribute('crossorigin', 'anonymous'); (img as any).decoding = 'sync'; (img as any).loading = 'eager'; img.style.filter = 'none'; const raw = img.getAttribute('src') || ''; if (raw.startsWith('/')) { img.src = window.location.origin + raw; } } catch {} }); } } } as any);
+      .invoice-content img { max-width: 100% !important; height: auto !important; object-fit: contain !important; }
+    `; doc.head.appendChild(style); } catch {} const imgs = Array.from(el.querySelectorAll('img')) as HTMLImageElement[]; imgs.forEach((img) => { try { const raw = img.getAttribute('src') || ''; if (raw.startsWith('/')) { img.src = window.location.origin + raw; } } catch {} }); } } } as any);
     return canvasToPdfBlob(canvas);
   }
 
-  if (viewMode === 'invoice') {
-    // Load the dedicated invoice page in a hidden iframe for pixel-perfect capture
-    const key = `key_${Date.now()}_${Math.random().toString(36).slice(2)}`;
-    const payload = JSON.stringify({ entries, settings });
-    try {
-      localStorage.setItem(`invoice:${key}`, payload);
-      localStorage.setItem(key, payload); // legacy fallback supported by the page
-    } catch {}
-
-    const iframe = document.createElement('iframe');
-    iframe.style.position = 'fixed';
-    iframe.style.left = '-10000px';
-    iframe.style.top = '0';
-    iframe.style.width = '816px'; // 8.5in * 96dpi
-    iframe.style.height = '1056px'; // 11in * 96dpi
-    iframe.style.visibility = 'hidden';
-    iframe.src = `/invoice?k=${encodeURIComponent(key)}`;
-    document.body.appendChild(iframe);
-
-    const blob = await new Promise<Blob>((resolve, reject) => {
-      iframe.onload = async () => {
-        try {
-          // Wait for the invoice page to signal readiness (fonts/images rendered)
-          await new Promise<void>((done) => {
-            const onMessage = (e: MessageEvent) => {
-              if (e.origin !== window.location.origin) return;
-              if (e.data && e.data.type === 'invoice-ready') {
-                window.removeEventListener('message', onMessage);
-                done();
-              }
-            };
-            window.addEventListener('message', onMessage);
-            // Fallback timeout in case message doesn't arrive
-            window.setTimeout(() => {
-              window.removeEventListener('message', onMessage);
-              done();
-            }, 6000);
-          });
-
-          const doc = iframe.contentDocument || iframe.contentWindow?.document;
-          const el = (doc?.querySelector('.invoice-content') as HTMLElement) || (doc?.body as HTMLElement);
-          if (!el) throw new Error('Invoice content not found');
-
-          const canvas = await html2canvas(el, { scale: 2, backgroundColor: '#ffffff', useCORS: true, letterRendering: true, foreignObjectRendering: true, scrollX: 0, scrollY: 0, width: 816, height: 1056, onclone: (doc: Document) => { const n = (doc.querySelector('#document-preview') as HTMLElement) || (doc.querySelector('.invoice-content') as HTMLElement); if (n) { n.style.width = '816px'; n.style.height = '1056px'; n.style.maxWidth = '816px'; n.style.boxShadow = 'none'; n.style.transform = 'none'; n.style.margin = '0 auto'; n.style.boxSizing = 'border-box'; n.style.padding = '72px 48px'; n.style.overflow = 'hidden'; try { const style = doc.createElement('style'); style.innerHTML = `
-          .invoice-content { box-sizing: border-box !important; max-width: 816px !important; width: 816px !important; padding: 72px 48px !important; overflow: hidden !important; }
-          .invoice-content .-ml-\\[25px\\] { margin-left: 0 !important; }
-          .invoice-content .-ml-\\[15px\\] { margin-left: 0 !important; }
-          .invoice-content .pl-\\[75px\\] { padding-left: 0 !important; }
-          .invoice-content img { max-width: 100% !important; height: auto !important; object-fit: contain !important; filter: none !important; }
-          .invoice-content .grid { overflow: hidden !important; }
-        `; doc.head.appendChild(style); } catch {} const imgs = Array.from(n.querySelectorAll('img')) as HTMLImageElement[]; imgs.forEach((img) => { try { (img as any).crossOrigin = 'anonymous'; img.setAttribute('crossorigin', 'anonymous'); (img as any).decoding = 'sync'; (img as any).loading = 'eager'; img.style.filter = 'none'; const raw = img.getAttribute('src') || ''; if (raw.startsWith('/')) { img.src = window.location.origin + raw; } } catch {} }); } } } as any);
-          const pdfBlob = await canvasToPdfBlob(canvas);
-          resolve(pdfBlob);
-        } catch (e) {
-          reject(e);
-        } finally {
-          iframe.remove();
-        }
-      };
-      iframe.onerror = () => {
-        iframe.remove();
-        reject(new Error('Failed to load invoice page'));
-      };
-    });
-
-    return blob;
-  }
+  // Skip iframe capture to ensure the downloaded PDF matches the on-screen preview.
+  // We fall through to the offscreen component capture below for all modes.
 
   // Time Card: render the existing InvoicePreview component offscreen and capture it
   const container = document.createElement('div');
@@ -193,12 +124,8 @@ export async function createPdfFromPreview(
 
   const canvas = await html2canvas(el, { scale: 2, backgroundColor: '#ffffff', useCORS: true, letterRendering: true, foreignObjectRendering: true, scrollX: 0, scrollY: 0, width: 816, height: 1056, onclone: (doc: Document) => { const n = (doc.querySelector('#document-preview') as HTMLElement) || (doc.querySelector('.invoice-content') as HTMLElement); if (n) { n.style.width = '816px'; n.style.height = '1056px'; n.style.maxWidth = '816px'; n.style.boxShadow = 'none'; n.style.transform = 'none'; n.style.margin = '0 auto'; n.style.boxSizing = 'border-box'; n.style.padding = '72px 48px'; n.style.overflow = 'hidden'; try { const style = doc.createElement('style'); style.innerHTML = `
       .invoice-content { box-sizing: border-box !important; max-width: 816px !important; width: 816px !important; padding: 72px 48px !important; overflow: hidden !important; }
-      .invoice-content .-ml-\\[25px\\] { margin-left: 0 !important; }
-      .invoice-content .-ml-\\[15px\\] { margin-left: 0 !important; }
-      .invoice-content .pl-\\[75px\\] { padding-left: 0 !important; }
-      .invoice-content img { max-width: 100% !important; height: auto !important; object-fit: contain !important; filter: none !important; }
-      .invoice-content .grid { overflow: hidden !important; }
-    `; doc.head.appendChild(style); } catch {} const imgs = Array.from(n.querySelectorAll('img')) as HTMLImageElement[]; imgs.forEach((img) => { try { (img as any).crossOrigin = 'anonymous'; img.setAttribute('crossorigin', 'anonymous'); (img as any).decoding = 'sync'; (img as any).loading = 'eager'; img.style.filter = 'none'; const raw = img.getAttribute('src') || ''; if (raw.startsWith('/')) { img.src = window.location.origin + raw; } } catch {} }); } } } as any);
+      .invoice-content img { max-width: 100% !important; height: auto !important; object-fit: contain !important; }
+    `; doc.head.appendChild(style); } catch {} const imgs = Array.from(n.querySelectorAll('img')) as HTMLImageElement[]; imgs.forEach((img) => { try { const raw = img.getAttribute('src') || ''; if (raw.startsWith('/')) { img.src = window.location.origin + raw; } } catch {} }); } } } as any);
   const blob = await canvasToPdfBlob(canvas);
 
   root.unmount();
