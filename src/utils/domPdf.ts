@@ -87,48 +87,31 @@ export async function createPdfFromPreview(
 
     const PAGE_W = 816;
     const PAGE_H = 1056;
-    const totalHeight = Math.max(liveEl.scrollHeight, liveEl.offsetHeight, liveEl.clientHeight);
-    const totalPages = Math.max(1, Math.ceil(totalHeight / PAGE_H));
 
-    const canvases: HTMLCanvasElement[] = [];
-    for (let i = 0; i < totalPages; i++) {
-      const canvas = await html2canvas(liveEl, {
-        scale: 2,
-        backgroundColor: '#ffffff',
-        useCORS: true,
-        allowTaint: true,
-        imageTimeout: 15000,
-        foreignObjectRendering: true,
-        scrollX: 0,
-        scrollY: 0,
-        width: PAGE_W,
-        height: PAGE_H,
-        onclone: (doc: Document) => {
-          const el = (doc.querySelector('#document-preview') as HTMLElement) || (doc.querySelector('.invoice-content') as HTMLElement);
-          if (el) {
-            try {
-              const style = doc.createElement('style');
-              style.innerHTML = `
-        .invoice-content { box-sizing: border-box !important; max-width: ${PAGE_W}px !important; width: ${PAGE_W}px !important; padding: 72px 48px !important; overflow: hidden !important; }
-        .invoice-content .-ml-\\[25px\\] { margin-left: 0 !important; }
-        .invoice-content .-ml-\\[15px\\] { margin-left: 0 !important; }
-        .invoice-content .pl-\\[75px\\] { padding-left: 0 !important; }
-        .invoice-content .grid { overflow: hidden !important; }
-        .invoice-content img { max-width: 100% !important; height: auto !important; object-fit: contain !important; }
-      `;
-              doc.head.appendChild(style);
-            } catch {}
-
+    // Capture the entire element into a single high-res canvas, then slice into pages
+    const fullCanvas = await html2canvas(liveEl, {
+      scale: 2,
+      backgroundColor: '#ffffff',
+      useCORS: true,
+      allowTaint: false,
+      imageTimeout: 15000,
+      letterRendering: true,
+      foreignObjectRendering: true,
+      scrollX: 0,
+      scrollY: 0,
+      onclone: (doc: Document) => {
+        const el = (doc.querySelector('#document-preview') as HTMLElement) || (doc.querySelector('.invoice-content') as HTMLElement);
+        if (el) {
+          try {
+            // Ensure predictable width; keep natural height
             el.style.width = `${PAGE_W}px`;
             el.style.maxWidth = `${PAGE_W}px`;
             el.style.boxShadow = 'none';
-            el.style.transform = `translateY(-${i * PAGE_H}px)`;
             el.style.margin = '0 auto';
             el.style.boxSizing = 'border-box';
-            el.style.padding = '72px 48px';
-            el.style.overflow = 'hidden';
-            el.style.height = `${totalHeight}px`;
+            el.style.overflow = 'visible';
 
+            // Sanitize images for html2canvas
             const imgs = Array.from(el.querySelectorAll('img')) as HTMLImageElement[];
             imgs.forEach((img) => {
               try {
@@ -136,14 +119,48 @@ export async function createPdfFromPreview(
                 if (raw.startsWith('/')) {
                   img.src = window.location.origin + raw;
                 }
-                img.crossOrigin = 'anonymous';
+                try {
+                  const u = new URL(img.src, window.location.origin);
+                  if (u.origin === window.location.origin) {
+                    img.removeAttribute('crossorigin');
+                  } else {
+                    img.crossOrigin = 'anonymous';
+                  }
+                } catch {}
                 img.style.filter = 'none';
               } catch {}
             });
-          }
+          } catch {}
         }
-      } as any);
-      canvases.push(canvas);
+      }
+    } as any);
+
+    // Slice the big canvas into page-sized canvases
+    const canvases: HTMLCanvasElement[] = [];
+    const scale = 2; // matches html2canvas scale
+    const pageHeightPx = Math.floor(PAGE_H * scale);
+    const totalHeightPx = fullCanvas.height;
+
+    for (let y = 0; y < totalHeightPx; y += pageHeightPx) {
+      const sliceHeight = Math.min(pageHeightPx, totalHeightPx - y);
+      const slice = document.createElement('canvas');
+      slice.width = fullCanvas.width;
+      slice.height = sliceHeight;
+      const ctx = slice.getContext('2d');
+      if (ctx) {
+        ctx.drawImage(
+          fullCanvas,
+          0,
+          y,
+          fullCanvas.width,
+          sliceHeight,
+          0,
+          0,
+          fullCanvas.width,
+          sliceHeight
+        );
+      }
+      canvases.push(slice);
     }
 
     return canvasesToPdfBlob(canvases);
@@ -208,47 +225,27 @@ export async function createPdfFromPreview(
   const PAGE_W = 816;
   const PAGE_H = 1056;
 
-  const totalHeight = Math.max(el.scrollHeight, el.offsetHeight, el.clientHeight);
-  const totalPages = Math.max(1, Math.ceil(totalHeight / PAGE_H));
-
-  const canvases: HTMLCanvasElement[] = [];
-  for (let i = 0; i < totalPages; i++) {
-    const canvas = await html2canvas(el, {
-      scale: 2,
-      backgroundColor: '#ffffff',
-      useCORS: true,
-      allowTaint: true,
-      imageTimeout: 15000,
-      letterRendering: true,
-      foreignObjectRendering: true,
-      scrollX: 0,
-      scrollY: 0,
-      width: PAGE_W,
-      height: PAGE_H,
-      onclone: (doc: Document) => {
-        const n = (doc.querySelector('#document-preview') as HTMLElement) || (doc.querySelector('.invoice-content') as HTMLElement);
-        if (n) {
-          n.style.width = `${PAGE_W}px`;
-          n.style.maxWidth = `${PAGE_W}px`;
-          n.style.boxShadow = 'none';
-          n.style.transform = `translateY(-${i * PAGE_H}px)`;
-          n.style.margin = '0 auto';
-          n.style.boxSizing = 'border-box';
-          n.style.padding = '72px 48px';
-          n.style.overflow = 'hidden';
-          n.style.height = `${totalHeight}px`;
-          try {
-            const style = doc.createElement('style');
-            style.innerHTML = `
-      .invoice-content { box-sizing: border-box !important; max-width: ${PAGE_W}px !important; width: ${PAGE_W}px !important; padding: 72px 48px !important; overflow: hidden !important; }
-      .invoice-content .-ml-\\[25px\\] { margin-left: 0 !important; }
-      .invoice-content .-ml-\\[15px\\] { margin-left: 0 !important; }
-      .invoice-content .pl-\\[75px\\] { padding-left: 0 !important; }
-      .invoice-content .grid { overflow: hidden !important; }
-      .invoice-content img { max-width: 100% !important; height: auto !important; object-fit: contain !important; }
-    `;
-            doc.head.appendChild(style);
-          } catch {}
+  // Capture the entire element once, then slice into PDF pages
+  const fullCanvas = await html2canvas(el, {
+    scale: 2,
+    backgroundColor: '#ffffff',
+    useCORS: true,
+    allowTaint: false,
+    imageTimeout: 15000,
+    letterRendering: true,
+    foreignObjectRendering: true,
+    scrollX: 0,
+    scrollY: 0,
+    onclone: (doc: Document) => {
+      const n = (doc.querySelector('#document-preview') as HTMLElement) || (doc.querySelector('.invoice-content') as HTMLElement);
+      if (n) {
+        n.style.width = `${PAGE_W}px`;
+        n.style.maxWidth = `${PAGE_W}px`;
+        n.style.boxShadow = 'none';
+        n.style.margin = '0 auto';
+        n.style.boxSizing = 'border-box';
+        n.style.overflow = 'visible';
+        try {
           const imgs = Array.from(n.querySelectorAll('img')) as HTMLImageElement[];
           imgs.forEach((img) => {
             try {
@@ -256,14 +253,47 @@ export async function createPdfFromPreview(
               if (raw.startsWith('/')) {
                 img.src = window.location.origin + raw;
               }
-              img.crossOrigin = 'anonymous';
+              try {
+                const u = new URL(img.src, window.location.origin);
+                if (u.origin === window.location.origin) {
+                  img.removeAttribute('crossorigin');
+                } else {
+                  img.crossOrigin = 'anonymous';
+                }
+              } catch {}
               img.style.filter = 'none';
             } catch {}
           });
-        }
+        } catch {}
       }
-    } as any);
-    canvases.push(canvas);
+    }
+  } as any);
+
+  const canvases: HTMLCanvasElement[] = [];
+  const scale = 2; // matches html2canvas scale
+  const pageHeightPx = Math.floor(PAGE_H * scale);
+  const totalHeightPx = fullCanvas.height;
+
+  for (let y = 0; y < totalHeightPx; y += pageHeightPx) {
+    const sliceHeight = Math.min(pageHeightPx, totalHeightPx - y);
+    const slice = document.createElement('canvas');
+    slice.width = fullCanvas.width;
+    slice.height = sliceHeight;
+    const ctx = slice.getContext('2d');
+    if (ctx) {
+      ctx.drawImage(
+        fullCanvas,
+        0,
+        y,
+        fullCanvas.width,
+        sliceHeight,
+        0,
+        0,
+        fullCanvas.width,
+        sliceHeight
+      );
+    }
+    canvases.push(slice);
   }
   const blob = await canvasesToPdfBlob(canvases);
 
