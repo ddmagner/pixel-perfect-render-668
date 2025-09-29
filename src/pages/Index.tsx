@@ -31,8 +31,21 @@ const Index = () => {
     }
   }, [searchParams]);
 
+  // Listen for external tab set events (e.g., after export)
+  useEffect(() => {
+    const handler = (e: any) => {
+      if (e?.detail && typeof e.detail === 'string') {
+        setActiveTab(e.detail);
+        try { localStorage.setItem('activeTab', e.detail); } catch {}
+      }
+    };
+    window.addEventListener('set-active-tab' as any, handler as any);
+    return () => window.removeEventListener('set-active-tab' as any, handler as any);
+  }, []);
+
   const handleTabChange = (tab: string) => {
     setActiveTab(tab);
+    try { localStorage.setItem('activeTab', tab); } catch {}
   };
 
   const handleRecordStart = () => {

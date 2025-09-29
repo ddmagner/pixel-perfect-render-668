@@ -145,6 +145,7 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
       }
 
       URL.revokeObjectURL(url);
+      try { window.dispatchEvent(new CustomEvent('set-active-tab', { detail: 'time-tally' })); } catch {}
       onClose();
     } catch (error) {
       console.error('Error exporting:', error);
