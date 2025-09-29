@@ -103,41 +103,13 @@ export async function createPdfFromPreview(
         const el = (doc.querySelector('#document-preview') as HTMLElement) || (doc.querySelector('.invoice-content') as HTMLElement);
         if (el) {
           try {
-            // Ensure predictable width; keep natural height
-            el.style.width = `${PAGE_W - 2}px`;
-            el.style.maxWidth = `${PAGE_W - 2}px`;
+            // Remove box shadow only, preserve all other styling from preview
             el.style.boxShadow = 'none';
-            el.style.margin = '0 auto';
-            el.style.boxSizing = 'border-box';
-            el.style.padding = '72px 48px';
-            el.style.overflow = 'visible';
 
-            // Normalize layout to avoid negative margin/padding clipping
-            const style = doc.createElement('style');
-            style.innerHTML = `
-              .invoice-content { box-sizing: border-box !important; max-width: ${PAGE_W - 2}px !important; width: ${PAGE_W - 2}px !important; padding: 72px 48px !important; }
-              .invoice-content .-ml-\\[25px\\] { margin-left: 0 !important; }
-              .invoice-content .-ml-\\[15px\\] { margin-left: 0 !important; }
-              .invoice-content .pl-\\[75px\\] { padding-left: 0 !important; }
-              .invoice-content img { object-fit: contain !important; }
-            `;
-            doc.head.appendChild(style);
-
-            // Sanitize images for html2canvas and preserve original dimensions
+            // Only fix image URLs for CORS, preserve all computed styles
             const imgs = Array.from(el.querySelectorAll('img')) as HTMLImageElement[];
             imgs.forEach((img) => {
               try {
-                // Capture original computed dimensions from the live preview
-                const originalImg = document.querySelector(`img[src="${img.src}"]`) as HTMLImageElement;
-                let originalWidth = img.width + 'px';
-                let originalHeight = img.height + 'px';
-                
-                if (originalImg) {
-                  const computedStyle = window.getComputedStyle(originalImg);
-                  originalWidth = computedStyle.width;
-                  originalHeight = computedStyle.height;
-                }
-                
                 const raw = img.getAttribute('src') || '';
                 if (raw.startsWith('/')) {
                   img.src = window.location.origin + raw;
@@ -150,16 +122,6 @@ export async function createPdfFromPreview(
                     img.crossOrigin = 'anonymous';
                   }
                 } catch {}
-                
-                // Preserve exact original dimensions to prevent scaling
-                img.style.width = originalWidth;
-                img.style.height = originalHeight;
-                img.style.maxWidth = originalWidth;
-                img.style.maxHeight = originalHeight;
-                img.style.minWidth = originalWidth;
-                img.style.minHeight = originalHeight;
-                img.style.objectFit = 'contain';
-                img.style.filter = 'none';
               } catch {}
             });
           } catch {}
@@ -271,39 +233,14 @@ export async function createPdfFromPreview(
     onclone: (doc: Document) => {
       const n = (doc.querySelector('#document-preview') as HTMLElement) || (doc.querySelector('.invoice-content') as HTMLElement);
       if (n) {
-        n.style.width = `${PAGE_W - 2}px`;
-        n.style.maxWidth = `${PAGE_W - 2}px`;
+        // Remove box shadow only, preserve all other styling from preview
         n.style.boxShadow = 'none';
-        n.style.margin = '0 auto';
-        n.style.boxSizing = 'border-box';
-        n.style.padding = '72px 48px';
-        n.style.overflow = 'visible';
+        
         try {
-          const style = doc.createElement('style');
-          style.innerHTML = `
-            .invoice-content { box-sizing: border-box !important; max-width: ${PAGE_W - 2}px !important; width: ${PAGE_W - 2}px !important; padding: 72px 48px !important; }
-            .invoice-content .-ml-\\[25px\\] { margin-left: 0 !important; }
-            .invoice-content .-ml-\\[15px\\] { margin-left: 0 !important; }
-            .invoice-content .pl-\\[75px\\] { padding-left: 0 !important; }
-            .invoice-content img { object-fit: contain !important; }
-          `;
-          doc.head.appendChild(style);
-        } catch {}
-        try {
+          // Only fix image URLs for CORS, preserve all computed styles
           const imgs = Array.from(n.querySelectorAll('img')) as HTMLImageElement[];
           imgs.forEach((img) => {
             try {
-              // Capture original computed dimensions from the live preview
-              const originalImg = document.querySelector(`img[src="${img.src}"]`) as HTMLImageElement;
-              let originalWidth = img.width + 'px';
-              let originalHeight = img.height + 'px';
-              
-              if (originalImg) {
-                const computedStyle = window.getComputedStyle(originalImg);
-                originalWidth = computedStyle.width;
-                originalHeight = computedStyle.height;
-              }
-              
               const raw = img.getAttribute('src') || '';
               if (raw.startsWith('/')) {
                 img.src = window.location.origin + raw;
@@ -316,16 +253,6 @@ export async function createPdfFromPreview(
                   img.crossOrigin = 'anonymous';
                 }
               } catch {}
-              
-              // Preserve exact original dimensions to prevent scaling
-              img.style.width = originalWidth;
-              img.style.height = originalHeight;
-              img.style.maxWidth = originalWidth;
-              img.style.maxHeight = originalHeight;
-              img.style.minWidth = originalWidth;
-              img.style.minHeight = originalHeight;
-              img.style.objectFit = 'contain';
-              img.style.filter = 'none';
             } catch {}
           });
         } catch {}
