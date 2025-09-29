@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { createRoot } from 'react-dom/client';
 import { Drawer, DrawerContent } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
@@ -64,7 +65,34 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
       let fileExtension: string;
 
       if (isPdfFormat) {
-        blob = await createPdfFromPreview(entriesToUse, settings, viewMode);
+        // Render hidden InvoicePreview so createPdfFromPreview captures the exact on-screen layout
+        const container = document.createElement('div');
+        container.style.position = 'fixed';
+        container.style.left = '-10000px';
+        container.style.top = '0';
+        container.style.width = '816px';
+        container.style.height = '1056px';
+        container.style.zIndex = '-1';
+        document.body.appendChild(container);
+
+        const root = createRoot(container);
+        root.render(
+          React.createElement(InvoicePreview, {
+            selectedEntries: entriesToUse,
+            settings: { ...settings, invoiceMode: viewMode === 'invoice' },
+            onClose: () => {}
+          })
+        );
+
+        // Wait a tick for layout and fonts
+        await new Promise(r => setTimeout(r, 350));
+
+        try {
+          blob = await createPdfFromPreview(entriesToUse, settings, viewMode);
+        } finally {
+          root.unmount();
+          container.remove();
+        }
         fileExtension = 'pdf';
       } else {
         blob = await generateSpreadsheet(entriesToUse, settings, viewMode);
