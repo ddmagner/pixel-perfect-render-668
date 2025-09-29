@@ -124,12 +124,20 @@ export async function createPdfFromPreview(
               if (computed.backgroundColor) htmlEl.style.backgroundColor = computed.backgroundColor;
               if (computed.opacity) htmlEl.style.opacity = computed.opacity;
               
-              // Force muted-foreground to exact grey - check class or if color is in the grey range (75% lightness)
+              // Force muted-foreground to exact grey - check class or if color is in the grey range
               const isGreyText = htmlEl.classList?.contains('text-muted-foreground') || 
-                                 currentColor.match(/rgb\(19[0-2],\s*19[0-2],\s*19[0-2]\)/) ||
+                                 /rgb\(19[0-2],\s*19[0-2],\s*19[0-2]\)/.test(currentColor) ||
                                  currentColor === 'rgb(191, 191, 191)';
               if (isGreyText) {
                 htmlEl.style.setProperty('color', 'rgb(191, 191, 191)', 'important');
+              }
+              
+              // Force grey filter for logo images to prevent black rendering
+              if (htmlEl.tagName === 'IMG') {
+                const src = htmlEl.getAttribute('src') || '';
+                if (src.includes('8829a351-d8df-4d66-829d-f34b1754bd35') || src.includes('21706651-e7f7-4eec-b5d7-cd8ccf2a385f')) {
+                  htmlEl.style.setProperty('filter', 'grayscale(100%) brightness(0) invert(75%)', 'important');
+                }
               }
               
               // Preserve filters (for the logo)
@@ -137,23 +145,27 @@ export async function createPdfFromPreview(
                 htmlEl.style.filter = computed.filter;
               }
               
-            // Preserve text properties with !important for letter spacing to prevent shifting
+            // Force exact text rendering properties to prevent any shifting
             if (computed.textAlign) htmlEl.style.textAlign = computed.textAlign;
             if (computed.fontSize) htmlEl.style.fontSize = computed.fontSize;
             if (computed.fontWeight) htmlEl.style.fontWeight = computed.fontWeight;
             if (computed.fontFamily) htmlEl.style.fontFamily = computed.fontFamily;
             if (computed.lineHeight) htmlEl.style.lineHeight = computed.lineHeight;
-            if (computed.letterSpacing && computed.letterSpacing !== 'normal') {
-              htmlEl.style.setProperty('letter-spacing', computed.letterSpacing, 'important');
-            }
+            
+            // Force letter-spacing to exact value always (never "normal") to prevent kerning shifts
+            const letterSpace = computed.letterSpacing === 'normal' ? '0px' : computed.letterSpacing;
+            htmlEl.style.setProperty('letter-spacing', letterSpace, 'important');
+            
             if (computed.textTransform) htmlEl.style.textTransform = computed.textTransform;
             if (computed.textDecoration) htmlEl.style.textDecoration = computed.textDecoration;
             if (computed.whiteSpace) htmlEl.style.whiteSpace = computed.whiteSpace;
-            if (computed.wordSpacing && computed.wordSpacing !== 'normal') {
-              htmlEl.style.setProperty('word-spacing', computed.wordSpacing, 'important');
-            }
-            if (computed.textShadow) htmlEl.style.textShadow = computed.textShadow;
-            if (computed.textIndent) htmlEl.style.textIndent = computed.textIndent;
+            
+            // Force word-spacing to exact value always
+            const wordSpace = computed.wordSpacing === 'normal' ? '0px' : computed.wordSpacing;
+            htmlEl.style.setProperty('word-spacing', wordSpace, 'important');
+            
+            if (computed.textShadow && computed.textShadow !== 'none') htmlEl.style.textShadow = computed.textShadow;
+            if (computed.textIndent && computed.textIndent !== '0px') htmlEl.style.textIndent = computed.textIndent;
               
               // Preserve spacing and positioning
               if (computed.padding) htmlEl.style.padding = computed.padding;
@@ -330,12 +342,20 @@ export async function createPdfFromPreview(
             if (computed.backgroundColor) htmlEl.style.backgroundColor = computed.backgroundColor;
             if (computed.opacity) htmlEl.style.opacity = computed.opacity;
             
-            // Force muted-foreground to exact grey - check class or if color is in the grey range (75% lightness)
+            // Force muted-foreground to exact grey - check class or if color is in the grey range
             const isGreyText = htmlEl.classList?.contains('text-muted-foreground') || 
-                               currentColor.match(/rgb\(19[0-2],\s*19[0-2],\s*19[0-2]\)/) ||
+                               /rgb\(19[0-2],\s*19[0-2],\s*19[0-2]\)/.test(currentColor) ||
                                currentColor === 'rgb(191, 191, 191)';
             if (isGreyText) {
               htmlEl.style.setProperty('color', 'rgb(191, 191, 191)', 'important');
+            }
+            
+            // Force grey filter for logo images to prevent black rendering
+            if (htmlEl.tagName === 'IMG') {
+              const src = htmlEl.getAttribute('src') || '';
+              if (src.includes('8829a351-d8df-4d66-829d-f34b1754bd35') || src.includes('21706651-e7f7-4eec-b5d7-cd8ccf2a385f')) {
+                htmlEl.style.setProperty('filter', 'grayscale(100%) brightness(0) invert(75%)', 'important');
+              }
             }
             
             // Preserve filters (for the logo)
@@ -343,23 +363,27 @@ export async function createPdfFromPreview(
               htmlEl.style.filter = computed.filter;
             }
             
-            // Preserve text properties with !important for letter spacing to prevent shifting
+            // Force exact text rendering properties to prevent any shifting
             if (computed.textAlign) htmlEl.style.textAlign = computed.textAlign;
             if (computed.fontSize) htmlEl.style.fontSize = computed.fontSize;
             if (computed.fontWeight) htmlEl.style.fontWeight = computed.fontWeight;
             if (computed.fontFamily) htmlEl.style.fontFamily = computed.fontFamily;
             if (computed.lineHeight) htmlEl.style.lineHeight = computed.lineHeight;
-            if (computed.letterSpacing && computed.letterSpacing !== 'normal') {
-              htmlEl.style.setProperty('letter-spacing', computed.letterSpacing, 'important');
-            }
+            
+            // Force letter-spacing to exact value always (never "normal") to prevent kerning shifts
+            const letterSpace = computed.letterSpacing === 'normal' ? '0px' : computed.letterSpacing;
+            htmlEl.style.setProperty('letter-spacing', letterSpace, 'important');
+            
             if (computed.textTransform) htmlEl.style.textTransform = computed.textTransform;
             if (computed.textDecoration) htmlEl.style.textDecoration = computed.textDecoration;
             if (computed.whiteSpace) htmlEl.style.whiteSpace = computed.whiteSpace;
-            if (computed.wordSpacing && computed.wordSpacing !== 'normal') {
-              htmlEl.style.setProperty('word-spacing', computed.wordSpacing, 'important');
-            }
-            if (computed.textShadow) htmlEl.style.textShadow = computed.textShadow;
-            if (computed.textIndent) htmlEl.style.textIndent = computed.textIndent;
+            
+            // Force word-spacing to exact value always
+            const wordSpace = computed.wordSpacing === 'normal' ? '0px' : computed.wordSpacing;
+            htmlEl.style.setProperty('word-spacing', wordSpace, 'important');
+            
+            if (computed.textShadow && computed.textShadow !== 'none') htmlEl.style.textShadow = computed.textShadow;
+            if (computed.textIndent && computed.textIndent !== '0px') htmlEl.style.textIndent = computed.textIndent;
             
             // Preserve spacing and positioning
             if (computed.padding) htmlEl.style.padding = computed.padding;
