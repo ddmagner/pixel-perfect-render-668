@@ -112,16 +112,40 @@ export async function createPdfFromPreview(
             // Remove box shadow
             el.style.boxShadow = 'none';
 
-            // Force logo images to be grey by applying filter directly to the element
+            // PRE-PROCESS LOGO IMAGES: Convert to grey at pixel level
             const logoImages = Array.from(el.querySelectorAll('img')) as HTMLImageElement[];
-            logoImages.forEach((img) => {
+            for (const img of logoImages) {
               const src = img.getAttribute('src') || '';
               if (src.includes('8829a351-d8df-4d66-829d-f34b1754bd35') || 
                   src.includes('21706651-e7f7-4eec-b5d7-cd8ccf2a385f')) {
-                // Force the grey filter inline with !important equivalent
-                img.style.cssText += 'filter: grayscale(100%) brightness(0) invert(60%) !important;';
+                try {
+                  const tempCanvas = doc.createElement('canvas');
+                  const tempCtx = tempCanvas.getContext('2d', { willReadFrequently: true });
+                  if (tempCtx && img.complete && img.naturalWidth > 0) {
+                    tempCanvas.width = img.naturalWidth;
+                    tempCanvas.height = img.naturalHeight;
+                    tempCtx.drawImage(img, 0, 0);
+                    const imageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
+                    const pixels = imageData.data;
+                    
+                    // Apply: grayscale -> brightness(0) -> invert(60%)
+                    for (let i = 0; i < pixels.length; i += 4) {
+                      const grey = pixels[i] * 0.299 + pixels[i + 1] * 0.587 + pixels[i + 2] * 0.114;
+                      const inverted = 255 - grey;
+                      const final = grey + (inverted - grey) * 0.6;
+                      pixels[i] = final;
+                      pixels[i + 1] = final;
+                      pixels[i + 2] = final;
+                    }
+                    
+                    tempCtx.putImageData(imageData, 0, 0);
+                    img.src = tempCanvas.toDataURL('image/png');
+                  }
+                } catch (err) {
+                  console.error('Logo processing error:', err);
+                }
               }
-            });
+            }
 
             // Force all computed styles to be inline for accurate capture
             const allElements = el.querySelectorAll('*');
@@ -322,16 +346,40 @@ export async function createPdfFromPreview(
           // Remove box shadow
           n.style.boxShadow = 'none';
           
-          // Force logo images to be grey by applying filter directly to the element
+          // PRE-PROCESS LOGO IMAGES: Convert to grey at pixel level
           const logoImages = Array.from(n.querySelectorAll('img')) as HTMLImageElement[];
-          logoImages.forEach((img) => {
+          for (const img of logoImages) {
             const src = img.getAttribute('src') || '';
             if (src.includes('8829a351-d8df-4d66-829d-f34b1754bd35') || 
                 src.includes('21706651-e7f7-4eec-b5d7-cd8ccf2a385f')) {
-              // Force the grey filter inline with !important equivalent
-              img.style.cssText += 'filter: grayscale(100%) brightness(0) invert(60%) !important;';
+              try {
+                const tempCanvas = doc.createElement('canvas');
+                const tempCtx = tempCanvas.getContext('2d', { willReadFrequently: true });
+                if (tempCtx && img.complete && img.naturalWidth > 0) {
+                  tempCanvas.width = img.naturalWidth;
+                  tempCanvas.height = img.naturalHeight;
+                  tempCtx.drawImage(img, 0, 0);
+                  const imageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
+                  const pixels = imageData.data;
+                  
+                  // Apply: grayscale -> brightness(0) -> invert(60%)
+                  for (let i = 0; i < pixels.length; i += 4) {
+                    const grey = pixels[i] * 0.299 + pixels[i + 1] * 0.587 + pixels[i + 2] * 0.114;
+                    const inverted = 255 - grey;
+                    const final = grey + (inverted - grey) * 0.6;
+                    pixels[i] = final;
+                    pixels[i + 1] = final;
+                    pixels[i + 2] = final;
+                  }
+                  
+                  tempCtx.putImageData(imageData, 0, 0);
+                  img.src = tempCanvas.toDataURL('image/png');
+                }
+              } catch (err) {
+                console.error('Logo processing error:', err);
+              }
             }
-          });
+          }
           
           // Force all computed styles to be inline for accurate capture
           const allElements = n.querySelectorAll('*');
