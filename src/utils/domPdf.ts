@@ -25,7 +25,7 @@ async function canvasToPdfBlob(canvas: HTMLCanvasElement): Promise<Blob> {
   const x = Math.round((pageWidth - drawW) / 2);
   const y = Math.round((pageHeight - drawH) / 2);
 
-  pdf.addImage(imgData, 'PNG', 0, 0, pageWidth, pageHeight);
+  pdf.addImage(imgData, 'PNG', x, y, drawW, drawH);
 
   return pdf.output('blob');
 }
@@ -59,7 +59,14 @@ export async function createPdfFromPreview(
       );
     } catch {}
 
-    const canvas = await html2canvas(liveEl, { scale: 2, backgroundColor: '#ffffff', useCORS: true, foreignObjectRendering: true, scrollX: 0, scrollY: 0, width: 816, height: 1056, onclone: (doc: Document) => { const el = (doc.querySelector('#document-preview') as HTMLElement) || (doc.querySelector('.invoice-content') as HTMLElement); if (el) { el.style.width = '816px'; el.style.height = '1056px'; el.style.maxWidth = '816px'; el.style.boxShadow = 'none'; el.style.transform = 'none'; el.style.margin = '0 auto'; el.style.boxSizing = 'border-box'; el.style.padding = '72px 48px'; el.style.overflow = 'hidden'; const imgs = Array.from(el.querySelectorAll('img')) as HTMLImageElement[]; imgs.forEach((img) => { try { (img as any).crossOrigin = 'anonymous'; const raw = img.getAttribute('src') || ''; if (raw.startsWith('/')) { img.src = window.location.origin + raw; } } catch {} }); } } } as any);
+    const canvas = await html2canvas(liveEl, { scale: 2, backgroundColor: '#ffffff', useCORS: true, foreignObjectRendering: true, scrollX: 0, scrollY: 0, width: 816, height: 1056, onclone: (doc: Document) => { const el = (doc.querySelector('#document-preview') as HTMLElement) || (doc.querySelector('.invoice-content') as HTMLElement); if (el) { el.style.width = '816px'; el.style.height = '1056px'; el.style.maxWidth = '816px'; el.style.boxShadow = 'none'; el.style.transform = 'none'; el.style.margin = '0 auto'; el.style.boxSizing = 'border-box'; el.style.padding = '72px 48px'; el.style.overflow = 'hidden'; try { const style = doc.createElement('style'); style.innerHTML = `
+      .invoice-content { box-sizing: border-box !important; max-width: 816px !important; width: 816px !important; padding: 72px 48px !important; overflow: hidden !important; }
+      .invoice-content .-ml-\\[25px\\] { margin-left: 0 !important; }
+      .invoice-content .-ml-\\[15px\\] { margin-left: 0 !important; }
+      .invoice-content .pl-\\[75px\\] { padding-left: 0 !important; }
+      .invoice-content img { max-width: 100% !important; height: auto !important; object-fit: contain !important; filter: none !important; }
+      .invoice-content .grid { overflow: hidden !important; }
+    `; doc.head.appendChild(style); } catch {} const imgs = Array.from(el.querySelectorAll('img')) as HTMLImageElement[]; imgs.forEach((img) => { try { (img as any).crossOrigin = 'anonymous'; img.setAttribute('crossorigin', 'anonymous'); (img as any).decoding = 'sync'; (img as any).loading = 'eager'; img.style.filter = 'none'; const raw = img.getAttribute('src') || ''; if (raw.startsWith('/')) { img.src = window.location.origin + raw; } } catch {} }); } } } as any);
     return canvasToPdfBlob(canvas);
   }
 
@@ -106,7 +113,14 @@ export async function createPdfFromPreview(
           const el = (doc?.querySelector('.invoice-content') as HTMLElement) || (doc?.body as HTMLElement);
           if (!el) throw new Error('Invoice content not found');
 
-          const canvas = await html2canvas(el, { scale: 2, backgroundColor: '#ffffff', useCORS: true, letterRendering: true, foreignObjectRendering: true, scrollX: 0, scrollY: 0, width: 816, height: 1056, onclone: (doc: Document) => { const n = (doc.querySelector('#document-preview') as HTMLElement) || (doc.querySelector('.invoice-content') as HTMLElement); if (n) { n.style.width = '816px'; n.style.height = '1056px'; n.style.maxWidth = '816px'; n.style.boxShadow = 'none'; n.style.transform = 'none'; n.style.margin = '0 auto'; n.style.boxSizing = 'border-box'; n.style.padding = '72px 48px'; n.style.overflow = 'hidden'; } } } as any);
+          const canvas = await html2canvas(el, { scale: 2, backgroundColor: '#ffffff', useCORS: true, letterRendering: true, foreignObjectRendering: true, scrollX: 0, scrollY: 0, width: 816, height: 1056, onclone: (doc: Document) => { const n = (doc.querySelector('#document-preview') as HTMLElement) || (doc.querySelector('.invoice-content') as HTMLElement); if (n) { n.style.width = '816px'; n.style.height = '1056px'; n.style.maxWidth = '816px'; n.style.boxShadow = 'none'; n.style.transform = 'none'; n.style.margin = '0 auto'; n.style.boxSizing = 'border-box'; n.style.padding = '72px 48px'; n.style.overflow = 'hidden'; try { const style = doc.createElement('style'); style.innerHTML = `
+          .invoice-content { box-sizing: border-box !important; max-width: 816px !important; width: 816px !important; padding: 72px 48px !important; overflow: hidden !important; }
+          .invoice-content .-ml-\\[25px\\] { margin-left: 0 !important; }
+          .invoice-content .-ml-\\[15px\\] { margin-left: 0 !important; }
+          .invoice-content .pl-\\[75px\\] { padding-left: 0 !important; }
+          .invoice-content img { max-width: 100% !important; height: auto !important; object-fit: contain !important; filter: none !important; }
+          .invoice-content .grid { overflow: hidden !important; }
+        `; doc.head.appendChild(style); } catch {} const imgs = Array.from(n.querySelectorAll('img')) as HTMLImageElement[]; imgs.forEach((img) => { try { (img as any).crossOrigin = 'anonymous'; img.setAttribute('crossorigin', 'anonymous'); (img as any).decoding = 'sync'; (img as any).loading = 'eager'; img.style.filter = 'none'; const raw = img.getAttribute('src') || ''; if (raw.startsWith('/')) { img.src = window.location.origin + raw; } } catch {} }); } } } as any);
           const pdfBlob = await canvasToPdfBlob(canvas);
           resolve(pdfBlob);
         } catch (e) {
@@ -177,7 +191,14 @@ export async function createPdfFromPreview(
     );
   } catch {}
 
-  const canvas = await html2canvas(el, { scale: 2, backgroundColor: '#ffffff', useCORS: true, letterRendering: true, foreignObjectRendering: true, scrollX: 0, scrollY: 0, width: 816, height: 1056, onclone: (doc: Document) => { const n = (doc.querySelector('#document-preview') as HTMLElement) || (doc.querySelector('.invoice-content') as HTMLElement); if (n) { n.style.width = '816px'; n.style.height = '1056px'; n.style.maxWidth = '816px'; n.style.boxShadow = 'none'; n.style.transform = 'none'; n.style.margin = '0 auto'; n.style.boxSizing = 'border-box'; n.style.overflow = 'hidden'; } } } as any);
+  const canvas = await html2canvas(el, { scale: 2, backgroundColor: '#ffffff', useCORS: true, letterRendering: true, foreignObjectRendering: true, scrollX: 0, scrollY: 0, width: 816, height: 1056, onclone: (doc: Document) => { const n = (doc.querySelector('#document-preview') as HTMLElement) || (doc.querySelector('.invoice-content') as HTMLElement); if (n) { n.style.width = '816px'; n.style.height = '1056px'; n.style.maxWidth = '816px'; n.style.boxShadow = 'none'; n.style.transform = 'none'; n.style.margin = '0 auto'; n.style.boxSizing = 'border-box'; n.style.padding = '72px 48px'; n.style.overflow = 'hidden'; try { const style = doc.createElement('style'); style.innerHTML = `
+      .invoice-content { box-sizing: border-box !important; max-width: 816px !important; width: 816px !important; padding: 72px 48px !important; overflow: hidden !important; }
+      .invoice-content .-ml-\\[25px\\] { margin-left: 0 !important; }
+      .invoice-content .-ml-\\[15px\\] { margin-left: 0 !important; }
+      .invoice-content .pl-\\[75px\\] { padding-left: 0 !important; }
+      .invoice-content img { max-width: 100% !important; height: auto !important; object-fit: contain !important; filter: none !important; }
+      .invoice-content .grid { overflow: hidden !important; }
+    `; doc.head.appendChild(style); } catch {} const imgs = Array.from(n.querySelectorAll('img')) as HTMLImageElement[]; imgs.forEach((img) => { try { (img as any).crossOrigin = 'anonymous'; img.setAttribute('crossorigin', 'anonymous'); (img as any).decoding = 'sync'; (img as any).loading = 'eager'; img.style.filter = 'none'; const raw = img.getAttribute('src') || ''; if (raw.startsWith('/')) { img.src = window.location.origin + raw; } } catch {} }); } } } as any);
   const blob = await canvasToPdfBlob(canvas);
 
   root.unmount();
