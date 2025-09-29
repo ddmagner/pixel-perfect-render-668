@@ -112,52 +112,16 @@ export async function createPdfFromPreview(
             // Remove box shadow
             el.style.boxShadow = 'none';
 
-            // PRE-PROCESS LOGO IMAGES: Convert them to grey directly in the image data
+            // Force logo images to be grey by applying filter directly to the element
             const logoImages = Array.from(el.querySelectorAll('img')) as HTMLImageElement[];
-            for (const img of logoImages) {
+            logoImages.forEach((img) => {
               const src = img.getAttribute('src') || '';
               if (src.includes('8829a351-d8df-4d66-829d-f34b1754bd35') || 
                   src.includes('21706651-e7f7-4eec-b5d7-cd8ccf2a385f')) {
-                try {
-                  // Create a canvas to process the image
-                  const canvas = document.createElement('canvas');
-                  const ctx = canvas.getContext('2d');
-                  if (ctx) {
-                    canvas.width = img.width || img.naturalWidth;
-                    canvas.height = img.height || img.naturalHeight;
-                    
-                    // Draw the original image
-                    ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                    
-                    // Get pixel data
-                    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                    const data = imageData.data;
-                    
-                    // Apply filter: grayscale(100%) brightness(0) invert(60%)
-                    // This means: convert to grey, make black, then invert 60% to get grey
-                    for (let i = 0; i < data.length; i += 4) {
-                      // Grayscale
-                      const grey = data[i] * 0.299 + data[i + 1] * 0.587 + data[i + 2] * 0.114;
-                      // Brightness(0) makes it black, then invert(60%) 
-                      // invert means: newValue = 255 - oldValue, but only 60%
-                      const inverted = 255 - grey;
-                      const final = grey + (inverted - grey) * 0.6;
-                      data[i] = final;     // R
-                      data[i + 1] = final; // G
-                      data[i + 2] = final; // B
-                      // Keep alpha as is
-                    }
-                    
-                    ctx.putImageData(imageData, 0, 0);
-                    
-                    // Replace the image src with the processed version
-                    img.src = canvas.toDataURL('image/png');
-                  }
-                } catch (err) {
-                  console.error('Error processing logo image:', err);
-                }
+                // Force the grey filter inline with !important equivalent
+                img.style.cssText += 'filter: grayscale(100%) brightness(0) invert(60%) !important;';
               }
-            }
+            });
 
             // Force all computed styles to be inline for accurate capture
             const allElements = el.querySelectorAll('*');
@@ -358,50 +322,16 @@ export async function createPdfFromPreview(
           // Remove box shadow
           n.style.boxShadow = 'none';
           
-          // PRE-PROCESS LOGO IMAGES: Convert them to grey directly in the image data
+          // Force logo images to be grey by applying filter directly to the element
           const logoImages = Array.from(n.querySelectorAll('img')) as HTMLImageElement[];
-          for (const img of logoImages) {
+          logoImages.forEach((img) => {
             const src = img.getAttribute('src') || '';
             if (src.includes('8829a351-d8df-4d66-829d-f34b1754bd35') || 
                 src.includes('21706651-e7f7-4eec-b5d7-cd8ccf2a385f')) {
-              try {
-                // Create a canvas to process the image
-                const canvas = document.createElement('canvas');
-                const ctx = canvas.getContext('2d');
-                if (ctx) {
-                  canvas.width = img.width || img.naturalWidth;
-                  canvas.height = img.height || img.naturalHeight;
-                  
-                  // Draw the original image
-                  ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                  
-                  // Get pixel data
-                  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
-                  const data = imageData.data;
-                  
-                  // Apply filter: grayscale(100%) brightness(0) invert(60%)
-                  for (let i = 0; i < data.length; i += 4) {
-                    // Grayscale
-                    const grey = data[i] * 0.299 + data[i + 1] * 0.587 + data[i + 2] * 0.114;
-                    // Brightness(0) makes it black, then invert(60%) 
-                    const inverted = 255 - grey;
-                    const final = grey + (inverted - grey) * 0.6;
-                    data[i] = final;     // R
-                    data[i + 1] = final; // G
-                    data[i + 2] = final; // B
-                    // Keep alpha as is
-                  }
-                  
-                  ctx.putImageData(imageData, 0, 0);
-                  
-                  // Replace the image src with the processed version
-                  img.src = canvas.toDataURL('image/png');
-                }
-              } catch (err) {
-                console.error('Error processing logo image:', err);
-              }
+              // Force the grey filter inline with !important equivalent
+              img.style.cssText += 'filter: grayscale(100%) brightness(0) invert(60%) !important;';
             }
-          }
+          });
           
           // Force all computed styles to be inline for accurate capture
           const allElements = n.querySelectorAll('*');
