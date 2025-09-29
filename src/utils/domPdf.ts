@@ -90,7 +90,7 @@ export async function createPdfFromPreview(
 
     // Capture the entire element into a single high-res canvas, then slice into pages
     const fullCanvas = await html2canvas(liveEl, {
-      scale: 2,
+      scale: 3,
       backgroundColor: '#ffffff',
       useCORS: true,
       allowTaint: false,
@@ -98,15 +98,48 @@ export async function createPdfFromPreview(
       letterRendering: true,
       foreignObjectRendering: false,
       scrollX: 0,
-      scrollY: 0,
-      onclone: (doc: Document) => {
-        const el = (doc.querySelector('#document-preview') as HTMLElement) || (doc.querySelector('.invoice-content') as HTMLElement);
+      scrollY: -window.scrollY,
+      windowWidth: liveEl.scrollWidth,
+      windowHeight: liveEl.scrollHeight,
+      logging: false,
+      onclone: (doc: Document, clonedEl: HTMLElement) => {
+        // Find the cloned preview element
+        const el = clonedEl;
         if (el) {
           try {
-            // Remove box shadow only, preserve all other styling from preview
+            // Remove box shadow
             el.style.boxShadow = 'none';
 
-            // Only fix image URLs for CORS, preserve all computed styles
+            // Force all computed styles to be inline for accurate capture
+            const allElements = el.querySelectorAll('*');
+            allElements.forEach((element) => {
+              const htmlEl = element as HTMLElement;
+              const computed = window.getComputedStyle(element);
+              
+              // Preserve color, especially for text-gray-400
+              if (computed.color) {
+                htmlEl.style.color = computed.color;
+              }
+              
+              // Preserve filters (for the logo)
+              if (computed.filter && computed.filter !== 'none') {
+                htmlEl.style.filter = computed.filter;
+              }
+              
+              // Preserve text alignment
+              if (computed.textAlign) {
+                htmlEl.style.textAlign = computed.textAlign;
+              }
+              
+              // Preserve font properties
+              if (computed.fontSize) htmlEl.style.fontSize = computed.fontSize;
+              if (computed.fontWeight) htmlEl.style.fontWeight = computed.fontWeight;
+              if (computed.fontFamily) htmlEl.style.fontFamily = computed.fontFamily;
+              if (computed.lineHeight) htmlEl.style.lineHeight = computed.lineHeight;
+              if (computed.letterSpacing) htmlEl.style.letterSpacing = computed.letterSpacing;
+            });
+
+            // Fix image URLs for CORS
             const imgs = Array.from(el.querySelectorAll('img')) as HTMLImageElement[];
             imgs.forEach((img) => {
               try {
@@ -124,14 +157,16 @@ export async function createPdfFromPreview(
                 } catch {}
               } catch {}
             });
-          } catch {}
+          } catch (err) {
+            console.error('Error in onclone:', err);
+          }
         }
       }
     } as any);
 
     // Slice the big canvas into page-sized canvases
     const canvases: HTMLCanvasElement[] = [];
-    const scale = 2; // matches html2canvas scale
+    const scale = 3; // matches html2canvas scale
     const pageHeightPx = Math.floor(PAGE_H * scale);
     const totalHeightPx = fullCanvas.height;
 
@@ -221,7 +256,7 @@ export async function createPdfFromPreview(
 
   // Capture the entire element once, then slice into PDF pages
   const fullCanvas = await html2canvas(el, {
-    scale: 2,
+    scale: 3,
     backgroundColor: '#ffffff',
     useCORS: true,
     allowTaint: false,
@@ -230,14 +265,46 @@ export async function createPdfFromPreview(
     foreignObjectRendering: false,
     scrollX: 0,
     scrollY: 0,
-    onclone: (doc: Document) => {
-      const n = (doc.querySelector('#document-preview') as HTMLElement) || (doc.querySelector('.invoice-content') as HTMLElement);
+    windowWidth: el.scrollWidth,
+    windowHeight: el.scrollHeight,
+    logging: false,
+    onclone: (doc: Document, clonedEl: HTMLElement) => {
+      const n = clonedEl;
       if (n) {
-        // Remove box shadow only, preserve all other styling from preview
-        n.style.boxShadow = 'none';
-        
         try {
-          // Only fix image URLs for CORS, preserve all computed styles
+          // Remove box shadow
+          n.style.boxShadow = 'none';
+          
+          // Force all computed styles to be inline for accurate capture
+          const allElements = n.querySelectorAll('*');
+          allElements.forEach((element) => {
+            const htmlEl = element as HTMLElement;
+            const computed = window.getComputedStyle(element);
+            
+            // Preserve color, especially for text-gray-400
+            if (computed.color) {
+              htmlEl.style.color = computed.color;
+            }
+            
+            // Preserve filters (for the logo)
+            if (computed.filter && computed.filter !== 'none') {
+              htmlEl.style.filter = computed.filter;
+            }
+            
+            // Preserve text alignment
+            if (computed.textAlign) {
+              htmlEl.style.textAlign = computed.textAlign;
+            }
+            
+            // Preserve font properties
+            if (computed.fontSize) htmlEl.style.fontSize = computed.fontSize;
+            if (computed.fontWeight) htmlEl.style.fontWeight = computed.fontWeight;
+            if (computed.fontFamily) htmlEl.style.fontFamily = computed.fontFamily;
+            if (computed.lineHeight) htmlEl.style.lineHeight = computed.lineHeight;
+            if (computed.letterSpacing) htmlEl.style.letterSpacing = computed.letterSpacing;
+          });
+
+          // Fix image URLs for CORS
           const imgs = Array.from(n.querySelectorAll('img')) as HTMLImageElement[];
           imgs.forEach((img) => {
             try {
@@ -255,13 +322,15 @@ export async function createPdfFromPreview(
               } catch {}
             } catch {}
           });
-        } catch {}
+        } catch (err) {
+          console.error('Error in onclone:', err);
+        }
       }
     }
   } as any);
 
   const canvases: HTMLCanvasElement[] = [];
-  const scale = 2; // matches html2canvas scale
+  const scale = 3; // matches html2canvas scale
   const pageHeightPx = Math.floor(PAGE_H * scale);
   const totalHeightPx = fullCanvas.height;
 
