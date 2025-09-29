@@ -101,6 +101,11 @@ All colors MUST be HSL.
     box-sizing: border-box;
   }
 
+  /* Fix for html2canvas text shifting - Tailwind's preflight sets img to block */
+  img {
+    @apply inline-block;
+  }
+
   html {
     overflow-x: hidden;
     width: 100%;

@@ -126,13 +126,17 @@ export async function createPdfFromPreview(
                 htmlEl.style.filter = computed.filter;
               }
               
-              // Preserve text properties
-              if (computed.textAlign) htmlEl.style.textAlign = computed.textAlign;
-              if (computed.fontSize) htmlEl.style.fontSize = computed.fontSize;
-              if (computed.fontWeight) htmlEl.style.fontWeight = computed.fontWeight;
-              if (computed.fontFamily) htmlEl.style.fontFamily = computed.fontFamily;
-              if (computed.lineHeight) htmlEl.style.lineHeight = computed.lineHeight;
-              if (computed.letterSpacing) htmlEl.style.letterSpacing = computed.letterSpacing;
+            // Preserve text properties
+            if (computed.textAlign) htmlEl.style.textAlign = computed.textAlign;
+            if (computed.fontSize) htmlEl.style.fontSize = computed.fontSize;
+            if (computed.fontWeight) htmlEl.style.fontWeight = computed.fontWeight;
+            if (computed.fontFamily) htmlEl.style.fontFamily = computed.fontFamily;
+            if (computed.lineHeight) htmlEl.style.lineHeight = computed.lineHeight;
+            if (computed.letterSpacing) htmlEl.style.letterSpacing = computed.letterSpacing;
+            if (computed.textTransform) htmlEl.style.textTransform = computed.textTransform;
+            if (computed.textDecoration) htmlEl.style.textDecoration = computed.textDecoration;
+            if (computed.whiteSpace) htmlEl.style.whiteSpace = computed.whiteSpace;
+            if (computed.wordSpacing) htmlEl.style.wordSpacing = computed.wordSpacing;
               
               // Preserve spacing and positioning
               if (computed.padding) htmlEl.style.padding = computed.padding;
@@ -318,6 +322,10 @@ export async function createPdfFromPreview(
             if (computed.fontFamily) htmlEl.style.fontFamily = computed.fontFamily;
             if (computed.lineHeight) htmlEl.style.lineHeight = computed.lineHeight;
             if (computed.letterSpacing) htmlEl.style.letterSpacing = computed.letterSpacing;
+            if (computed.textTransform) htmlEl.style.textTransform = computed.textTransform;
+            if (computed.textDecoration) htmlEl.style.textDecoration = computed.textDecoration;
+            if (computed.whiteSpace) htmlEl.style.whiteSpace = computed.whiteSpace;
+            if (computed.wordSpacing) htmlEl.style.wordSpacing = computed.wordSpacing;
             
             // Preserve spacing and positioning
             if (computed.padding) htmlEl.style.padding = computed.padding;
