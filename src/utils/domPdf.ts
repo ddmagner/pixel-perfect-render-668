@@ -118,54 +118,43 @@ export async function createPdfFromPreview(
               const htmlEl = element as HTMLElement;
               const computed = window.getComputedStyle(element);
               
-              // Preserve all color properties with exact values
-              const currentColor = computed.color || '';
-              if (currentColor) htmlEl.style.color = currentColor;
+              // Preserve all color properties
+              if (computed.color) htmlEl.style.color = computed.color;
               if (computed.backgroundColor) htmlEl.style.backgroundColor = computed.backgroundColor;
               if (computed.opacity) htmlEl.style.opacity = computed.opacity;
               
-              // Force muted-foreground to exact grey using RGB value
+              // Force muted-foreground text to grey
               if (htmlEl.classList?.contains('text-muted-foreground')) {
-                htmlEl.style.setProperty('color', 'rgb(191, 191, 191)', 'important');
+                htmlEl.style.color = 'rgb(191, 191, 191)';
               }
               
-              // Images: preserve inline filter exactly, or apply from computed if none inline
+              // CRITICAL FIX: Force logo images to grey using exact filter from component
               if (htmlEl.tagName === 'IMG') {
-                const inlineFilter = htmlEl.style.filter;
-                if (inlineFilter) {
-                  // Keep the exact inline filter from the component
-                  htmlEl.style.setProperty('filter', inlineFilter, 'important');
-                } else if (computed.filter && computed.filter !== 'none') {
-                  htmlEl.style.setProperty('filter', computed.filter, 'important');
-                }
-              } else {
-                // For non-images, preserve computed filters
-                if (computed.filter && computed.filter !== 'none') {
-                  htmlEl.style.filter = computed.filter;
+                const src = htmlEl.getAttribute('src') || '';
+                // Check for both logo images by their upload IDs
+                if (src.includes('8829a351-d8df-4d66-829d-f34b1754bd35') || 
+                    src.includes('21706651-e7f7-4eec-b5d7-cd8ccf2a385f')) {
+                  // Use exact filter from InvoicePreview component
+                  htmlEl.style.filter = 'grayscale(100%) brightness(0) invert(60%)';
                 }
               }
               
-            // Force exact text rendering properties to prevent any shifting
-            if (computed.textAlign) htmlEl.style.textAlign = computed.textAlign;
-            if (computed.fontSize) htmlEl.style.fontSize = computed.fontSize;
-            if (computed.fontWeight) htmlEl.style.fontWeight = computed.fontWeight;
-            if (computed.fontFamily) htmlEl.style.fontFamily = computed.fontFamily;
-            if (computed.lineHeight) htmlEl.style.lineHeight = computed.lineHeight;
-            
-            // Completely disable letter spacing to prevent kerning issues
-            htmlEl.style.setProperty('letter-spacing', '0', 'important');
-            htmlEl.style.setProperty('font-feature-settings', '"kern" 0', 'important');
-            htmlEl.style.setProperty('font-kerning', 'none', 'important');
-            
-            if (computed.textTransform) htmlEl.style.textTransform = computed.textTransform;
-            if (computed.textDecoration) htmlEl.style.textDecoration = computed.textDecoration;
-            if (computed.whiteSpace) htmlEl.style.whiteSpace = computed.whiteSpace;
-            
-            // Disable word spacing variations
-            htmlEl.style.setProperty('word-spacing', '0', 'important');
-            
-            if (computed.textShadow && computed.textShadow !== 'none') htmlEl.style.textShadow = computed.textShadow;
-            if (computed.textIndent && computed.textIndent !== '0px') htmlEl.style.textIndent = computed.textIndent;
+              // Text rendering - disable all kerning and spacing variations
+              if (computed.textAlign) htmlEl.style.textAlign = computed.textAlign;
+              if (computed.fontSize) htmlEl.style.fontSize = computed.fontSize;
+              if (computed.fontWeight) htmlEl.style.fontWeight = computed.fontWeight;
+              if (computed.fontFamily) htmlEl.style.fontFamily = computed.fontFamily;
+              if (computed.lineHeight) htmlEl.style.lineHeight = computed.lineHeight;
+              
+              // CRITICAL FIX: Force zero letter spacing to prevent kerning issues
+              htmlEl.style.letterSpacing = '0';
+              htmlEl.style.wordSpacing = '0';
+              
+              if (computed.textTransform) htmlEl.style.textTransform = computed.textTransform;
+              if (computed.textDecoration) htmlEl.style.textDecoration = computed.textDecoration;
+              if (computed.whiteSpace) htmlEl.style.whiteSpace = computed.whiteSpace;
+              if (computed.textShadow && computed.textShadow !== 'none') htmlEl.style.textShadow = computed.textShadow;
+              if (computed.textIndent && computed.textIndent !== '0px') htmlEl.style.textIndent = computed.textIndent;
               
               // Preserve spacing and positioning
               if (computed.padding) htmlEl.style.padding = computed.padding;
@@ -336,52 +325,41 @@ export async function createPdfFromPreview(
             const htmlEl = element as HTMLElement;
             const computed = window.getComputedStyle(element);
             
-            // Preserve all color properties with exact values
-            const currentColor = computed.color || '';
-            if (currentColor) htmlEl.style.color = currentColor;
+            // Preserve all color properties
+            if (computed.color) htmlEl.style.color = computed.color;
             if (computed.backgroundColor) htmlEl.style.backgroundColor = computed.backgroundColor;
             if (computed.opacity) htmlEl.style.opacity = computed.opacity;
             
-            // Force muted-foreground to exact grey using RGB value
+            // Force muted-foreground text to grey
             if (htmlEl.classList?.contains('text-muted-foreground')) {
-              htmlEl.style.setProperty('color', 'rgb(191, 191, 191)', 'important');
+              htmlEl.style.color = 'rgb(191, 191, 191)';
             }
             
-            // Images: preserve inline filter exactly, or apply from computed if none inline
+            // CRITICAL FIX: Force logo images to grey using exact filter from component
             if (htmlEl.tagName === 'IMG') {
-              const inlineFilter = htmlEl.style.filter;
-              if (inlineFilter) {
-                // Keep the exact inline filter from the component
-                htmlEl.style.setProperty('filter', inlineFilter, 'important');
-              } else if (computed.filter && computed.filter !== 'none') {
-                htmlEl.style.setProperty('filter', computed.filter, 'important');
-              }
-            } else {
-              // For non-images, preserve computed filters
-              if (computed.filter && computed.filter !== 'none') {
-                htmlEl.style.filter = computed.filter;
+              const src = htmlEl.getAttribute('src') || '';
+              // Check for both logo images by their upload IDs
+              if (src.includes('8829a351-d8df-4d66-829d-f34b1754bd35') || 
+                  src.includes('21706651-e7f7-4eec-b5d7-cd8ccf2a385f')) {
+                // Use exact filter from InvoicePreview component
+                htmlEl.style.filter = 'grayscale(100%) brightness(0) invert(60%)';
               }
             }
             
-            // Force exact text rendering properties to prevent any shifting
+            // Text rendering - disable all kerning and spacing variations
             if (computed.textAlign) htmlEl.style.textAlign = computed.textAlign;
             if (computed.fontSize) htmlEl.style.fontSize = computed.fontSize;
             if (computed.fontWeight) htmlEl.style.fontWeight = computed.fontWeight;
             if (computed.fontFamily) htmlEl.style.fontFamily = computed.fontFamily;
             if (computed.lineHeight) htmlEl.style.lineHeight = computed.lineHeight;
             
-            // Completely disable letter spacing to prevent kerning issues
-            htmlEl.style.setProperty('letter-spacing', '0', 'important');
-            htmlEl.style.setProperty('font-feature-settings', '"kern" 0', 'important');
-            htmlEl.style.setProperty('font-kerning', 'none', 'important');
+            // CRITICAL FIX: Force zero letter spacing to prevent kerning issues
+            htmlEl.style.letterSpacing = '0';
+            htmlEl.style.wordSpacing = '0';
             
             if (computed.textTransform) htmlEl.style.textTransform = computed.textTransform;
             if (computed.textDecoration) htmlEl.style.textDecoration = computed.textDecoration;
             if (computed.whiteSpace) htmlEl.style.whiteSpace = computed.whiteSpace;
-            
-            // Disable word spacing variations
-            htmlEl.style.setProperty('word-spacing', '0', 'important');
-            
             if (computed.textShadow && computed.textShadow !== 'none') htmlEl.style.textShadow = computed.textShadow;
             if (computed.textIndent && computed.textIndent !== '0px') htmlEl.style.textIndent = computed.textIndent;
             
