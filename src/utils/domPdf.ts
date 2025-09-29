@@ -181,7 +181,7 @@ export async function createPdfFromPreview(
             const pdfWordmarkOffset = el.querySelector('.pdf-wordmark-offset') as HTMLElement;
             if (pdfWordmarkOffset) {
               pdfWordmarkOffset.style.position = 'relative';
-              pdfWordmarkOffset.style.top = '-2px';
+              pdfWordmarkOffset.style.top = '1px';
             }
             
             // Lower the icon by 1px in PDF
@@ -430,7 +430,7 @@ export async function createPdfFromPreview(
           const pdfWordmarkOffset = n.querySelector('.pdf-wordmark-offset') as HTMLElement;
           if (pdfWordmarkOffset) {
             pdfWordmarkOffset.style.position = 'relative';
-            pdfWordmarkOffset.style.top = '-2px';
+            pdfWordmarkOffset.style.top = '1px';
           }
           
           // Lower the icon by 1px in PDF
