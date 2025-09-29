@@ -239,7 +239,7 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
               </div>
               <div className="flex items-center gap-3">
                 {settings.invoiceMode && <div className="min-w-[60px] text-right">
-                    {editingTask?.id === task.id ? <input type="text" value={editingTask.hourlyRate ? formatCurrency(editingTask.hourlyRate) : ''} onChange={e => {
+                    {editingTask?.id === task.id ? <input type="text" value={editingTask.hourlyRate?.toString() || ''} onChange={e => {
                 const value = e.target.value.replace(/[^0-9.]/g, '');
                 setEditingTask({
                   ...editingTask,
@@ -254,7 +254,7 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
                 if (e.key === 'Escape') {
                   setEditingTask(null);
                 }
-              }} className="text-[#09121F] text-sm bg-transparent border-none outline-none w-full text-right leading-5" /> : <span className="text-[#09121F] text-sm leading-5">
+              }} className="text-[#09121F] text-sm bg-transparent border-none outline-none w-full text-right leading-5" autoFocus onFocus={e => e.target.select()} /> : <span className="text-[#09121F] text-sm leading-5">
                         {formatCurrency(task.hourlyRate || 0)}
                       </span>}
                   </div>}
@@ -327,7 +327,7 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
               </div>
               <div className="flex items-center gap-3">
                 {settings.invoiceMode && <div className="min-w-[60px] text-right">
-                    {editingTax?.id === tax.id ? <input type="text" value={editingTax.rate ? `${editingTax.rate}%` : ''} onChange={e => {
+                    {editingTax?.id === tax.id ? <input type="text" value={editingTax.rate?.toString() || ''} onChange={e => {
                 const value = e.target.value.replace(/[^0-9.]/g, '');
                 setEditingTax({
                   ...editingTax,
@@ -342,7 +342,7 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
                 if (e.key === 'Escape') {
                   setEditingTax(null);
                 }
-              }} className="text-[#09121F] text-sm bg-transparent border-none outline-none w-full text-right leading-5" /> : <span className="text-[#09121F] text-sm leading-5">
+              }} className="text-[#09121F] text-sm bg-transparent border-none outline-none w-full text-right leading-5" autoFocus onFocus={e => e.target.select()} /> : <span className="text-[#09121F] text-sm leading-5">
                         {tax.rate ? `${tax.rate}%` : '0.00%'}
                       </span>}
                   </div>}
