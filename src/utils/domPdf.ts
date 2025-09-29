@@ -102,6 +102,8 @@ export async function createPdfFromPreview(
       windowWidth: liveEl.scrollWidth,
       windowHeight: liveEl.scrollHeight,
       logging: false,
+      removeContainer: true,
+      textAlign: 'auto',
       onclone: (doc: Document, clonedEl: HTMLElement) => {
         // Find the cloned preview element
         const el = clonedEl;
@@ -116,10 +118,15 @@ export async function createPdfFromPreview(
               const htmlEl = element as HTMLElement;
               const computed = window.getComputedStyle(element);
               
-              // Preserve all color properties
+              // Preserve all color properties with exact values
               if (computed.color) htmlEl.style.color = computed.color;
               if (computed.backgroundColor) htmlEl.style.backgroundColor = computed.backgroundColor;
               if (computed.opacity) htmlEl.style.opacity = computed.opacity;
+              
+              // Force muted-foreground to exact HSL value
+              if (htmlEl.classList?.contains('text-muted-foreground') || computed.color === 'rgb(191, 191, 191)') {
+                htmlEl.style.color = 'hsl(0, 0%, 75%)';
+              }
               
               // Preserve filters (for the logo)
               if (computed.filter && computed.filter !== 'none') {
@@ -294,6 +301,8 @@ export async function createPdfFromPreview(
     windowWidth: el.scrollWidth,
     windowHeight: el.scrollHeight,
     logging: false,
+    removeContainer: true,
+    textAlign: 'auto',
     onclone: (doc: Document, clonedEl: HTMLElement) => {
       const n = clonedEl;
       if (n) {
@@ -307,10 +316,15 @@ export async function createPdfFromPreview(
             const htmlEl = element as HTMLElement;
             const computed = window.getComputedStyle(element);
             
-            // Preserve all color properties
+            // Preserve all color properties with exact values
             if (computed.color) htmlEl.style.color = computed.color;
             if (computed.backgroundColor) htmlEl.style.backgroundColor = computed.backgroundColor;
             if (computed.opacity) htmlEl.style.opacity = computed.opacity;
+            
+            // Force muted-foreground to exact HSL value
+            if (htmlEl.classList?.contains('text-muted-foreground') || computed.color === 'rgb(191, 191, 191)') {
+              htmlEl.style.color = 'hsl(0, 0%, 75%)';
+            }
             
             // Preserve filters (for the logo)
             if (computed.filter && computed.filter !== 'none') {
