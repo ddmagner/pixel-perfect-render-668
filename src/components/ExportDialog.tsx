@@ -90,6 +90,37 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
         try {
           const el = container.querySelector('#document-preview') as HTMLElement | null;
           if (!el) throw new Error('Document preview element not found');
+
+          // Ensure fonts and images are ready and sanitize images for html2canvas
+          // @ts-ignore
+          if (document.fonts && typeof document.fonts.ready?.then === 'function') {
+            // @ts-ignore
+            await document.fonts.ready;
+          }
+          const imgs = Array.from(el.querySelectorAll('img')) as HTMLImageElement[];
+          await Promise.all(
+            imgs.map((img) =>
+              img.complete ? Promise.resolve() : new Promise<void>((res) => { img.onload = () => res(); img.onerror = () => res(); })
+            )
+          );
+          imgs.forEach((img) => {
+            try {
+              const raw = img.getAttribute('src') || '';
+              if (raw.startsWith('/')) {
+                img.src = window.location.origin + raw;
+              }
+              // Remove CORS attribute for same-origin assets to avoid tainting
+              try {
+                const u = new URL(img.src, window.location.origin);
+                if (u.origin === window.location.origin) {
+                  img.removeAttribute('crossorigin');
+                }
+              } catch {}
+              // Remove filters so rasterization keeps the image
+              img.style.filter = 'none';
+            } catch {}
+          });
+
           blob = await createPdfFromPreview(entriesToUse, settings, viewMode, el);
         } finally {
           root.unmount();
