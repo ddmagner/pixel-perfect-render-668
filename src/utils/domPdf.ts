@@ -5,6 +5,70 @@ import { createRoot } from 'react-dom/client';
 import { InvoicePreview } from '@/components/InvoicePreview';
 import { TimeEntry, AppSettings, ViewMode } from '@/types';
 
+const LOGO_MATCHERS = [
+  '8829a351-d8df-4d66-829d-f34b1754bd35',
+  '21706651-e7f7-4eec-b5d7-cd8ccf2a385f'
+];
+
+async function greyifyImageElement(img: HTMLImageElement): Promise<void> {
+  try {
+    // Ensure the image is decoded
+    // @ts-ignore
+    if (typeof img.decode === 'function') {
+      try { await img.decode(); } catch {}
+    }
+    if (!img.complete || img.naturalWidth === 0) {
+      await new Promise<void>((res) => {
+        const done = () => res();
+        img.onload = done;
+        img.onerror = done;
+      });
+    }
+    if (img.naturalWidth === 0) return;
+
+    const tempCanvas = document.createElement('canvas');
+    const tempCtx = tempCanvas.getContext('2d', { willReadFrequently: true } as any) as CanvasRenderingContext2D | null;
+    if (!tempCtx) return;
+
+    tempCanvas.width = img.naturalWidth;
+    tempCanvas.height = img.naturalHeight;
+    tempCtx.drawImage(img, 0, 0);
+
+    const imageData = tempCtx.getImageData(0, 0, tempCanvas.width, tempCanvas.height);
+    const pixels = imageData.data;
+    for (let i = 0; i < pixels.length; i += 4) {
+      const grey = pixels[i] * 0.299 + pixels[i + 1] * 0.587 + pixels[i + 2] * 0.114;
+      const inverted = 255 - grey;
+      const final = grey + (inverted - grey) * 0.6;
+      pixels[i] = final;
+      pixels[i + 1] = final;
+      pixels[i + 2] = final;
+    }
+    tempCtx.putImageData(imageData, 0, 0);
+
+    // Swap to processed data URL and wait until it's ready
+    const dataUrl = tempCanvas.toDataURL('image/png');
+    await new Promise<void>((res) => {
+      const done = () => res();
+      img.onload = done;
+      img.onerror = done;
+      img.src = dataUrl;
+      if (img.complete) res();
+    });
+  } catch (e) {
+    console.error('Preprocess logo to grey failed:', e);
+  }
+}
+
+async function greyifyLogosIn(root: HTMLElement): Promise<void> {
+  const imgs = Array.from(root.querySelectorAll('img')) as HTMLImageElement[];
+  const targets = imgs.filter((img) => {
+    const src = img.getAttribute('src') || '';
+    return LOGO_MATCHERS.some((m) => src.includes(m));
+  });
+  await Promise.all(targets.map((img) => greyifyImageElement(img)));
+}
+
 async function canvasToPdfBlob(canvas: HTMLCanvasElement): Promise<Blob> {
   const pdf = new jsPDF({ unit: 'pt', format: 'letter' });
   const pageWidth = pdf.internal.pageSize.getWidth(); // 612pt
@@ -87,7 +151,8 @@ export async function createPdfFromPreview(
 
     const PAGE_W = 816;
     const PAGE_H = 1056;
-
+    
+    await greyifyLogosIn(liveEl);
     // Capture the entire element into a single high-res canvas, then slice into pages
     const fullCanvas = await html2canvas(liveEl, {
       scale: 3,
@@ -322,7 +387,8 @@ export async function createPdfFromPreview(
 
   const PAGE_W = 816;
   const PAGE_H = 1056;
-
+  
+  await greyifyLogosIn(el);
   // Capture the entire element once, then slice into PDF pages
   const fullCanvas = await html2canvas(el, {
     scale: 3,
