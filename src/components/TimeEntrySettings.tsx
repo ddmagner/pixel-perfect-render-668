@@ -259,7 +259,10 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
                       </span>}
                   </div>}
                 <div className="flex gap-3 w-[56px] justify-end">
-                  <button onClick={() => setEditingTask(task)} className="text-gray-400 hover:text-[#09121F] flex items-center justify-center w-4 h-4">
+                  <button onClick={() => {
+                    console.log('Edit clicked for task:', task);
+                    setEditingTask(task);
+                  }} className="text-gray-400 hover:text-[#09121F] flex items-center justify-center w-4 h-4">
                     <Edit3 size={16} />
                   </button>
                   <button onClick={() => handleDeleteTask(task.id)} className="text-gray-400 hover:text-red-500 flex items-center justify-center w-4 h-4">
@@ -347,7 +350,10 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
                       </span>}
                   </div>}
                 <div className="flex gap-3 w-[56px] justify-end">
-                  <button onClick={() => setEditingTax(tax)} className="text-gray-400 hover:text-[#09121F] flex items-center justify-center w-4 h-4">
+                  <button onClick={() => {
+                    console.log('Edit clicked for tax:', tax);
+                    setEditingTax(tax);
+                  }} className="text-gray-400 hover:text-[#09121F] flex items-center justify-center w-4 h-4">
                     <Edit3 size={16} />
                   </button>
                   <button onClick={() => handleDeleteTax(tax.id)} className="text-gray-400 hover:text-red-500 flex items-center justify-center w-4 h-4">
