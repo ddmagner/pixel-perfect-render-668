@@ -237,12 +237,15 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
               </div>
               <div className="flex items-center gap-3">
                 {settings.invoiceMode && <div className="min-w-[60px] text-right">
-{editingTask?.id === task.id ? <input type="text" value={editingTask.hourlyRate ? editingTask.hourlyRate.toFixed(2) : '0.00'} onChange={e => {
-                const value = e.target.value.replace(/[^0-9.]/g, '');
-                setEditingTask({
-                  ...editingTask,
-                  hourlyRate: parseFloat(value) || 0
-                });
+{editingTask?.id === task.id ? <input type="text" value={editingTask.hourlyRate !== undefined ? editingTask.hourlyRate.toString() : '0.00'} onChange={e => {
+                const value = e.target.value;
+                // Allow digits and one decimal point
+                if (/^\d*\.?\d{0,2}$/.test(value)) {
+                  setEditingTask({
+                    ...editingTask,
+                    hourlyRate: parseFloat(value) || 0
+                  });
+                }
               }} onKeyDown={e => {
                 if (e.key === 'Enter') {
                   handleUpdateTask(editingTask);
@@ -324,12 +327,15 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
               </div>
               <div className="flex items-center gap-3">
                 {settings.invoiceMode && <div className="min-w-[60px] text-right">
-{editingTax?.id === tax.id ? <input type="text" value={editingTax.rate ? editingTax.rate.toFixed(2) : '0.00'} onChange={e => {
-                const value = e.target.value.replace(/[^0-9.]/g, '');
-                setEditingTax({
-                  ...editingTax,
-                  rate: parseFloat(value) || 0
-                });
+{editingTax?.id === tax.id ? <input type="text" value={editingTax.rate !== undefined ? editingTax.rate.toString() : '0.00'} onChange={e => {
+                const value = e.target.value;
+                // Allow digits and one decimal point with up to 2 decimal places
+                if (/^\d*\.?\d{0,2}$/.test(value)) {
+                  setEditingTax({
+                    ...editingTax,
+                    rate: parseFloat(value) || 0
+                  });
+                }
               }} onKeyDown={e => {
                 if (e.key === 'Enter') {
                   handleUpdateTax(editingTax);
