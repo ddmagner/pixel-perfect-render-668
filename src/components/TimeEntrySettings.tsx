@@ -303,93 +303,95 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
       </section>
 
       {/* Tax */}
-      <section className="px-2.5 pb-[22px]">
-        <div className="pt-5 mb-3">
-          <div className="flex justify-between items-center">
-            <h3 className="text-[#09121F] text-sm font-bold">Tax</h3>
-            {settings.invoiceMode && <div className="flex items-center gap-3">
-              <h3 className="text-[#09121F] text-sm font-bold min-w-[60px] text-right">Rate</h3>
-              <div className="flex gap-3 pl-3 w-[56px]"></div>
-            </div>}
-          </div>
-        </div>
-        <div className="border-b border-[#09121F] mb-3"></div>
-        
-        <div className="space-y-3">
-          {(settings.taxTypes || []).map(tax => <div key={tax.id} className="flex items-center justify-between min-h-[20px]">
-              <div className="flex-1 min-w-0 flex items-center">
-{editingTax?.id === tax.id ? <input type="text" value={editingTax.name} onChange={e => setEditingTax({
-              ...editingTax,
-              name: e.target.value
-            })} onKeyDown={e => {
-              if (e.key === 'Enter') {
-                handleUpdateTax(editingTax);
-              }
-              if (e.key === 'Escape') {
-                setEditingTax(null);
-              }
-            }} className="text-[#09121F] text-sm bg-transparent border-none outline-none flex-1 min-w-0 leading-5" autoFocus /> : <span className="text-[#09121F] text-sm flex-1 min-w-0 leading-5">{tax.name}</span>}
-              </div>
+      {settings.invoiceMode && (
+        <section className="px-2.5 pb-[22px]">
+          <div className="pt-5 mb-3">
+            <div className="flex justify-between items-center">
+              <h3 className="text-[#09121F] text-sm font-bold">Tax</h3>
               <div className="flex items-center gap-3">
-                {settings.invoiceMode && <div className="min-w-[60px] text-right">
-{editingTax?.id === tax.id ? <input type="text" value={editingTax.rate !== undefined ? editingTax.rate.toString() : '0.00'} onChange={e => {
-                const value = e.target.value;
-                // Allow digits and one decimal point with up to 2 decimal places
-                if (/^\d*\.?\d{0,2}$/.test(value)) {
-                  setEditingTax({
-                    ...editingTax,
-                    rate: parseFloat(value) || 0
-                  });
-                }
-              }} onKeyDown={e => {
+                <h3 className="text-[#09121F] text-sm font-bold min-w-[60px] text-right">Rate</h3>
+                <div className="flex gap-3 pl-3 w-[56px]"></div>
+              </div>
+            </div>
+          </div>
+          <div className="border-b border-[#09121F] mb-3"></div>
+          
+          <div className="space-y-3">
+            {(settings.taxTypes || []).map(tax => <div key={tax.id} className="flex items-center justify-between min-h-[20px]">
+                <div className="flex-1 min-w-0 flex items-center">
+  {editingTax?.id === tax.id ? <input type="text" value={editingTax.name} onChange={e => setEditingTax({
+                ...editingTax,
+                name: e.target.value
+              })} onKeyDown={e => {
                 if (e.key === 'Enter') {
                   handleUpdateTax(editingTax);
                 }
                 if (e.key === 'Escape') {
                   setEditingTax(null);
                 }
-              }} className="text-[#09121F] text-sm bg-transparent border-none outline-none w-full text-right leading-5" onFocus={e => e.target.select()} required /> : <span className="text-[#09121F] text-sm leading-5">
-                        {tax.rate ? `${tax.rate}%` : '0.00%'}
-                      </span>}
-                  </div>}
-                <div className="flex gap-3 w-[56px] justify-end">
-                  <button onClick={() => {
-                    console.log('Edit clicked for tax:', tax);
-                    setEditingTax(tax);
-                  }} className="text-gray-400 hover:text-[#09121F] flex items-center justify-center w-4 h-4">
-                    <Edit3 size={16} />
-                  </button>
-                  <button onClick={() => handleDeleteTax(tax.id)} className="text-gray-400 hover:text-red-500 flex items-center justify-center w-4 h-4">
-                    <Trash2 size={16} />
+              }} className="text-[#09121F] text-sm bg-transparent border-none outline-none flex-1 min-w-0 leading-5" autoFocus /> : <span className="text-[#09121F] text-sm flex-1 min-w-0 leading-5">{tax.name}</span>}
+                </div>
+                <div className="flex items-center gap-3">
+                  <div className="min-w-[60px] text-right">
+  {editingTax?.id === tax.id ? <input type="text" value={editingTax.rate !== undefined ? editingTax.rate.toString() : '0.00'} onChange={e => {
+                  const value = e.target.value;
+                  // Allow digits and one decimal point with up to 2 decimal places
+                  if (/^\d*\.?\d{0,2}$/.test(value)) {
+                    setEditingTax({
+                      ...editingTax,
+                      rate: parseFloat(value) || 0
+                    });
+                  }
+                }} onKeyDown={e => {
+                  if (e.key === 'Enter') {
+                    handleUpdateTax(editingTax);
+                  }
+                  if (e.key === 'Escape') {
+                    setEditingTax(null);
+                  }
+                }} className="text-[#09121F] text-sm bg-transparent border-none outline-none w-full text-right leading-5" onFocus={e => e.target.select()} required /> : <span className="text-[#09121F] text-sm leading-5">
+                          {tax.rate ? `${tax.rate}%` : '0.00%'}
+                        </span>}
+                    </div>
+                  <div className="flex gap-3 w-[56px] justify-end">
+                    <button onClick={() => {
+                      console.log('Edit clicked for tax:', tax);
+                      setEditingTax(tax);
+                    }} className="text-gray-400 hover:text-[#09121F] flex items-center justify-center w-4 h-4">
+                      <Edit3 size={16} />
+                    </button>
+                    <button onClick={() => handleDeleteTax(tax.id)} className="text-gray-400 hover:text-red-500 flex items-center justify-center w-4 h-4">
+                      <Trash2 size={16} />
+                    </button>
+                  </div>
+                </div>
+              </div>)}
+            
+            <div className="flex items-center justify-between">
+              <input type="text" placeholder="Add tax type" value={newTaxName} onChange={e => setNewTaxName(e.target.value)} className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none flex-1 min-w-0" />
+              <div className="flex items-center gap-3">
+                <input type="text" placeholder="0.00%" value={newTaxRate ? `${newTaxRate}%` : ''} onChange={e => {
+                const input = e.target.value;
+                // Remove all non-numeric characters except decimal point
+                const numericValue = input.replace(/[^0-9.]/g, '');
+
+                // Ensure only one decimal point
+                const parts = numericValue.split('.');
+                const formattedValue = parts.length > 2 ? parts[0] + '.' + parts.slice(1).join('') : numericValue;
+
+                // Limit to 2 decimal places
+                const finalValue = formattedValue.includes('.') ? formattedValue.substring(0, formattedValue.indexOf('.') + 3) : formattedValue;
+                setNewTaxRate(finalValue);
+              }} className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none w-20 text-right" />
+                <div className="flex pl-8 justify-end w-[56px]">
+                  <button onClick={handleAddTax} className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-[#09121F]/80 transition-colors">
+                    <Plus className="h-2.5 w-2.5" strokeWidth={3} />
                   </button>
                 </div>
               </div>
-            </div>)}
-          
-          <div className="flex items-center justify-between">
-            <input type="text" placeholder="Add tax type" value={newTaxName} onChange={e => setNewTaxName(e.target.value)} className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none flex-1 min-w-0" />
-            <div className="flex items-center gap-3">
-              {settings.invoiceMode && <input type="text" placeholder="0.00%" value={newTaxRate ? `${newTaxRate}%` : ''} onChange={e => {
-              const input = e.target.value;
-              // Remove all non-numeric characters except decimal point
-              const numericValue = input.replace(/[^0-9.]/g, '');
-
-              // Ensure only one decimal point
-              const parts = numericValue.split('.');
-              const formattedValue = parts.length > 2 ? parts[0] + '.' + parts.slice(1).join('') : numericValue;
-
-              // Limit to 2 decimal places
-              const finalValue = formattedValue.includes('.') ? formattedValue.substring(0, formattedValue.indexOf('.') + 3) : formattedValue;
-              setNewTaxRate(finalValue);
-            }} className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none w-20 text-right" />}
-              <div className="flex pl-8 justify-end w-[56px]">
-                <button onClick={handleAddTax} className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-[#09121F]/80 transition-colors">
-                  <Plus className="h-2.5 w-2.5" strokeWidth={3} />
-                </button>
-              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
     </div>;
 };
