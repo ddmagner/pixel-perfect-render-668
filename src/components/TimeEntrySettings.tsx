@@ -1,16 +1,16 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useApp } from '@/context/AppContext';
 import { TaskType, TaxType, Project, Client } from '@/types';
 import { Edit3, Trash2, Plus } from 'lucide-react';
 import { formatCurrency } from '@/lib/utils';
 interface TimeEntrySettingsProps {
   highlightSection?: string | null;
+  onClientDetailsOpen?: (client: Client) => void;
 }
 export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
-  highlightSection
+  highlightSection,
+  onClientDetailsOpen
 }) => {
-  const navigate = useNavigate();
   const {
     settings,
     updateSettings
@@ -137,7 +137,10 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
             }
           }} className="text-[#09121F] text-sm bg-transparent border-none outline-none flex-1 min-w-0" autoFocus /> : <span className="text-[#09121F] text-sm flex-1 min-w-0">{client.name}</span>}
               <div className="flex items-center gap-3">
-                <button onClick={() => navigate(`/client-address?clientId=${client.id}`)} className="text-[#BFBFBF] text-right text-[15px] font-normal leading-5 underline decoration-solid decoration-auto underline-offset-auto">
+                <button 
+                  onClick={() => onClientDetailsOpen?.(client)} 
+                  className="text-[#BFBFBF] text-right text-[15px] font-normal leading-5 underline decoration-solid decoration-auto underline-offset-auto"
+                >
                   +/Edit Address
                 </button>
                 <button onClick={() => setEditingClient(client)} className="text-gray-400 hover:text-[#09121F]">

@@ -5,9 +5,11 @@ import { UserProfile } from './UserProfile';
 import { ColorCustomization } from './ColorCustomization';
 import { TimeArchive } from './TimeArchive';
 import { InvoicePreview } from './InvoicePreview';
+import { ClientDetailsDrawer } from './ClientDetailsDrawer';
 import { useApp } from '@/context/AppContext';
 import { useAuth } from '@/hooks/useAuth';
 import { Clock, LogOut, FileText } from 'lucide-react';
+import type { Client } from '@/types';
 interface SettingsProps {
   highlightSection?: string | null;
 }
@@ -24,6 +26,13 @@ export const Settings: React.FC<SettingsProps> = ({
   } = useApp();
   const [showColorOverlay, setShowColorOverlay] = useState(false);
   const [showInvoicePreview, setShowInvoicePreview] = useState(false);
+  const [showClientDetails, setShowClientDetails] = useState(false);
+  const [selectedClient, setSelectedClient] = useState<Client | null>(null);
+
+  const handleClientDetailsOpen = (client: Client) => {
+    setSelectedClient(client);
+    setShowClientDetails(true);
+  };
   const handleSignOut = async () => {
     await signOut();
     navigate('/auth');
@@ -59,7 +68,7 @@ export const Settings: React.FC<SettingsProps> = ({
 
       {/* Settings Content */}
       <div className="flex-1 overflow-y-auto overflow-x-hidden w-full">
-        <TimeEntrySettings highlightSection={highlightSection} />
+        <TimeEntrySettings highlightSection={highlightSection} onClientDetailsOpen={handleClientDetailsOpen} />
         
         {/* User Profile Section */}
         <div className="w-full h-[10px] bg-[#E5E5E5]" />
@@ -129,5 +138,15 @@ export const Settings: React.FC<SettingsProps> = ({
 
       {/* Invoice Preview Overlay */}
       {showInvoicePreview && <InvoicePreview settings={settings} onClose={() => setShowInvoicePreview(false)} />}
+
+      {/* Client Details Drawer */}
+      <ClientDetailsDrawer 
+        isOpen={showClientDetails} 
+        onClose={() => {
+          setShowClientDetails(false);
+          setSelectedClient(null);
+        }} 
+        client={selectedClient} 
+      />
     </div>;
 };
