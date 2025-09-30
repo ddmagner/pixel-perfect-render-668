@@ -104,7 +104,7 @@ export const ClientDetailsDrawer: React.FC<ClientDetailsDrawerProps> = ({
 
   return (
     <Drawer open={isOpen} onOpenChange={onClose}>
-      <DrawerContent className="mx-2 border-none bg-background rounded-t-[20px] max-w-sm mx-auto">
+      <DrawerContent className="mx-2 border-none bg-background rounded-t-[20px] max-w-sm mx-auto data-[state=open]:animate-slide-up-in data-[state=closed]:animate-slide-down-out">
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4">
           <div className="flex items-baseline gap-2">
