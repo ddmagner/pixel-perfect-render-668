@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Drawer, DrawerContent } from '@/components/ui/drawer';
 import { Button } from '@/components/ui/button';
@@ -35,6 +35,17 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
   const [fileName, setFileName] = useState(`${settings.userProfile.name || 'User'} ${viewMode === 'invoice' ? 'Invoice' : 'Time Card'} ${format(new Date(), 'yyyy-MM-dd')}`);
   const [isExporting, setIsExporting] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
+  const [autoPrint, setAutoPrint] = useState(false);
+
+  useEffect(() => {
+    if (showPreview && autoPrint) {
+      const t = setTimeout(() => {
+        try { window.print(); } catch {}
+        finally { setAutoPrint(false); }
+      }, 400);
+      return () => clearTimeout(t);
+    }
+  }, [showPreview, autoPrint]);
 
   // Use selected entries if available, otherwise use all time entries
   const entriesToUse = selectedEntries && selectedEntries.length > 0 ? selectedEntries : timeEntries;
@@ -51,6 +62,14 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
       return;
     }
 
+    // If printing a PDF, show the on-screen document preview and trigger device print
+    if (exportMethod === 'print' && isPdfFormat) {
+      setShowPreview(true);
+      setAutoPrint(true);
+      onClose();
+      return;
+    }
+
     // Store current tab before export
     try {
       localStorage.setItem('activeTab', 'time-tally');
@@ -59,7 +78,7 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
     }
 
     setIsExporting(true);
-    
+
     try {
       let blob: Blob;
       let fileExtension: string;
@@ -183,44 +202,7 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
 
       if (exportMethod === 'print') {
         if (isPdfFormat) {
-          // Create iframe for printing
-          const iframe = document.createElement('iframe');
-          iframe.style.display = 'none';
-          iframe.src = url;
-          document.body.appendChild(iframe);
-          
-          iframe.onload = () => {
-            try {
-              // Focus on iframe and trigger print
-              iframe.contentWindow?.focus();
-              iframe.contentWindow?.print();
-              
-              // Clean up after a delay
-              setTimeout(() => {
-                document.body.removeChild(iframe);
-              }, 1000);
-            } catch (error) {
-              // Fallback: open in new window for print
-              document.body.removeChild(iframe);
-              const printWindow = window.open(url, '_blank');
-              if (printWindow) {
-                printWindow.onload = () => {
-                  printWindow.print();
-                };
-              }
-            }
-          };
-          
-          iframe.onerror = () => {
-            // Fallback: open in new window for print
-            document.body.removeChild(iframe);
-            const printWindow = window.open(url, '_blank');
-            if (printWindow) {
-              printWindow.onload = () => {
-                printWindow.print();
-              };
-            }
-          };
+          // Printing a PDF is handled above by showing the document preview and calling window.print()
         } else {
           const a = document.createElement('a');
           a.href = url;
@@ -247,7 +229,7 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
     return (
       <InvoicePreview 
         selectedEntries={entriesToUse}
-        settings={settings}
+        settings={{ ...settings, invoiceMode: viewMode === 'invoice' }}
         onClose={() => setShowPreview(false)}
       />
     );
