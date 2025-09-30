@@ -223,12 +223,10 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
         <div className="space-y-3">
           {settings.taskTypes.map(task => <div key={task.id} className="flex items-center justify-between min-h-[20px]">
               <div className="flex-1 min-w-0 flex items-center">
-                {editingTask?.id === task.id ? <input type="text" value={editingTask.name} onChange={e => setEditingTask({
+{editingTask?.id === task.id ? <input type="text" value={editingTask.name} onChange={e => setEditingTask({
               ...editingTask,
               name: e.target.value
-            })} onBlur={() => {
-              handleUpdateTask(editingTask);
-            }} onKeyDown={e => {
+            })} onKeyDown={e => {
               if (e.key === 'Enter') {
                 handleUpdateTask(editingTask);
               }
@@ -239,14 +237,12 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
               </div>
               <div className="flex items-center gap-3">
                 {settings.invoiceMode && <div className="min-w-[60px] text-right">
-                    {editingTask?.id === task.id ? <input type="text" value={editingTask.hourlyRate?.toString() || ''} onChange={e => {
+{editingTask?.id === task.id ? <input type="text" value={editingTask.hourlyRate?.toString() || ''} onChange={e => {
                 const value = e.target.value.replace(/[^0-9.]/g, '');
                 setEditingTask({
                   ...editingTask,
                   hourlyRate: parseFloat(value) || 0
                 });
-              }} onBlur={() => {
-                handleUpdateTask(editingTask);
               }} onKeyDown={e => {
                 if (e.key === 'Enter') {
                   handleUpdateTask(editingTask);
@@ -314,12 +310,10 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
         <div className="space-y-3">
           {(settings.taxTypes || []).map(tax => <div key={tax.id} className="flex items-center justify-between min-h-[20px]">
               <div className="flex-1 min-w-0 flex items-center">
-                {editingTax?.id === tax.id ? <input type="text" value={editingTax.name} onChange={e => setEditingTax({
+{editingTax?.id === tax.id ? <input type="text" value={editingTax.name} onChange={e => setEditingTax({
               ...editingTax,
               name: e.target.value
-            })} onBlur={() => {
-              handleUpdateTax(editingTax);
-            }} onKeyDown={e => {
+            })} onKeyDown={e => {
               if (e.key === 'Enter') {
                 handleUpdateTax(editingTax);
               }
@@ -330,14 +324,12 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
               </div>
               <div className="flex items-center gap-3">
                 {settings.invoiceMode && <div className="min-w-[60px] text-right">
-                    {editingTax?.id === tax.id ? <input type="text" value={editingTax.rate?.toString() || ''} onChange={e => {
+{editingTax?.id === tax.id ? <input type="text" value={editingTax.rate?.toString() || ''} onChange={e => {
                 const value = e.target.value.replace(/[^0-9.]/g, '');
                 setEditingTax({
                   ...editingTax,
                   rate: parseFloat(value) || 0
                 });
-              }} onBlur={() => {
-                handleUpdateTax(editingTax);
               }} onKeyDown={e => {
                 if (e.key === 'Enter') {
                   handleUpdateTax(editingTax);
