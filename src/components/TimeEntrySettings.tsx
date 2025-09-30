@@ -393,5 +393,8 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
           </div>
         </section>
       )}
+      
+      {/* Maintain padding when Tax section is hidden */}
+      {!settings.invoiceMode && <div className="pb-[22px]" />}
     </div>;
 };
