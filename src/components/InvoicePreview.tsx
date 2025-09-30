@@ -158,8 +158,8 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
   return (
     <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
       <div className="bg-white w-full max-w-4xl h-full max-h-[90vh] overflow-auto rounded-lg shadow-2xl">
-        {/* Header Controls */}
-        <div className="sticky top-0 bg-white border-b border-gray-200 p-4 flex justify-between items-center">
+        {/* Header Controls - Hidden when printing */}
+        <div className="sticky top-0 bg-white border-b border-gray-200 p-4 flex justify-between items-center print:hidden">
           <h2 className="text-xl font-bold text-gray-900">
             {settings.invoiceMode ? 'Invoice Preview (Letter Size)' : 'Time Card Preview (Letter Size)'}
           </h2>
