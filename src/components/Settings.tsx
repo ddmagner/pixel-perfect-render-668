@@ -144,7 +144,6 @@ export const Settings: React.FC<SettingsProps> = ({
         isOpen={showClientDetails} 
         onClose={() => {
           setShowClientDetails(false);
-          setSelectedClient(null);
         }} 
         client={selectedClient} 
       />

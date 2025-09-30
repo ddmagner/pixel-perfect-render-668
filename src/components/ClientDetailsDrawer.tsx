@@ -26,21 +26,29 @@ export const ClientDetailsDrawer: React.FC<ClientDetailsDrawerProps> = ({
   const [state, setState] = useState(client?.state || '');
   const [zipCode, setZipCode] = useState(client?.zip_code || '');
 
-  // Update form when client changes
+  // Keep a snapshot of the client while the drawer animates out
+  const [activeClient, setActiveClient] = useState<Client | null>(client);
   useEffect(() => {
-    if (client) {
-      setAttention(client.attention || '');
-      setAddress(client.address || '');
-      setCity(client.city || '');
-      setState(client.state || '');
-      setZipCode(client.zip_code || '');
+    if (isOpen && client) {
+      setActiveClient(client);
     }
-  }, [client]);
+  }, [isOpen, client]);
+
+  // Update form when active client changes
+  useEffect(() => {
+    if (activeClient) {
+      setAttention(activeClient.attention || '');
+      setAddress(activeClient.address || '');
+      setCity(activeClient.city || '');
+      setState(activeClient.state || '');
+      setZipCode(activeClient.zip_code || '');
+    }
+  }, [activeClient]);
 
   const handleSave = async () => {
-    if (client) {
+    if (activeClient) {
       const updatedClients = settings.clients.map(c => 
-        c.id === client.id 
+        c.id === activeClient.id 
           ? { 
               ...c, 
               attention,
@@ -98,17 +106,14 @@ export const ClientDetailsDrawer: React.FC<ClientDetailsDrawerProps> = ({
     }
   }, [zipCode]);
 
-  if (!client) {
-    return null;
-  }
 
   return (
-    <Drawer open={isOpen} onOpenChange={onClose}>
+    <Drawer open={isOpen} onOpenChange={(open) => { if (!open) onClose(); }}>
       <DrawerContent className="mx-2 border-none bg-background rounded-t-[20px] max-w-sm mx-auto data-[state=open]:animate-slide-up-in data-[state=closed]:animate-slide-down-out">
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-4">
           <div className="flex items-baseline gap-2">
-            <h1 className="text-[#09121F] text-xl font-bold">{client.name}</h1>
+            <h1 className="text-[#09121F] text-xl font-bold">{activeClient?.name ?? ''}</h1>
             <p className="text-[#09121F] text-sm">contact details</p>
           </div>
           <Button variant="ghost" size="icon" onClick={onClose} className="h-8 w-8">
