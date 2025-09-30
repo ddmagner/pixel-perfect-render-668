@@ -146,16 +146,17 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
 
       if (exportMethod === 'email') {
         try {
-          // Try native sharing first (mobile)
+          // For mobile devices, use native sharing
           if (await Share.canShare()) {
             await Share.share({
-              title: finalFileName,
-              text: `Time ${viewMode} report`,
+              title: `Time ${viewMode} Report`,
+              text: `Please find attached the time ${viewMode} report.`,
               url: url,
-              files: [url]
+              dialogTitle: 'Share Report'
             });
           } else {
-            // For web/desktop, create a download link and open email client
+            // For web browsers, we can't auto-attach files to email
+            // So we download the file and provide instructions
             const a = document.createElement('a');
             a.href = url;
             a.download = finalFileName;
@@ -163,14 +164,12 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
             a.click();
             document.body.removeChild(a);
             
-            // Open email client with pre-filled subject and body
-            const subject = encodeURIComponent(`Time ${viewMode} Report`);
-            const body = encodeURIComponent(`Please find attached the time ${viewMode} report.\n\nThe file "${finalFileName}" has been downloaded to your device. Please attach it to this email before sending.`);
-            window.open(`mailto:?subject=${subject}&body=${body}`, '_blank');
+            // Show user-friendly message instead of opening empty email
+            alert(`File "${finalFileName}" has been downloaded to your device.\n\nDue to browser security restrictions, files cannot be automatically attached to emails. Please manually attach the downloaded file to your email.`);
           }
         } catch (error) {
           console.error('Error sharing via email:', error);
-          // Fallback to download + mailto
+          // Fallback to download with instructions
           const a = document.createElement('a');
           a.href = url;
           a.download = finalFileName;
@@ -178,9 +177,7 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
           a.click();
           document.body.removeChild(a);
           
-          const subject = encodeURIComponent(`Time ${viewMode} Report`);
-          const body = encodeURIComponent(`Please find attached the time ${viewMode} report.`);
-          window.open(`mailto:?subject=${subject}&body=${body}`, '_blank');
+          alert(`File "${finalFileName}" has been downloaded.\n\nPlease manually attach this file to your email.`);
         }
       }
 
