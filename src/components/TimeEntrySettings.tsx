@@ -25,6 +25,8 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
   const [newTaxRate, setNewTaxRate] = useState('');
   const [newProjectName, setNewProjectName] = useState('');
   const [newClientName, setNewClientName] = useState('');
+  const [editingTaskRateInput, setEditingTaskRateInput] = useState<string>('');
+  const formatCurrencyInput = (n?: number) => `$${(n ?? 0).toFixed(2)}`;
   const handleAddTask = () => {
     if (!newTaskName.trim()) return;
     const newTask: TaskType = {
@@ -237,21 +239,23 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
               </div>
               <div className="flex items-center gap-3">
                 {settings.invoiceMode && <div className="min-w-[60px] text-right">
-{editingTask?.id === task.id ? <input type="text" value={editingTask.hourlyRate !== undefined ? editingTask.hourlyRate.toString() : '0.00'} onChange={e => {
-                const value = e.target.value;
-                // Allow digits and one decimal point
-                if (/^\d*\.?\d{0,2}$/.test(value)) {
-                  setEditingTask({
-                    ...editingTask,
-                    hourlyRate: parseFloat(value) || 0
-                  });
-                }
+{editingTask?.id === task.id ? <input type="text" value={editingTaskRateInput !== '' ? editingTaskRateInput : formatCurrencyInput(editingTask.hourlyRate)} onChange={e => {
+                const raw = e.target.value;
+                const digits = raw.replace(/\D/g, '');
+                const amount = digits ? (parseInt(digits, 10) / 100) : 0;
+                setEditingTaskRateInput(`$${amount.toFixed(2)}`);
+                setEditingTask({
+                  ...editingTask,
+                  hourlyRate: amount
+                });
               }} onKeyDown={e => {
                 if (e.key === 'Enter') {
                   handleUpdateTask(editingTask);
+                  setEditingTaskRateInput('');
                 }
                 if (e.key === 'Escape') {
                   setEditingTask(null);
+                  setEditingTaskRateInput('');
                 }
               }} className="text-[#09121F] text-sm bg-transparent border-none outline-none w-full text-right leading-5" onFocus={e => e.target.select()} required /> : <span className="text-[#09121F] text-sm leading-5">
                         {formatCurrency(task.hourlyRate || 0)}
@@ -261,6 +265,7 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
                   <button onClick={() => {
                     console.log('Edit clicked for task:', task);
                     setEditingTask(task);
+                    setEditingTaskRateInput(formatCurrencyInput(task.hourlyRate));
                   }} className="text-gray-400 hover:text-[#09121F] flex items-center justify-center w-4 h-4">
                     <Edit3 size={16} />
                   </button>
