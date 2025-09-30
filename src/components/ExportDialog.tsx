@@ -145,13 +145,39 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
       }
 
       if (exportMethod === 'email') {
-        if (await Share.canShare()) {
-          await Share.share({
-            title: finalFileName,
-            text: `Time ${viewMode} report`,
-            url: url
-          });
-        } else {
+        try {
+          // Try native sharing first (mobile)
+          if (await Share.canShare()) {
+            await Share.share({
+              title: finalFileName,
+              text: `Time ${viewMode} report`,
+              url: url,
+              files: [url]
+            });
+          } else {
+            // For web/desktop, create a download link and open email client
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = finalFileName;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            
+            // Open email client with pre-filled subject and body
+            const subject = encodeURIComponent(`Time ${viewMode} Report`);
+            const body = encodeURIComponent(`Please find attached the time ${viewMode} report.\n\nThe file "${finalFileName}" has been downloaded to your device. Please attach it to this email before sending.`);
+            window.open(`mailto:?subject=${subject}&body=${body}`, '_blank');
+          }
+        } catch (error) {
+          console.error('Error sharing via email:', error);
+          // Fallback to download + mailto
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = finalFileName;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          
           const subject = encodeURIComponent(`Time ${viewMode} Report`);
           const body = encodeURIComponent(`Please find attached the time ${viewMode} report.`);
           window.open(`mailto:?subject=${subject}&body=${body}`, '_blank');
@@ -160,12 +186,44 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
 
       if (exportMethod === 'print') {
         if (isPdfFormat) {
-          const newWindow = window.open(url, '_blank');
-          if (newWindow) {
-            newWindow.onload = () => {
-              newWindow.print();
-            };
-          }
+          // Create iframe for printing
+          const iframe = document.createElement('iframe');
+          iframe.style.display = 'none';
+          iframe.src = url;
+          document.body.appendChild(iframe);
+          
+          iframe.onload = () => {
+            try {
+              // Focus on iframe and trigger print
+              iframe.contentWindow?.focus();
+              iframe.contentWindow?.print();
+              
+              // Clean up after a delay
+              setTimeout(() => {
+                document.body.removeChild(iframe);
+              }, 1000);
+            } catch (error) {
+              // Fallback: open in new window for print
+              document.body.removeChild(iframe);
+              const printWindow = window.open(url, '_blank');
+              if (printWindow) {
+                printWindow.onload = () => {
+                  printWindow.print();
+                };
+              }
+            }
+          };
+          
+          iframe.onerror = () => {
+            // Fallback: open in new window for print
+            document.body.removeChild(iframe);
+            const printWindow = window.open(url, '_blank');
+            if (printWindow) {
+              printWindow.onload = () => {
+                printWindow.print();
+              };
+            }
+          };
         } else {
           const a = document.createElement('a');
           a.href = url;
