@@ -26,7 +26,7 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
   const [newProjectName, setNewProjectName] = useState('');
   const [newClientName, setNewClientName] = useState('');
   const [editingTaskRateInput, setEditingTaskRateInput] = useState<string>('');
-  const formatCurrencyInput = (n?: number) => `$${(n ?? 0).toFixed(2)}`;
+  const formatCurrencyInput = (n?: number) => `$${(n ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   const handleAddTask = () => {
     if (!newTaskName.trim()) return;
     const newTask: TaskType = {
@@ -246,7 +246,7 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
                 const raw = e.target.value;
                 const digits = raw.replace(/\D/g, '');
                 const amount = digits ? (parseInt(digits, 10) / 100) : 0;
-                setEditingTaskRateInput(`$${amount.toFixed(2)}`);
+                setEditingTaskRateInput(`$${amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`);
                 setEditingTask({
                   ...editingTask,
                   hourlyRate: amount
