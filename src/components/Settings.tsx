@@ -42,7 +42,7 @@ export const Settings: React.FC<SettingsProps> = ({
       invoiceMode: !settings.invoiceMode
     });
   };
-  return <div className="flex flex-col h-full w-full bg-white overflow-x-hidden">
+  return <div className="flex flex-col w-full bg-white overflow-x-hidden">
       {/* Mode Toggle */}
       <div className="flex justify-center items-center w-full px-2.5 py-4">
         <div className="flex items-center gap-4">
