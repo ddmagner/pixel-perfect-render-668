@@ -116,7 +116,7 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
         <div className="border-b border-[#09121F] mb-3"></div>
         
         <div className="space-y-3">
-          {settings.clients.map(client => <div key={client.id} className="flex items-center justify-between">
+          {[...settings.clients].sort((a, b) => a.name.localeCompare(b.name)).map(client => <div key={client.id} className="flex items-center justify-between">
               {editingClient?.id === client.id ? <input type="text" value={editingClient.name} onChange={e => setEditingClient({
             ...editingClient,
             name: e.target.value
@@ -169,7 +169,7 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
         <div className="border-b border-[#09121F] mb-3"></div>
         
         <div className="space-y-3">
-          {settings.projects.map(project => <div key={project.id} className="flex items-center justify-between">
+          {[...settings.projects].sort((a, b) => a.name.localeCompare(b.name)).map(project => <div key={project.id} className="flex items-center justify-between">
               {editingProject?.id === project.id ? <input type="text" value={editingProject.name} onChange={e => setEditingProject({
             ...editingProject,
             name: e.target.value
@@ -226,7 +226,7 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
         <div className="border-b border-[#09121F] mb-3"></div>
         
         <div className="space-y-3">
-          {settings.taskTypes.map(task => <div key={task.id} className="flex items-center justify-between min-h-[20px]">
+          {[...settings.taskTypes].sort((a, b) => a.name.localeCompare(b.name)).map(task => <div key={task.id} className="flex items-center justify-between min-h-[20px]">
               <div className="flex-1 min-w-0 flex items-center">
 {editingTask?.id === task.id ? <input type="text" value={editingTask.name} onChange={e => setEditingTask({
               ...editingTask,
