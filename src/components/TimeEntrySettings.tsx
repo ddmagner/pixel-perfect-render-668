@@ -30,7 +30,7 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
   const handleAddTask = () => {
     if (!newTaskName.trim()) return;
     const newTask: TaskType = {
-      id: Date.now().toString(),
+      id: crypto.randomUUID(),
       name: newTaskName.trim(),
       hourlyRate: newTaskRate ? parseFloat(newTaskRate.replace(/[^0-9.]/g, '')) : undefined
     };
@@ -54,7 +54,7 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
   const handleAddTax = () => {
     if (!newTaxName.trim()) return;
     const newTax: TaxType = {
-      id: Date.now().toString(),
+      id: crypto.randomUUID(),
       name: newTaxName.trim(),
       rate: newTaxRate ? parseFloat(newTaxRate.replace(/[^0-9.]/g, '')) : undefined
     };
@@ -78,7 +78,7 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
   const handleAddProject = () => {
     if (!newProjectName.trim()) return;
     const newProject: Project = {
-      id: Date.now().toString(),
+      id: crypto.randomUUID(),
       name: newProjectName.trim()
     };
     updateSettings({
@@ -94,7 +94,7 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
   const handleAddClient = () => {
     if (!newClientName.trim()) return;
     const newClient: Client = {
-      id: Date.now().toString(),
+      id: crypto.randomUUID(),
       name: newClientName.trim()
     };
     updateSettings({
