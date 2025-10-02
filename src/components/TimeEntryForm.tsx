@@ -139,9 +139,9 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
   const handleInputChange = (field: keyof TimeEntryData, value: string) => {
     let formattedValue = value;
     
-    // Apply initial capitalization for task, project, and client fields
+    // Apply initial capitalization for task, project, and client fields (without trimming during input)
     if (field === 'task' || field === 'project' || field === 'client') {
-      formattedValue = value.trim().replace(/\b\w/g, char => char.toUpperCase());
+      formattedValue = value.replace(/\b\w/g, char => char.toUpperCase());
     }
     
     setFormData(prev => ({
