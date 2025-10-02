@@ -62,7 +62,7 @@ export const Settings: React.FC<SettingsProps> = ({
       <div className="w-full px-2.5 mb-6"><div className="h-px bg-[#09121F]" /></div>
 
       {/* Settings Content */}
-      <div className="flex-1 overflow-y-auto overflow-x-hidden w-full">
+      <div className="w-full">
         {/* Header */}
         <div className="flex items-baseline justify-between px-2.5 pt-0.5 pb-1">
           <h1 className="text-[#09121F] text-[28px] font-bold leading-8">Time In settings</h1>

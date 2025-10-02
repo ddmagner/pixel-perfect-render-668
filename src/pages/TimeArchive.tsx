@@ -363,7 +363,7 @@ export const TimeArchivePage: React.FC = () => {
           </div>
 
           {/* Content */}
-          <div className="flex-1 overflow-y-auto w-full px-2.5">
+          <div className="w-full px-2.5">
             {archivedEntries.length === 0 ? (
               <div className="text-center py-8">
                 <Archive className="h-12 w-12 mx-auto mb-2 opacity-50 text-[#BFBFBF]" />
