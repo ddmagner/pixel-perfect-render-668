@@ -88,38 +88,42 @@ const Index = () => {
         href="https://fonts.googleapis.com/css2?family=Gilroy:wght@400;700;800;900&display=swap"
       />
       <div 
-        className="flex w-full max-w-sm mx-auto flex-col items-start relative bg-white overflow-x-hidden"
+        className="flex w-full max-w-sm mx-auto flex-col items-start relative bg-white h-screen overflow-hidden"
         style={{ fontFamily: 'Gilroy, sans-serif' }}
       >
-        <Navigation activeTab={activeTab} onTabChange={handleTabChange} />
+        {/* Fixed Header */}
+        <div className="sticky top-0 z-10 bg-white w-full">
+          <Navigation activeTab={activeTab} onTabChange={handleTabChange} />
+          <TabNavigation activeTab={activeTab} onTabChange={handleTabChange} />
+          <Divider />
+        </div>
         
-        <TabNavigation activeTab={activeTab} onTabChange={handleTabChange} />
-        
-        <Divider />
-        
-        {activeTab === 'enter-time' && (
-          <>
-            <RecordButton
-              onRecordStart={handleRecordStart}
-              onRecordStop={handleRecordStop}
-              isRecording={isRecording}
-              onTranscript={handleTranscript}
-              onFinalTranscript={handleFinalTranscript}
-            />
-            
-            <Divider />
-            
-            <TimeEntryForm onSubmit={handleTimeEntrySubmit} transcript={currentTranscript} finalTranscript={finalTranscript} />
-          </>
-        )}
+        {/* Scrollable Content */}
+        <div className="flex-1 overflow-y-auto w-full">
+          {activeTab === 'enter-time' && (
+            <>
+              <RecordButton
+                onRecordStart={handleRecordStart}
+                onRecordStop={handleRecordStop}
+                isRecording={isRecording}
+                onTranscript={handleTranscript}
+                onFinalTranscript={handleFinalTranscript}
+              />
+              
+              <Divider />
+              
+              <TimeEntryForm onSubmit={handleTimeEntrySubmit} transcript={currentTranscript} finalTranscript={finalTranscript} />
+            </>
+          )}
 
-        {activeTab === 'time-tally' && (
-          <TimeTally onSwitchToSettings={() => setActiveTab('settings')} />
-        )}
+          {activeTab === 'time-tally' && (
+            <TimeTally onSwitchToSettings={() => setActiveTab('settings')} />
+          )}
 
-        {activeTab === 'settings' && (
-          <Settings />
-        )}
+          {activeTab === 'settings' && (
+            <Settings />
+          )}
+        </div>
 
         {/* Home indicator */}
         <div className="flex flex-col justify-end items-start w-full">

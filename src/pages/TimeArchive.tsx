@@ -270,29 +270,32 @@ export const TimeArchivePage: React.FC = () => {
         href="https://fonts.googleapis.com/css2?family=Gilroy:wght@400;700;800;900&display=swap"
       />
       <div 
-        className="flex w-full max-w-sm mx-auto flex-col items-start relative bg-white overflow-x-hidden"
+        className="flex w-full max-w-sm mx-auto flex-col items-start relative bg-white h-screen overflow-hidden"
         style={{ fontFamily: 'Gilroy, sans-serif' }}
       >
-        <Navigation activeTab="" onTabChange={() => {}} />
-        
-        <TabNavigation activeTab="" onTabChange={() => {}} />
-        
-        <Divider />
-        
-        {/* Mode Toggle */}
-        <div className="flex justify-center items-center w-full px-2.5 pt-4 pb-1">
-          <div className="flex items-center gap-4">
-            <span className={`text-sm font-medium ${viewMode === 'timecard' ? 'text-[#09121F]' : 'text-[#BFBFBF]'}`}>
-              Time Card Mode
-            </span>
-            <button onClick={() => setViewMode(viewMode === 'timecard' ? 'invoice' : 'timecard')} className={`w-12 h-6 rounded-full transition-colors ${viewMode === 'invoice' ? 'bg-[#09121F]' : 'bg-[#BFBFBF]'}`}>
-              <div className={`w-5 h-5 bg-white rounded-full transition-transform ${viewMode === 'invoice' ? 'translate-x-6' : 'translate-x-0.5'}`} />
-            </button>
-            <span className={`text-sm font-medium ${viewMode === 'invoice' ? 'text-[#09121F]' : 'text-[#BFBFBF]'}`}>
-              Invoice Mode
-            </span>
-          </div>
+        {/* Fixed Header */}
+        <div className="sticky top-0 z-10 bg-white w-full">
+          <Navigation activeTab="" onTabChange={() => {}} />
+          <TabNavigation activeTab="" onTabChange={() => {}} />
+          <Divider />
         </div>
+        
+        {/* Scrollable Content */}
+        <div className="flex-1 overflow-y-auto w-full">
+          {/* Mode Toggle */}
+          <div className="flex justify-center items-center w-full px-2.5 pt-4 pb-1">
+            <div className="flex items-center gap-4">
+              <span className={`text-sm font-medium ${viewMode === 'timecard' ? 'text-[#09121F]' : 'text-[#BFBFBF]'}`}>
+                Time Card Mode
+              </span>
+              <button onClick={() => setViewMode(viewMode === 'timecard' ? 'invoice' : 'timecard')} className={`w-12 h-6 rounded-full transition-colors ${viewMode === 'invoice' ? 'bg-[#09121F]' : 'bg-[#BFBFBF]'}`}>
+                <div className={`w-5 h-5 bg-white rounded-full transition-transform ${viewMode === 'invoice' ? 'translate-x-6' : 'translate-x-0.5'}`} />
+              </button>
+              <span className={`text-sm font-medium ${viewMode === 'invoice' ? 'text-[#09121F]' : 'text-[#BFBFBF]'}`}>
+                Invoice Mode
+              </span>
+            </div>
+          </div>
         
         <div className="flex flex-col h-full w-full font-gilroy">
           {/* Header / Selection Toolbar */}
@@ -642,6 +645,7 @@ export const TimeArchivePage: React.FC = () => {
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
+        </div>
         </div>
         
         {/* Home indicator */}

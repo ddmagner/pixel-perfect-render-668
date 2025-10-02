@@ -16,40 +16,45 @@ const SettingsPage = () => {
   return (
     <>
       <div
-        className="flex w-full max-w-sm mx-auto flex-col items-start relative bg-white overflow-x-hidden"
+        className="flex w-full max-w-sm mx-auto flex-col items-start relative bg-white h-screen overflow-hidden"
         style={{ fontFamily: 'Gilroy, sans-serif' }}
       >
-        {/* Navigation with back button */}
-        <nav className="flex justify-center items-center self-stretch px-2.5 pt-4 pb-1 bg-white relative">
-          <button 
-            onClick={handleBack}
-            className="flex items-center gap-2 text-[#09121F] absolute left-2.5"
-            aria-label="Go back"
-          >
-            <ChevronLeft size={20} />
-            <span className="text-sm font-medium">Back</span>
-          </button>
-          <div className="flex h-3.5 justify-end items-center">
-            <div className="flex items-center gap-[9px]">
-              <div>
-                <img 
-                  src="/lovable-uploads/8829a351-d8df-4d66-829d-f34b1754bd35.png" 
-                  alt="Logo" 
-                  className="w-[14px] h-[14px]"
-                />
-              </div>
-              <div className="w-[91px] self-stretch">
-                <img 
-                  src="/lovable-uploads/21706651-e7f7-4eec-b5d7-cd8ccf2a385f.png" 
-                  alt="TIME IN Logo" 
-                  className="h-[14px] w-[91px]"
-                />
+        {/* Fixed Navigation with back button */}
+        <div className="sticky top-0 z-10 bg-white w-full">
+          <nav className="flex justify-center items-center self-stretch px-2.5 pt-4 pb-1 bg-white relative">
+            <button 
+              onClick={handleBack}
+              className="flex items-center gap-2 text-[#09121F] absolute left-2.5"
+              aria-label="Go back"
+            >
+              <ChevronLeft size={20} />
+              <span className="text-sm font-medium">Back</span>
+            </button>
+            <div className="flex h-3.5 justify-end items-center">
+              <div className="flex items-center gap-[9px]">
+                <div>
+                  <img 
+                    src="/lovable-uploads/8829a351-d8df-4d66-829d-f34b1754bd35.png" 
+                    alt="Logo" 
+                    className="w-[14px] h-[14px]"
+                  />
+                </div>
+                <div className="w-[91px] self-stretch">
+                  <img 
+                    src="/lovable-uploads/21706651-e7f7-4eec-b5d7-cd8ccf2a385f.png" 
+                    alt="TIME IN Logo" 
+                    className="h-[14px] w-[91px]"
+                  />
+                </div>
               </div>
             </div>
-          </div>
-        </nav>
+          </nav>
+        </div>
         
-        <Settings highlightSection={section} />
+        {/* Scrollable Content */}
+        <div className="flex-1 overflow-y-auto w-full">
+          <Settings highlightSection={section} />
+        </div>
         
         {/* Home indicator */}
         <div className="flex flex-col justify-end items-start w-full">
