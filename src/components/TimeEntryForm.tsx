@@ -141,7 +141,7 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
     
     // Apply initial capitalization for task, project, and client fields
     if (field === 'task' || field === 'project' || field === 'client') {
-      formattedValue = value.replace(/\b\w/g, char => char.toUpperCase());
+      formattedValue = value.trim().replace(/\b\w/g, char => char.toUpperCase());
     }
     
     setFormData(prev => ({

@@ -122,13 +122,13 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
             name: e.target.value
           })} onBlur={() => {
             updateSettings({
-              clients: settings.clients.map(c => c.id === editingClient.id ? editingClient : c)
+              clients: settings.clients.map(c => c.id === editingClient.id ? { ...editingClient, name: editingClient.name.trim() } : c)
             });
             setEditingClient(null);
           }} onKeyDown={e => {
             if (e.key === 'Enter') {
               updateSettings({
-                clients: settings.clients.map(c => c.id === editingClient.id ? editingClient : c)
+                clients: settings.clients.map(c => c.id === editingClient.id ? { ...editingClient, name: editingClient.name.trim() } : c)
               });
               setEditingClient(null);
             }
@@ -175,13 +175,13 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
             name: e.target.value
           })} onBlur={() => {
             updateSettings({
-              projects: settings.projects.map(p => p.id === editingProject.id ? editingProject : p)
+              projects: settings.projects.map(p => p.id === editingProject.id ? { ...editingProject, name: editingProject.name.trim() } : p)
             });
             setEditingProject(null);
           }} onKeyDown={e => {
             if (e.key === 'Enter') {
               updateSettings({
-                projects: settings.projects.map(p => p.id === editingProject.id ? editingProject : p)
+                projects: settings.projects.map(p => p.id === editingProject.id ? { ...editingProject, name: editingProject.name.trim() } : p)
               });
               setEditingProject(null);
             }
@@ -233,7 +233,7 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
               name: e.target.value
             })} onKeyDown={e => {
               if (e.key === 'Enter') {
-                handleUpdateTask(editingTask);
+                handleUpdateTask({ ...editingTask, name: editingTask.name.trim() });
               }
               if (e.key === 'Escape') {
                 setEditingTask(null);
@@ -327,7 +327,7 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
                 name: e.target.value
               })} onKeyDown={e => {
                 if (e.key === 'Enter') {
-                  handleUpdateTax(editingTax);
+                  handleUpdateTax({ ...editingTax, name: editingTax.name.trim() });
                 }
                 if (e.key === 'Escape') {
                   setEditingTax(null);
