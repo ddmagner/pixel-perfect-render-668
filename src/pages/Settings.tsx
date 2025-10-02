@@ -16,7 +16,7 @@ const SettingsPage = () => {
   return (
     <>
       <div
-        className="flex w-full max-w-sm mx-auto flex-col items-start relative bg-white h-screen overflow-y-auto"
+        className="flex w-full max-w-sm mx-auto flex-col items-start relative bg-white min-h-screen"
         style={{ fontFamily: 'Gilroy, sans-serif' }}
       >
         <nav className="flex justify-center items-center self-stretch px-2.5 pt-4 pb-1 bg-white relative">

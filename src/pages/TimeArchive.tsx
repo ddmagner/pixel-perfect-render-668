@@ -270,7 +270,7 @@ export const TimeArchivePage: React.FC = () => {
         href="https://fonts.googleapis.com/css2?family=Gilroy:wght@400;700;800;900&display=swap"
       />
       <div 
-        className="flex w-full max-w-sm mx-auto flex-col items-start relative bg-white h-screen overflow-y-auto"
+        className="flex w-full max-w-sm mx-auto flex-col items-start relative bg-white min-h-screen"
         style={{ fontFamily: 'Gilroy, sans-serif' }}
       >
         <Navigation activeTab="" onTabChange={() => {}} />
