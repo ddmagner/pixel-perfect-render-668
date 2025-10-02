@@ -5,6 +5,7 @@ import { useApp } from '@/context/AppContext';
 import { useToast } from '@/hooks/use-toast';
 import { useHaptics } from '@/hooks/useHaptics';
 import { supabase } from '@/integrations/supabase/client';
+import { AutocompleteInput } from '@/components/ui/autocomplete-input';
 interface TimeEntryData {
   duration: string;
   task: string;
@@ -269,7 +270,13 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
             </label>
           </div>
           <div className="flex items-start gap-2.5 w-full px-2.5 py-1">
-            <input id="task" type="text" placeholder="Doing what?" value={formData.task} onChange={e => handleInputChange('task', e.target.value)} className="flex-[1_0_0] text-[#09121F] text-[15px] font-normal leading-5 tracking-[0.1px] bg-transparent border-none outline-none placeholder:text-[#BFBFBF]" />
+            <AutocompleteInput
+              id="task"
+              placeholder="Doing what?"
+              value={formData.task}
+              onChange={(value) => handleInputChange('task', value)}
+              suggestions={settings.taskTypes.map(t => t.name)}
+            />
             <button 
               type="button" 
               onClick={() => handleNavigateToSettings('tasks')}
@@ -288,7 +295,13 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
             </label>
           </div>
           <div className="flex items-start gap-2.5 w-full px-2.5 py-1">
-            <input id="project" type="text" placeholder="On what?" value={formData.project} onChange={e => handleInputChange('project', e.target.value)} className="flex-[1_0_0] text-[#09121F] text-[15px] font-normal leading-5 tracking-[0.1px] bg-transparent border-none outline-none placeholder:text-[#BFBFBF]" />
+            <AutocompleteInput
+              id="project"
+              placeholder="On what?"
+              value={formData.project}
+              onChange={(value) => handleInputChange('project', value)}
+              suggestions={settings.projects.map(p => p.name)}
+            />
             <button 
               type="button" 
               onClick={() => handleNavigateToSettings('projects')}
@@ -307,7 +320,13 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
             </label>
           </div>
           <div className="flex items-start gap-2.5 w-full px-2.5 py-1">
-            <input id="client" type="text" placeholder="For who?" value={formData.client} onChange={e => handleInputChange('client', e.target.value)} className="flex-[1_0_0] text-[#09121F] text-[15px] font-normal leading-5 tracking-[0.1px] bg-transparent border-none outline-none placeholder:text-[#BFBFBF]" />
+            <AutocompleteInput
+              id="client"
+              placeholder="For who?"
+              value={formData.client}
+              onChange={(value) => handleInputChange('client', value)}
+              suggestions={settings.clients.map(c => c.name)}
+            />
             <button 
               type="button" 
               onClick={() => handleNavigateToSettings('clients')}
