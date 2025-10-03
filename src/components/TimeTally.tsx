@@ -680,7 +680,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({ onSwitchToSettings }) => {
                   
                    {/* Top Level Header */}
                    <div className="grid items-center font-bold text-[#09121F] text-sm py-2" style={{
-                     gridTemplateColumns: getRegularGridTemplate(settings.invoiceMode),
+                     gridTemplateColumns: getEntryGridTemplate(settings.invoiceMode),
                      gap: '0'
                    }}>
                     <div className="flex items-center justify-start">
@@ -739,7 +739,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({ onSwitchToSettings }) => {
                       
                        {/* Subgroup Header */}
                        <div className="grid items-center font-bold text-[#09121F] text-sm py-2" style={{
-                         gridTemplateColumns: getRegularGridTemplate(settings.invoiceMode),
+                         gridTemplateColumns: getEntryGridTemplate(settings.invoiceMode),
                          gap: '0'
                        }}>
                         <div className="flex items-center justify-start">
