@@ -379,7 +379,7 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
           </div>
         </div>
 
-        <div className="w-full px-2.5 py-1">
+        <div className="w-full px-2.5 pt-4 pb-1">
           <button 
             type="submit" 
             disabled={isProcessing}
