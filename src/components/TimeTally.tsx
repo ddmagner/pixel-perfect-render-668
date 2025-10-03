@@ -773,7 +773,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({ onSwitchToSettings }) => {
                       })()}
                     </div>
                      <div></div>
-                     <div className="text-left font-bold text-[#09121F] text-sm">
+                     <div className="text-left font-bold text-[#09121F] text-sm col-span-3">
                        {editingGroupHeader?.name === group.name ? (
                          <input
                            type="text"
@@ -808,8 +808,8 @@ export const TimeTally: React.FC<TimeTallyProps> = ({ onSwitchToSettings }) => {
                    {/* Subgroups */}
                    {group.subgroups?.map((subgroup: any, subIndex: number) => (
                      <div key={`${subgroup.type}-${subgroup.name}-${subIndex}`}>
-                      
-                       {/* Subgroup Header */}
+                       
+                        {/* Subgroup Header */}
                        <div className="grid items-center font-bold text-[#09121F] text-sm py-2" style={{
                          gridTemplateColumns: getEntryGridTemplate(settings.invoiceMode),
                          gap: '0'
@@ -838,7 +838,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({ onSwitchToSettings }) => {
                           })()}
                          </div>
                          <div></div>
-                         <div className="text-left font-bold text-[#09121F] text-sm">
+                         <div className="text-left font-bold text-[#09121F] text-sm col-span-3">
                            {editingSubgroupHeader?.groupName === group.name && editingSubgroupHeader?.subgroupName === subgroup.name ? (
                              <input
                                type="text"
