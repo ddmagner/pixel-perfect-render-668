@@ -773,7 +773,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({ onSwitchToSettings }) => {
                       })()}
                     </div>
                      <div></div>
-                     <div className="text-left font-bold text-[#09121F] text-sm col-span-3">
+                     <div className="text-left font-bold text-[#09121F] text-sm">
                        {editingGroupHeader?.name === group.name ? (
                          <input
                            type="text"
@@ -794,20 +794,20 @@ export const TimeTally: React.FC<TimeTallyProps> = ({ onSwitchToSettings }) => {
                            {sortOption === 'date' ? formatDateLabel(group.name, true) : group.name}
                          </span>
                        )}
-                      </div>
-                      <div></div>
-                      <div></div>
-                      {settings.invoiceMode && (
-                        <>
-                          <div></div>
-                          <div></div>
-                        </>
-                      )}
+                     </div>
+                     <div></div>
+                     <div></div>
+                     {settings.invoiceMode && (
+                       <>
+                         <div></div>
+                         <div></div>
+                       </>
+                     )}
                    </div>
 
-                  {/* Subgroups */}
-                  {group.subgroups?.map((subgroup: any, subIndex: number) => (
-                    <div key={`${subgroup.type}-${subgroup.name}-${subIndex}`}>
+                   {/* Subgroups */}
+                   {group.subgroups?.map((subgroup: any, subIndex: number) => (
+                     <div key={`${subgroup.type}-${subgroup.name}-${subIndex}`}>
                       
                        {/* Subgroup Header */}
                        <div className="grid items-center font-bold text-[#09121F] text-sm py-2" style={{
@@ -838,7 +838,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({ onSwitchToSettings }) => {
                           })()}
                          </div>
                          <div></div>
-                         <div className="text-left font-bold text-[#09121F] text-sm col-span-3">
+                         <div className="text-left font-bold text-[#09121F] text-sm">
                            {editingSubgroupHeader?.groupName === group.name && editingSubgroupHeader?.subgroupName === subgroup.name ? (
                              <input
                                type="text"
@@ -861,14 +861,13 @@ export const TimeTally: React.FC<TimeTallyProps> = ({ onSwitchToSettings }) => {
                            )}
                          </div>
                          <div></div>
-                         <div className="flex justify-end">
-                           {subgroup.name === 'No Client' && (
-                             <button className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-[#09121F]/80 transition-colors">
-                               <Plus className="h-2.5 w-2.5" strokeWidth={3} />
-                             </button>
-                           )}
-                         </div>
-                         {settings.invoiceMode && <div></div>}
+                         <div></div>
+                         {settings.invoiceMode && (
+                           <>
+                             <div></div>
+                             <div></div>
+                           </>
+                         )}
                       </div>
 
                        {/* Entries */}
