@@ -6,11 +6,19 @@ import { useToast } from '@/hooks/use-toast';
 import { useHaptics } from '@/hooks/useHaptics';
 import { supabase } from '@/integrations/supabase/client';
 import { AutocompleteInput } from '@/components/ui/autocomplete-input';
+import { Calendar } from '@/components/ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Button } from '@/components/ui/button';
+import { format } from 'date-fns';
+import { CalendarIcon } from 'lucide-react';
+import { cn } from '@/lib/utils';
+
 interface TimeEntryData {
   duration: string;
   task: string;
   project: string;
   client: string;
+  date: Date;
 }
 interface TimeEntryFormProps {
   onSubmit: (data: TimeEntryData) => void;
@@ -33,7 +41,8 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
     duration: '',
     task: '',
     project: '',
-    client: ''
+    client: '',
+    date: new Date()
   });
   const [isProcessing, setIsProcessing] = useState(false);
 
@@ -54,7 +63,8 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
           duration: parsed.duration !== undefined ? parsed.duration.toString() : prev.duration,
           task: parsed.task ? applyInitialCapitalization(parsed.task) : prev.task,
           project: parsed.project ? applyInitialCapitalization(parsed.project) : prev.project,
-          client: parsed.client ? applyInitialCapitalization(parsed.client) : prev.client
+          client: parsed.client ? applyInitialCapitalization(parsed.client) : prev.client,
+          date: prev.date
         };
         console.log('Updated form data:', newData);
         return newData;
@@ -130,7 +140,8 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
         duration: '',
         task: '',
         project: '',
-        client: ''
+        client: '',
+        date: new Date()
       });
     } finally {
       setIsProcessing(false);
@@ -335,6 +346,39 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
             >
               + Client
             </button>
+          </div>
+        </div>
+
+        <div className="flex flex-col items-start w-full">
+          <div className="flex items-start gap-2.5 w-full px-2.5 py-1">
+            <label htmlFor="date" className="flex-[1_0_0] text-[#09121F] text-[15px] font-bold leading-5 tracking-[0.1px] max-sm:text-sm">
+              Date
+            </label>
+          </div>
+          <div className="flex items-start gap-2.5 w-full px-2.5 py-1">
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="ghost"
+                  className={cn(
+                    "flex-[1_0_0] justify-start text-left font-normal p-0 h-auto hover:bg-transparent",
+                    "text-[#09121F] text-[15px] leading-5 tracking-[0.1px]"
+                  )}
+                >
+                  <CalendarIcon className="mr-2 h-4 w-4 text-[#BFBFBF]" />
+                  {format(formData.date, "PPP")}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <Calendar
+                  mode="single"
+                  selected={formData.date}
+                  onSelect={(date) => date && setFormData(prev => ({ ...prev, date }))}
+                  initialFocus
+                  className="pointer-events-auto"
+                />
+              </PopoverContent>
+            </Popover>
           </div>
         </div>
 
