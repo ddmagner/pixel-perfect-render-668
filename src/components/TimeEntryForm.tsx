@@ -261,7 +261,7 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
 
       <form onSubmit={handleSubmit} className="flex flex-col items-start gap-1 w-full">
         <div className="flex flex-col items-start w-full">
-          <div className="flex items-start gap-2.5 w-full px-2.5 py-1 pt-2.5">
+          <div className="flex items-start gap-2.5 w-full px-2.5 py-1 pt-5">
             <label htmlFor="duration" className="flex-[1_0_0] text-[#09121F] text-[15px] font-bold leading-5 tracking-[0.1px]">
               Duration (hours)
             </label>
