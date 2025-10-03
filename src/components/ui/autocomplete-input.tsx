@@ -11,20 +11,32 @@ interface AutocompleteInputProps extends Omit<React.InputHTMLAttributes<HTMLInpu
 export const AutocompleteInput = React.forwardRef<HTMLInputElement, AutocompleteInputProps>(
   ({ suggestions, value, onChange, onSelect, className, ...props }, ref) => {
     const [suggestion, setSuggestion] = useState('');
+    const [lastValue, setLastValue] = useState('');
     const inputRef = useRef<HTMLInputElement>(null);
 
     useEffect(() => {
       if (value.trim()) {
-        // Find first matching suggestion that starts with the input value
-        const match = suggestions.find(s =>
-          s.toLowerCase().startsWith(value.toLowerCase()) && 
-          s.toLowerCase() !== value.toLowerCase()
-        );
-        setSuggestion(match || '');
+        // Check if user is deleting (value is shorter than before)
+        const isDeleting = value.length < lastValue.length;
+        
+        if (isDeleting) {
+          // Clear suggestion when deleting
+          setSuggestion('');
+          setLastValue(value);
+        } else {
+          // Find first matching suggestion that starts with the input value
+          const match = suggestions.find(s =>
+            s.toLowerCase().startsWith(value.toLowerCase()) && 
+            s.toLowerCase() !== value.toLowerCase()
+          );
+          setSuggestion(match || '');
+          setLastValue(value);
+        }
       } else {
         setSuggestion('');
+        setLastValue(value);
       }
-    }, [value, suggestions]);
+    }, [value, suggestions, lastValue]);
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
       if (suggestion && (e.key === 'Tab' || e.key === 'ArrowRight' || e.key === 'Enter')) {
