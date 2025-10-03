@@ -274,14 +274,15 @@ export const TimeArchivePage: React.FC = () => {
         className="flex w-full max-w-sm mx-auto flex-col items-start relative bg-white min-h-screen"
         style={{ fontFamily: 'Gilroy, sans-serif' }}
       >
-        <div className="sticky top-0 z-10 bg-white pb-2">
+        <div className="sticky top-0 z-10 bg-white">
           <Navigation activeTab="" onTabChange={() => {}} />
           <TabNavigation activeTab="" onTabChange={() => {}} />
           <Divider />
+          <div className="h-2" />
         </div>
 
         {/* Mode Toggle */}
-        <div className="flex justify-center items-center w-full px-2.5 pt-4 pb-1">
+        <div className="flex justify-center items-center w-full px-2.5 pt-4 pb-1 -mt-2">
           <div className="flex items-center gap-4">
             <span className={`text-sm font-medium ${viewMode === 'timecard' ? 'text-[#09121F]' : 'text-[#BFBFBF]'}`}>
               Time Card Mode
