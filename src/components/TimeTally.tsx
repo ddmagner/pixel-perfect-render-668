@@ -369,22 +369,62 @@ export const TimeTally: React.FC<TimeTallyProps> = ({ onSwitchToSettings }) => {
       return;
     }
 
-    // Update all entries with this group name
+    // Prevent renaming special placeholders
+    if (oldName === 'No Client') {
+      toast({ title: 'Cannot rename', description: 'The "No Client" group cannot be renamed.', variant: 'destructive' });
+      setEditingGroupHeader(null);
+      return;
+    }
+
+    // Duplicate checks against settings
+    if (type === 'client') {
+      const dup = settings.clients.find(c => c.name.toLowerCase() === trimmedName.toLowerCase() && c.name !== oldName);
+      if (dup) {
+        toast({ title: 'Duplicate Client', description: 'A client with this name already exists.', variant: 'destructive' });
+        setEditingGroupHeader(null);
+        return;
+      }
+    } else if (type === 'project') {
+      const dup = settings.projects.find(p => p.name.toLowerCase() === trimmedName.toLowerCase() && p.name !== oldName);
+      if (dup) {
+        toast({ title: 'Duplicate Project', description: 'A project with this name already exists.', variant: 'destructive' });
+        setEditingGroupHeader(null);
+        return;
+      }
+    } else if (type === 'task') {
+      const dup = settings.taskTypes.find(t => t.name.toLowerCase() === trimmedName.toLowerCase() && t.name !== oldName);
+      if (dup) {
+        toast({ title: 'Duplicate Task', description: 'A task with this name already exists.', variant: 'destructive' });
+        setEditingGroupHeader(null);
+        return;
+      }
+    }
+
+    // Update all entries with this group name and persist in settings
     if (type === 'client') {
       const entriesToUpdate = activeTimeEntries.filter(e => resolveClientName(e) === oldName);
       for (const entry of entriesToUpdate) {
         await updateTimeEntry(entry.id, { client: trimmedName });
       }
+      await updateSettings({
+        clients: settings.clients.map(c => c.name === oldName ? { ...c, name: trimmedName } : c)
+      });
     } else if (type === 'project') {
       const entriesToUpdate = activeTimeEntries.filter(e => e.project === oldName);
       for (const entry of entriesToUpdate) {
         await updateTimeEntry(entry.id, { project: trimmedName });
       }
+      await updateSettings({
+        projects: settings.projects.map(p => p.name === oldName ? { ...p, name: trimmedName } : p)
+      });
     } else if (type === 'task') {
       const entriesToUpdate = activeTimeEntries.filter(e => e.task === oldName);
       for (const entry of entriesToUpdate) {
         await updateTimeEntry(entry.id, { task: trimmedName });
       }
+      await updateSettings({
+        taskTypes: settings.taskTypes.map(t => t.name === oldName ? { ...t, name: trimmedName } : t)
+      });
     }
 
     setEditingGroupHeader(null);
@@ -397,21 +437,46 @@ export const TimeTally: React.FC<TimeTallyProps> = ({ onSwitchToSettings }) => {
       return;
     }
 
-    // Update entries based on groupType and subgroup type
+    if (oldName === 'No Client') {
+      toast({ title: 'Cannot rename', description: 'The "No Client" group cannot be renamed.', variant: 'destructive' });
+      setEditingSubgroupHeader(null);
+      return;
+    }
+
     if (groupType === 'project') {
-      // In project view, subgroups are projects
+      // Subgroups are projects under a client
+      const dup = settings.projects.find(p => p.name.toLowerCase() === trimmedName.toLowerCase() && p.name !== oldName);
+      if (dup) {
+        toast({ title: 'Duplicate Project', description: 'A project with this name already exists.', variant: 'destructive' });
+        setEditingSubgroupHeader(null);
+        return;
+      }
+
       const entriesToUpdate = activeTimeEntries.filter(e => 
         resolveClientName(e) === groupName && e.project === oldName
       );
       for (const entry of entriesToUpdate) {
         await updateTimeEntry(entry.id, { project: trimmedName });
       }
+      await updateSettings({
+        projects: settings.projects.map(p => p.name === oldName ? { ...p, name: trimmedName } : p)
+      });
     } else if (groupType === 'date' || groupType === 'task') {
-      // In date/task views, subgroups are clients
+      // Subgroups are clients
+      const dup = settings.clients.find(c => c.name.toLowerCase() === trimmedName.toLowerCase() && c.name !== oldName);
+      if (dup) {
+        toast({ title: 'Duplicate Client', description: 'A client with this name already exists.', variant: 'destructive' });
+        setEditingSubgroupHeader(null);
+        return;
+      }
+
       const entriesToUpdate = activeTimeEntries.filter(e => resolveClientName(e) === oldName);
       for (const entry of entriesToUpdate) {
         await updateTimeEntry(entry.id, { client: trimmedName });
       }
+      await updateSettings({
+        clients: settings.clients.map(c => c.name === oldName ? { ...c, name: trimmedName } : c)
+      });
     }
 
     setEditingSubgroupHeader(null);
@@ -729,9 +794,16 @@ export const TimeTally: React.FC<TimeTallyProps> = ({ onSwitchToSettings }) => {
                            {sortOption === 'date' ? formatDateLabel(group.name, true) : group.name}
                          </span>
                        )}
-                     </div>
-                     {settings.invoiceMode && <div></div>}
-                  </div>
+                      </div>
+                      <div></div>
+                      <div></div>
+                      {settings.invoiceMode && (
+                        <>
+                          <div></div>
+                          <div></div>
+                        </>
+                      )}
+                   </div>
 
                   {/* Subgroups */}
                   {group.subgroups?.map((subgroup: any, subIndex: number) => (
