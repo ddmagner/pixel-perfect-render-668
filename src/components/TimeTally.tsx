@@ -16,9 +16,7 @@ import { ExportDialog } from '@/components/ExportDialog';
 interface TimeTallyProps {
   onSwitchToSettings?: () => void;
 }
-export const TimeTally: React.FC<TimeTallyProps> = ({
-  onSwitchToSettings
-}) => {
+export const TimeTally: React.FC<TimeTallyProps> = ({ onSwitchToSettings }) => {
   const {
     timeEntries,
     sortOption,
@@ -33,6 +31,8 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
   
   const [editingEntryId, setEditingEntryId] = useState<string | null>(null);
   const [editingField, setEditingField] = useState<string | null>(null);
+  const [editingGroupHeader, setEditingGroupHeader] = useState<{ type: string; name: string } | null>(null);
+  const [editingSubgroupHeader, setEditingSubgroupHeader] = useState<{ groupName: string; subgroupName: string } | null>(null);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [showArchiveDialog, setShowArchiveDialog] = useState(false);
   const [isExportDialogOpen, setIsExportDialogOpen] = useState(false);
@@ -361,6 +361,61 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
     setEditingEntryId(null);
     setEditingField(null);
   };
+
+  const handleGroupHeaderSave = async (oldName: string, newName: string, type: string) => {
+    const trimmedName = newName.trim();
+    if (!trimmedName || trimmedName === oldName) {
+      setEditingGroupHeader(null);
+      return;
+    }
+
+    // Update all entries with this group name
+    if (type === 'client') {
+      const entriesToUpdate = activeTimeEntries.filter(e => resolveClientName(e) === oldName);
+      for (const entry of entriesToUpdate) {
+        await updateTimeEntry(entry.id, { client: trimmedName });
+      }
+    } else if (type === 'project') {
+      const entriesToUpdate = activeTimeEntries.filter(e => e.project === oldName);
+      for (const entry of entriesToUpdate) {
+        await updateTimeEntry(entry.id, { project: trimmedName });
+      }
+    } else if (type === 'task') {
+      const entriesToUpdate = activeTimeEntries.filter(e => e.task === oldName);
+      for (const entry of entriesToUpdate) {
+        await updateTimeEntry(entry.id, { task: trimmedName });
+      }
+    }
+
+    setEditingGroupHeader(null);
+  };
+
+  const handleSubgroupHeaderSave = async (groupName: string, oldName: string, newName: string, groupType: string) => {
+    const trimmedName = newName.trim();
+    if (!trimmedName || trimmedName === oldName) {
+      setEditingSubgroupHeader(null);
+      return;
+    }
+
+    // Update entries based on groupType and subgroup type
+    if (groupType === 'project') {
+      // In project view, subgroups are projects
+      const entriesToUpdate = activeTimeEntries.filter(e => 
+        resolveClientName(e) === groupName && e.project === oldName
+      );
+      for (const entry of entriesToUpdate) {
+        await updateTimeEntry(entry.id, { project: trimmedName });
+      }
+    } else if (groupType === 'date' || groupType === 'task') {
+      // In date/task views, subgroups are clients
+      const entriesToUpdate = activeTimeEntries.filter(e => resolveClientName(e) === oldName);
+      for (const entry of entriesToUpdate) {
+        await updateTimeEntry(entry.id, { client: trimmedName });
+      }
+    }
+
+    setEditingSubgroupHeader(null);
+  };
   const handleDelete = () => {
     deleteTimeEntries(selection.selectedIds);
     selection.clearSelection();
@@ -652,11 +707,30 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                         );
                       })()}
                     </div>
-                    <div></div>
-                    <div className="text-left font-bold text-[#09121F] text-sm col-span-3">
-                      {sortOption === 'date' ? formatDateLabel(group.name, true) : group.name}
-                    </div>
-                    {settings.invoiceMode && <div></div>}
+                     <div></div>
+                     <div className="text-left font-bold text-[#09121F] text-sm col-span-3">
+                       {editingGroupHeader?.name === group.name ? (
+                         <input
+                           type="text"
+                           defaultValue={sortOption === 'date' ? formatDateLabel(group.name, true) : group.name}
+                           className="text-sm font-bold bg-transparent border-none outline-none focus:bg-white focus:border focus:border-gray-300 px-1 rounded w-full"
+                           autoFocus
+                           onBlur={(e) => handleGroupHeaderSave(group.name, sortOption === 'date' ? group.name : e.target.value, group.type)}
+                           onKeyDown={(e) => {
+                             if (e.key === 'Enter') handleGroupHeaderSave(group.name, sortOption === 'date' ? group.name : e.currentTarget.value, group.type);
+                             if (e.key === 'Escape') setEditingGroupHeader(null);
+                           }}
+                         />
+                       ) : (
+                         <span 
+                           className={`${sortOption !== 'date' ? 'cursor-pointer hover:bg-gray-100 px-1 rounded' : ''}`}
+                           onClick={() => sortOption !== 'date' && setEditingGroupHeader({ type: group.type, name: group.name })}
+                         >
+                           {sortOption === 'date' ? formatDateLabel(group.name, true) : group.name}
+                         </span>
+                       )}
+                     </div>
+                     {settings.invoiceMode && <div></div>}
                   </div>
 
                   {/* Subgroups */}
@@ -690,20 +764,39 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                               return <div className="w-4 h-4"></div>;
                             }
                           })()}
-                        </div>
-                        <div></div>
-                        <div className="text-left font-bold text-[#09121F] text-sm col-span-3">
-                          {subgroup.name}
-                        </div>
-                        <div></div>
-                        <div className="flex justify-end">
-                          {subgroup.name === 'No Client' && (
-                            <button className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-[#09121F]/80 transition-colors">
-                              <Plus className="h-2.5 w-2.5" strokeWidth={3} />
-                            </button>
-                          )}
-                        </div>
-                        {settings.invoiceMode && <div></div>}
+                         </div>
+                         <div></div>
+                         <div className="text-left font-bold text-[#09121F] text-sm col-span-3">
+                           {editingSubgroupHeader?.groupName === group.name && editingSubgroupHeader?.subgroupName === subgroup.name ? (
+                             <input
+                               type="text"
+                               defaultValue={subgroup.name}
+                               className="text-sm font-bold bg-transparent border-none outline-none focus:bg-white focus:border focus:border-gray-300 px-1 rounded w-full"
+                               autoFocus
+                               onBlur={(e) => handleSubgroupHeaderSave(group.name, subgroup.name, e.target.value, group.type)}
+                               onKeyDown={(e) => {
+                                 if (e.key === 'Enter') handleSubgroupHeaderSave(group.name, subgroup.name, e.currentTarget.value, group.type);
+                                 if (e.key === 'Escape') setEditingSubgroupHeader(null);
+                               }}
+                             />
+                           ) : (
+                             <span 
+                               className="cursor-pointer hover:bg-gray-100 px-1 rounded"
+                               onClick={() => setEditingSubgroupHeader({ groupName: group.name, subgroupName: subgroup.name })}
+                             >
+                               {subgroup.name}
+                             </span>
+                           )}
+                         </div>
+                         <div></div>
+                         <div className="flex justify-end">
+                           {subgroup.name === 'No Client' && (
+                             <button className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-[#09121F]/80 transition-colors">
+                               <Plus className="h-2.5 w-2.5" strokeWidth={3} />
+                             </button>
+                           )}
+                         </div>
+                         {settings.invoiceMode && <div></div>}
                       </div>
 
                        {/* Entries */}
@@ -721,11 +814,11 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                           </div>
                           
                           <div></div>
-                          
-                          {/* Entry data based on sort option */}
-                          {sortOption === 'project' && (
-                            <>
-                              <div className="text-[#09121F] text-sm leading-tight flex items-start">
+                           
+                           {/* Entry data based on sort option */}
+                           {sortOption === 'project' && (
+                             <React.Fragment>
+                               <div className="text-[#09121F] text-sm leading-tight flex items-start">
                                 {editingEntryId === entry.id && editingField === 'date' ? (
                                   <input
                                     type="date"
@@ -766,15 +859,15 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                                     className="cursor-pointer hover:bg-gray-100 px-1 rounded"
                                     onClick={() => handleFieldEdit(entry.id, 'task')}
                                   >
-                                    {entry.task}
-                                  </span>
-                                )}
-                              </div>
-                            </>
-                          )}
-                          
-                          {sortOption === 'date' && (
-                            <>
+                                   {entry.task}
+                                 </span>
+                               )}
+                             </div>
+                             </React.Fragment>
+                           )}
+                           
+                           {sortOption === 'date' && (
+                             <React.Fragment>
                               <div className="text-[#09121F] text-sm leading-tight flex items-start">
                                 {editingEntryId === entry.id && editingField === 'project' ? (
                                   <input
@@ -816,15 +909,15 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                                     className="cursor-pointer hover:bg-gray-100 px-1 rounded"
                                     onClick={() => handleFieldEdit(entry.id, 'task')}
                                   >
-                                    {entry.task}
-                                  </span>
-                                )}
-                              </div>
-                            </>
-                          )}
-                          
-                          {sortOption === 'task' && (
-                            <>
+                                   {entry.task}
+                                 </span>
+                               )}
+                             </div>
+                             </React.Fragment>
+                           )}
+                           
+                           {sortOption === 'task' && (
+                             <React.Fragment>
                               <div className="text-[#09121F] text-sm leading-tight flex items-start">
                                 {editingEntryId === entry.id && editingField === 'date' ? (
                                   <input
@@ -866,12 +959,12 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                                     className="cursor-pointer hover:bg-gray-100 px-1 rounded"
                                     onClick={() => handleFieldEdit(entry.id, 'project')}
                                   >
-                                    {entry.project}
-                                  </span>
-                                )}
-                              </div>
-                            </>
-                          )}
+                                     {entry.project}
+                                   </span>
+                                 )}
+                               </div>
+                             </React.Fragment>
+                           )}
                           
                           <div></div>
                           <div className="text-[#09121F] text-sm leading-tight text-left flex items-start justify-start">
