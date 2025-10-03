@@ -778,7 +778,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({ onSwitchToSettings }) => {
                          <input
                            type="text"
                            defaultValue={sortOption === 'date' ? formatDateLabel(group.name, true) : group.name}
-                           className="text-sm font-bold bg-transparent border-none outline-none focus:bg-white focus:border focus:border-gray-300 px-1 rounded w-full"
+                           className="text-sm font-bold bg-transparent border-none outline-none focus:bg-white focus:border focus:border-gray-300 rounded w-full"
                            autoFocus
                            onBlur={(e) => handleGroupHeaderSave(group.name, sortOption === 'date' ? group.name : e.target.value, group.type)}
                            onKeyDown={(e) => {
@@ -788,7 +788,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({ onSwitchToSettings }) => {
                          />
                        ) : (
                          <span 
-                           className={`${sortOption !== 'date' ? 'cursor-pointer hover:bg-gray-100 px-1 rounded' : ''}`}
+                           className={`${sortOption !== 'date' ? 'cursor-pointer hover:bg-gray-100 rounded' : ''}`}
                            onClick={() => sortOption !== 'date' && setEditingGroupHeader({ type: group.type, name: group.name })}
                          >
                            {sortOption === 'date' ? formatDateLabel(group.name, true) : group.name}
@@ -843,7 +843,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({ onSwitchToSettings }) => {
                              <input
                                type="text"
                                defaultValue={subgroup.name}
-                               className="text-sm font-bold bg-transparent border-none outline-none focus:bg-white focus:border focus:border-gray-300 px-1 rounded w-full"
+                               className="text-sm font-bold bg-transparent border-none outline-none focus:bg-white focus:border focus:border-gray-300 rounded w-full"
                                autoFocus
                                onBlur={(e) => handleSubgroupHeaderSave(group.name, subgroup.name, e.target.value, group.type)}
                                onKeyDown={(e) => {
@@ -853,7 +853,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({ onSwitchToSettings }) => {
                              />
                            ) : (
                              <span 
-                               className="cursor-pointer hover:bg-gray-100 px-1 rounded"
+                               className="cursor-pointer hover:bg-gray-100 rounded"
                                onClick={() => setEditingSubgroupHeader({ groupName: group.name, subgroupName: subgroup.name })}
                              >
                                {subgroup.name}
@@ -903,8 +903,8 @@ export const TimeTally: React.FC<TimeTallyProps> = ({ onSwitchToSettings }) => {
                                     }}
                                   />
                                 ) : (
-                                  <span 
-                                    className="cursor-pointer hover:bg-gray-100 pr-1 rounded text-left"
+                                   <span 
+                                    className="cursor-pointer hover:bg-gray-100 rounded text-left"
                                     onClick={() => handleFieldEdit(entry.id, 'date')}
                                   >
                                     {formatDateLabel(entry.date)}
@@ -953,8 +953,8 @@ export const TimeTally: React.FC<TimeTallyProps> = ({ onSwitchToSettings }) => {
                                     }}
                                   />
                                 ) : (
-                                  <span 
-                                    className="cursor-pointer hover:bg-gray-100 px-1 rounded"
+                                   <span 
+                                    className="cursor-pointer hover:bg-gray-100 rounded"
                                     onClick={() => handleFieldEdit(entry.id, 'project')}
                                   >
                                     {entry.project}
@@ -1003,8 +1003,8 @@ export const TimeTally: React.FC<TimeTallyProps> = ({ onSwitchToSettings }) => {
                                     }}
                                   />
                                 ) : (
-                                  <span 
-                                    className="cursor-pointer hover:bg-gray-100 pr-1 rounded"
+                                   <span 
+                                    className="cursor-pointer hover:bg-gray-100 rounded"
                                     onClick={() => handleFieldEdit(entry.id, 'date')}
                                   >
                                     {formatDateLabel(entry.date)}
