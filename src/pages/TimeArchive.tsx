@@ -274,7 +274,7 @@ export const TimeArchivePage: React.FC = () => {
         className="flex w-full max-w-sm mx-auto flex-col items-start relative bg-white min-h-screen"
         style={{ fontFamily: 'Gilroy, sans-serif' }}
       >
-        <div className="sticky top-0 z-10 bg-white">
+        <div className="sticky top-0 z-10 bg-white self-stretch w-full">
           <Navigation activeTab="" onTabChange={() => {}} />
           <TabNavigation activeTab="" onTabChange={() => {}} />
           <Divider />

@@ -21,7 +21,7 @@ const SettingsPage = () => {
         className="flex w-full max-w-sm mx-auto flex-col items-start relative bg-white min-h-screen"
         style={{ fontFamily: 'Gilroy, sans-serif' }}
       >
-        <div className="sticky top-0 z-10 bg-white">
+        <div className="sticky top-0 z-10 bg-white self-stretch w-full">
           <nav className="flex justify-center items-center self-stretch px-2.5 pt-4 pb-1 bg-white relative">
             <button 
               onClick={handleBack}
@@ -53,8 +53,7 @@ const SettingsPage = () => {
           <Divider />
           <div className="h-2" />
         </div>
-
-        <div className="-mt-2">
+        <div className="-mt-2 self-stretch w-full">
           <Settings highlightSection={section} />
         </div>
         

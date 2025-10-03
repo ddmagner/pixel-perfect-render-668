@@ -92,40 +92,38 @@ const Index = () => {
         className="flex w-full max-w-sm mx-auto flex-col items-start relative bg-white min-h-screen"
         style={{ fontFamily: 'Gilroy, sans-serif' }}
       >
-        <div className="sticky top-0 z-10 bg-white">
+        <div className="sticky top-0 z-10 bg-white self-stretch w-full">
           <Navigation activeTab={activeTab} onTabChange={handleTabChange} />
           <TabNavigation activeTab={activeTab} onTabChange={handleTabChange} />
           <Divider />
           <div className="h-2" />
         </div>
 
-        {activeTab === 'enter-time' && (
-          <div className="-mt-2">
-            <RecordButton
-              onRecordStart={handleRecordStart}
-              onRecordStop={handleRecordStop}
-              isRecording={isRecording}
-              onTranscript={handleTranscript}
-              onFinalTranscript={handleFinalTranscript}
-            />
-            
-            <Divider />
-            
-            <TimeEntryForm onSubmit={handleTimeEntrySubmit} transcript={currentTranscript} finalTranscript={finalTranscript} />
-          </div>
-        )}
+        <div className="-mt-2 self-stretch w-full">
+          {activeTab === 'enter-time' && (
+            <>
+              <RecordButton
+                onRecordStart={handleRecordStart}
+                onRecordStop={handleRecordStop}
+                isRecording={isRecording}
+                onTranscript={handleTranscript}
+                onFinalTranscript={handleFinalTranscript}
+              />
+              
+              <Divider />
+              
+              <TimeEntryForm onSubmit={handleTimeEntrySubmit} transcript={currentTranscript} finalTranscript={finalTranscript} />
+            </>
+          )}
 
-        {activeTab === 'time-tally' && (
-          <div className="-mt-2">
+          {activeTab === 'time-tally' && (
             <TimeTally onSwitchToSettings={() => setActiveTab('settings')} />
-          </div>
-        )}
+          )}
 
-        {activeTab === 'settings' && (
-          <div className="-mt-2">
+          {activeTab === 'settings' && (
             <Settings />
-          </div>
-        )}
+          )}
+        </div>
 
         <HomeIndicator />
 
