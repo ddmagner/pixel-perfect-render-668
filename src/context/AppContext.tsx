@@ -49,7 +49,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   const { hasPermission: hasMicrophonePermission, requestPermission: requestMicrophonePermission } = useMicrophonePermission();
   const [timeEntries, setTimeEntries] = useState<TimeEntry[]>([]);
   const [settings, setSettings] = useState<AppSettings>(defaultSettings);
-  const [sortOption, setSortOption] = useState<SortOption>('date');
+  const [sortOption, setSortOption] = useState<SortOption>('project');
   const [viewMode, setViewMode] = useState<ViewMode>(() => {
     // Load viewMode from localStorage on initialization
     const saved = localStorage.getItem('timeapp-viewmode');
@@ -153,6 +153,10 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         hourlyRate: entry.hourly_rate ? Number(entry.hourly_rate) : undefined,
         archived: entry.archived || false
       })));
+
+      // Load sort option from settings
+      const loadedSortOption = (settingsData?.sort_option as SortOption) || 'project';
+      setSortOption(loadedSortOption);
 
       const newSettings = {
         accentColor: settingsData?.accent_color || defaultSettings.accentColor,
@@ -370,13 +374,14 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         }
       }
       
-      // Update app settings
+      // Update app settings (including sort_option if it exists in context)
       const { error: settingsError } = await supabase
         .from('app_settings')
         .upsert({
           user_id: user.id,
           accent_color: updatedSettings.accentColor,
-          invoice_mode: updatedSettings.invoiceMode
+          invoice_mode: updatedSettings.invoiceMode,
+          sort_option: sortOption
         }, {
           onConflict: 'user_id'
         });
@@ -534,7 +539,26 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     requestMicrophonePermission,
     addTimeEntry,
     updateSettings,
-    setSortOption,
+    setSortOption: async (option: SortOption) => {
+      setSortOption(option);
+      // Save to database
+      if (user) {
+        try {
+          await supabase
+            .from('app_settings')
+            .upsert({
+              user_id: user.id,
+              accent_color: settings.accentColor,
+              invoice_mode: settings.invoiceMode,
+              sort_option: option
+            }, {
+              onConflict: 'user_id'
+            });
+        } catch (error) {
+          console.error('Error saving sort option:', error);
+        }
+      }
+    },
     setViewMode: (mode: ViewMode) => {
       setViewMode(mode);
       localStorage.setItem('timeapp-viewmode', mode);

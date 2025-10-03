@@ -20,6 +20,7 @@ export type Database = {
           created_at: string
           id: string
           invoice_mode: boolean | null
+          sort_option: string
           updated_at: string
           user_id: string
         }
@@ -28,6 +29,7 @@ export type Database = {
           created_at?: string
           id?: string
           invoice_mode?: boolean | null
+          sort_option?: string
           updated_at?: string
           user_id: string
         }
@@ -36,6 +38,7 @@ export type Database = {
           created_at?: string
           id?: string
           invoice_mode?: boolean | null
+          sort_option?: string
           updated_at?: string
           user_id?: string
         }
