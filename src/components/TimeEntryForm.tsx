@@ -258,12 +258,8 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
   return (
     <section className="flex w-full flex-col items-start px-0 pb-2.5">
       <div className="flex h-px flex-col items-start gap-2.5 w-full px-2.5 py-0" />
-      
-      <header className="flex h-14 flex-col justify-center items-start gap-14 w-full pt-2.5 px-2.5">
-        <h1 className="w-full text-[#09121F] text-[28px] font-bold leading-8 tracking-[-0.56px]">New time in</h1>
-      </header>
 
-      <form onSubmit={handleSubmit} className="flex flex-col items-start gap-1 w-full">
+      <form onSubmit={handleSubmit} className="flex flex-col items-start gap-1 w-full pt-16">
         <div className="flex flex-col items-start w-full">
           <div className="flex items-start gap-2.5 w-full px-2.5 py-1">
             <label htmlFor="duration" className="flex-[1_0_0] text-[#09121F] text-[15px] font-bold leading-5 tracking-[0.1px]">
