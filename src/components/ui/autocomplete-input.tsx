@@ -27,7 +27,7 @@ export const AutocompleteInput = React.forwardRef<HTMLInputElement, Autocomplete
     }, [value, suggestions]);
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-      if (suggestion && (e.key === 'Tab' || e.key === 'ArrowRight')) {
+      if (suggestion && (e.key === 'Tab' || e.key === 'ArrowRight' || e.key === 'Enter')) {
         e.preventDefault();
         onChange(suggestion);
         onSelect?.(suggestion);
@@ -35,7 +35,7 @@ export const AutocompleteInput = React.forwardRef<HTMLInputElement, Autocomplete
       }
     };
 
-    const handleSuggestionClick = () => {
+    const acceptSuggestion = () => {
       if (suggestion) {
         onChange(suggestion);
         onSelect?.(suggestion);
@@ -55,7 +55,7 @@ export const AutocompleteInput = React.forwardRef<HTMLInputElement, Autocomplete
               <span className="invisible">{value}</span>
               <span 
                 className="text-[#BFBFBF] cursor-pointer hover:text-[#999999] transition-colors pointer-events-auto"
-                onClick={handleSuggestionClick}
+                onClick={acceptSuggestion}
               >
                 {suggestion.slice(value.length)}
               </span>
@@ -75,6 +75,8 @@ export const AutocompleteInput = React.forwardRef<HTMLInputElement, Autocomplete
             value={value}
             onChange={(e) => onChange(e.target.value)}
             onKeyDown={handleKeyDown}
+            onClick={() => { if (suggestion) acceptSuggestion(); }}
+            onTouchEnd={() => { if (suggestion) acceptSuggestion(); }}
             className={cn(
               "flex-[1_0_0] text-[#09121F] text-[15px] font-normal leading-5 tracking-[0.1px] bg-transparent border-none outline-none placeholder:text-[#BFBFBF] w-full relative",
               className
