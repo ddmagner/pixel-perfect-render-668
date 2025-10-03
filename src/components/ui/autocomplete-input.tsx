@@ -11,32 +11,30 @@ interface AutocompleteInputProps extends Omit<React.InputHTMLAttributes<HTMLInpu
 export const AutocompleteInput = React.forwardRef<HTMLInputElement, AutocompleteInputProps>(
   ({ suggestions, value, onChange, onSelect, className, ...props }, ref) => {
     const [suggestion, setSuggestion] = useState('');
-    const [lastValue, setLastValue] = useState('');
     const inputRef = useRef<HTMLInputElement>(null);
+    const prevValueRef = useRef<string>('');
+    const wasDeletingRef = useRef<boolean>(false);
 
     useEffect(() => {
-      if (value.trim()) {
-        // Check if user is deleting (value is shorter than before)
-        const isDeleting = value.length < lastValue.length;
-        
-        if (isDeleting) {
-          // Clear suggestion when deleting
-          setSuggestion('');
-          setLastValue(value);
-        } else {
-          // Find first matching suggestion that starts with the input value
-          const match = suggestions.find(s =>
-            s.toLowerCase().startsWith(value.toLowerCase()) && 
-            s.toLowerCase() !== value.toLowerCase()
-          );
-          setSuggestion(match || '');
-          setLastValue(value);
-        }
-      } else {
+      if (!value || !value.trim()) {
         setSuggestion('');
-        setLastValue(value);
+        prevValueRef.current = value;
+        return;
       }
-    }, [value, suggestions, lastValue]);
+
+      if (wasDeletingRef.current) {
+        // Suppress ghost text immediately after a deletion until next non-delete input
+        setSuggestion('');
+        wasDeletingRef.current = false;
+        prevValueRef.current = value;
+        return;
+      }
+
+      const lower = value.toLowerCase();
+      const match = suggestions.find(s => s.toLowerCase().startsWith(lower) && s.toLowerCase() !== lower);
+      setSuggestion(match || '');
+      prevValueRef.current = value;
+    }, [value, suggestions]);
 
     const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
       if (suggestion && (e.key === 'Tab' || e.key === 'ArrowRight' || e.key === 'Enter')) {
@@ -53,6 +51,21 @@ export const AutocompleteInput = React.forwardRef<HTMLInputElement, Autocomplete
         onSelect?.(suggestion);
         setSuggestion('');
       }
+    };
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const next = e.target.value;
+      const prev = prevValueRef.current || '';
+      const isDeleting = next.length < prev.length;
+      if (isDeleting) {
+        // Clear ghost immediately and mark deletion so effect suppresses next render
+        setSuggestion('');
+        wasDeletingRef.current = true;
+      } else {
+        wasDeletingRef.current = false;
+      }
+      prevValueRef.current = next;
+      onChange(next);
     };
 
     return (
@@ -85,7 +98,7 @@ export const AutocompleteInput = React.forwardRef<HTMLInputElement, Autocomplete
             }}
             type="text"
             value={value}
-            onChange={(e) => onChange(e.target.value)}
+            onChange={handleChange}
             onKeyDown={handleKeyDown}
             onClick={() => { if (suggestion) acceptSuggestion(); }}
             onTouchEnd={() => { if (suggestion) acceptSuggestion(); }}
