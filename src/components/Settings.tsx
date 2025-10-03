@@ -118,7 +118,7 @@ export const Settings: React.FC<SettingsProps> = ({
               <button onClick={() => navigate('/privacy')} className="text-[#BFBFBF] text-xs font-normal underline hover:opacity-70 transition-opacity block">
                 Privacy Policy
               </button>
-              <div className="text-[#BFBFBF] text-xs font-normal pt-2">
+              <div className="text-[#BFBFBF] text-xs font-normal">
                 Version 1.0.0
               </div>
             </div>
