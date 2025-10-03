@@ -52,7 +52,7 @@ const SettingsPage = () => {
             <div className="h-1" />
           </div>
         </div>
-        <div className="h-24" />
+        <div className="h-[92px]" />
         
         <div className="w-full max-w-sm mx-auto" style={{ fontFamily: 'Gilroy, sans-serif' }}>
           <Settings highlightSection={section} />
