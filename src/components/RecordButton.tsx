@@ -98,7 +98,7 @@ export const RecordButton: React.FC<RecordButtonProps> = ({
       document.removeEventListener('visibilitychange', onVisibilityChange);
     };
   }, [isPressed, isSupported]);
-  return <section className="flex w-full justify-center items-center gap-2.5 px-0 pt-[40px] pb-[15px]">
+  return <section className="flex w-full justify-center items-center gap-2.5 px-0 pt-[35px] pb-[15px]">
       <div className="flex flex-col items-center gap-[30px] shrink-0">
         <div className="h-[220px] w-[220px] relative">
           <button className={`w-[220px] h-[220px] shrink-0 absolute left-0 top-0 transition-all flex items-center justify-center rounded-full select-none ${isPressed ? 'scale-95' : 'scale-100'} ${isRecording ? 'animate-pulse' : ''}`} onPointerDown={handlePointerDown} onPointerUp={handlePointerUp} onPointerCancel={handlePointerCancel} onPointerLeave={handlePointerLeave} onContextMenu={e => e.preventDefault()} aria-label="Hold to record voice note" role="button" style={{
