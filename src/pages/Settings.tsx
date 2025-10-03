@@ -49,7 +49,7 @@ const SettingsPage = () => {
               </div>
             </nav>
             <Divider />
-            <div className="h-2" />
+            <div className="h-1" />
           </div>
         </div>
         <div className="h-24" />

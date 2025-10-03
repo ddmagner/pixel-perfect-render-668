@@ -276,7 +276,7 @@ export const TimeArchivePage: React.FC = () => {
             <Navigation activeTab="" onTabChange={() => {}} />
             <TabNavigation activeTab="" onTabChange={() => {}} />
             <Divider />
-            <div className="h-2" />
+            <div className="h-1" />
           </div>
         </div>
         <div className="h-24" />
