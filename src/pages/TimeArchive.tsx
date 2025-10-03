@@ -271,7 +271,7 @@ export const TimeArchivePage: React.FC = () => {
         href="https://fonts.googleapis.com/css2?family=Gilroy:wght@400;700;800;900&display=swap"
       />
       <div className="min-h-screen bg-white">
-        <div className="sticky top-0 inset-x-0 z-20 bg-white">
+        <div className="fixed top-0 inset-x-0 z-40 bg-white">
           <div className="w-full max-w-sm mx-auto" style={{ fontFamily: 'Gilroy, sans-serif' }}>
             <Navigation activeTab="" onTabChange={() => {}} />
             <TabNavigation activeTab="" onTabChange={() => {}} />
@@ -279,9 +279,10 @@ export const TimeArchivePage: React.FC = () => {
             <div className="h-2" />
           </div>
         </div>
+        <div className="h-24" />
 
         {/* Mode Toggle */}
-        <div className="w-full max-w-sm mx-auto -mt-2" style={{ fontFamily: 'Gilroy, sans-serif' }}>
+        <div className="w-full max-w-sm mx-auto" style={{ fontFamily: 'Gilroy, sans-serif' }}>
           <div className="flex justify-center items-center w-full px-2.5 pt-4 pb-1">
           <div className="flex items-center gap-4">
             <span className={`text-sm font-medium ${viewMode === 'timecard' ? 'text-[#09121F]' : 'text-[#BFBFBF]'}`}>

@@ -89,7 +89,7 @@ const Index = () => {
         href="https://fonts.googleapis.com/css2?family=Gilroy:wght@400;700;800;900&display=swap"
       />
       <div className="min-h-screen bg-white">
-        <div className="sticky top-0 inset-x-0 z-20 bg-white">
+        <div className="fixed top-0 inset-x-0 z-40 bg-white">
           <div className="w-full max-w-sm mx-auto" style={{ fontFamily: 'Gilroy, sans-serif' }}>
             <Navigation activeTab={activeTab} onTabChange={handleTabChange} />
             <TabNavigation activeTab={activeTab} onTabChange={handleTabChange} />
@@ -97,8 +97,9 @@ const Index = () => {
             <div className="h-2" />
           </div>
         </div>
+        <div className="h-24" />
 
-        <div className="w-full max-w-sm mx-auto -mt-2" style={{ fontFamily: 'Gilroy, sans-serif' }}>
+        <div className="w-full max-w-sm mx-auto" style={{ fontFamily: 'Gilroy, sans-serif' }}>
           {activeTab === 'enter-time' && (
             <>
               <RecordButton
