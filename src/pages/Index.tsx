@@ -92,9 +92,11 @@ const Index = () => {
         className="flex w-full max-w-sm mx-auto flex-col items-start relative bg-white min-h-screen"
         style={{ fontFamily: 'Gilroy, sans-serif' }}
       >
-        <Navigation activeTab={activeTab} onTabChange={handleTabChange} />
-        <TabNavigation activeTab={activeTab} onTabChange={handleTabChange} />
-        <Divider />
+        <div className="sticky top-0 z-10 bg-white pb-2">
+          <Navigation activeTab={activeTab} onTabChange={handleTabChange} />
+          <TabNavigation activeTab={activeTab} onTabChange={handleTabChange} />
+          <Divider />
+        </div>
 
         {activeTab === 'enter-time' && (
           <>
