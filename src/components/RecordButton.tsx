@@ -99,16 +99,16 @@ export const RecordButton: React.FC<RecordButtonProps> = ({
     };
   }, [isPressed, isSupported]);
   return <section className="flex w-full justify-center items-center gap-2.5 px-0 pt-[40px] pb-[15px]">
-      <div className="flex flex-col items-center gap-[30px] max-sm:gap-[70px] shrink-0">
-        <div className="h-[220px] w-[220px] relative max-sm:h-[180px] max-sm:w-[180px]">
-          <button className={`w-[220px] h-[220px] shrink-0 absolute left-0 top-0 max-sm:w-[180px] max-sm:h-[180px] transition-all flex items-center justify-center rounded-full select-none ${isPressed ? 'scale-95' : 'scale-100'} ${isRecording ? 'animate-pulse' : ''}`} onPointerDown={handlePointerDown} onPointerUp={handlePointerUp} onPointerCancel={handlePointerCancel} onPointerLeave={handlePointerLeave} onContextMenu={e => e.preventDefault()} aria-label="Hold to record voice note" role="button" style={{
+      <div className="flex flex-col items-center gap-[30px] shrink-0">
+        <div className="h-[220px] w-[220px] relative">
+          <button className={`w-[220px] h-[220px] shrink-0 absolute left-0 top-0 transition-all flex items-center justify-center rounded-full select-none ${isPressed ? 'scale-95' : 'scale-100'} ${isRecording ? 'animate-pulse' : ''}`} onPointerDown={handlePointerDown} onPointerUp={handlePointerUp} onPointerCancel={handlePointerCancel} onPointerLeave={handlePointerLeave} onContextMenu={e => e.preventDefault()} aria-label="Hold to record voice note" role="button" style={{
           userSelect: 'none',
           WebkitUserSelect: 'none',
           WebkitTouchCallout: 'none',
           touchAction: 'none'
         }}>
             <div dangerouslySetInnerHTML={{
-            __html: `<svg width="220" height="221" viewBox="0 0 220 221" fill="none" xmlns="http://www.w3.org/2000/svg" class="record-button max-sm:w-[180px] max-sm:h-[180px]" style="width: 220px; height: 220px; flex-shrink: 0;">
+            __html: `<svg width="220" height="221" viewBox="0 0 220 221" fill="none" xmlns="http://www.w3.org/2000/svg" class="record-button" style="width: 220px; height: 220px; flex-shrink: 0;">
                   <path d="M110 0.5C170.753 0.5 220 49.747 220 110.5C220 171.253 170.753 220.5 110 220.5C91.278 220.5 73.645 215.825 58.212 207.575L0 220.5L12.936 162.31C4.686 146.866 0 129.233 0 110.5C0 49.747 49.247 0.5 110 0.5Z" fill="${isPressed ? '#BFBFBF' : settings.accentColor}"/>
                   <path d="M110 0.5C170.753 0.5 220 49.747 220 110.5C220 171.253 170.753 220.5 110 220.5C91.278 220.5 73.645 215.825 58.212 207.575L0 220.5L12.936 162.31C4.686 146.866 0 129.233 0 110.5C0 49.747 49.247 0.5 110 0.5ZM110 22.5C61.402 22.5 22 61.902 22 110.5C22 125.185 25.586 139.298 32.34 151.926L36.19 159.12L28.974 191.526L61.402 184.332L68.585 188.171C81.213 194.925 95.315 198.5 110 198.5C158.598 198.5 198 159.098 198 110.5C198 61.902 158.598 22.5 110 22.5Z" fill="#09121F"/>
                 </svg>`
