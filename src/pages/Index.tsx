@@ -88,18 +88,17 @@ const Index = () => {
         rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Gilroy:wght@400;700;800;900&display=swap"
       />
-      <div 
-        className="flex w-full max-w-sm mx-auto flex-col items-start relative bg-white min-h-screen"
-        style={{ fontFamily: 'Gilroy, sans-serif' }}
-      >
-        <div className="sticky top-0 z-10 bg-white self-stretch w-full">
-          <Navigation activeTab={activeTab} onTabChange={handleTabChange} />
-          <TabNavigation activeTab={activeTab} onTabChange={handleTabChange} />
-          <Divider />
-          <div className="h-2" />
+      <div className="min-h-screen bg-white">
+        <div className="sticky top-0 inset-x-0 z-20 bg-white">
+          <div className="w-full max-w-sm mx-auto" style={{ fontFamily: 'Gilroy, sans-serif' }}>
+            <Navigation activeTab={activeTab} onTabChange={handleTabChange} />
+            <TabNavigation activeTab={activeTab} onTabChange={handleTabChange} />
+            <Divider />
+            <div className="h-2" />
+          </div>
         </div>
 
-        <div className="-mt-2 self-stretch w-full">
+        <div className="w-full max-w-sm mx-auto -mt-2" style={{ fontFamily: 'Gilroy, sans-serif' }}>
           {activeTab === 'enter-time' && (
             <>
               <RecordButton
@@ -126,7 +125,6 @@ const Index = () => {
         </div>
 
         <HomeIndicator />
-
       </div>
     </>
   );
