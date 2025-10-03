@@ -297,12 +297,49 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
     const entry = activeTimeEntries.find(e => e.id === entryId);
     if (!entry) return;
 
+    const trimmedValue = value.trim();
+
+    // Check for duplicates when editing client or project
+    if (field === 'client') {
+      const existingClient = settings.clients.find(
+        c => c.name.toLowerCase() === trimmedValue.toLowerCase() && c.name !== entry.client
+      );
+      if (existingClient && trimmedValue.toLowerCase() !== entry.client?.toLowerCase()) {
+        toast({
+          title: "Duplicate Client",
+          description: "A client with this name already exists.",
+          variant: "destructive",
+        });
+        setEditingEntryId(null);
+        setEditingField(null);
+        return;
+      }
+    } else if (field === 'project') {
+      const existingProject = settings.projects.find(
+        p => p.name.toLowerCase() === trimmedValue.toLowerCase() && p.name !== entry.project
+      );
+      if (existingProject && trimmedValue.toLowerCase() !== entry.project.toLowerCase()) {
+        toast({
+          title: "Duplicate Project",
+          description: "A project with this name already exists.",
+          variant: "destructive",
+        });
+        setEditingEntryId(null);
+        setEditingField(null);
+        return;
+      }
+    }
+
     const updates: Partial<TimeEntry> = {};
     
     if (field === 'date') {
       updates.date = value;
     } else if (field === 'task') {
-      updates.task = value;
+      updates.task = trimmedValue;
+    } else if (field === 'client') {
+      updates.client = trimmedValue;
+    } else if (field === 'project') {
+      updates.project = trimmedValue;
     } else if (field === 'duration') {
       const numValue = parseFloat(value);
       if (!isNaN(numValue) && numValue >= 0) {
@@ -739,7 +776,26 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                           {sortOption === 'date' && (
                             <>
                               <div className="text-[#09121F] text-sm leading-tight flex items-start">
-                                {entry.project}
+                                {editingEntryId === entry.id && editingField === 'project' ? (
+                                  <input
+                                    type="text"
+                                    defaultValue={entry.project}
+                                    className="text-sm bg-transparent border-none outline-none focus:bg-white focus:border focus:border-gray-300 px-1 rounded w-full"
+                                    autoFocus
+                                    onBlur={(e) => handleFieldSave(entry.id, 'project', e.target.value)}
+                                    onKeyDown={(e) => {
+                                      if (e.key === 'Enter') handleFieldSave(entry.id, 'project', e.currentTarget.value);
+                                      if (e.key === 'Escape') handleFieldCancel();
+                                    }}
+                                  />
+                                ) : (
+                                  <span 
+                                    className="cursor-pointer hover:bg-gray-100 px-1 rounded"
+                                    onClick={() => handleFieldEdit(entry.id, 'project')}
+                                  >
+                                    {entry.project}
+                                  </span>
+                                )}
                               </div>
                               <div></div>
                               <div className="text-[#09121F] text-sm leading-tight flex items-start">
@@ -793,7 +849,26 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                               </div>
                               <div></div>
                               <div className="text-[#09121F] text-sm leading-tight flex items-start">
-                                {entry.project}
+                                {editingEntryId === entry.id && editingField === 'project' ? (
+                                  <input
+                                    type="text"
+                                    defaultValue={entry.project}
+                                    className="text-sm bg-transparent border-none outline-none focus:bg-white focus:border focus:border-gray-300 px-1 rounded w-full"
+                                    autoFocus
+                                    onBlur={(e) => handleFieldSave(entry.id, 'project', e.target.value)}
+                                    onKeyDown={(e) => {
+                                      if (e.key === 'Enter') handleFieldSave(entry.id, 'project', e.currentTarget.value);
+                                      if (e.key === 'Escape') handleFieldCancel();
+                                    }}
+                                  />
+                                ) : (
+                                  <span 
+                                    className="cursor-pointer hover:bg-gray-100 px-1 rounded"
+                                    onClick={() => handleFieldEdit(entry.id, 'project')}
+                                  >
+                                    {entry.project}
+                                  </span>
+                                )}
                               </div>
                             </>
                           )}

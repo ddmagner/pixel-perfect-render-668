@@ -37,11 +37,11 @@ export const AutocompleteInput = React.forwardRef<HTMLInputElement, Autocomplete
 
     return (
       <div className="relative flex-1">
-        <div className="relative">
+        <div className="relative flex items-center">
           {/* Ghost text for autocomplete preview */}
           {suggestion && (
             <div 
-              className="absolute inset-0 pointer-events-none text-[#09121F] text-[15px] font-normal leading-5 tracking-[0.1px]"
+              className="absolute inset-0 pointer-events-none flex items-center text-[#09121F] text-[15px] font-normal leading-5 tracking-[0.1px]"
               aria-hidden="true"
             >
               <span className="invisible">{value}</span>

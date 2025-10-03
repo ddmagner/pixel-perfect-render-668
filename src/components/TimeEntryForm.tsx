@@ -166,43 +166,46 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
       const { data: user } = await supabase.auth.getUser();
       if (!user.user) return;
 
-      // Check if client already exists
+      // Check if client already exists (case-insensitive)
       const existingClient = settings.clients.find(
         client => client.name.toLowerCase() === clientName.toLowerCase()
       );
 
-      if (!existingClient) {
-        // Create new client
-        const { data: newClient, error } = await supabase
-          .from('clients')
-          .insert({
-            name: clientName,
-            user_id: user.user.id
-          })
-          .select()
-          .single();
-
-        if (error) {
-          console.error('Error creating client:', error);
-          return;
-        }
-
-        // Update settings with new client
-        const updatedSettings = {
-          ...settings,
-          clients: [...settings.clients, {
-            id: newClient.id,
-            name: newClient.name,
-            email: newClient.email || undefined,
-            address: newClient.address || undefined,
-            city: newClient.city || undefined,
-            state: newClient.state || undefined,
-            zip_code: newClient.zip_code || undefined
-          }]
-        };
-        
-        await updateSettings(updatedSettings);
+      if (existingClient) {
+        // Client already exists, don't create duplicate
+        return;
       }
+
+      // Create new client
+      const { data: newClient, error } = await supabase
+        .from('clients')
+        .insert({
+          name: clientName,
+          user_id: user.user.id
+        })
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Error creating client:', error);
+        return;
+      }
+
+      // Update settings with new client
+      const updatedSettings = {
+        ...settings,
+        clients: [...settings.clients, {
+          id: newClient.id,
+          name: newClient.name,
+          email: newClient.email || undefined,
+          address: newClient.address || undefined,
+          city: newClient.city || undefined,
+          state: newClient.state || undefined,
+          zip_code: newClient.zip_code || undefined
+        }]
+      };
+      
+      await updateSettings(updatedSettings);
     } catch (error) {
       console.error('Error in client auto-match:', error);
     }
@@ -213,39 +216,42 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
       const { data: user } = await supabase.auth.getUser();
       if (!user.user) return;
 
-      // Check if project already exists
+      // Check if project already exists (case-insensitive)
       const existingProject = settings.projects.find(
         project => project.name.toLowerCase() === projectName.toLowerCase()
       );
 
-      if (!existingProject) {
-        // Create new project
-        const { data: newProject, error } = await supabase
-          .from('projects')
-          .insert({
-            name: projectName,
-            user_id: user.user.id
-          })
-          .select()
-          .single();
-
-        if (error) {
-          console.error('Error creating project:', error);
-          return;
-        }
-
-        // Update settings with new project
-        const updatedSettings = {
-          ...settings,
-          projects: [...settings.projects, {
-            id: newProject.id,
-            name: newProject.name,
-            clientId: newProject.client_id || undefined
-          }]
-        };
-        
-        await updateSettings(updatedSettings);
+      if (existingProject) {
+        // Project already exists, don't create duplicate
+        return;
       }
+
+      // Create new project
+      const { data: newProject, error } = await supabase
+        .from('projects')
+        .insert({
+          name: projectName,
+          user_id: user.user.id
+        })
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Error creating project:', error);
+        return;
+      }
+
+      // Update settings with new project
+      const updatedSettings = {
+        ...settings,
+        projects: [...settings.projects, {
+          id: newProject.id,
+          name: newProject.name,
+          clientId: newProject.client_id || undefined
+        }]
+      };
+      
+      await updateSettings(updatedSettings);
     } catch (error) {
       console.error('Error in project auto-match:', error);
     }
