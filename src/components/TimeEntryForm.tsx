@@ -367,8 +367,7 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
                     "text-[#09121F] text-[15px] leading-5 tracking-[0.1px]"
                   )}
                 >
-                  <CalendarIcon className="mr-2 h-4 w-4 text-[#BFBFBF]" />
-                  {format(formData.date, "PPP")}
+                  {format(formData.date, "MM/dd/yy")}
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="w-auto p-0" align="start">
