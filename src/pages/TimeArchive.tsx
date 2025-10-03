@@ -279,7 +279,7 @@ export const TimeArchivePage: React.FC = () => {
             <div className="h-1" />
           </div>
         </div>
-        <div className="h-[88px]" />
+        <div className="h-[84px]" />
 
         {/* Mode Toggle */}
         <div className="w-full max-w-sm mx-auto" style={{ fontFamily: 'Gilroy, sans-serif' }}>
