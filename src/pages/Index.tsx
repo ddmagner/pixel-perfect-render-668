@@ -94,7 +94,7 @@ const Index = () => {
             <Navigation activeTab={activeTab} onTabChange={handleTabChange} />
             <TabNavigation activeTab={activeTab} onTabChange={handleTabChange} />
             <Divider />
-            <div className="h-0.5" />
+            <div className="h-1" />
           </div>
         </div>
         <div className="h-24" />
