@@ -55,7 +55,7 @@ export const ColorCustomization: React.FC<{ onClose?: () => void }> = ({ onClose
           const hue = col * 36 % 360; // 360/10 colors = 36° per column
           const lightness = 100 - row * 100 / 9; // Keep original 9-row lightness calculation
           const color = `hsl(${hue} 100% ${lightness}%)`;
-          return <button key={i} onClick={() => handleColorSelect(color)} className="w-full h-full transition-transform hover:scale-110 hover:z-10" style={{
+          return <button key={i} onClick={() => handleColorSelect(color)} className={`w-full h-full transition-transform hover:scale-110 hover:z-10 ${color === selectedColor ? 'ring-2 ring-white ring-inset' : ''}`} style={{
             backgroundColor: color
           }} aria-label={`Select color ${color}`} />;
         })}
