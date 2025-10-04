@@ -3,6 +3,7 @@ import { useApp } from '@/context/AppContext';
 import { TaskType, TaxType, Project, Client } from '@/types';
 import { Edit3, Trash2, Plus } from 'lucide-react';
 import { formatCurrency } from '@/lib/utils';
+import { toast } from '@/hooks/use-toast';
 interface TimeEntrySettingsProps {
   highlightSection?: string | null;
   onClientDetailsOpen?: (client: Client) => void;
@@ -29,9 +30,24 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
   const formatCurrencyInput = (n?: number) => `$${(n ?? 0).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
   const handleAddTask = () => {
     if (!newTaskName.trim()) return;
+    
+    // Check for duplicate task name
+    const trimmedName = newTaskName.trim();
+    const isDuplicate = settings.taskTypes.some(
+      task => task.name.toLowerCase() === trimmedName.toLowerCase()
+    );
+    
+    if (isDuplicate) {
+      toast({
+        title: "Task already entered.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
     const newTask: TaskType = {
       id: crypto.randomUUID(),
-      name: newTaskName.trim(),
+      name: trimmedName,
       hourlyRate: newTaskRate ? parseFloat(newTaskRate.replace(/[^0-9.]/g, '')) : undefined
     };
     updateSettings({
@@ -77,9 +93,24 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
   };
   const handleAddProject = () => {
     if (!newProjectName.trim()) return;
+    
+    // Check for duplicate project name
+    const trimmedName = newProjectName.trim();
+    const isDuplicate = settings.projects.some(
+      project => project.name.toLowerCase() === trimmedName.toLowerCase()
+    );
+    
+    if (isDuplicate) {
+      toast({
+        title: "Project already entered.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
     const newProject: Project = {
       id: crypto.randomUUID(),
-      name: newProjectName.trim()
+      name: trimmedName
     };
     updateSettings({
       projects: [...settings.projects, newProject]
@@ -93,9 +124,24 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
   };
   const handleAddClient = () => {
     if (!newClientName.trim()) return;
+    
+    // Check for duplicate client name
+    const trimmedName = newClientName.trim();
+    const isDuplicate = settings.clients.some(
+      client => client.name.toLowerCase() === trimmedName.toLowerCase()
+    );
+    
+    if (isDuplicate) {
+      toast({
+        title: "Client already entered.",
+        variant: "destructive"
+      });
+      return;
+    }
+    
     const newClient: Client = {
       id: crypto.randomUUID(),
-      name: newClientName.trim()
+      name: trimmedName
     };
     updateSettings({
       clients: [...settings.clients, newClient]
