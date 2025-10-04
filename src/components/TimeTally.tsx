@@ -486,8 +486,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({ onSwitchToSettings }) => {
     selection.clearSelection();
     setShowDeleteDialog(false);
     toast({
-      title: "Entries Deleted",
-      description: `${selection.selectedCount} ${selection.selectedCount === 1 ? 'entry' : 'entries'} deleted`
+      description: selection.selectedCount === 1 ? "Time entry deleted." : `${selection.selectedCount} entries deleted.`
     });
   };
   const handleArchive = () => {
