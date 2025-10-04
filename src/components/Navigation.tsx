@@ -14,8 +14,8 @@ export const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }
   const isArchivePage = location.pathname === '/archive';
   
   return (
-    <nav className={`flex justify-center items-center w-full px-2.5 pt-4 pb-1 ${
-      isArchivePage ? 'bg-gray-200 opacity-50 pointer-events-none' : 'bg-white'
+    <nav className={`flex justify-center items-center w-full px-2.5 pt-4 pb-1 bg-white ${
+      isArchivePage ? 'opacity-50 pointer-events-none' : ''
     }`}>
       <div className="flex h-3.5 justify-end items-center">
         <div className="flex items-center gap-[9px]">
