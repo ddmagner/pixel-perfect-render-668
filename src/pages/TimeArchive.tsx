@@ -662,14 +662,16 @@ export const TimeArchivePage: React.FC = () => {
           </div>
 
           {/* Exit Button */}
-          <div className="px-2.5 pt-0 pb-5">
-            <Button 
-              variant="outline" 
+          <div className="px-2.5 py-5">
+            <button 
               onClick={() => navigate('/')} 
-              className="w-full h-12 text-base font-medium rounded-none border-2 border-foreground"
+              className="w-full text-white py-3.5 font-bold text-sm transition-colors"
+              style={{
+                backgroundColor: '#09121F'
+              }}
             >
               Exit
-            </Button>
+            </button>
           </div>
 
           {/* Clear Archive Dialog */}
