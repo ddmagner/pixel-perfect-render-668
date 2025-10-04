@@ -295,7 +295,7 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
                           setEditingTask(null);
                         }
                       }}
-                      className="text-[#09121F] text-sm bg-transparent border-none outline-none w-full h-5 leading-5"
+                      className="text-[#09121F] text-sm bg-transparent border-none outline-none w-full h-5 leading-5 p-0 appearance-none"
                       autoFocus
                     />
                   ) : (
@@ -340,7 +340,7 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
                             setEditingTaskRateInput('');
                           }
                         }}
-                        className="text-[#09121F] text-sm bg-transparent border-none outline-none w-full text-right h-5 leading-5"
+                        className="text-[#09121F] text-sm bg-transparent border-none outline-none w-full text-right h-5 leading-5 p-0 appearance-none"
                         onFocus={(e) => e.target.select()}
                         required
                       />
@@ -380,7 +380,7 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
               placeholder="Add task type"
               value={newTaskName}
               onChange={(e) => setNewTaskName(e.target.value)}
-              className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none w-full h-5 leading-5"
+              className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none w-full h-5 leading-5 p-0 appearance-none"
             />
 
             <div className="text-right">
@@ -402,7 +402,7 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
                       : formattedValue;
                     setNewTaskRate(finalValue);
                   }}
-                  className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none w-full text-right h-5 leading-5"
+                  className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none w-full text-right h-5 leading-5 p-0 appearance-none"
                 />
               ) : (
                 <span className="invisible select-none leading-5 block">0</span>
