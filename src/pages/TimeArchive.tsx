@@ -18,14 +18,14 @@ import { HomeIndicator } from '@/components/HomeIndicator';
 export const TimeArchivePage: React.FC = () => {
   const {
     timeEntries,
-    deleteTimeEntry,
-    updateTimeEntry,
     settings,
     viewMode,
     setViewMode,
     sortOption,
     setSortOption,
-    updateSettings
+    updateSettings,
+    updateTimeEntry,
+    deleteTimeEntries
   } = useApp();
   const {
     toast
@@ -206,40 +206,65 @@ export const TimeArchivePage: React.FC = () => {
     };
   }, [archivedEntries, sortOption, viewMode, settings]);
 
-  const handleRestore = (ids: string[]) => {
-    ids.forEach(id => {
-      updateTimeEntry(id, {
-        archived: false
+  const handleRestore = async (ids: string[]) => {
+    try {
+      // Update each entry to unarchive it
+      for (const id of ids) {
+        await updateTimeEntry(id, { archived: false });
+      }
+      
+      selection.clearSelection();
+      
+      toast({
+        title: ids.length === 1 ? "Time entry restored." : `${ids.length} entries restored.`
       });
-    });
-    selection.clearSelection();
-    toast({
-      title: "Entries Restored",
-      description: `${ids.length} ${ids.length === 1 ? 'entry' : 'entries'} restored to active records`
-    });
+    } catch (error) {
+      console.error('Error restoring entries:', error);
+      toast({
+        description: "Error restoring entries. Please try again.",
+        variant: "destructive"
+      });
+    }
   };
 
-  const handleDelete = (ids: string[]) => {
-    ids.forEach(id => {
-      deleteTimeEntry(id);
-    });
-    selection.clearSelection();
-    toast({
-      title: "Entries Deleted",
-      description: `${ids.length} ${ids.length === 1 ? 'entry' : 'entries'} permanently deleted`
-    });
+  const handleDelete = async (ids: string[]) => {
+    try {
+      await deleteTimeEntries(ids);
+      
+      selection.clearSelection();
+      setShowDeleteDialog(false);
+      
+      toast({
+        title: ids.length === 1 ? "Time entry deleted." : `${ids.length} entries deleted.`
+      });
+    } catch (error) {
+      console.error('Error deleting entries:', error);
+      toast({
+        description: "Error deleting entries. Please try again.",
+        variant: "destructive"
+      });
+    }
   };
 
-  const handleClearArchive = () => {
-    archivedEntries.forEach(entry => {
-      deleteTimeEntry(entry.id);
-    });
-    selection.clearSelection();
-    setShowClearDialog(false);
-    toast({
-      title: "Archive Cleared",
-      description: "All archived entries have been permanently deleted"
-    });
+  const handleClearArchive = async () => {
+    try {
+      const archivedIds = archivedEntries.map(e => e.id);
+      await deleteTimeEntries(archivedIds);
+      
+      selection.clearSelection();
+      setShowClearDialog(false);
+      
+      toast({
+        title: "Archive cleared.",
+        description: "All archived entries have been permanently deleted"
+      });
+    } catch (error) {
+      console.error('Error clearing archive:', error);
+      toast({
+        description: "Error clearing archive. Please try again.",
+        variant: "destructive"
+      });
+    }
   };
 
   const formatHours = (hours: number): string => {
