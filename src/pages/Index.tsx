@@ -88,8 +88,8 @@ const Index = () => {
         rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Gilroy:wght@400;700;800;900&display=swap"
       />
-      <div className="fixed inset-0 flex flex-col bg-white">
-        <div className="fixed top-0 inset-x-0 z-40 bg-white">
+      <div className="fixed inset-0 flex flex-col bg-white overflow-y-auto">
+        <div className="sticky top-0 z-40 bg-white">
           <div className="w-full max-w-sm mx-auto" style={{ fontFamily: 'Gilroy, sans-serif' }}>
             <Navigation activeTab={activeTab} onTabChange={handleTabChange} />
             <TabNavigation activeTab={activeTab} onTabChange={handleTabChange} />
@@ -98,7 +98,7 @@ const Index = () => {
           </div>
         </div>
 
-        <div className="flex-1 overflow-y-auto pt-[84px]">
+        <div className="flex-1">
           <div className="w-full max-w-sm mx-auto" style={{ fontFamily: 'Gilroy, sans-serif' }}>
             {activeTab === 'enter-time' && (
               <>
