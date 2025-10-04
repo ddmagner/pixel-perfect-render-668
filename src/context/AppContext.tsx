@@ -568,9 +568,14 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         .eq('user_id', user.id);
 
       if (error) throw error;
+      
+      // Update local state immediately
       setTimeEntries(prev => prev.map(entry => 
         ids.includes(entry.id) ? { ...entry, archived: true } : entry
       ));
+      
+      // Reload data from database to ensure sync
+      await loadUserData();
     } catch (error) {
       console.error('Error archiving time entries:', error);
       toast({
