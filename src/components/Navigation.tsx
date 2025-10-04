@@ -15,7 +15,7 @@ export const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }
   
   return (
     <nav className={`flex justify-center items-center w-full px-2.5 pt-4 pb-1 bg-white ${
-      isArchivePage ? 'opacity-50 pointer-events-none' : ''
+      isArchivePage ? 'pointer-events-none' : ''
     }`}>
       <div className="flex h-3.5 justify-end items-center">
         <div className="flex items-center gap-[9px]">
@@ -52,7 +52,7 @@ export const TabNavigation: React.FC<TabNavigationProps> = ({ activeTab, onTabCh
   
   return (
     <nav className={`flex items-start w-full px-2.5 pt-0 pb-0 bg-white ${
-      isArchivePage ? 'opacity-50 pointer-events-none' : ''
+      isArchivePage ? 'pointer-events-none' : ''
     }`}>
       <button
         className={`flex h-12 flex-col justify-center items-center flex-[1_0_0] px-0 py-[9px] relative ${
