@@ -288,12 +288,12 @@ export const TimeArchivePage: React.FC = () => {
   // Get table headers based on sort option - matching TimeTally
   const getTableHeaders = () => {
     if (sortOption === 'project') {
-      return viewMode === 'invoice' ? ['Date', 'Task', 'Hours', 'Fee'] : ['Date', 'Task', 'Hours'];
+      return settings.invoiceMode ? ['Date', 'Task', 'Hours', 'Fee'] : ['Date', 'Task', 'Hours'];
     } else if (sortOption === 'date') {
-      return viewMode === 'invoice' ? ['Project', 'Task', 'Hours', 'Fee'] : ['Project', 'Task', 'Hours'];
+      return settings.invoiceMode ? ['Project', 'Task', 'Hours', 'Fee'] : ['Project', 'Task', 'Hours'];
     } else {
       // task
-      return viewMode === 'invoice' ? ['Date', 'Project', 'Hours', 'Fee'] : ['Date', 'Project', 'Hours'];
+      return settings.invoiceMode ? ['Date', 'Project', 'Hours', 'Fee'] : ['Date', 'Project', 'Hours'];
     }
   };
   const headers = getTableHeaders();
@@ -375,17 +375,17 @@ export const TimeArchivePage: React.FC = () => {
         {/* Mode Toggle */}
         <div className="w-full max-w-sm mx-auto" style={{ fontFamily: 'Gilroy, sans-serif' }}>
           <div className="flex justify-center items-center w-full px-2.5 py-4">
-          <div className="flex items-center gap-4">
-            <span className={`text-sm font-medium ${viewMode === 'timecard' ? 'text-[#09121F]' : 'text-[#BFBFBF]'}`}>
-              Time Card Mode
-            </span>
-            <button onClick={() => setViewMode(viewMode === 'timecard' ? 'invoice' : 'timecard')} className={`w-12 h-6 rounded-full transition-colors ${viewMode === 'invoice' ? 'bg-[#09121F]' : 'bg-[#BFBFBF]'}`}>
-              <div className={`w-5 h-5 bg-white rounded-full transition-transform ${viewMode === 'invoice' ? 'translate-x-6' : 'translate-x-0.5'}`} />
-            </button>
-            <span className={`text-sm font-medium ${viewMode === 'invoice' ? 'text-[#09121F]' : 'text-[#BFBFBF]'}`}>
-              Invoice Mode
-            </span>
-          </div>
+            <div className="flex items-center gap-4">
+              <span className={`text-sm font-medium ${!settings.invoiceMode ? 'text-[#09121F]' : 'text-[#BFBFBF]'}`}>
+                Time Card Mode
+              </span>
+              <button onClick={() => updateSettings({ invoiceMode: !settings.invoiceMode })} className={`w-12 h-6 rounded-full transition-colors ${settings.invoiceMode ? 'bg-[#09121F]' : 'bg-[#BFBFBF]'}`}>
+                <div className={`w-5 h-5 bg-white rounded-full transition-transform ${settings.invoiceMode ? 'translate-x-6' : 'translate-x-0.5'}`} />
+              </button>
+              <span className={`text-sm font-medium ${settings.invoiceMode ? 'text-[#09121F]' : 'text-[#BFBFBF]'}`}>
+                Invoice Mode
+              </span>
+            </div>
         </div>
 
         {/* Divider */}
@@ -423,7 +423,7 @@ export const TimeArchivePage: React.FC = () => {
           {/* Table Header */}
           <div className="w-full px-2.5">
             <div className="grid h-[32px] items-center" style={{
-              gridTemplateColumns: getEntryGridTemplate(viewMode === 'invoice'),
+              gridTemplateColumns: getEntryGridTemplate(settings.invoiceMode),
               gap: '0'
             }}>
               <div className="flex items-center justify-start">
@@ -458,7 +458,7 @@ export const TimeArchivePage: React.FC = () => {
                     
                     {/* Top Level Header */}
                     <div className="grid items-center font-bold text-[#09121F] text-sm py-2" style={{
-                      gridTemplateColumns: getEntryGridTemplate(viewMode === 'invoice'),
+                      gridTemplateColumns: getEntryGridTemplate(settings.invoiceMode),
                       gap: '0'
                     }}>
                       <div className="flex items-center justify-start">
@@ -480,7 +480,7 @@ export const TimeArchivePage: React.FC = () => {
                       </div>
                       <div></div>
                       <div></div>
-                      {viewMode === 'invoice' && (
+                      {settings.invoiceMode && (
                         <>
                           <div></div>
                           <div></div>
@@ -494,7 +494,7 @@ export const TimeArchivePage: React.FC = () => {
                         
                         {/* Subgroup Header */}
                         <div className="grid items-center font-bold text-[#09121F] text-sm py-2" style={{
-                          gridTemplateColumns: getEntryGridTemplate(viewMode === 'invoice'),
+                          gridTemplateColumns: getEntryGridTemplate(settings.invoiceMode),
                           gap: '0'
                         }}>
                           <div className="flex items-center justify-start">
@@ -520,7 +520,7 @@ export const TimeArchivePage: React.FC = () => {
                           </div>
                           <div></div>
                           <div></div>
-                          {viewMode === 'invoice' && (
+                          {settings.invoiceMode && (
                             <>
                               <div></div>
                               <div></div>
@@ -531,7 +531,7 @@ export const TimeArchivePage: React.FC = () => {
                         {/* Entries */}
                         {subgroup.entries?.map((entry: TimeEntry) => (
                           <div key={entry.id} className="grid items-start hover:bg-gray-50 py-2" style={{
-                            gridTemplateColumns: getEntryGridTemplate(viewMode === 'invoice'),
+                            gridTemplateColumns: getEntryGridTemplate(settings.invoiceMode),
                             gap: '0'
                           }}>
                             <div className="flex items-start justify-start self-start mt-1">
@@ -558,23 +558,23 @@ export const TimeArchivePage: React.FC = () => {
                                 <div className="text-[#09121F] text-sm leading-tight text-right flex items-start justify-end">
                                   {formatHours(entry.duration)}
                                 </div>
-                                {viewMode === 'invoice' && (
-                                  <>
-                                    <div></div>
-                                    <div className="text-[#09121F] text-sm leading-tight text-right flex items-start justify-end">
-                                      {hasTaskRate(entry.task) ? (
-                                        formatCurrency(calculateFee(entry))
-                                      ) : (
-                                        <button 
-                                          onClick={() => handleAddRate(entry.task)}
-                                          className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-[#09121F]/80 transition-colors"
-                                        >
-                                          <Plus className="h-2.5 w-2.5" />
-                                        </button>
-                                      )}
-                                    </div>
-                                  </>
-                                )}
+                                {settings.invoiceMode && (
+                                    <>
+                                      <div></div>
+                                      <div className="text-[#09121F] text-sm leading-tight text-right flex items-start justify-end">
+                                        {hasTaskRate(entry.task) ? (
+                                          formatCurrency(calculateFee(entry))
+                                        ) : (
+                                          <button 
+                                            onClick={() => handleAddRate(entry.task)}
+                                            className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-[#09121F]/80 transition-colors"
+                                          >
+                                            <Plus className="h-2.5 w-2.5" />
+                                          </button>
+                                        )}
+                                      </div>
+                                    </>
+                                  )}
                               </React.Fragment>
                             )}
                             
@@ -591,23 +591,23 @@ export const TimeArchivePage: React.FC = () => {
                                 <div className="text-[#09121F] text-sm leading-tight text-right flex items-start justify-end">
                                   {formatHours(entry.duration)}
                                 </div>
-                                {viewMode === 'invoice' && (
-                                  <>
-                                    <div></div>
-                                    <div className="text-[#09121F] text-sm leading-tight text-right flex items-start justify-end">
-                                      {hasTaskRate(entry.task) ? (
-                                        formatCurrency(calculateFee(entry))
-                                      ) : (
-                                        <button 
-                                          onClick={() => handleAddRate(entry.task)}
-                                          className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-[#09121F]/80 transition-colors"
-                                        >
-                                          <Plus className="h-2.5 w-2.5" />
-                                        </button>
-                                      )}
-                                    </div>
-                                  </>
-                                )}
+                                  {settings.invoiceMode && (
+                                    <>
+                                      <div></div>
+                                      <div className="text-[#09121F] text-sm leading-tight text-right flex items-start justify-end">
+                                        {hasTaskRate(entry.task) ? (
+                                          formatCurrency(calculateFee(entry))
+                                        ) : (
+                                          <button 
+                                            onClick={() => handleAddRate(entry.task)}
+                                            className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-[#09121F]/80 transition-colors"
+                                          >
+                                            <Plus className="h-2.5 w-2.5" />
+                                          </button>
+                                        )}
+                                      </div>
+                                    </>
+                                  )}
                               </React.Fragment>
                             )}
                             
@@ -624,23 +624,23 @@ export const TimeArchivePage: React.FC = () => {
                                 <div className="text-[#09121F] text-sm leading-tight text-right flex items-start justify-end">
                                   {formatHours(entry.duration)}
                                 </div>
-                                {viewMode === 'invoice' && (
-                                  <>
-                                    <div></div>
-                                    <div className="text-[#09121F] text-sm leading-tight text-right flex items-start justify-end">
-                                      {hasTaskRate(entry.task) ? (
-                                        formatCurrency(calculateFee(entry))
-                                      ) : (
-                                        <button 
-                                          onClick={() => handleAddRate(entry.task)}
-                                          className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-[#09121F]/80 transition-colors"
-                                        >
-                                          <Plus className="h-2.5 w-2.5" />
-                                        </button>
-                                      )}
-                                    </div>
-                                  </>
-                                )}
+                                  {settings.invoiceMode && (
+                                    <>
+                                      <div></div>
+                                      <div className="text-[#09121F] text-sm leading-tight text-right flex items-start justify-end">
+                                        {hasTaskRate(entry.task) ? (
+                                          formatCurrency(calculateFee(entry))
+                                        ) : (
+                                          <button 
+                                            onClick={() => handleAddRate(entry.task)}
+                                            className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-[#09121F]/80 transition-colors"
+                                          >
+                                            <Plus className="h-2.5 w-2.5" />
+                                          </button>
+                                        )}
+                                      </div>
+                                    </>
+                                  )}
                               </React.Fragment>
                             )}
                           </div>
