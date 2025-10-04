@@ -267,9 +267,6 @@ export const TimeArchivePage: React.FC = () => {
     }
   };
 
-  const formatHours = (hours: number): string => {
-    return hours.toFixed(2);
-  };
 
   // Get sort option display text
   const getSortOptionText = () => {
@@ -434,7 +431,7 @@ export const TimeArchivePage: React.FC = () => {
               <div></div>
               {headers.map((header, index) => (
                 <React.Fragment key={header}>
-                  <span className={`text-[#09121F] text-sm font-bold ${header === 'Fee' ? 'text-right' : 'text-left'}`}>
+                  <span className={`text-[#09121F] text-sm font-bold ${header === 'Fee' ? 'text-right' : header === 'Hours' ? 'text-left' : 'text-left'}`}>
                     {header}
                   </span>
                   {index < headers.length - 1 && <div></div>}
@@ -555,9 +552,9 @@ export const TimeArchivePage: React.FC = () => {
                                   {entry.task}
                                 </div>
                                 <div></div>
-                                <div className="text-[#09121F] text-sm leading-tight text-right flex items-start justify-end">
-                                  {formatHours(entry.duration)}
-                                </div>
+                                 <div className="text-[#09121F] text-sm leading-tight text-left flex items-start justify-start">
+                                   {formatHours(entry.duration)}
+                                 </div>
                                 {settings.invoiceMode && (
                                     <>
                                       <div></div>
@@ -588,9 +585,9 @@ export const TimeArchivePage: React.FC = () => {
                                   {entry.task}
                                 </div>
                                 <div></div>
-                                <div className="text-[#09121F] text-sm leading-tight text-right flex items-start justify-end">
-                                  {formatHours(entry.duration)}
-                                </div>
+                                 <div className="text-[#09121F] text-sm leading-tight text-left flex items-start justify-start">
+                                   {formatHours(entry.duration)}
+                                 </div>
                                   {settings.invoiceMode && (
                                     <>
                                       <div></div>
@@ -621,9 +618,9 @@ export const TimeArchivePage: React.FC = () => {
                                   {entry.project}
                                 </div>
                                 <div></div>
-                                <div className="text-[#09121F] text-sm leading-tight text-right flex items-start justify-end">
-                                  {formatHours(entry.duration)}
-                                </div>
+                                 <div className="text-[#09121F] text-sm leading-tight text-left flex items-start justify-start">
+                                   {formatHours(entry.duration)}
+                                 </div>
                                   {settings.invoiceMode && (
                                     <>
                                       <div></div>
