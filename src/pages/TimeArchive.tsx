@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { useApp } from '@/context/AppContext';
 import { TimeEntry } from '@/types';
 import { format } from 'date-fns';
-import { Trash2, RotateCcw, Archive, ChevronDown, X, Plus } from 'lucide-react';
+import { Trash2, Archive, ChevronDown, Plus } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -359,29 +359,6 @@ export const TimeArchivePage: React.FC = () => {
         <div className="flex flex-col h-full w-full font-gilroy">
           {/* Header / Selection Toolbar */}
           <div className="pt-0.5 pb-1 h-[2.75rem] px-2.5">
-            {selection.hasAnySelected && <div className="fixed left-1/2 transform -translate-x-1/2 w-[calc(100%-2.5rem)] z-50" style={{
-            top: '150px'
-          }}>
-                <div className="flex items-center gap-2 bg-gray-50 h-[2.75rem] py-2 pl-0 pr-3 justify-between rounded" style={{
-              boxShadow: '0 -3px 8px -1px rgba(0, 0, 0, 0.2), 0 3px 8px -1px rgba(0, 0, 0, 0.2)'
-            }}>
-                  <div className="flex items-center gap-4" style={{
-                paddingLeft: '32px'
-              }}>
-                    <Button size="sm" variant="ghost" onClick={() => handleRestore(selection.selectedIds)} className="bg-transparent text-[#09121F] hover:text-gray-600 hover:bg-transparent border-none shadow-none pl-0 gap-1">
-                      <RotateCcw className="h-4 w-4" />
-                      Restore
-                    </Button>
-                    <Button size="sm" variant="ghost" onClick={() => setShowDeleteDialog(true)} className="bg-transparent text-[#09121F] hover:text-gray-600 hover:bg-transparent border-none shadow-none gap-1">
-                      <Trash2 className="h-4 w-4" />
-                      Delete
-                    </Button>
-                  </div>
-                  <Button size="sm" variant="ghost" onClick={selection.clearSelection} className="bg-transparent text-[#09121F] hover:text-gray-600 hover:bg-transparent border-none shadow-none p-1">
-                    <X className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>}
             <div className="flex items-baseline justify-between h-full">
               <h1 className="text-[#09121F] text-[28px] font-bold leading-8">Time Archive</h1>
               <DropdownMenu>
@@ -639,23 +616,26 @@ export const TimeArchivePage: React.FC = () => {
             )}
           </div>
 
-          {/* Unarchive Button */}
+          {/* Action Buttons */}
           {selection.hasAnySelected && (
-            <div className="px-2.5 pt-5">
+            <div className="px-2.5 pt-5 pb-2 flex gap-2">
               <button 
                 onClick={() => handleRestore(selection.selectedIds)} 
-                className="w-full text-white py-3.5 font-bold text-sm transition-colors" 
-                style={{
-                  background: 'linear-gradient(135deg, #09121F 0%, #2C3E50 100%)'
-                }}
+                className="flex-1 bg-white text-[#09121F] border-2 border-[#09121F] py-3.5 font-bold text-sm transition-colors hover:bg-gray-50"
               >
                 Unarchive
+              </button>
+              <button 
+                onClick={() => setShowDeleteDialog(true)} 
+                className="flex-1 bg-white text-[#09121F] border-2 border-[#09121F] py-3.5 font-bold text-sm transition-colors hover:bg-gray-50"
+              >
+                Delete
               </button>
             </div>
           )}
 
           {/* Exit Button */}
-          <div className="px-2.5 pt-2 pb-5">
+          <div className="px-2.5 pb-5">
             <Button 
               variant="outline" 
               onClick={() => navigate('/')} 
