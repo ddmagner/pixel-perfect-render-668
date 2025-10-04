@@ -131,7 +131,7 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
       
       // Show toast notification
       toast({
-        description: "Time added.",
+        description: "Time entry added.",
         duration: 3000,
       });
       
