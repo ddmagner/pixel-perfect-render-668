@@ -307,6 +307,26 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       
       // Sync task types to database if they were updated
       if (newSettings.taskTypes) {
+        // Get current task type IDs from database
+        const { data: dbTaskTypes } = await supabase
+          .from('task_types')
+          .select('id')
+          .eq('user_id', user.id);
+        
+        const dbTaskTypeIds = (dbTaskTypes || []).map(t => t.id);
+        const newTaskTypeIds = newSettings.taskTypes.map(t => t.id);
+        
+        // Delete task types that are no longer in the array
+        const taskTypesToDelete = dbTaskTypeIds.filter(id => !newTaskTypeIds.includes(id));
+        if (taskTypesToDelete.length > 0) {
+          await supabase
+            .from('task_types')
+            .delete()
+            .in('id', taskTypesToDelete)
+            .eq('user_id', user.id);
+        }
+        
+        // Upsert remaining task types
         for (const taskType of newSettings.taskTypes) {
           await supabase
             .from('task_types')
@@ -323,6 +343,26 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
       // Sync tax types to database if they were updated
       if (newSettings.taxTypes) {
+        // Get current tax type IDs from database
+        const { data: dbTaxTypes } = await supabase
+          .from('tax_types')
+          .select('id')
+          .eq('user_id', user.id);
+        
+        const dbTaxTypeIds = (dbTaxTypes || []).map(t => t.id);
+        const newTaxTypeIds = newSettings.taxTypes.map(t => t.id);
+        
+        // Delete tax types that are no longer in the array
+        const taxTypesToDelete = dbTaxTypeIds.filter(id => !newTaxTypeIds.includes(id));
+        if (taxTypesToDelete.length > 0) {
+          await supabase
+            .from('tax_types')
+            .delete()
+            .in('id', taxTypesToDelete)
+            .eq('user_id', user.id);
+        }
+        
+        // Upsert remaining tax types
         for (const taxType of newSettings.taxTypes) {
           await supabase
             .from('tax_types')
@@ -339,6 +379,26 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
       // Sync clients to database if they were updated
       if (newSettings.clients) {
+        // Get current client IDs from database
+        const { data: dbClients } = await supabase
+          .from('clients')
+          .select('id')
+          .eq('user_id', user.id);
+        
+        const dbClientIds = (dbClients || []).map(c => c.id);
+        const newClientIds = newSettings.clients.map(c => c.id);
+        
+        // Delete clients that are no longer in the array
+        const clientsToDelete = dbClientIds.filter(id => !newClientIds.includes(id));
+        if (clientsToDelete.length > 0) {
+          await supabase
+            .from('clients')
+            .delete()
+            .in('id', clientsToDelete)
+            .eq('user_id', user.id);
+        }
+        
+        // Upsert remaining clients
         for (const client of newSettings.clients) {
           await supabase
             .from('clients')
@@ -360,6 +420,26 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
 
       // Sync projects to database if they were updated
       if (newSettings.projects) {
+        // Get current project IDs from database
+        const { data: dbProjects } = await supabase
+          .from('projects')
+          .select('id')
+          .eq('user_id', user.id);
+        
+        const dbProjectIds = (dbProjects || []).map(p => p.id);
+        const newProjectIds = newSettings.projects.map(p => p.id);
+        
+        // Delete projects that are no longer in the array
+        const projectsToDelete = dbProjectIds.filter(id => !newProjectIds.includes(id));
+        if (projectsToDelete.length > 0) {
+          await supabase
+            .from('projects')
+            .delete()
+            .in('id', projectsToDelete)
+            .eq('user_id', user.id);
+        }
+        
+        // Upsert remaining projects
         for (const project of newSettings.projects) {
           await supabase
             .from('projects')
