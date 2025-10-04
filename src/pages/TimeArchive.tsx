@@ -642,7 +642,17 @@ export const TimeArchivePage: React.FC = () => {
           </div>
 
           {/* Action Buttons */}
-          <div className="px-2.5 py-5">
+          <div className="w-full px-2.5 py-5 space-y-3">
+            <button 
+              onClick={() => navigate('/')} 
+              className="w-full text-white py-3.5 font-bold text-sm transition-colors"
+              style={{
+                backgroundColor: '#09121F'
+              }}
+            >
+              Exit
+            </button>
+            
             <div className="flex gap-3">
               <button 
                 onClick={() => handleRestore(selection.selectedIds)} 
@@ -659,19 +669,6 @@ export const TimeArchivePage: React.FC = () => {
                 Delete
               </button>
             </div>
-          </div>
-
-          {/* Exit Button */}
-          <div className="px-2.5 py-5">
-            <button 
-              onClick={() => navigate('/')} 
-              className="w-full text-white py-3.5 font-bold text-sm transition-colors"
-              style={{
-                backgroundColor: '#09121F'
-              }}
-            >
-              Exit
-            </button>
           </div>
 
           {/* Clear Archive Dialog */}
