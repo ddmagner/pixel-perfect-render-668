@@ -299,7 +299,7 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
                       autoFocus
                     />
                   ) : (
-                    <span className="text-[#09121F] text-sm leading-5 truncate block">
+                    <span className="text-[#09121F] text-sm h-5 leading-5 truncate block">
                       {task.name}
                     </span>
                   )}
@@ -345,12 +345,12 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
                         required
                       />
                     ) : (
-                      <span className="text-[#09121F] text-sm leading-5">
+                      <span className="text-[#09121F] text-sm h-5 leading-5 inline-block">
                         {formatCurrency(task.hourlyRate || 0)}
                       </span>
                     )
                   ) : (
-                    <span className="invisible select-none leading-5 block">0</span>
+                    <span className="invisible select-none h-5 leading-5 inline-block">0</span>
                   )}
                 </div>
 
@@ -405,7 +405,7 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
                   className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none w-full text-right h-5 leading-5 p-0 appearance-none"
                 />
               ) : (
-                <span className="invisible select-none leading-5 block">0</span>
+                <span className="invisible select-none h-5 leading-5 inline-block">0</span>
               )}
             </div>
 
