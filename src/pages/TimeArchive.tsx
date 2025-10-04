@@ -90,7 +90,7 @@ export const TimeArchivePage: React.FC = () => {
     return entry.duration * rate;
   };
 
-  // Group and sort archived entries based on sort option
+  // Group and sort archived entries based on sort option - matching TimeTally structure
   const organizedData = useMemo(() => {
     if (archivedEntries.length === 0) return {
       groups: [],
@@ -99,31 +99,33 @@ export const TimeArchivePage: React.FC = () => {
         fee: 0
       }
     };
+    
     let groups: any[] = [];
     let totalHours = 0;
     let totalFee = 0;
+    
     archivedEntries.forEach(entry => {
       totalHours += entry.duration;
       totalFee += calculateFee(entry);
     });
+    
     if (sortOption === 'project') {
-      // Group by Client > Project > Individual entries
-      const clientGroups: {
-        [key: string]: {
-          [key: string]: TimeEntry[];
-        };
-      } = {};
+      // Group by Client > Project (matching TimeTally)
+      const clientGroups: { [key: string]: { [key: string]: TimeEntry[] } } = {};
+      
       archivedEntries.forEach(entry => {
-        const clientName = getClientByProject(entry.project) || 'No Client';
+        const clientName = entry.client || getClientByProject(entry.project) || 'No Client';
         const projectName = entry.project;
+        
         if (!clientGroups[clientName]) clientGroups[clientName] = {};
         if (!clientGroups[clientName][projectName]) clientGroups[clientName][projectName] = [];
         clientGroups[clientName][projectName].push(entry);
       });
+      
       groups = Object.entries(clientGroups).map(([clientName, projects]) => ({
         type: 'client',
         name: clientName,
-        projects: Object.entries(projects).map(([projectName, entries]) => ({
+        subgroups: Object.entries(projects).map(([projectName, entries]) => ({
           type: 'project',
           name: projectName,
           entries: entries.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()),
@@ -134,26 +136,57 @@ export const TimeArchivePage: React.FC = () => {
         }))
       }));
     } else if (sortOption === 'date') {
-      // Group by Date > Project > Task
-      const dateGroups: {
-        [key: string]: {
-          [key: string]: TimeEntry[];
-        };
-      } = {};
+      // Group by Date > Project (matching TimeTally)
+      const dateGroups: { [key: string]: { [key: string]: TimeEntry[] } } = {};
+      
       archivedEntries.forEach(entry => {
-        const dateKey = format(new Date(entry.date), 'MM/dd');
+        const dateKey = format(new Date(entry.date), 'MM/dd/yyyy');
         const projectKey = entry.project;
+        
         if (!dateGroups[dateKey]) dateGroups[dateKey] = {};
         if (!dateGroups[dateKey][projectKey]) dateGroups[dateKey][projectKey] = [];
         dateGroups[dateKey][projectKey].push(entry);
       });
-      groups = Object.entries(dateGroups).sort(([a], [b]) => a.localeCompare(b)).map(([date, projects]) => ({
-        type: 'date',
-        name: date,
-        projects: Object.entries(projects).map(([projectName, entries]) => ({
+      
+      groups = Object.entries(dateGroups)
+        .sort(([a], [b]) => new Date(a).getTime() - new Date(b).getTime())
+        .map(([date, projects]) => ({
+          type: 'date',
+          name: date,
+          subgroups: Object.entries(projects).map(([projectName, entries]) => ({
+            type: 'project',
+            name: projectName,
+            entries: entries,
+            subtotal: {
+              hours: entries.reduce((sum, e) => sum + e.duration, 0),
+              fee: entries.reduce((sum, e) => sum + calculateFee(e), 0)
+            }
+          })),
+          subtotal: {
+            hours: Object.values(projects).flat().reduce((sum, e) => sum + e.duration, 0),
+            fee: Object.values(projects).flat().reduce((sum, e) => sum + calculateFee(e), 0)
+          }
+        }));
+    } else if (sortOption === 'task') {
+      // Group by Task > Project (matching TimeTally)
+      const taskGroups: { [key: string]: { [key: string]: TimeEntry[] } } = {};
+      
+      archivedEntries.forEach(entry => {
+        const taskName = entry.task;
+        const projectName = entry.project;
+        
+        if (!taskGroups[taskName]) taskGroups[taskName] = {};
+        if (!taskGroups[taskName][projectName]) taskGroups[taskName][projectName] = [];
+        taskGroups[taskName][projectName].push(entry);
+      });
+      
+      groups = Object.entries(taskGroups).map(([taskName, projects]) => ({
+        type: 'task',
+        name: taskName,
+        subgroups: Object.entries(projects).map(([projectName, entries]) => ({
           type: 'project',
           name: projectName,
-          entries: entries,
+          entries: entries.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()),
           subtotal: {
             hours: entries.reduce((sum, e) => sum + e.duration, 0),
             fee: entries.reduce((sum, e) => sum + calculateFee(e), 0)
@@ -164,26 +197,8 @@ export const TimeArchivePage: React.FC = () => {
           fee: Object.values(projects).flat().reduce((sum, e) => sum + calculateFee(e), 0)
         }
       }));
-    } else if (sortOption === 'task') {
-      // Group by Task > Date + Project combinations
-      const taskGroups: {
-        [key: string]: TimeEntry[];
-      } = {};
-      archivedEntries.forEach(entry => {
-        const taskName = entry.task;
-        if (!taskGroups[taskName]) taskGroups[taskName] = [];
-        taskGroups[taskName].push(entry);
-      });
-      groups = Object.entries(taskGroups).map(([taskName, entries]) => ({
-        type: 'task',
-        name: taskName,
-        entries: entries.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()),
-        subtotal: {
-          hours: entries.reduce((sum, e) => sum + e.duration, 0),
-          fee: entries.reduce((sum, e) => sum + calculateFee(e), 0)
-        }
-      }));
     }
+    
     return {
       groups,
       total: {
@@ -247,7 +262,7 @@ export const TimeArchivePage: React.FC = () => {
     }
   };
 
-  // Get table headers based on sort option
+  // Get table headers based on sort option - matching TimeTally
   const getTableHeaders = () => {
     if (sortOption === 'project') {
       return viewMode === 'invoice' ? ['Date', 'Task', 'Hours', 'Fee'] : ['Date', 'Task', 'Hours'];
@@ -259,8 +274,14 @@ export const TimeArchivePage: React.FC = () => {
     }
   };
   const headers = getTableHeaders();
-  const gridCols = viewMode === 'invoice' ? 'grid-cols-4' : 'grid-cols-3';
-  const gridColsWithSelection = viewMode === 'invoice' ? 'grid-cols-5' : 'grid-cols-4';
+  
+  // Get grid template matching TimeTally
+  const getEntryGridTemplate = (invoiceMode: boolean) => {
+    if (invoiceMode) {
+      return '16px 8px 72px 8px minmax(0, 1fr) 8px 40px 8px 90px';
+    }
+    return '16px 8px 72px 8px minmax(0, 1fr) 8px 40px';
+  };
 
   const isAllSelected = allArchivedIds.length > 0 && allArchivedIds.every(id => selection.isSelected(id));
   
@@ -349,19 +370,23 @@ export const TimeArchivePage: React.FC = () => {
           
           {/* Table Header */}
           <div className="w-full px-2.5">
-            <div className={`grid ${gridColsWithSelection} h-[32px] items-center`} style={{
-              gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (viewMode === 'invoice' ? ' calc(40px + 50px)' : ''),
+            <div className="grid h-[32px] items-center" style={{
+              gridTemplateColumns: getEntryGridTemplate(viewMode === 'invoice'),
               gap: '0'
             }}>
-              <div className="flex items-center w-[32px]">
+              <div className="flex items-center justify-start">
                 <div className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${isAllSelected ? 'bg-gray-300' : 'bg-white'}`} onClick={() => selection.toggleSelectAll(allArchivedIds)}>
                   {isAllSelected && <div className="w-2 h-2 rounded-full bg-[#09121F]"></div>}
                 </div>
               </div>
+              <div></div>
               {headers.map((header, index) => (
-                <span key={header} className={`text-[#09121F] text-sm font-bold ${header === 'Hours' || header === 'Fee' ? 'text-right' : 'text-left'}`}>
-                  {header}
-                </span>
+                <React.Fragment key={header}>
+                  <span className={`text-[#09121F] text-sm font-bold ${header === 'Fee' ? 'text-right' : 'text-left'}`}>
+                    {header}
+                  </span>
+                  {index < headers.length - 1 && <div></div>}
+                </React.Fragment>
               ))}
             </div>
             <div className="h-px bg-[#09121F]" />
@@ -375,197 +400,236 @@ export const TimeArchivePage: React.FC = () => {
                 <p className="text-[#BFBFBF] text-lg">No archived entries</p>
               </div>
             ) : (
-              <div className="space-y-4">
+              <div className="space-y-0">
                 {organizedData.groups.map((group, groupIndex) => (
                   <div key={`${group.type}-${group.name}-${groupIndex}`}>
-                    {/* Group Header */}
-                    <div className="font-bold text-[#09121F] text-sm h-[32px] flex items-center pl-8">
-                      {group.name}
+                    
+                    {/* Top Level Header */}
+                    <div className="grid items-center font-bold text-[#09121F] text-sm py-2" style={{
+                      gridTemplateColumns: getEntryGridTemplate(viewMode === 'invoice'),
+                      gap: '0'
+                    }}>
+                      <div className="flex items-center justify-start">
+                        <div className="w-4 h-4"></div>
+                      </div>
+                      <div></div>
+                      <div className="text-left font-bold text-[#09121F] text-sm col-span-3">
+                        {sortOption === 'date' ? format(new Date(group.name), 'EEEE, MMMM d') : group.name}
+                      </div>
+                      <div></div>
+                      <div></div>
+                      {viewMode === 'invoice' && (
+                        <>
+                          <div></div>
+                          <div></div>
+                        </>
+                      )}
                     </div>
 
-                    {/* Group Content */}
-                    {sortOption === 'project' && group.projects ? (
-                      group.projects.map((project: any, projectIndex: number) => (
-                        <div key={`project-${project.name}-${projectIndex}`}>
-                          <div className="font-bold text-[#09121F] text-sm h-[32px] flex items-center pl-8">
-                            {project.name}
-                          </div>
-                          
-                          {project.entries.map((entry: TimeEntry) => (
-                            <div key={entry.id} className={`grid ${gridColsWithSelection} items-start hover:bg-gray-50 py-2`} style={{
-                              gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (viewMode === 'invoice' ? ' calc(40px + 50px)' : ''),
-                              gap: '0'
-                            }}>
-                              <div className="flex items-start w-[32px] self-start mt-1">
-                                <div className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${selection.isSelected(entry.id) ? 'bg-gray-300' : 'bg-white'}`} onClick={() => selection.toggleSelectRecord(entry.id)} style={{ marginTop: '-3px' }}>
-                                  {selection.isSelected(entry.id) && <div className="w-2 h-2 rounded-full bg-[#09121F]"></div>}
-                                </div>
-                              </div>
-                              <div className="text-[#09121F] text-sm leading-tight flex items-start">
-                                {format(new Date(entry.date), 'MM/dd')}
-                              </div>
-                              <div className="text-[#09121F] text-sm leading-tight flex items-start">
-                                {entry.task}
-                              </div>
-                              <div className="text-[#09121F] text-sm leading-tight text-right flex items-start justify-end">
-                                {formatHours(entry.duration)}
-                              </div>
-                               {viewMode === 'invoice' && (
-                                 <div className="text-[#09121F] text-sm leading-tight text-right flex items-start justify-end">
-                                   {hasTaskRate(entry.task) ? (
-                                     formatCurrency(calculateFee(entry))
-                                   ) : (
-                                     <button 
-                                       onClick={() => handleAddRate(entry.task)}
-                                        className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-[#09121F]/80 transition-colors"
-                                     >
-                                       <Plus className="h-2.5 w-2.5" />
-                                     </button>
-                                   )}
-                                 </div>
-                               )}
-                            </div>
-                          ))}
-                          
-                          <div className="h-px bg-[#09121F]" />
-                          <div className={`grid ${gridColsWithSelection} h-[32px] items-center`} style={{
-                            gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (viewMode === 'invoice' ? ' calc(40px + 50px)' : ''),
-                            gap: '0'
-                          }}>
-                            <div></div>
-                            <div></div>
-                            <div className="text-[#09121F] text-sm font-bold flex items-center">Sub-total</div>
-                            <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
-                              {formatHours(project.subtotal.hours)}
-                            </div>
-                            {viewMode === 'invoice' && (
-                              <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
-                                {formatCurrency(project.subtotal.fee)}
-                              </div>
-                            )}
-                          </div>
-                          <div className="h-px bg-[#09121F]" />
-                        </div>
-                      ))
-                    ) : sortOption === 'date' && group.projects ? (
-                      <div>
-                        {group.projects.map((project: any, projectIndex: number) => (
-                          <div key={`date-project-${project.name}-${projectIndex}`}>
-                            {project.entries.map((entry: TimeEntry) => (
-                              <div key={entry.id} className={`grid ${gridColsWithSelection} items-start hover:bg-gray-50 py-2`} style={{
-                                gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (viewMode === 'invoice' ? ' calc(40px + 50px)' : ''),
-                                gap: '0'
-                              }}>
-                                 <div className="flex items-start w-[32px] self-start mt-1">
-                                  <div className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${selection.isSelected(entry.id) ? 'bg-gray-300' : 'bg-white'}`} onClick={() => selection.toggleSelectRecord(entry.id)} style={{ marginTop: '-3px' }}>
-                                    {selection.isSelected(entry.id) && <div className="w-2 h-2 rounded-full bg-[#09121F]"></div>}
-                                  </div>
-                                </div>
-                                <div className="text-[#09121F] text-sm leading-tight flex items-start">
-                                  {entry.project}
-                                </div>
-                                <div className="text-[#09121F] text-sm leading-tight flex items-start">
-                                  {entry.task}
-                                </div>
-                                <div className="text-[#09121F] text-sm leading-tight text-right flex items-start justify-end">
-                                  {formatHours(entry.duration)}
-                                </div>
-                                 {viewMode === 'invoice' && (
-                                   <div className="text-[#09121F] text-sm leading-tight text-right flex items-start justify-end">
-                                     {hasTaskRate(entry.task) ? (
-                                       formatCurrency(calculateFee(entry))
-                                     ) : (
-                                       <button 
-                                         onClick={() => handleAddRate(entry.task)}
-                                          className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-[#09121F]/80 transition-colors"
-                                       >
-                                         <Plus className="h-2.5 w-2.5" />
-                                       </button>
-                                     )}
-                                   </div>
-                                 )}
-                              </div>
-                            ))}
-                          </div>
-                        ))}
+                    {/* Subgroups */}
+                    {group.subgroups?.map((subgroup: any, subIndex: number) => (
+                      <div key={`${subgroup.type}-${subgroup.name}-${subIndex}`}>
                         
-                        <div className="h-px bg-[#09121F] mt-2" />
-                        <div className={`grid ${gridColsWithSelection} h-[32px] items-center`} style={{
-                          gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (viewMode === 'invoice' ? ' calc(40px + 50px)' : ''),
+                        {/* Subgroup Header */}
+                        <div className="grid items-center font-bold text-[#09121F] text-sm py-2" style={{
+                          gridTemplateColumns: getEntryGridTemplate(viewMode === 'invoice'),
                           gap: '0'
                         }}>
-                          <div></div>
-                          <div></div>
-                          <div className="text-[#09121F] text-sm font-bold flex items-center">Sub-total</div>
-                          <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
-                            {formatHours(group.subtotal.hours)}
+                          <div className="flex items-center justify-start">
+                            {sortOption === 'project' ? (
+                              <div className="w-4 h-4"></div>
+                            ) : (
+                              <div className="w-4 h-4"></div>
+                            )}
                           </div>
+                          <div></div>
+                          <div className="text-left font-bold text-[#09121F] text-sm col-span-3">
+                            {subgroup.name}
+                          </div>
+                          <div></div>
+                          <div></div>
                           {viewMode === 'invoice' && (
-                            <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
-                              {formatCurrency(group.subtotal.fee)}
-                            </div>
+                            <>
+                              <div></div>
+                              <div></div>
+                            </>
                           )}
                         </div>
-                        <div className="h-px bg-[#09121F]" />
-                      </div>
-                    ) : sortOption === 'task' && group.entries ? (
-                      <div>
-                        {group.entries.map((entry: TimeEntry) => (
-                          <div key={entry.id} className={`grid ${gridColsWithSelection} items-start hover:bg-gray-50 py-2`} style={{
-                            gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (viewMode === 'invoice' ? ' calc(40px + 50px)' : ''),
+
+                        {/* Entries */}
+                        {subgroup.entries?.map((entry: TimeEntry) => (
+                          <div key={entry.id} className="grid items-start hover:bg-gray-50 py-2" style={{
+                            gridTemplateColumns: getEntryGridTemplate(viewMode === 'invoice'),
                             gap: '0'
                           }}>
-                            <div className="flex items-start w-[32px] self-start mt-1">
-                              <div className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${selection.isSelected(entry.id) ? 'bg-gray-300' : 'bg-white'}`} onClick={() => selection.toggleSelectRecord(entry.id)} style={{ marginTop: '-3px' }}>
+                            <div className="flex items-start justify-start self-start mt-1">
+                              <div className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${selection.isSelected(entry.id) ? 'bg-gray-300' : 'bg-white'}`} onClick={() => selection.toggleSelectRecord(entry.id)} style={{
+                                marginTop: '-3px'
+                              }}>
                                 {selection.isSelected(entry.id) && <div className="w-2 h-2 rounded-full bg-[#09121F]"></div>}
                               </div>
                             </div>
-                            <div className="text-[#09121F] text-sm leading-tight flex items-start">
-                              {format(new Date(entry.date), 'MM/dd')}
-                            </div>
-                            <div className="text-[#09121F] text-sm leading-tight flex items-start">
-                              {entry.project}
-                            </div>
-                            <div className="text-[#09121F] text-sm leading-tight text-right flex items-start justify-end">
-                              {formatHours(entry.duration)}
-                            </div>
-                             {viewMode === 'invoice' && (
-                               <div className="text-[#09121F] text-sm leading-tight text-right flex items-start justify-end">
-                                 {hasTaskRate(entry.task) ? (
-                                   formatCurrency(calculateFee(entry))
-                                 ) : (
-                                   <button 
-                                     onClick={() => handleAddRate(entry.task)}
-                                     className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-[#09121F]/80 transition-colors"
-                                   >
-                                     <Plus className="h-2.5 w-2.5" />
-                                   </button>
-                                 )}
-                               </div>
-                             )}
+                            
+                            <div></div>
+                            
+                            {/* Entry data based on sort option */}
+                            {sortOption === 'project' && (
+                              <React.Fragment>
+                                <div className="text-[#09121F] text-sm leading-tight flex items-start">
+                                  {format(new Date(entry.date), 'MM/dd')}
+                                </div>
+                                <div></div>
+                                <div className="text-[#09121F] text-sm leading-tight flex items-start">
+                                  {entry.task}
+                                </div>
+                                <div></div>
+                                <div className="text-[#09121F] text-sm leading-tight text-right flex items-start justify-end">
+                                  {formatHours(entry.duration)}
+                                </div>
+                                {viewMode === 'invoice' && (
+                                  <>
+                                    <div></div>
+                                    <div className="text-[#09121F] text-sm leading-tight text-right flex items-start justify-end">
+                                      {hasTaskRate(entry.task) ? (
+                                        formatCurrency(calculateFee(entry))
+                                      ) : (
+                                        <button 
+                                          onClick={() => handleAddRate(entry.task)}
+                                          className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-[#09121F]/80 transition-colors"
+                                        >
+                                          <Plus className="h-2.5 w-2.5" />
+                                        </button>
+                                      )}
+                                    </div>
+                                  </>
+                                )}
+                              </React.Fragment>
+                            )}
+                            
+                            {sortOption === 'date' && (
+                              <React.Fragment>
+                                <div className="text-[#09121F] text-sm leading-tight flex items-start">
+                                  {entry.project}
+                                </div>
+                                <div></div>
+                                <div className="text-[#09121F] text-sm leading-tight flex items-start">
+                                  {entry.task}
+                                </div>
+                                <div></div>
+                                <div className="text-[#09121F] text-sm leading-tight text-right flex items-start justify-end">
+                                  {formatHours(entry.duration)}
+                                </div>
+                                {viewMode === 'invoice' && (
+                                  <>
+                                    <div></div>
+                                    <div className="text-[#09121F] text-sm leading-tight text-right flex items-start justify-end">
+                                      {hasTaskRate(entry.task) ? (
+                                        formatCurrency(calculateFee(entry))
+                                      ) : (
+                                        <button 
+                                          onClick={() => handleAddRate(entry.task)}
+                                          className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-[#09121F]/80 transition-colors"
+                                        >
+                                          <Plus className="h-2.5 w-2.5" />
+                                        </button>
+                                      )}
+                                    </div>
+                                  </>
+                                )}
+                              </React.Fragment>
+                            )}
+                            
+                            {sortOption === 'task' && (
+                              <React.Fragment>
+                                <div className="text-[#09121F] text-sm leading-tight flex items-start">
+                                  {format(new Date(entry.date), 'MM/dd')}
+                                </div>
+                                <div></div>
+                                <div className="text-[#09121F] text-sm leading-tight flex items-start">
+                                  {entry.project}
+                                </div>
+                                <div></div>
+                                <div className="text-[#09121F] text-sm leading-tight text-right flex items-start justify-end">
+                                  {formatHours(entry.duration)}
+                                </div>
+                                {viewMode === 'invoice' && (
+                                  <>
+                                    <div></div>
+                                    <div className="text-[#09121F] text-sm leading-tight text-right flex items-start justify-end">
+                                      {hasTaskRate(entry.task) ? (
+                                        formatCurrency(calculateFee(entry))
+                                      ) : (
+                                        <button 
+                                          onClick={() => handleAddRate(entry.task)}
+                                          className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-[#09121F]/80 transition-colors"
+                                        >
+                                          <Plus className="h-2.5 w-2.5" />
+                                        </button>
+                                      )}
+                                    </div>
+                                  </>
+                                )}
+                              </React.Fragment>
+                            )}
                           </div>
                         ))}
                         
-                        <div className="h-px bg-[#09121F] mt-2" />
-                        <div className={`grid ${gridColsWithSelection} h-[32px] items-center`} style={{
-                          gridTemplateColumns: '32px minmax(0, 1fr) minmax(0, 1fr) 40px' + (viewMode === 'invoice' ? ' calc(40px + 50px)' : ''),
+                        {/* Subgroup Subtotal */}
+                        <div className="h-px bg-[#09121F]" />
+                        <div className="grid h-[32px] items-center" style={{
+                          gridTemplateColumns: getEntryGridTemplate(viewMode === 'invoice'),
                           gap: '0'
                         }}>
                           <div></div>
                           <div></div>
+                          <div></div>
+                          <div></div>
                           <div className="text-[#09121F] text-sm font-bold flex items-center">Sub-total</div>
+                          <div></div>
                           <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
-                            {formatHours(group.subtotal.hours)}
+                            {formatHours(subgroup.subtotal.hours)}
                           </div>
                           {viewMode === 'invoice' && (
-                            <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
-                              {formatCurrency(group.subtotal.fee)}
-                            </div>
+                            <>
+                              <div></div>
+                              <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
+                                {formatCurrency(subgroup.subtotal.fee)}
+                              </div>
+                            </>
                           )}
                         </div>
                         <div className="h-px bg-[#09121F]" />
                       </div>
-                    ) : null}
+                    ))}
+                    
+                    {/* Group Subtotal (for date and task views) */}
+                    {(sortOption === 'date' || sortOption === 'task') && group.subtotal && (
+                      <>
+                        <div className="grid h-[32px] items-center font-bold" style={{
+                          gridTemplateColumns: getEntryGridTemplate(viewMode === 'invoice'),
+                          gap: '0'
+                        }}>
+                          <div></div>
+                          <div></div>
+                          <div></div>
+                          <div></div>
+                          <div className="text-[#09121F] text-sm font-bold flex items-center">Total</div>
+                          <div></div>
+                          <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
+                            {formatHours(group.subtotal.hours)}
+                          </div>
+                          {viewMode === 'invoice' && (
+                            <>
+                              <div></div>
+                              <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
+                                {formatCurrency(group.subtotal.fee)}
+                              </div>
+                            </>
+                          )}
+                        </div>
+                        <div className="h-px bg-[#09121F]" />
+                      </>
+                    )}
                   </div>
                 ))}
               </div>
