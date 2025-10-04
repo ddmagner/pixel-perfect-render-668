@@ -271,7 +271,7 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
             .map((task) => (
               <div
                 key={task.id}
-                className="grid grid-cols-[1fr_60px_56px] items-center gap-3 min-h-[20px]"
+                className="grid grid-cols-[1fr_60px_56px] items-center gap-3"
               >
                 <div className="min-w-0">
                   {editingTask?.id === task.id ? (
@@ -295,11 +295,11 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
                           setEditingTask(null);
                         }
                       }}
-                      className="text-[#09121F] text-sm bg-transparent border-none outline-none w-full leading-5"
+                      className="text-[#09121F] text-sm bg-transparent border-none outline-none w-full"
                       autoFocus
                     />
                   ) : (
-                    <span className="text-[#09121F] text-sm leading-5 truncate block">
+                    <span className="text-[#09121F] text-sm truncate block">
                       {task.name}
                     </span>
                   )}
@@ -340,12 +340,12 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
                             setEditingTaskRateInput('');
                           }
                         }}
-                        className="text-[#09121F] text-sm bg-transparent border-none outline-none w-full text-right leading-5"
+                        className="text-[#09121F] text-sm bg-transparent border-none outline-none w-full text-right"
                         onFocus={(e) => e.target.select()}
                         required
                       />
                     ) : (
-                      <span className="text-[#09121F] text-sm leading-5">
+                      <span className="text-[#09121F] text-sm">
                         {formatCurrency(task.hourlyRate || 0)}
                       </span>
                     )
@@ -360,13 +360,13 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
                       setEditingTask(task);
                       setEditingTaskRateInput(formatCurrencyInput(task.hourlyRate));
                     }}
-                    className="text-gray-400 hover:text-[#09121F] flex items-center justify-center w-4 h-4"
+                    className="text-gray-400 hover:text-[#09121F]"
                   >
                     <Edit3 size={16} />
                   </button>
                   <button
                     onClick={() => handleDeleteTask(task.id)}
-                    className="text-gray-400 hover:text-red-500 flex items-center justify-center w-4 h-4"
+                    className="text-gray-400 hover:text-red-500"
                   >
                     <Trash2 size={16} />
                   </button>
