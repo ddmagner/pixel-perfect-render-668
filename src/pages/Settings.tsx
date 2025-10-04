@@ -17,7 +17,7 @@ const SettingsPage = () => {
 
   return (
     <>
-      <div className="fixed inset-0 flex flex-col bg-white overflow-y-auto">
+      <div className="fixed inset-0 flex flex-col bg-white overflow-y-scroll overflow-x-hidden">
         <div className="sticky top-0 z-40 bg-white">
           <div className="w-full max-w-sm mx-auto" style={{ fontFamily: 'Gilroy, sans-serif' }}>
             <nav className="flex justify-center items-center self-stretch px-2.5 pt-4 pb-1 bg-white relative">
