@@ -383,7 +383,9 @@ export const TimeArchivePage: React.FC = () => {
 
         {/* Divider */}
         <div className="w-full px-2.5 mb-6"><div className="h-px bg-[#09121F]" /></div>
+        </div>
         
+        <div className="w-full max-w-sm mx-auto" style={{ fontFamily: 'Gilroy, sans-serif' }}>
         <div className="flex flex-col h-full w-full font-gilroy">
           {/* Header / Selection Toolbar */}
           <div className="pt-0.5 pb-1 h-[2.75rem] px-2.5">
@@ -712,11 +714,12 @@ export const TimeArchivePage: React.FC = () => {
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
+          </div>
         </div>
+        
+        <HomeIndicator />
       </div>
-      
       <HomeIndicator />
-    </div>
     </>
   );
 };
