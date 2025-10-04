@@ -354,7 +354,7 @@ export const TimeArchivePage: React.FC = () => {
         rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Gilroy:wght@400;700;800;900&display=swap"
       />
-      <div className="min-h-screen bg-white">
+      <div className="fixed inset-0 flex flex-col bg-white">
         <div className="fixed top-0 inset-x-0 z-40 bg-white">
           <div className="w-full max-w-sm mx-auto" style={{ fontFamily: 'Gilroy, sans-serif' }}>
             <Navigation activeTab="" onTabChange={() => {}} />
@@ -363,11 +363,12 @@ export const TimeArchivePage: React.FC = () => {
             <div className="h-1" />
           </div>
         </div>
-        <div className="h-[84px]" />
 
-        {/* Mode Toggle */}
-        <div className="w-full max-w-sm mx-auto" style={{ fontFamily: 'Gilroy, sans-serif' }}>
-          <div className="flex justify-center items-center w-full px-2.5 py-4">
+        <div className="flex-1 overflow-y-auto pt-[84px]">
+
+          {/* Mode Toggle */}
+          <div className="w-full max-w-sm mx-auto" style={{ fontFamily: 'Gilroy, sans-serif' }}>
+            <div className="flex justify-center items-center w-full px-2.5 py-4">
           <div className="flex items-center gap-4">
             <span className={`text-sm font-medium ${viewMode === 'timecard' ? 'text-[#09121F]' : 'text-[#BFBFBF]'}`}>
               Time Card Mode
@@ -715,11 +716,11 @@ export const TimeArchivePage: React.FC = () => {
             </AlertDialogContent>
           </AlertDialog>
           </div>
+          </div>
         </div>
         
         <HomeIndicator />
       </div>
-      <HomeIndicator />
     </>
   );
 };

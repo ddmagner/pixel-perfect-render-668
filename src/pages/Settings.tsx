@@ -17,7 +17,7 @@ const SettingsPage = () => {
 
   return (
     <>
-      <div className="min-h-screen bg-white">
+      <div className="fixed inset-0 flex flex-col bg-white">
         <div className="fixed top-0 inset-x-0 z-40 bg-white">
           <div className="w-full max-w-sm mx-auto" style={{ fontFamily: 'Gilroy, sans-serif' }}>
             <nav className="flex justify-center items-center self-stretch px-2.5 pt-4 pb-1 bg-white relative">
@@ -52,10 +52,11 @@ const SettingsPage = () => {
             <div className="h-1" />
           </div>
         </div>
-        <div className="h-[84px]" />
-        
-        <div className="w-full max-w-sm mx-auto" style={{ fontFamily: 'Gilroy, sans-serif' }}>
-          <Settings highlightSection={section} />
+
+        <div className="flex-1 overflow-y-auto pt-[84px]">
+          <div className="w-full max-w-sm mx-auto" style={{ fontFamily: 'Gilroy, sans-serif' }}>
+            <Settings highlightSection={section} />
+          </div>
         </div>
         
         <HomeIndicator />

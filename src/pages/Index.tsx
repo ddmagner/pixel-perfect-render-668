@@ -88,7 +88,7 @@ const Index = () => {
         rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Gilroy:wght@400;700;800;900&display=swap"
       />
-      <div className="min-h-screen bg-white">
+      <div className="fixed inset-0 flex flex-col bg-white">
         <div className="fixed top-0 inset-x-0 z-40 bg-white">
           <div className="w-full max-w-sm mx-auto" style={{ fontFamily: 'Gilroy, sans-serif' }}>
             <Navigation activeTab={activeTab} onTabChange={handleTabChange} />
@@ -97,32 +97,33 @@ const Index = () => {
             <div className="h-1" />
           </div>
         </div>
-        <div className="h-[84px]" />
 
-        <div className="w-full max-w-sm mx-auto" style={{ fontFamily: 'Gilroy, sans-serif' }}>
-          {activeTab === 'enter-time' && (
-            <>
-              <RecordButton
-                onRecordStart={handleRecordStart}
-                onRecordStop={handleRecordStop}
-                isRecording={isRecording}
-                onTranscript={handleTranscript}
-                onFinalTranscript={handleFinalTranscript}
-              />
-              
-              <Divider />
-              
-              <TimeEntryForm onSubmit={handleTimeEntrySubmit} transcript={currentTranscript} finalTranscript={finalTranscript} />
-            </>
-          )}
+        <div className="flex-1 overflow-y-auto pt-[84px]">
+          <div className="w-full max-w-sm mx-auto" style={{ fontFamily: 'Gilroy, sans-serif' }}>
+            {activeTab === 'enter-time' && (
+              <>
+                <RecordButton
+                  onRecordStart={handleRecordStart}
+                  onRecordStop={handleRecordStop}
+                  isRecording={isRecording}
+                  onTranscript={handleTranscript}
+                  onFinalTranscript={handleFinalTranscript}
+                />
+                
+                <Divider />
+                
+                <TimeEntryForm onSubmit={handleTimeEntrySubmit} transcript={currentTranscript} finalTranscript={finalTranscript} />
+              </>
+            )}
 
-          {activeTab === 'time-tally' && (
-            <TimeTally onSwitchToSettings={() => setActiveTab('settings')} />
-          )}
+            {activeTab === 'time-tally' && (
+              <TimeTally onSwitchToSettings={() => setActiveTab('settings')} />
+            )}
 
-          {activeTab === 'settings' && (
-            <Settings />
-          )}
+            {activeTab === 'settings' && (
+              <Settings />
+            )}
+          </div>
         </div>
 
         <HomeIndicator />
