@@ -300,10 +300,16 @@ export const TimeArchivePage: React.FC = () => {
   
   // Get grid template matching TimeTally
   const getEntryGridTemplate = (invoiceMode: boolean) => {
-    if (invoiceMode) {
-      return '16px 8px 72px 8px minmax(0, 1fr) 8px 40px 8px 90px';
+    const hasDateColumn = sortOption === 'project' || sortOption === 'task';
+    if (hasDateColumn) {
+      return invoiceMode
+        ? '16px 8px 0.5fr 8px 1.5fr 8px 50px 8px 60px'
+        : '16px 8px 0.5fr 8px 1.5fr 8px 50px';
+    } else {
+      return invoiceMode
+        ? '16px 8px 1fr 8px 1fr 8px 50px 8px 60px'
+        : '16px 8px 1fr 8px 1fr 8px 50px';
     }
-    return '16px 8px 72px 8px minmax(0, 1fr) 8px 40px';
   };
 
   const isAllSelected = allArchivedIds.length > 0 && allArchivedIds.every(id => selection.isSelected(id));
