@@ -285,6 +285,46 @@ export const TimeArchivePage: React.FC = () => {
 
   const isAllSelected = allArchivedIds.length > 0 && allArchivedIds.every(id => selection.isSelected(id));
   
+  // Selection helpers for groups
+  const getGroupEntryIds = (group: any): string[] => {
+    const ids: string[] = [];
+    if (group.subgroups) {
+      group.subgroups.forEach((subgroup: any) => {
+        if (subgroup.entries) {
+          ids.push(...subgroup.entries.map((entry: TimeEntry) => entry.id));
+        }
+      });
+    }
+    return ids;
+  };
+  
+  const isGroupSelected = (group: any): boolean => {
+    const ids = getGroupEntryIds(group);
+    return ids.length > 0 && ids.every(id => selection.isSelected(id));
+  };
+  
+  const toggleGroupSelection = (group: any) => {
+    const ids = getGroupEntryIds(group);
+    selection.toggleSelectAll(ids);
+  };
+  
+  const getSubgroupEntryIds = (subgroup: any): string[] => {
+    if (subgroup.entries) {
+      return subgroup.entries.map((entry: TimeEntry) => entry.id);
+    }
+    return [];
+  };
+  
+  const isSubgroupSelected = (subgroup: any): boolean => {
+    const ids = getSubgroupEntryIds(subgroup);
+    return ids.length > 0 && ids.every(id => selection.isSelected(id));
+  };
+  
+  const toggleSubgroupSelection = (subgroup: any) => {
+    const ids = getSubgroupEntryIds(subgroup);
+    selection.toggleSelectAll(ids);
+  };
+  
   return (
     <>
       <link
@@ -410,7 +450,17 @@ export const TimeArchivePage: React.FC = () => {
                       gap: '0'
                     }}>
                       <div className="flex items-center justify-start">
-                        <div className="w-4 h-4"></div>
+                        {(() => {
+                          const isSelected = isGroupSelected(group);
+                          return (
+                            <div 
+                              className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${isSelected ? 'bg-gray-300' : 'bg-white'}`}
+                              onClick={() => toggleGroupSelection(group)}
+                            >
+                              {isSelected && <div className="w-2 h-2 rounded-full bg-[#09121F]"></div>}
+                            </div>
+                          );
+                        })()}
                       </div>
                       <div></div>
                       <div className="text-left font-bold text-[#09121F] text-sm col-span-3">
@@ -437,7 +487,17 @@ export const TimeArchivePage: React.FC = () => {
                         }}>
                           <div className="flex items-center justify-start">
                             {sortOption === 'project' ? (
-                              <div className="w-4 h-4"></div>
+                              (() => {
+                                const isSelected = isSubgroupSelected(subgroup);
+                                return (
+                                  <div 
+                                    className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${isSelected ? 'bg-gray-300' : 'bg-white'}`}
+                                    onClick={() => toggleSubgroupSelection(subgroup)}
+                                  >
+                                    {isSelected && <div className="w-2 h-2 rounded-full bg-[#09121F]"></div>}
+                                  </div>
+                                );
+                              })()
                             ) : (
                               <div className="w-4 h-4"></div>
                             )}
