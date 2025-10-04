@@ -34,7 +34,6 @@ export const TimeTally: React.FC<TimeTallyProps> = ({ onSwitchToSettings }) => {
   const [editingGroupHeader, setEditingGroupHeader] = useState<{ type: string; name: string } | null>(null);
   const [editingSubgroupHeader, setEditingSubgroupHeader] = useState<{ groupName: string; subgroupName: string } | null>(null);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-  const [showArchiveDialog, setShowArchiveDialog] = useState(false);
   const [isExportDialogOpen, setIsExportDialogOpen] = useState(false);
   const selection = useSelection();
   const {
@@ -490,12 +489,11 @@ export const TimeTally: React.FC<TimeTallyProps> = ({ onSwitchToSettings }) => {
     });
   };
   const handleArchive = () => {
+    const count = selection.selectedCount;
     archiveTimeEntries(selection.selectedIds);
     selection.clearSelection();
-    setShowArchiveDialog(false);
     toast({
-      title: "Entries Archived",
-      description: `${selection.selectedCount} ${selection.selectedCount === 1 ? 'entry' : 'entries'} moved to archive`
+      title: count === 1 ? "Time entry archived." : `${count} entries archived.`
     });
   };
   const handleExport = () => {
@@ -1181,7 +1179,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({ onSwitchToSettings }) => {
             Delete
           </button>
           <button 
-            onClick={() => setShowArchiveDialog(true)} 
+            onClick={handleArchive} 
             className="flex-1 bg-white border border-[#09121F] text-[#09121F] py-3.5 font-bold text-sm transition-colors hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
             disabled={!selection.hasAnySelected}
           >
@@ -1208,23 +1206,6 @@ export const TimeTally: React.FC<TimeTallyProps> = ({ onSwitchToSettings }) => {
         </AlertDialogContent>
       </AlertDialog>
 
-      {/* Archive Confirmation Dialog */}
-      <AlertDialog open={showArchiveDialog} onOpenChange={setShowArchiveDialog}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Archive Entries</AlertDialogTitle>
-            <AlertDialogDescription>
-              Are you sure you want to archive {selection.selectedCount} selected {selection.selectedCount === 1 ? 'entry' : 'entries'}? You can restore them from the archive later.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleArchive} className="bg-orange-600 hover:bg-orange-700">
-              Archive
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
 
       {/* Export Dialog */}
       <ExportDialog
