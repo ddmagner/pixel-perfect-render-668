@@ -414,7 +414,7 @@ export const TimeArchivePage: React.FC = () => {
                       </div>
                       <div></div>
                       <div className="text-left font-bold text-[#09121F] text-sm col-span-3">
-                        {sortOption === 'date' ? format(new Date(group.name), 'EEEE, MMMM d') : group.name}
+                        {sortOption === 'date' ? format(new Date(group.name), 'MM/dd/yy') : group.name}
                       </div>
                       <div></div>
                       <div></div>
