@@ -621,13 +621,13 @@ export const TimeArchivePage: React.FC = () => {
             <div className="px-2.5 pt-5 pb-2 flex gap-2">
               <button 
                 onClick={() => handleRestore(selection.selectedIds)} 
-                className="flex-1 bg-white text-[#09121F] border-2 border-[#09121F] py-3.5 font-bold text-sm transition-colors hover:bg-gray-50"
+                className="flex-1 bg-white border border-[#09121F] text-[#09121F] py-3.5 font-bold text-sm transition-colors hover:bg-gray-50"
               >
                 Unarchive
               </button>
               <button 
                 onClick={() => setShowDeleteDialog(true)} 
-                className="flex-1 bg-white text-[#09121F] border-2 border-[#09121F] py-3.5 font-bold text-sm transition-colors hover:bg-gray-50"
+                className="flex-1 bg-white border border-[#09121F] text-[#09121F] py-3.5 font-bold text-sm transition-colors hover:bg-gray-50"
               >
                 Delete
               </button>
