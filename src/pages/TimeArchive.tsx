@@ -10,7 +10,6 @@ import { useSelection } from '@/hooks/useSelection';
 import { useToast } from '@/hooks/use-toast';
 import { formatCurrency, formatHours } from '@/lib/utils';
 import { useNavigate } from 'react-router-dom';
-import { ExportDialog } from '@/components/ExportDialog';
 import { Navigation, TabNavigation } from '@/components/Navigation';
 import { Divider } from '@/components/Divider';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
@@ -35,7 +34,6 @@ export const TimeArchivePage: React.FC = () => {
   const selection = useSelection();
   const [showClearDialog, setShowClearDialog] = useState(false);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-  const [isExportDialogOpen, setIsExportDialogOpen] = useState(false);
 
   // Filter archived entries
   const archivedEntries = timeEntries.filter(entry => entry.archived);
@@ -641,17 +639,17 @@ export const TimeArchivePage: React.FC = () => {
             )}
           </div>
 
-          {/* Export Button */}
-          {archivedEntries.length > 0 && (
+          {/* Unarchive Button */}
+          {selection.hasAnySelected && (
             <div className="px-2.5 pt-5">
               <button 
-                onClick={() => setIsExportDialogOpen(true)} 
+                onClick={() => handleRestore(selection.selectedIds)} 
                 className="w-full text-white py-3.5 font-bold text-sm transition-colors" 
                 style={{
                   background: 'linear-gradient(135deg, #09121F 0%, #2C3E50 100%)'
                 }}
               >
-                Export/Share/Print
+                Unarchive
               </button>
             </div>
           )}
@@ -666,15 +664,6 @@ export const TimeArchivePage: React.FC = () => {
               Exit
             </Button>
           </div>
-
-          {/* Export Dialog */}
-          <ExportDialog 
-            isOpen={isExportDialogOpen} 
-            onClose={() => setIsExportDialogOpen(false)} 
-            timeEntries={archivedEntries} 
-            settings={settings} 
-            viewMode={viewMode} 
-          />
 
           {/* Clear Archive Dialog */}
           <AlertDialog open={showClearDialog} onOpenChange={setShowClearDialog}>
