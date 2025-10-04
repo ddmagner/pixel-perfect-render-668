@@ -367,7 +367,7 @@ export const TimeArchivePage: React.FC = () => {
 
         {/* Mode Toggle */}
         <div className="w-full max-w-sm mx-auto" style={{ fontFamily: 'Gilroy, sans-serif' }}>
-          <div className="flex justify-center items-center w-full px-2.5 pt-4 pb-1">
+          <div className="flex justify-center items-center w-full px-2.5 py-4">
           <div className="flex items-center gap-4">
             <span className={`text-sm font-medium ${viewMode === 'timecard' ? 'text-[#09121F]' : 'text-[#BFBFBF]'}`}>
               Time Card Mode
@@ -380,6 +380,9 @@ export const TimeArchivePage: React.FC = () => {
             </span>
           </div>
         </div>
+
+        {/* Divider */}
+        <div className="w-full px-2.5 mb-6"><div className="h-px bg-[#09121F]" /></div>
         
         <div className="flex flex-col h-full w-full font-gilroy">
           {/* Header / Selection Toolbar */}
