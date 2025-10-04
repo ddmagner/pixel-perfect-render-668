@@ -325,16 +325,6 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                           <div className="col-span-2 text-right font-medium">{formatCurrency(tax.amount)}</div>
                         </div>
                       ))}
-                      {taxCalculations.length === 0 && (
-                      <div className="grid grid-cols-12 gap-4 py-1 text-sm text-black items-center border-t border-gray-300">
-                        <div className="col-span-2"></div>
-                        <div className="col-span-3"></div>
-                        <div className="col-span-3 -ml-[25px]">Tax (0%):</div>
-                        <div className="col-span-1"></div>
-                        <div className="col-span-1"></div>
-                        <div className="col-span-2 text-right font-medium">$0.00</div>
-                      </div>
-                      )}
                       <div className="grid grid-cols-12 gap-4 py-1 text-sm text-black items-center border-t border-black" style={{ borderTopWidth: '1pt' }}>
                         <div className="col-span-2"></div>
                         <div className="col-span-3"></div>
