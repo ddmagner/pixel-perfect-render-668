@@ -51,8 +51,8 @@ export const TabNavigation: React.FC<TabNavigationProps> = ({ activeTab, onTabCh
   const { selectionChanged } = useHaptics();
   
   return (
-    <nav className={`flex items-start w-full px-2.5 pt-0 pb-0 ${
-      isArchivePage ? 'bg-gray-200 opacity-50 pointer-events-none' : 'bg-white'
+    <nav className={`flex items-start w-full px-2.5 pt-0 pb-0 bg-white ${
+      isArchivePage ? 'opacity-50 pointer-events-none' : ''
     }`}>
       <button
         className={`flex h-12 flex-col justify-center items-center flex-[1_0_0] px-0 py-[9px] relative ${
