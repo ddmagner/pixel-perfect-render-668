@@ -561,18 +561,50 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     if (!user) return;
     
     try {
-      const { error } = await supabase
-        .from('time_entries')
-        .update({ archived: true })
-        .in('id', ids)
-        .eq('user_id', user.id);
-
-      if (error) throw error;
+      // Get the entries to archive and resolve their client names
+      const entriesToArchive = timeEntries.filter(entry => ids.includes(entry.id));
+      
+      // Update each entry with resolved client name before archiving
+      for (const entry of entriesToArchive) {
+        let clientName = entry.client || '';
+        
+        // If no client is set, try to resolve from project
+        if (!clientName) {
+          const project = settings.projects.find(p => p.name === entry.project);
+          if (project?.clientId) {
+            const client = settings.clients.find(c => c.id === project.clientId);
+            clientName = client?.name || '';
+          }
+        }
+        
+        // Update entry with client name and archived status
+        const { error } = await supabase
+          .from('time_entries')
+          .update({ 
+            archived: true,
+            client: clientName 
+          })
+          .eq('id', entry.id)
+          .eq('user_id', user.id);
+          
+        if (error) throw error;
+      }
       
       // Update local state immediately
-      setTimeEntries(prev => prev.map(entry => 
-        ids.includes(entry.id) ? { ...entry, archived: true } : entry
-      ));
+      setTimeEntries(prev => prev.map(entry => {
+        if (ids.includes(entry.id)) {
+          let clientName = entry.client || '';
+          if (!clientName) {
+            const project = settings.projects.find(p => p.name === entry.project);
+            if (project?.clientId) {
+              const client = settings.clients.find(c => c.id === project.clientId);
+              clientName = client?.name || '';
+            }
+          }
+          return { ...entry, archived: true, client: clientName };
+        }
+        return entry;
+      }));
       
       // Reload data from database to ensure sync
       await loadUserData();
