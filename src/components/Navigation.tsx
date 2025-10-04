@@ -52,7 +52,7 @@ export const TabNavigation: React.FC<TabNavigationProps> = ({ activeTab, onTabCh
   
   return (
     <nav className={`flex items-start w-full px-2.5 pt-0 pb-0 bg-white ${
-      isArchivePage ? 'pointer-events-none' : ''
+      isArchivePage ? 'blur-sm pointer-events-none' : ''
     }`}>
       <button
         className={`flex h-12 flex-col justify-center items-center flex-[1_0_0] px-0 py-[9px] relative ${
