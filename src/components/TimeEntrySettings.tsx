@@ -266,82 +266,156 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
         <div className="border-b border-[#09121F] mb-3"></div>
         
         <div className="space-y-3">
-          {[...settings.taskTypes].sort((a, b) => a.name.localeCompare(b.name)).map(task => <div key={task.id} className="flex items-center justify-between">
-              {editingTask?.id === task.id ? <input type="text" value={editingTask.name} onChange={e => setEditingTask({
-              ...editingTask,
-              name: e.target.value
-            })} onKeyDown={e => {
-              if (e.key === 'Enter') {
-                handleUpdateTask({ ...editingTask, name: editingTask.name.trim() });
-              }
-              if (e.key === 'Escape') {
-                setEditingTask(null);
-              }
-            }} className="text-[#09121F] text-sm bg-transparent border-none outline-none flex-1 min-w-0" style={{
-              marginRight: settings.invoiceMode ? '0' : '56px'
-            }} autoFocus /> : <span className="text-[#09121F] text-sm" style={{
-              marginRight: settings.invoiceMode ? '0' : '56px'
-            }}>{task.name}</span>}
-              <div className="flex items-center gap-3">
-                {settings.invoiceMode && <div className="min-w-[60px] text-right">
-{editingTask?.id === task.id ? <input type="text" value={editingTaskRateInput !== '' ? editingTaskRateInput : formatCurrencyInput(editingTask.hourlyRate)} onChange={e => {
-                const raw = e.target.value;
-                const digits = raw.replace(/\D/g, '');
-                const amount = digits ? (parseInt(digits, 10) / 100) : 0;
-                setEditingTaskRateInput(`$${amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`);
-                setEditingTask({
-                  ...editingTask,
-                  hourlyRate: amount
-                });
-              }} onKeyDown={e => {
-                if (e.key === 'Enter') {
-                  handleUpdateTask(editingTask);
-                  setEditingTaskRateInput('');
-                }
-                if (e.key === 'Escape') {
-                  setEditingTask(null);
-                  setEditingTaskRateInput('');
-                }
-              }} className="text-[#09121F] text-sm bg-transparent border-none outline-none w-full text-right" onFocus={e => e.target.select()} required /> : <span className="text-[#09121F] text-sm">
+          {[...settings.taskTypes]
+            .sort((a, b) => a.name.localeCompare(b.name))
+            .map((task) => (
+              <div
+                key={task.id}
+                className="grid grid-cols-[1fr_60px_56px] items-center gap-3 min-h-[20px]"
+              >
+                <div className="min-w-0">
+                  {editingTask?.id === task.id ? (
+                    <input
+                      type="text"
+                      value={editingTask.name}
+                      onChange={(e) =>
+                        setEditingTask({
+                          ...editingTask,
+                          name: e.target.value,
+                        })
+                      }
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          handleUpdateTask({
+                            ...editingTask,
+                            name: editingTask.name.trim(),
+                          });
+                        }
+                        if (e.key === 'Escape') {
+                          setEditingTask(null);
+                        }
+                      }}
+                      className="text-[#09121F] text-sm bg-transparent border-none outline-none w-full leading-5"
+                      autoFocus
+                    />
+                  ) : (
+                    <span className="text-[#09121F] text-sm leading-5 truncate block">
+                      {task.name}
+                    </span>
+                  )}
+                </div>
+
+                <div className="text-right">
+                  {settings.invoiceMode ? (
+                    editingTask?.id === task.id ? (
+                      <input
+                        type="text"
+                        value={
+                          editingTaskRateInput !== ''
+                            ? editingTaskRateInput
+                            : formatCurrencyInput(editingTask.hourlyRate)
+                        }
+                        onChange={(e) => {
+                          const raw = e.target.value;
+                          const digits = raw.replace(/\D/g, '');
+                          const amount = digits ? parseInt(digits, 10) / 100 : 0;
+                          setEditingTaskRateInput(
+                            `$${amount.toLocaleString('en-US', {
+                              minimumFractionDigits: 2,
+                              maximumFractionDigits: 2,
+                            })}`
+                          );
+                          setEditingTask({
+                            ...editingTask,
+                            hourlyRate: amount,
+                          });
+                        }}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            handleUpdateTask(editingTask);
+                            setEditingTaskRateInput('');
+                          }
+                          if (e.key === 'Escape') {
+                            setEditingTask(null);
+                            setEditingTaskRateInput('');
+                          }
+                        }}
+                        className="text-[#09121F] text-sm bg-transparent border-none outline-none w-full text-right leading-5"
+                        onFocus={(e) => e.target.select()}
+                        required
+                      />
+                    ) : (
+                      <span className="text-[#09121F] text-sm leading-5">
                         {formatCurrency(task.hourlyRate || 0)}
-                      </span>}
-                  </div>}
-                <div className="flex gap-3 w-[56px] justify-end">
-                  <button onClick={() => {
-                    console.log('Edit clicked for task:', task);
-                    setEditingTask(task);
-                    setEditingTaskRateInput(formatCurrencyInput(task.hourlyRate));
-                  }} className="text-gray-400 hover:text-[#09121F]">
+                      </span>
+                    )
+                  ) : (
+                    <span className="invisible select-none">0</span>
+                  )}
+                </div>
+
+                <div className="flex gap-3 justify-end w-[56px]">
+                  <button
+                    onClick={() => {
+                      setEditingTask(task);
+                      setEditingTaskRateInput(formatCurrencyInput(task.hourlyRate));
+                    }}
+                    className="text-gray-400 hover:text-[#09121F] flex items-center justify-center w-4 h-4"
+                  >
                     <Edit3 size={16} />
                   </button>
-                  <button onClick={() => handleDeleteTask(task.id)} className="text-gray-400 hover:text-red-500">
+                  <button
+                    onClick={() => handleDeleteTask(task.id)}
+                    className="text-gray-400 hover:text-red-500 flex items-center justify-center w-4 h-4"
+                  >
                     <Trash2 size={16} />
                   </button>
                 </div>
               </div>
-            </div>)}
-          
-          <div className="flex items-center justify-between">
-            <input type="text" placeholder="Add task type" value={newTaskName} onChange={e => setNewTaskName(e.target.value)} className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none flex-1 min-w-0" />
-            <div className="flex items-center gap-3">
-              {settings.invoiceMode && <input type="text" placeholder="$0.00" value={newTaskRate ? `$${newTaskRate}` : ''} onChange={e => {
-              const input = e.target.value;
-              // Remove all non-numeric characters except decimal point
-              const numericValue = input.replace(/[^0-9.]/g, '');
+            ))}
 
-              // Ensure only one decimal point
-              const parts = numericValue.split('.');
-              const formattedValue = parts.length > 2 ? parts[0] + '.' + parts.slice(1).join('') : numericValue;
+          <div className="grid grid-cols-[1fr_60px_56px] items-center gap-3">
+            <input
+              type="text"
+              placeholder="Add task type"
+              value={newTaskName}
+              onChange={(e) => setNewTaskName(e.target.value)}
+              className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none w-full"
+            />
 
-              // Limit to 2 decimal places
-              const finalValue = formattedValue.includes('.') ? formattedValue.substring(0, formattedValue.indexOf('.') + 3) : formattedValue;
-              setNewTaskRate(finalValue);
-            }} className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none w-20 text-right" />}
-              <div className="flex pl-8 justify-end w-[56px]">
-                <button onClick={handleAddTask} className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-[#09121F]/80 transition-colors">
-                  <Plus className="h-2.5 w-2.5" strokeWidth={3} />
-                </button>
-              </div>
+            <div className="text-right">
+              {settings.invoiceMode ? (
+                <input
+                  type="text"
+                  placeholder="$0.00"
+                  value={newTaskRate ? `$${newTaskRate}` : ''}
+                  onChange={(e) => {
+                    const input = e.target.value;
+                    const numericValue = input.replace(/[^0-9.]/g, '');
+                    const parts = numericValue.split('.');
+                    const formattedValue =
+                      parts.length > 2
+                        ? parts[0] + '.' + parts.slice(1).join('')
+                        : numericValue;
+                    const finalValue = formattedValue.includes('.')
+                      ? formattedValue.substring(0, formattedValue.indexOf('.') + 3)
+                      : formattedValue;
+                    setNewTaskRate(finalValue);
+                  }}
+                  className="text-[#BFBFBF] text-sm bg-transparent border-none outline-none w-full text-right"
+                />
+              ) : (
+                <span className="invisible select-none">0</span>
+              )}
+            </div>
+
+            <div className="flex justify-end w-[56px]">
+              <button
+                onClick={handleAddTask}
+                className="w-4 h-4 bg-[#09121F] text-white rounded-full flex items-center justify-center hover:bg-[#09121F]/80 transition-colors"
+              >
+                <Plus className="h-2.5 w-2.5" strokeWidth={3} />
+              </button>
             </div>
           </div>
         </div>
