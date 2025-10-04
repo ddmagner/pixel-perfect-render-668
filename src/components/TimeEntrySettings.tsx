@@ -261,20 +261,13 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
       {/* Tasks */}
       <section className="px-2.5">
         <div className="pt-5 mb-3">
-          <div className="flex justify-between items-center">
-            <h3 className="text-[#09121F] text-sm font-bold">Tasks</h3>
-            {settings.invoiceMode && <div className="flex items-center gap-3">
-              <h3 className="text-[#09121F] text-sm font-bold min-w-[60px] text-right">Hourly Rate</h3>
-              <div className="flex gap-3 pl-3 w-[56px]"></div>
-            </div>}
-          </div>
+          <h3 className="text-[#09121F] text-sm font-bold">Tasks</h3>
         </div>
         <div className="border-b border-[#09121F] mb-3"></div>
         
         <div className="space-y-3">
-          {[...settings.taskTypes].sort((a, b) => a.name.localeCompare(b.name)).map(task => <div key={task.id} className="flex items-center justify-between min-h-[20px]">
-              <div className="flex-1 min-w-0 flex items-center">
-{editingTask?.id === task.id ? <input type="text" value={editingTask.name} onChange={e => setEditingTask({
+          {[...settings.taskTypes].sort((a, b) => a.name.localeCompare(b.name)).map(task => <div key={task.id} className="flex items-center justify-between">
+              {editingTask?.id === task.id ? <input type="text" value={editingTask.name} onChange={e => setEditingTask({
               ...editingTask,
               name: e.target.value
             })} onKeyDown={e => {
@@ -284,8 +277,11 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
               if (e.key === 'Escape') {
                 setEditingTask(null);
               }
-            }} className="text-[#09121F] text-sm bg-transparent border-none outline-none flex-1 min-w-0 leading-5" autoFocus /> : <span className="text-[#09121F] text-sm flex-1 min-w-0 leading-5">{task.name}</span>}
-              </div>
+            }} className="text-[#09121F] text-sm bg-transparent border-none outline-none flex-1 min-w-0" style={{
+              marginRight: settings.invoiceMode ? '0' : '56px'
+            }} autoFocus /> : <span className="text-[#09121F] text-sm" style={{
+              marginRight: settings.invoiceMode ? '0' : '56px'
+            }}>{task.name}</span>}
               <div className="flex items-center gap-3">
                 {settings.invoiceMode && <div className="min-w-[60px] text-right">
 {editingTask?.id === task.id ? <input type="text" value={editingTaskRateInput !== '' ? editingTaskRateInput : formatCurrencyInput(editingTask.hourlyRate)} onChange={e => {
@@ -306,7 +302,7 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
                   setEditingTask(null);
                   setEditingTaskRateInput('');
                 }
-              }} className="text-[#09121F] text-sm bg-transparent border-none outline-none w-full text-right leading-5" onFocus={e => e.target.select()} required /> : <span className="text-[#09121F] text-sm leading-5">
+              }} className="text-[#09121F] text-sm bg-transparent border-none outline-none w-full text-right" onFocus={e => e.target.select()} required /> : <span className="text-[#09121F] text-sm">
                         {formatCurrency(task.hourlyRate || 0)}
                       </span>}
                   </div>}
@@ -315,10 +311,10 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
                     console.log('Edit clicked for task:', task);
                     setEditingTask(task);
                     setEditingTaskRateInput(formatCurrencyInput(task.hourlyRate));
-                  }} className="text-gray-400 hover:text-[#09121F] flex items-center justify-center w-4 h-4">
+                  }} className="text-gray-400 hover:text-[#09121F]">
                     <Edit3 size={16} />
                   </button>
-                  <button onClick={() => handleDeleteTask(task.id)} className="text-gray-400 hover:text-red-500 flex items-center justify-center w-4 h-4">
+                  <button onClick={() => handleDeleteTask(task.id)} className="text-gray-400 hover:text-red-500">
                     <Trash2 size={16} />
                   </button>
                 </div>
