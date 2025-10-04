@@ -633,63 +633,8 @@ export const TimeArchivePage: React.FC = () => {
                             )}
                           </div>
                         ))}
-                        
-                        {/* Subgroup Subtotal */}
-                        <div className="h-px bg-[#09121F]" />
-                        <div className="grid h-[32px] items-center" style={{
-                          gridTemplateColumns: getEntryGridTemplate(viewMode === 'invoice'),
-                          gap: '0'
-                        }}>
-                          <div></div>
-                          <div></div>
-                          <div></div>
-                          <div></div>
-                          <div className="text-[#09121F] text-sm font-bold flex items-center">Sub-total</div>
-                          <div></div>
-                          <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
-                            {formatHours(subgroup.subtotal.hours)}
-                          </div>
-                          {viewMode === 'invoice' && (
-                            <>
-                              <div></div>
-                              <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
-                                {formatCurrency(subgroup.subtotal.fee)}
-                              </div>
-                            </>
-                          )}
-                        </div>
-                        <div className="h-px bg-[#09121F]" />
                       </div>
                     ))}
-                    
-                    {/* Group Subtotal (for date and task views) */}
-                    {(sortOption === 'date' || sortOption === 'task') && group.subtotal && (
-                      <>
-                        <div className="grid h-[32px] items-center font-bold" style={{
-                          gridTemplateColumns: getEntryGridTemplate(viewMode === 'invoice'),
-                          gap: '0'
-                        }}>
-                          <div></div>
-                          <div></div>
-                          <div></div>
-                          <div></div>
-                          <div className="text-[#09121F] text-sm font-bold flex items-center">Total</div>
-                          <div></div>
-                          <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
-                            {formatHours(group.subtotal.hours)}
-                          </div>
-                          {viewMode === 'invoice' && (
-                            <>
-                              <div></div>
-                              <div className="text-[#09121F] text-sm font-bold text-right flex items-center justify-end">
-                                {formatCurrency(group.subtotal.fee)}
-                              </div>
-                            </>
-                          )}
-                        </div>
-                        <div className="h-px bg-[#09121F]" />
-                      </>
-                    )}
                   </div>
                 ))}
               </div>
