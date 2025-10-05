@@ -358,20 +358,17 @@ export const TimeArchivePage: React.FC = () => {
         href="https://fonts.googleapis.com/css2?family=Gilroy:wght@400;700;800;900&display=swap"
       />
       <div className="fixed inset-0 flex flex-col bg-white">
-        <div className="sticky top-0 z-40 bg-white">
-          <div className="w-full max-w-sm mx-auto" style={{ fontFamily: 'Gilroy, sans-serif' }}>
+        <div className="w-full max-w-sm mx-auto flex flex-col h-full" style={{ fontFamily: 'Gilroy, sans-serif' }}>
+          <div className="sticky top-0 z-40 bg-white">
             <Navigation activeTab="" onTabChange={() => {}} />
             <TabNavigation activeTab="" onTabChange={() => {}} />
             <Divider />
             <div className="h-1" />
           </div>
-        </div>
 
-        <div className="flex-1 overflow-y-auto overflow-x-hidden">
-
-        {/* Mode Toggle */}
-        <div className="w-full max-w-sm mx-auto" style={{ fontFamily: 'Gilroy, sans-serif' }}>
-          <div className="flex justify-center items-center w-full px-2.5 py-4">
+          <div className="flex-1 overflow-y-auto overflow-x-hidden">
+            {/* Mode Toggle */}
+            <div className="flex justify-center items-center w-full px-2.5 py-4">
             <div className="flex items-center gap-4">
               <span className={`text-sm font-medium ${!settings.invoiceMode ? 'text-[#09121F]' : 'text-[#BFBFBF]'}`}>
                 Time Card Mode
@@ -383,14 +380,12 @@ export const TimeArchivePage: React.FC = () => {
                 Invoice Mode
               </span>
             </div>
-        </div>
+            </div>
 
-        {/* Divider */}
-        <div className="w-full px-2.5 mb-6"><div className="h-px bg-[#09121F]" /></div>
-        </div>
-        
-        <div className="w-full max-w-sm mx-auto" style={{ fontFamily: 'Gilroy, sans-serif' }}>
-        <div className="flex flex-col h-full w-full font-gilroy">
+            {/* Divider */}
+            <div className="w-full px-2.5 mb-6"><div className="h-px bg-[#09121F]" /></div>
+
+            <div className="flex flex-col h-full w-full font-gilroy">
           {/* Header / Selection Toolbar */}
           <div className="pt-0.5 pb-1 h-[2.75rem] px-2.5">
             <div className="flex items-baseline justify-between h-full">
@@ -718,10 +713,10 @@ export const TimeArchivePage: React.FC = () => {
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
-          </div>
+            </div>
           </div>
         </div>
-        
+
         <HomeIndicator />
       </div>
     </>

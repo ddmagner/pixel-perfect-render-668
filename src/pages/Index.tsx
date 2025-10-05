@@ -89,17 +89,15 @@ const Index = () => {
         href="https://fonts.googleapis.com/css2?family=Gilroy:wght@400;700;800;900&display=swap"
       />
       <div className="fixed inset-0 flex flex-col bg-white">
-        <div className="sticky top-0 z-40 bg-white">
-          <div className="w-full max-w-sm mx-auto" style={{ fontFamily: 'Gilroy, sans-serif' }}>
+        <div className="w-full max-w-sm mx-auto flex flex-col h-full" style={{ fontFamily: 'Gilroy, sans-serif' }}>
+          <div className="sticky top-0 z-40 bg-white">
             <Navigation activeTab={activeTab} onTabChange={handleTabChange} />
             <TabNavigation activeTab={activeTab} onTabChange={handleTabChange} />
             <Divider />
             <div className="h-1" />
           </div>
-        </div>
 
-        <div className="flex-1 overflow-y-auto overflow-x-hidden">
-          <div className="w-full max-w-sm mx-auto" style={{ fontFamily: 'Gilroy, sans-serif' }}>
+          <div className="flex-1 overflow-y-auto overflow-x-hidden">
             {activeTab === 'enter-time' && (
               <>
                 <RecordButton
