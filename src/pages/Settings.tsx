@@ -17,7 +17,7 @@ const SettingsPage = () => {
 
   return (
     <>
-      <div className="fixed inset-0 flex flex-col bg-white overflow-y-scroll overflow-x-hidden">
+      <div className="fixed inset-0 flex flex-col bg-white">
         <div className="sticky top-0 z-40 bg-white">
           <div className="w-full max-w-sm mx-auto" style={{ fontFamily: 'Gilroy, sans-serif' }}>
             <nav className="flex justify-center items-center self-stretch px-2.5 pb-1 bg-white relative" style={{ paddingTop: 'max(1rem, env(safe-area-inset-top))' }}>
@@ -53,7 +53,7 @@ const SettingsPage = () => {
           </div>
         </div>
 
-        <div className="flex-1">
+        <div className="flex-1 overflow-y-auto overflow-x-hidden">
           <div className="w-full max-w-sm mx-auto" style={{ fontFamily: 'Gilroy, sans-serif' }}>
             <Settings highlightSection={section} />
           </div>
