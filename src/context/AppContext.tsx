@@ -61,18 +61,6 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     if (user) {
       loadUserData();
-      // Avoid prompting for microphone permission on non-interactive routes like the invoice print window
-      const isInvoiceWindow = typeof window !== 'undefined' && window.location.pathname === '/invoice';
-      if (!isInvoiceWindow && !hasMicrophonePermission) {
-        requestMicrophonePermission().then((granted) => {
-          if (granted) {
-            toast({
-              title: "Microphone Access Granted",
-              description: "You can now use voice recording features.",
-            });
-          }
-        });
-      }
     } else if (!authLoading) {
       // Reset data when user logs out
       setTimeEntries([]);

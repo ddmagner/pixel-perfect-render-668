@@ -26,7 +26,9 @@ export const RecordButton: React.FC<RecordButtonProps> = ({
     isSupported
   } = useSpeechRecognition();
   const {
-    settings
+    settings,
+    hasMicrophonePermission,
+    requestMicrophonePermission
   } = useApp();
   const {
     mediumImpact,
@@ -44,8 +46,13 @@ export const RecordButton: React.FC<RecordButtonProps> = ({
     }
   }, [finalTranscript, onFinalTranscript]);
   // Unified Pointer Events to avoid mouse/touch conflicts and long-press issues
-  const handlePointerDown = (e: React.PointerEvent<HTMLButtonElement>) => {
+  const handlePointerDown = async (e: React.PointerEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    // If we don't yet have permission, request it first and exit
+    if (!hasMicrophonePermission) {
+      const granted = await requestMicrophonePermission();
+      if (!granted) return;
+    }
     // Capture the pointer so we reliably receive the corresponding pointerup
     try {
       (e.currentTarget as any).setPointerCapture?.(e.pointerId);
