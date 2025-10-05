@@ -18,36 +18,85 @@ async function fetchAsBase64(url: string): Promise<string> {
   });
 }
 
-// Compose icon and wordmark into a single image to keep spacing locked
+// Compose label + icon + wordmark into a single image to keep spacing locked
 async function composeBrandImage(
   iconB64: string,
   wordmarkB64: string,
-  options: { iconWidth?: number; wordmarkWidth?: number; height?: number; gap?: number } = {}
-): Promise<string> {
-  const { iconWidth = 9, wordmarkWidth = 48, height = 9, gap = 6 } = options;
+  options: {
+    iconWidth?: number;
+    wordmarkWidth?: number;
+    height?: number;
+    gap?: number;
+    label?: string;
+    labelGap?: number;
+    labelColor?: string;
+    fontFamily?: string;
+    fontPx?: number;
+  } = {}
+): Promise<{ base64: string; width: number; height: number }> {
+  const {
+    iconWidth = 9,
+    wordmarkWidth = 48,
+    height = 12,
+    gap = 6,
+    label = '',
+    labelGap = 6,
+    labelColor = '#9CA3AF',
+    fontFamily = 'Helvetica',
+    fontPx = 9,
+  } = options;
+
   return new Promise((resolve) => {
     const iconImg = new Image();
     const wordmarkImg = new Image();
+
+    // Prepare a temp canvas for measuring text
+    const measureCanvas = document.createElement('canvas');
+    const mctx = measureCanvas.getContext('2d');
+    let labelWidth = 0;
+    if (mctx && label) {
+      mctx.font = `${fontPx}px ${fontFamily}`;
+      labelWidth = Math.ceil(mctx.measureText(label).width);
+    }
+
     let loaded = 0;
     const done = () => {
       loaded += 1;
       if (loaded < 2) return;
-      const width = iconWidth + gap + wordmarkWidth;
+
+      const h = Math.max(height, fontPx);
+      const totalWidth = (label ? labelWidth + labelGap : 0) + iconWidth + gap + wordmarkWidth;
+
       const canvas = document.createElement('canvas');
-      canvas.width = width;
-      canvas.height = height;
+      canvas.width = totalWidth;
+      canvas.height = h;
       const ctx = canvas.getContext('2d');
       if (!ctx) {
-        resolve(iconB64);
+        resolve({ base64: iconB64, width: iconWidth, height: h });
         return;
       }
-      ctx.clearRect(0, 0, width, height);
-      ctx.drawImage(iconImg, 0, 0, iconWidth, height);
-      ctx.drawImage(wordmarkImg, iconWidth + gap, 0, wordmarkWidth, height);
+
+      ctx.clearRect(0, 0, totalWidth, h);
+
+      // Draw label
+      if (label) {
+        ctx.font = `${fontPx}px ${fontFamily}`;
+        ctx.fillStyle = labelColor;
+        ctx.textBaseline = 'middle';
+        ctx.fillText(label, 0, h / 2);
+      }
+
+      // Draw icon and wordmark
+      const xIcon = (label ? labelWidth + labelGap : 0);
+      ctx.drawImage(iconImg, xIcon, 0, iconWidth, h);
+      ctx.drawImage(wordmarkImg, xIcon + iconWidth + gap, 0, wordmarkWidth, h);
+
       const dataUrl = canvas.toDataURL('image/png');
-      resolve(dataUrl.split(',')[1] || '');
+      resolve({ base64: dataUrl.split(',')[1] || '', width: totalWidth, height: h });
     };
-    const fail = () => resolve(iconB64);
+
+    const fail = () => resolve({ base64: iconB64, width: iconWidth, height });
+
     iconImg.onload = done;
     wordmarkImg.onload = done;
     iconImg.onerror = fail;
@@ -313,10 +362,8 @@ export async function generateSpreadsheet(
 
   rowIdx += 2;
 
-  // Footer brand: MADE WITH [icon][wordmark]
-  sheet.getCell(rowIdx, 1).value = 'MADE WITH';
-  sheet.getCell(rowIdx, 1).font = fontFooter;
-  sheet.getRow(rowIdx).height = 14; // ensure enough height for 9px images
+  // Footer brand strip (text + logo merged as one image)
+  sheet.getRow(rowIdx).height = 14; // ensure enough height for ~12px strip
 
   try {
     const [iconB64, wordmarkB64] = await Promise.all([
@@ -324,19 +371,23 @@ export async function generateSpreadsheet(
       fetchAsBase64(BRAND.wordmark),
     ]);
 
-    // Combine icon and wordmark into a single image to prevent relative spacing shifts
-    const combinedB64 = await composeBrandImage(iconB64, wordmarkB64, {
+    // Compose label + icon + wordmark into one image to prevent spacing shifts and keep on same line
+    const brandStrip = await composeBrandImage(iconB64, wordmarkB64, {
       iconWidth: 9,
       wordmarkWidth: 48,
-      height: 9,
+      height: 12,
       gap: 6,
+      label: 'MADE WITH',
+      labelGap: 6,
+      labelColor: '#9CA3AF',
+      fontPx: 9,
     });
-    const brandId = workbook.addImage({ base64: combinedB64, extension: 'png' });
+    const brandId = workbook.addImage({ base64: brandStrip.base64, extension: 'png' });
 
     // Position the single brand image; absolute lock so it won't shift with cells
     sheet.addImage(brandId, {
-      tl: { col: 1.65, row: rowIdx - 0.70 },
-      ext: { width: 63, height: 9 }, // 9 + 6 gap + 48 = 63
+      tl: { col: 1.0, row: rowIdx - 0.75 },
+      ext: { width: brandStrip.width, height: brandStrip.height },
       editAs: 'absolute',
     });
   } catch (e) {
