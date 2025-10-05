@@ -289,15 +289,16 @@ export async function generateSpreadsheet(
     const wordmarkId = workbook.addImage({ base64: wordmarkB64, extension: 'png' });
 
     // Position images to align with text baseline and slight gap
+    // Using 'absolute' to lock spacing between icon and wordmark
     sheet.addImage(iconId, {
       tl: { col: 1.65, row: rowIdx - 0.70 },
       ext: { width: 9, height: 9 },
-      editAs: 'twoCell',
+      editAs: 'absolute',
     });
     sheet.addImage(wordmarkId, {
       tl: { col: 1.86, row: rowIdx - 0.70 },
       ext: { width: 48, height: 9 },
-      editAs: 'twoCell',
+      editAs: 'absolute',
     });
   } catch (e) {
     // If image embedding fails, we still keep the text footer
