@@ -50,13 +50,16 @@ async function composeBrandImage(
     const iconImg = new Image();
     const wordmarkImg = new Image();
 
+    // High-res scale factor to prevent rasterization
+    const scale = 3;
+
     // Prepare a temp canvas for measuring text
     const measureCanvas = document.createElement('canvas');
     const mctx = measureCanvas.getContext('2d');
     let labelWidth = 0;
     if (mctx && label) {
-      mctx.font = `${fontPx}px ${fontFamily}`;
-      labelWidth = Math.ceil(mctx.measureText(label).width);
+      mctx.font = `${fontPx * scale}px ${fontFamily}`;
+      labelWidth = Math.ceil(mctx.measureText(label).width / scale);
     }
 
     let loaded = 0;
@@ -64,35 +67,50 @@ async function composeBrandImage(
       loaded += 1;
       if (loaded < 2) return;
 
-      const h = Math.max(height, fontPx);
-      const totalWidth = (label ? labelWidth + labelGap : 0) + iconWidth + gap + wordmarkWidth;
+      // Calculate proper aspect ratios
+      const iconAspect = iconImg.width / iconImg.height;
+      const wordmarkAspect = wordmarkImg.width / wordmarkImg.height;
+      
+      const iconH = height;
+      const iconW = iconH * iconAspect;
+      const wordmarkH = height;
+      const wordmarkW = wordmarkH * wordmarkAspect;
 
+      const totalWidth = (label ? labelWidth + labelGap : 0) + iconW + gap + wordmarkW;
+      const totalHeight = Math.max(height, fontPx * 1.2);
+
+      // Create high-res canvas
       const canvas = document.createElement('canvas');
-      canvas.width = totalWidth;
-      canvas.height = h;
+      canvas.width = totalWidth * scale;
+      canvas.height = totalHeight * scale;
       const ctx = canvas.getContext('2d');
       if (!ctx) {
-        resolve({ base64: iconB64, width: iconWidth, height: h });
+        resolve({ base64: iconB64, width: iconW, height: iconH });
         return;
       }
 
-      ctx.clearRect(0, 0, totalWidth, h);
+      // Scale context for high-res rendering
+      ctx.scale(scale, scale);
+      ctx.clearRect(0, 0, totalWidth, totalHeight);
 
       // Draw label
       if (label) {
         ctx.font = `${fontPx}px ${fontFamily}`;
         ctx.fillStyle = labelColor;
         ctx.textBaseline = 'middle';
-        ctx.fillText(label, 0, h / 2);
+        ctx.fillText(label, 0, totalHeight / 2);
       }
 
-      // Draw icon and wordmark
+      // Draw icon and wordmark with proper aspect ratios
       const xIcon = (label ? labelWidth + labelGap : 0);
-      ctx.drawImage(iconImg, xIcon, 0, iconWidth, h);
-      ctx.drawImage(wordmarkImg, xIcon + iconWidth + gap, 0, wordmarkWidth, h);
+      const yIcon = (totalHeight - iconH) / 2;
+      const yWordmark = (totalHeight - wordmarkH) / 2;
+      
+      ctx.drawImage(iconImg, xIcon, yIcon, iconW, iconH);
+      ctx.drawImage(wordmarkImg, xIcon + iconW + gap, yWordmark, wordmarkW, wordmarkH);
 
       const dataUrl = canvas.toDataURL('image/png');
-      resolve({ base64: dataUrl.split(',')[1] || '', width: totalWidth, height: h });
+      resolve({ base64: dataUrl.split(',')[1] || '', width: totalWidth, height: totalHeight });
     };
 
     const fail = () => resolve({ base64: iconB64, width: iconWidth, height });
