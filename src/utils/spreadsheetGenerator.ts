@@ -18,6 +18,45 @@ async function fetchAsBase64(url: string): Promise<string> {
   });
 }
 
+// Compose icon and wordmark into a single image to keep spacing locked
+async function composeBrandImage(
+  iconB64: string,
+  wordmarkB64: string,
+  options: { iconWidth?: number; wordmarkWidth?: number; height?: number; gap?: number } = {}
+): Promise<string> {
+  const { iconWidth = 9, wordmarkWidth = 48, height = 9, gap = 6 } = options;
+  return new Promise((resolve) => {
+    const iconImg = new Image();
+    const wordmarkImg = new Image();
+    let loaded = 0;
+    const done = () => {
+      loaded += 1;
+      if (loaded < 2) return;
+      const width = iconWidth + gap + wordmarkWidth;
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      if (!ctx) {
+        resolve(iconB64);
+        return;
+      }
+      ctx.clearRect(0, 0, width, height);
+      ctx.drawImage(iconImg, 0, 0, iconWidth, height);
+      ctx.drawImage(wordmarkImg, iconWidth + gap, 0, wordmarkWidth, height);
+      const dataUrl = canvas.toDataURL('image/png');
+      resolve(dataUrl.split(',')[1] || '');
+    };
+    const fail = () => resolve(iconB64);
+    iconImg.onload = done;
+    wordmarkImg.onload = done;
+    iconImg.onerror = fail;
+    wordmarkImg.onerror = fail;
+    iconImg.src = `data:image/png;base64,${iconB64}`;
+    wordmarkImg.src = `data:image/png;base64,${wordmarkB64}`;
+  });
+}
+
 export async function generateSpreadsheet(
   entries: TimeEntry[],
   settings: AppSettings,
@@ -285,19 +324,19 @@ export async function generateSpreadsheet(
       fetchAsBase64(BRAND.wordmark),
     ]);
 
-    const iconId = workbook.addImage({ base64: iconB64, extension: 'png' });
-    const wordmarkId = workbook.addImage({ base64: wordmarkB64, extension: 'png' });
-
-    // Position images to align with text baseline and slight gap
-    // Using 'absolute' to lock spacing between icon and wordmark
-    sheet.addImage(iconId, {
-      tl: { col: 1.65, row: rowIdx - 0.70 },
-      ext: { width: 9, height: 9 },
-      editAs: 'absolute',
+    // Combine icon and wordmark into a single image to prevent relative spacing shifts
+    const combinedB64 = await composeBrandImage(iconB64, wordmarkB64, {
+      iconWidth: 9,
+      wordmarkWidth: 48,
+      height: 9,
+      gap: 6,
     });
-    sheet.addImage(wordmarkId, {
-      tl: { col: 1.86, row: rowIdx - 0.70 },
-      ext: { width: 48, height: 9 },
+    const brandId = workbook.addImage({ base64: combinedB64, extension: 'png' });
+
+    // Position the single brand image; absolute lock so it won't shift with cells
+    sheet.addImage(brandId, {
+      tl: { col: 1.65, row: rowIdx - 0.70 },
+      ext: { width: 63, height: 9 }, // 9 + 6 gap + 48 = 63
       editAs: 'absolute',
     });
   } catch (e) {
