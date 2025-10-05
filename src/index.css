@@ -160,17 +160,44 @@ All colors MUST be HSL.
     size: letter;
     margin: 0;
   }
-  
-  body {
+
+  html, body {
+    width: 8.5in;
+    height: 11in;
     margin: 0 !important;
     padding: 0 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+
+  /* Print only the invoice preview content */
+  body * {
+    visibility: hidden !important;
+  }
+  #document-preview, #document-preview * {
+    visibility: visible !important;
+  }
+  #document-preview {
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
   }
   
+  /* Ensure the content fits exactly within the page */
   .invoice-content {
     width: 8.5in !important;
     max-width: 8.5in !important;
     margin: 0 auto !important;
     padding: 0.75in 0.5in !important;
     box-sizing: border-box !important;
+  }
+
+  /* Remove any potential UI effects when printing */
+  .shadow-2xl, .rounded-lg, .overflow-auto, .fixed, .inset-0 {
+    box-shadow: none !important;
+    border-radius: 0 !important;
+    overflow: visible !important;
+    position: static !important;
+    inset: auto !important;
   }
 }
