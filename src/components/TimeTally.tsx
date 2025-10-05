@@ -2,11 +2,9 @@ import React, { useMemo, useState } from 'react';
 import { useApp } from '@/context/AppContext';
 import { TimeEntry } from '@/types';
 import { formatCurrency, formatHours } from '@/lib/utils';
-
 import { ChevronDown, Pencil, Trash2, Archive, Edit, X, Plus, PlusCircle } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
-
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { useSelection } from '@/hooks/useSelection';
@@ -16,7 +14,9 @@ import { ExportDialog } from '@/components/ExportDialog';
 interface TimeTallyProps {
   onSwitchToSettings?: () => void;
 }
-export const TimeTally: React.FC<TimeTallyProps> = ({ onSwitchToSettings }) => {
+export const TimeTally: React.FC<TimeTallyProps> = ({
+  onSwitchToSettings
+}) => {
   const {
     timeEntries,
     sortOption,
@@ -28,11 +28,16 @@ export const TimeTally: React.FC<TimeTallyProps> = ({ onSwitchToSettings }) => {
     updateTimeEntry
   } = useApp();
   const navigate = useNavigate();
-  
   const [editingEntryId, setEditingEntryId] = useState<string | null>(null);
   const [editingField, setEditingField] = useState<string | null>(null);
-  const [editingGroupHeader, setEditingGroupHeader] = useState<{ type: string; name: string } | null>(null);
-  const [editingSubgroupHeader, setEditingSubgroupHeader] = useState<{ groupName: string; subgroupName: string } | null>(null);
+  const [editingGroupHeader, setEditingGroupHeader] = useState<{
+    type: string;
+    name: string;
+  } | null>(null);
+  const [editingSubgroupHeader, setEditingSubgroupHeader] = useState<{
+    groupName: string;
+    subgroupName: string;
+  } | null>(null);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [isExportDialogOpen, setIsExportDialogOpen] = useState(false);
   const selection = useSelection();
@@ -42,7 +47,6 @@ export const TimeTally: React.FC<TimeTallyProps> = ({ onSwitchToSettings }) => {
 
   // Filter out archived entries
   const activeTimeEntries = timeEntries.filter(entry => !entry.archived);
-
 
   // Get client name by project
   const getClientByProject = (projectName: string): string => {
@@ -111,42 +115,42 @@ export const TimeTally: React.FC<TimeTallyProps> = ({ onSwitchToSettings }) => {
   const organizedData = useMemo(() => {
     if (activeTimeEntries.length === 0) return {
       groups: [],
-      totalIn: { hours: 0, fee: 0 }
+      totalIn: {
+        hours: 0,
+        fee: 0
+      }
     };
-    
     let totalInHours = 0;
     let totalInFee = 0;
     activeTimeEntries.forEach(entry => {
       totalInHours += entry.duration;
       totalInFee += calculateFee(entry);
     });
-
     let groups: any[] = [];
-
     if (sortOption === 'project') {
       // By Project: Client name -> Project name -> entries -> Sub-total -> TOTAL -> TOTAL-IN
-      const clientGroups: { [key: string]: TimeEntry[] } = {};
-      
+      const clientGroups: {
+        [key: string]: TimeEntry[];
+      } = {};
       activeTimeEntries.forEach(entry => {
         const clientName = resolveClientName(entry);
         if (!clientGroups[clientName]) clientGroups[clientName] = [];
         clientGroups[clientName].push(entry);
       });
-
       groups = Object.entries(clientGroups).map(([clientName, clientEntries]) => {
         // Group by project within client
-        const projectGroups: { [key: string]: TimeEntry[] } = {};
+        const projectGroups: {
+          [key: string]: TimeEntry[];
+        } = {};
         clientEntries.forEach(entry => {
           if (!projectGroups[entry.project]) projectGroups[entry.project] = [];
           projectGroups[entry.project].push(entry);
         });
-
         const projectSubgroups = Object.entries(projectGroups).map(([projectName, projectEntries]) => {
           const sortedEntries = [...projectEntries].sort((a, b) => {
             if (a.date !== b.date) return compareDateStrAsc(a.date, b.date);
             return a.task.localeCompare(b.task);
           });
-
           return {
             type: 'project',
             name: projectName,
@@ -157,7 +161,6 @@ export const TimeTally: React.FC<TimeTallyProps> = ({ onSwitchToSettings }) => {
             }
           };
         });
-
         return {
           type: 'client',
           name: clientName,
@@ -168,79 +171,30 @@ export const TimeTally: React.FC<TimeTallyProps> = ({ onSwitchToSettings }) => {
           }
         };
       });
-
     } else if (sortOption === 'date') {
       // By Date: Date -> Client name -> entries -> Sub-total -> TOTAL -> TOTAL-IN
-      const dateGroups: { [key: string]: TimeEntry[] } = {};
-      
+      const dateGroups: {
+        [key: string]: TimeEntry[];
+      } = {};
       activeTimeEntries.forEach(entry => {
         if (!dateGroups[entry.date]) dateGroups[entry.date] = [];
         dateGroups[entry.date].push(entry);
       });
-
-      groups = Object.entries(dateGroups)
-        .sort(([dateA], [dateB]) => compareDateStrAsc(dateA, dateB))
-        .map(([date, dateEntries]) => {
-          // Group by client within date
-          const clientGroups: { [key: string]: TimeEntry[] } = {};
-          dateEntries.forEach(entry => {
-            const clientName = resolveClientName(entry);
-            if (!clientGroups[clientName]) clientGroups[clientName] = [];
-            clientGroups[clientName].push(entry);
-          });
-
-          const clientSubgroups = Object.entries(clientGroups).map(([clientName, clientEntries]) => {
-            const sortedEntries = [...clientEntries].sort((a, b) => {
-              if (a.project !== b.project) return a.project.localeCompare(b.project);
-              return a.task.localeCompare(b.task);
-            });
-
-            return {
-              type: 'client',
-              name: clientName,
-              entries: sortedEntries,
-              subtotal: {
-                hours: clientEntries.reduce((sum, e) => sum + e.duration, 0),
-                fee: clientEntries.reduce((sum, e) => sum + calculateFee(e), 0)
-              }
-            };
-          });
-
-          return {
-            type: 'date',
-            name: date,
-            subgroups: clientSubgroups,
-            total: {
-              hours: dateEntries.reduce((sum, e) => sum + e.duration, 0),
-              fee: dateEntries.reduce((sum, e) => sum + calculateFee(e), 0)
-            }
-          };
-        });
-
-    } else if (sortOption === 'task') {
-      // By Task: Task name -> Client name -> entries -> Sub-total -> TOTAL -> TOTAL-IN
-      const taskGroups: { [key: string]: TimeEntry[] } = {};
-      
-      activeTimeEntries.forEach(entry => {
-        if (!taskGroups[entry.task]) taskGroups[entry.task] = [];
-        taskGroups[entry.task].push(entry);
-      });
-
-      groups = Object.entries(taskGroups).map(([taskName, taskEntries]) => {
-        // Group by client within task
-        const clientGroups: { [key: string]: TimeEntry[] } = {};
-        taskEntries.forEach(entry => {
+      groups = Object.entries(dateGroups).sort(([dateA], [dateB]) => compareDateStrAsc(dateA, dateB)).map(([date, dateEntries]) => {
+        // Group by client within date
+        const clientGroups: {
+          [key: string]: TimeEntry[];
+        } = {};
+        dateEntries.forEach(entry => {
           const clientName = resolveClientName(entry);
           if (!clientGroups[clientName]) clientGroups[clientName] = [];
           clientGroups[clientName].push(entry);
         });
-
         const clientSubgroups = Object.entries(clientGroups).map(([clientName, clientEntries]) => {
           const sortedEntries = [...clientEntries].sort((a, b) => {
-            if (a.date !== b.date) return compareDateStrAsc(a.date, b.date);
-            return a.project.localeCompare(b.project);
+            if (a.project !== b.project) return a.project.localeCompare(b.project);
+            return a.task.localeCompare(b.task);
           });
-
           return {
             type: 'client',
             name: clientName,
@@ -251,7 +205,50 @@ export const TimeTally: React.FC<TimeTallyProps> = ({ onSwitchToSettings }) => {
             }
           };
         });
-
+        return {
+          type: 'date',
+          name: date,
+          subgroups: clientSubgroups,
+          total: {
+            hours: dateEntries.reduce((sum, e) => sum + e.duration, 0),
+            fee: dateEntries.reduce((sum, e) => sum + calculateFee(e), 0)
+          }
+        };
+      });
+    } else if (sortOption === 'task') {
+      // By Task: Task name -> Client name -> entries -> Sub-total -> TOTAL -> TOTAL-IN
+      const taskGroups: {
+        [key: string]: TimeEntry[];
+      } = {};
+      activeTimeEntries.forEach(entry => {
+        if (!taskGroups[entry.task]) taskGroups[entry.task] = [];
+        taskGroups[entry.task].push(entry);
+      });
+      groups = Object.entries(taskGroups).map(([taskName, taskEntries]) => {
+        // Group by client within task
+        const clientGroups: {
+          [key: string]: TimeEntry[];
+        } = {};
+        taskEntries.forEach(entry => {
+          const clientName = resolveClientName(entry);
+          if (!clientGroups[clientName]) clientGroups[clientName] = [];
+          clientGroups[clientName].push(entry);
+        });
+        const clientSubgroups = Object.entries(clientGroups).map(([clientName, clientEntries]) => {
+          const sortedEntries = [...clientEntries].sort((a, b) => {
+            if (a.date !== b.date) return compareDateStrAsc(a.date, b.date);
+            return a.project.localeCompare(b.project);
+          });
+          return {
+            type: 'client',
+            name: clientName,
+            entries: sortedEntries,
+            subtotal: {
+              hours: clientEntries.reduce((sum, e) => sum + e.duration, 0),
+              fee: clientEntries.reduce((sum, e) => sum + calculateFee(e), 0)
+            }
+          };
+        });
         return {
           type: 'task',
           name: taskName,
@@ -263,7 +260,6 @@ export const TimeTally: React.FC<TimeTallyProps> = ({ onSwitchToSettings }) => {
         };
       });
     }
-
     return {
       groups,
       totalIn: {
@@ -291,46 +287,38 @@ export const TimeTally: React.FC<TimeTallyProps> = ({ onSwitchToSettings }) => {
     setEditingEntryId(entryId);
     setEditingField(field);
   };
-
   const handleFieldSave = async (entryId: string, field: string, value: string) => {
     const entry = activeTimeEntries.find(e => e.id === entryId);
     if (!entry) return;
-
     const trimmedValue = value.trim();
 
     // Check for duplicates when editing client or project
     if (field === 'client') {
-      const existingClient = settings.clients.find(
-        c => c.name.toLowerCase() === trimmedValue.toLowerCase() && c.name !== entry.client
-      );
+      const existingClient = settings.clients.find(c => c.name.toLowerCase() === trimmedValue.toLowerCase() && c.name !== entry.client);
       if (existingClient && trimmedValue.toLowerCase() !== entry.client?.toLowerCase()) {
         toast({
           title: "Duplicate Client",
           description: "A client with this name already exists.",
-          variant: "destructive",
+          variant: "destructive"
         });
         setEditingEntryId(null);
         setEditingField(null);
         return;
       }
     } else if (field === 'project') {
-      const existingProject = settings.projects.find(
-        p => p.name.toLowerCase() === trimmedValue.toLowerCase() && p.name !== entry.project
-      );
+      const existingProject = settings.projects.find(p => p.name.toLowerCase() === trimmedValue.toLowerCase() && p.name !== entry.project);
       if (existingProject && trimmedValue.toLowerCase() !== entry.project.toLowerCase()) {
         toast({
           title: "Duplicate Project",
           description: "A project with this name already exists.",
-          variant: "destructive",
+          variant: "destructive"
         });
         setEditingEntryId(null);
         setEditingField(null);
         return;
       }
     }
-
     const updates: Partial<TimeEntry> = {};
-    
     if (field === 'date') {
       updates.date = value;
     } else if (field === 'task') {
@@ -350,17 +338,14 @@ export const TimeTally: React.FC<TimeTallyProps> = ({ onSwitchToSettings }) => {
         return;
       }
     }
-
     await updateTimeEntry(entryId, updates);
     setEditingEntryId(null);
     setEditingField(null);
   };
-
   const handleFieldCancel = () => {
     setEditingEntryId(null);
     setEditingField(null);
   };
-
   const handleGroupHeaderSave = async (oldName: string, newName: string, type: string) => {
     const trimmedName = newName.trim();
     if (!trimmedName || trimmedName === oldName) {
@@ -370,7 +355,11 @@ export const TimeTally: React.FC<TimeTallyProps> = ({ onSwitchToSettings }) => {
 
     // Prevent renaming special placeholders
     if (oldName === 'No Client') {
-      toast({ title: 'Cannot rename', description: 'The "No Client" group cannot be renamed.', variant: 'destructive' });
+      toast({
+        title: 'Cannot rename',
+        description: 'The "No Client" group cannot be renamed.',
+        variant: 'destructive'
+      });
       setEditingGroupHeader(null);
       return;
     }
@@ -379,21 +368,33 @@ export const TimeTally: React.FC<TimeTallyProps> = ({ onSwitchToSettings }) => {
     if (type === 'client') {
       const dup = settings.clients.find(c => c.name.toLowerCase() === trimmedName.toLowerCase() && c.name !== oldName);
       if (dup) {
-        toast({ title: 'Duplicate Client', description: 'A client with this name already exists.', variant: 'destructive' });
+        toast({
+          title: 'Duplicate Client',
+          description: 'A client with this name already exists.',
+          variant: 'destructive'
+        });
         setEditingGroupHeader(null);
         return;
       }
     } else if (type === 'project') {
       const dup = settings.projects.find(p => p.name.toLowerCase() === trimmedName.toLowerCase() && p.name !== oldName);
       if (dup) {
-        toast({ title: 'Duplicate Project', description: 'A project with this name already exists.', variant: 'destructive' });
+        toast({
+          title: 'Duplicate Project',
+          description: 'A project with this name already exists.',
+          variant: 'destructive'
+        });
         setEditingGroupHeader(null);
         return;
       }
     } else if (type === 'task') {
       const dup = settings.taskTypes.find(t => t.name.toLowerCase() === trimmedName.toLowerCase() && t.name !== oldName);
       if (dup) {
-        toast({ title: 'Duplicate Task', description: 'A task with this name already exists.', variant: 'destructive' });
+        toast({
+          title: 'Duplicate Task',
+          description: 'A task with this name already exists.',
+          variant: 'destructive'
+        });
         setEditingGroupHeader(null);
         return;
       }
@@ -403,81 +404,109 @@ export const TimeTally: React.FC<TimeTallyProps> = ({ onSwitchToSettings }) => {
     if (type === 'client') {
       const entriesToUpdate = activeTimeEntries.filter(e => resolveClientName(e) === oldName);
       for (const entry of entriesToUpdate) {
-        await updateTimeEntry(entry.id, { client: trimmedName });
+        await updateTimeEntry(entry.id, {
+          client: trimmedName
+        });
       }
       await updateSettings({
-        clients: settings.clients.map(c => c.name === oldName ? { ...c, name: trimmedName } : c)
+        clients: settings.clients.map(c => c.name === oldName ? {
+          ...c,
+          name: trimmedName
+        } : c)
       });
     } else if (type === 'project') {
       const entriesToUpdate = activeTimeEntries.filter(e => e.project === oldName);
       for (const entry of entriesToUpdate) {
-        await updateTimeEntry(entry.id, { project: trimmedName });
+        await updateTimeEntry(entry.id, {
+          project: trimmedName
+        });
       }
       await updateSettings({
-        projects: settings.projects.map(p => p.name === oldName ? { ...p, name: trimmedName } : p)
+        projects: settings.projects.map(p => p.name === oldName ? {
+          ...p,
+          name: trimmedName
+        } : p)
       });
     } else if (type === 'task') {
       const entriesToUpdate = activeTimeEntries.filter(e => e.task === oldName);
       for (const entry of entriesToUpdate) {
-        await updateTimeEntry(entry.id, { task: trimmedName });
+        await updateTimeEntry(entry.id, {
+          task: trimmedName
+        });
       }
       await updateSettings({
-        taskTypes: settings.taskTypes.map(t => t.name === oldName ? { ...t, name: trimmedName } : t)
+        taskTypes: settings.taskTypes.map(t => t.name === oldName ? {
+          ...t,
+          name: trimmedName
+        } : t)
       });
     }
-
     setEditingGroupHeader(null);
   };
-
   const handleSubgroupHeaderSave = async (groupName: string, oldName: string, newName: string, groupType: string) => {
     const trimmedName = newName.trim();
     if (!trimmedName || trimmedName === oldName) {
       setEditingSubgroupHeader(null);
       return;
     }
-
     if (oldName === 'No Client') {
-      toast({ title: 'Cannot rename', description: 'The "No Client" group cannot be renamed.', variant: 'destructive' });
+      toast({
+        title: 'Cannot rename',
+        description: 'The "No Client" group cannot be renamed.',
+        variant: 'destructive'
+      });
       setEditingSubgroupHeader(null);
       return;
     }
-
     if (groupType === 'project') {
       // Subgroups are projects under a client
       const dup = settings.projects.find(p => p.name.toLowerCase() === trimmedName.toLowerCase() && p.name !== oldName);
       if (dup) {
-        toast({ title: 'Duplicate Project', description: 'A project with this name already exists.', variant: 'destructive' });
+        toast({
+          title: 'Duplicate Project',
+          description: 'A project with this name already exists.',
+          variant: 'destructive'
+        });
         setEditingSubgroupHeader(null);
         return;
       }
-
-      const entriesToUpdate = activeTimeEntries.filter(e => 
-        resolveClientName(e) === groupName && e.project === oldName
-      );
+      const entriesToUpdate = activeTimeEntries.filter(e => resolveClientName(e) === groupName && e.project === oldName);
       for (const entry of entriesToUpdate) {
-        await updateTimeEntry(entry.id, { project: trimmedName });
+        await updateTimeEntry(entry.id, {
+          project: trimmedName
+        });
       }
       await updateSettings({
-        projects: settings.projects.map(p => p.name === oldName ? { ...p, name: trimmedName } : p)
+        projects: settings.projects.map(p => p.name === oldName ? {
+          ...p,
+          name: trimmedName
+        } : p)
       });
     } else if (groupType === 'date' || groupType === 'task') {
       // Subgroups are clients
       const dup = settings.clients.find(c => c.name.toLowerCase() === trimmedName.toLowerCase() && c.name !== oldName);
       if (dup) {
-        toast({ title: 'Duplicate Client', description: 'A client with this name already exists.', variant: 'destructive' });
+        toast({
+          title: 'Duplicate Client',
+          description: 'A client with this name already exists.',
+          variant: 'destructive'
+        });
         setEditingSubgroupHeader(null);
         return;
       }
-
       const entriesToUpdate = activeTimeEntries.filter(e => resolveClientName(e) === oldName);
       for (const entry of entriesToUpdate) {
-        await updateTimeEntry(entry.id, { client: trimmedName });
+        await updateTimeEntry(entry.id, {
+          client: trimmedName
+        });
       }
       await updateSettings({
-        clients: settings.clients.map(c => c.name === oldName ? { ...c, name: trimmedName } : c)
+        clients: settings.clients.map(c => c.name === oldName ? {
+          ...c,
+          name: trimmedName
+        } : c)
       });
     }
-
     setEditingSubgroupHeader(null);
   };
   const handleDelete = () => {
@@ -501,11 +530,10 @@ export const TimeTally: React.FC<TimeTallyProps> = ({ onSwitchToSettings }) => {
       toast({
         title: "No entries to export",
         description: "Please add some time entries first.",
-        variant: "destructive",
+        variant: "destructive"
       });
       return;
     }
-    
     setIsExportDialogOpen(true);
   };
 
@@ -539,21 +567,15 @@ export const TimeTally: React.FC<TimeTallyProps> = ({ onSwitchToSettings }) => {
   const getEntryGridTemplate = (invoice: boolean) => {
     const hasDateColumn = sortOption === 'project' || sortOption === 'task';
     if (hasDateColumn) {
-      return invoice
-        ? '16px 8px 0.5fr 8px 1.5fr 8px 50px 8px 60px'
-        : '16px 8px 0.5fr 8px 1.5fr 8px 50px';
+      return invoice ? '16px 8px 0.5fr 8px 1.5fr 8px 50px 8px 60px' : '16px 8px 0.5fr 8px 1.5fr 8px 50px';
     } else {
-      return invoice
-        ? '16px 8px 1fr 8px 1fr 8px 50px 8px 60px'
-        : '16px 8px 1fr 8px 1fr 8px 50px';
+      return invoice ? '16px 8px 1fr 8px 1fr 8px 50px 8px 60px' : '16px 8px 1fr 8px 1fr 8px 50px';
     }
   };
 
   // Helper to get grid template for sub-total/total rows (always use equal columns)
   const getRegularGridTemplate = (invoice: boolean) => {
-    return invoice
-      ? '16px 8px 1fr 8px 1fr 8px 50px 8px 60px'
-      : '16px 8px 1fr 8px 1fr 8px 50px';
+    return invoice ? '16px 8px 1fr 8px 1fr 8px 50px 8px 60px' : '16px 8px 1fr 8px 1fr 8px 50px';
   };
   const headers = getTableHeaders();
   // Compute fixed widths for the two content columns at half their previous width
@@ -572,39 +594,30 @@ export const TimeTally: React.FC<TimeTallyProps> = ({ onSwitchToSettings }) => {
     const halfOfEach = Math.floor(remaining / 4);
     setContentColWidth(halfOfEach);
   }, [fixedBaseWidth]);
-
   React.useEffect(() => {
     recomputeWidths();
     window.addEventListener('resize', recomputeWidths);
     return () => window.removeEventListener('resize', recomputeWidths);
   }, [recomputeWidths, sortOption]);
-
   const buildCols = (invoice: boolean) => {
     if (contentColWidth > 0) {
-      return invoice
-        ? `16px 8px ${contentColWidth}px 8px ${contentColWidth}px 8px 50px 8px 60px`
-        : `16px 8px ${contentColWidth}px 8px ${contentColWidth}px 8px 50px`;
+      return invoice ? `16px 8px ${contentColWidth}px 8px ${contentColWidth}px 8px 50px 8px 60px` : `16px 8px ${contentColWidth}px 8px ${contentColWidth}px 8px 50px`;
     }
-    return invoice
-      ? '16px 8px 1fr 8px 1fr 8px 50px 8px 60px'
-      : '16px 8px 1fr 8px 1fr 8px 50px';
+    return invoice ? '16px 8px 1fr 8px 1fr 8px 50px 8px 60px' : '16px 8px 1fr 8px 1fr 8px 50px';
   };
-
   const isAllSelected = allEntryIds.length > 0 && allEntryIds.every(id => selection.isSelected(id));
-  
+
   // Helper functions to get entry IDs for different groupings
   const getDateGroupEntryIds = (date: string, clientName: string) => {
     const group = organizedData.groups.find(g => g.name === clientName);
     if (!group?.entries) return [];
     return group.entries.filter(entry => entry.date === date).map(entry => entry.id);
   };
-
   const getTaskGroupEntryIds = (task: string, clientName: string) => {
     const group = organizedData.groups.find(g => g.name === clientName);
     if (!group?.entries) return [];
     return group.entries.filter(entry => entry.task === task).map(entry => entry.id);
   };
-
   const getClientGroupEntryIds = (clientName: string) => {
     // Find entries for a specific client across all groups/subgroups
     const entryIds: string[] = [];
@@ -618,12 +631,10 @@ export const TimeTally: React.FC<TimeTallyProps> = ({ onSwitchToSettings }) => {
     });
     return entryIds;
   };
-
   const getProjectGroupEntryIds = (projectName: string, clientName: string) => {
     // For "By Project" view: find entries for a specific project within a client
     const clientGroup = organizedData.groups.find(g => g.name === clientName);
     if (!clientGroup?.subgroups) return [];
-    
     const projectSubgroup = clientGroup.subgroups.find((sg: any) => sg.name === projectName);
     return projectSubgroup?.entries?.map((entry: TimeEntry) => entry.id) || [];
   };
@@ -633,17 +644,14 @@ export const TimeTally: React.FC<TimeTallyProps> = ({ onSwitchToSettings }) => {
     const entryIds = getDateGroupEntryIds(date, clientName);
     return entryIds.length > 0 && entryIds.every(id => selection.isSelected(id));
   };
-
   const isTaskGroupSelected = (task: string, clientName: string) => {
     const entryIds = getTaskGroupEntryIds(task, clientName);
     return entryIds.length > 0 && entryIds.every(id => selection.isSelected(id));
   };
-
   const isClientGroupSelected = (clientName: string) => {
     const entryIds = getClientGroupEntryIds(clientName);
     return entryIds.length > 0 && entryIds.every(id => selection.isSelected(id));
   };
-
   const isProjectGroupSelected = (project: string, clientName: string) => {
     const entryIds = getProjectGroupEntryIds(project, clientName);
     return entryIds.length > 0 && entryIds.every(id => selection.isSelected(id));
@@ -654,22 +662,18 @@ export const TimeTally: React.FC<TimeTallyProps> = ({ onSwitchToSettings }) => {
     const entryIds = getDateGroupEntryIds(date, clientName);
     selection.toggleSelectAll(entryIds);
   };
-
   const toggleTaskGroupSelection = (task: string, clientName: string) => {
     const entryIds = getTaskGroupEntryIds(task, clientName);
     selection.toggleSelectAll(entryIds);
   };
-
   const toggleClientGroupSelection = (clientName: string) => {
     const entryIds = getClientGroupEntryIds(clientName);
     selection.toggleSelectAll(entryIds);
   };
-
   const toggleProjectGroupSelection = (project: string, clientName: string) => {
     const entryIds = getProjectGroupEntryIds(project, clientName);
     selection.toggleSelectAll(entryIds);
   };
-
   return <div className="flex flex-col h-full w-full font-gilroy">
       {/* Divider */}
 
@@ -677,7 +681,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({ onSwitchToSettings }) => {
       <div className="pt-0.5 pb-1 h-[2.75rem] px-2.5 mb-6">
         
         <div className="flex items-baseline justify-between h-full py-[20px]">
-          <h1 className="text-[#09121F] text-[28px] font-bold leading-8">Where the time went</h1>
+          <h1 className="text-[#09121F] text-[28px] font-bold leading-8">Where time went</h1>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <button className="flex items-center text-sm font-medium text-[#09121F] hover:bg-gray-50">
@@ -703,180 +707,128 @@ export const TimeTally: React.FC<TimeTallyProps> = ({ onSwitchToSettings }) => {
       {/* Table Header */}
       <div className="w-full px-2.5">
         <div className="grid h-[32px] items-center" style={{
-          gridTemplateColumns: getEntryGridTemplate(settings.invoiceMode),
-          gap: '0'
-        }}>
+        gridTemplateColumns: getEntryGridTemplate(settings.invoiceMode),
+        gap: '0'
+      }}>
           <div className="flex items-center justify-start">
             <div className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${isAllSelected ? 'bg-gray-300' : 'bg-white'}`} onClick={() => selection.toggleSelectAll(allEntryIds)}>
               {isAllSelected && <div className="w-2 h-2 rounded-full bg-[#09121F]"></div>}
             </div>
           </div>
           <div></div>
-          {headers.map((header, index) => (
-            <React.Fragment key={header}>
-              <span
-                className={`text-[#09121F] text-sm font-bold ${
-                  header === 'Fee' ? 'text-right' : 'text-left'
-                }`}
-              >
+          {headers.map((header, index) => <React.Fragment key={header}>
+              <span className={`text-[#09121F] text-sm font-bold ${header === 'Fee' ? 'text-right' : 'text-left'}`}>
                 {header}
               </span>
               {index < headers.length - 1 && <div></div>}
-            </React.Fragment>
-          ))}
+            </React.Fragment>)}
         </div>
         <div className="h-px bg-[#09121F]" />
       </div>
 
       {/* Content */}
       <div className="w-full px-2.5">
-        {organizedData.groups.length === 0 ? (
-          <div className="text-center py-8">
+        {organizedData.groups.length === 0 ? <div className="text-center py-8">
             <p className="text-[#BFBFBF] text-lg">No time entered yet. Get busy.</p>
-          </div>
-        ) : (
-          <>
+          </div> : <>
             <div className="space-y-0">
-              {organizedData.groups.map((group, groupIndex) => (
-                <div key={`${group.type}-${group.name}-${groupIndex}`}>
+              {organizedData.groups.map((group, groupIndex) => <div key={`${group.type}-${group.name}-${groupIndex}`}>
                   
                    {/* Top Level Header */}
                    <div className="grid items-center font-bold text-[#09121F] text-sm py-2" style={{
-                     gridTemplateColumns: getEntryGridTemplate(settings.invoiceMode),
-                     gap: '0'
-                   }}>
+              gridTemplateColumns: getEntryGridTemplate(settings.invoiceMode),
+              gap: '0'
+            }}>
                     <div className="flex items-center justify-start">
                       {(() => {
-                        // Get all entry IDs for this top-level group
-                        const groupEntryIds: string[] = [];
-                        if (group.subgroups) {
-                          group.subgroups.forEach((subgroup: any) => {
-                            if (subgroup.entries) {
-                              groupEntryIds.push(...subgroup.entries.map((entry: TimeEntry) => entry.id));
-                            }
-                          });
-                        }
-                        
-                        const isGroupSelected = groupEntryIds.length > 0 && groupEntryIds.every(id => selection.isSelected(id));
-                        
-                        return (
-                          <div 
-                            className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${isGroupSelected ? 'bg-gray-300' : 'bg-white'}`}
-                            onClick={() => selection.toggleSelectAll(groupEntryIds)}
-                          >
+                  // Get all entry IDs for this top-level group
+                  const groupEntryIds: string[] = [];
+                  if (group.subgroups) {
+                    group.subgroups.forEach((subgroup: any) => {
+                      if (subgroup.entries) {
+                        groupEntryIds.push(...subgroup.entries.map((entry: TimeEntry) => entry.id));
+                      }
+                    });
+                  }
+                  const isGroupSelected = groupEntryIds.length > 0 && groupEntryIds.every(id => selection.isSelected(id));
+                  return <div className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${isGroupSelected ? 'bg-gray-300' : 'bg-white'}`} onClick={() => selection.toggleSelectAll(groupEntryIds)}>
                             {isGroupSelected && <div className="w-2 h-2 rounded-full bg-[#09121F]"></div>}
-                          </div>
-                        );
-                      })()}
+                          </div>;
+                })()}
                     </div>
                      <div></div>
                      <div className="text-left font-bold text-[#09121F] text-sm col-span-3">
-                       {editingGroupHeader?.name === group.name ? (
-                         <input
-                           type="text"
-                           defaultValue={sortOption === 'date' ? formatDateLabel(group.name, true) : group.name}
-                           className="text-sm font-bold bg-transparent border-none outline-none focus:bg-white focus:border focus:border-gray-300 rounded w-full"
-                           autoFocus
-                           onBlur={(e) => handleGroupHeaderSave(group.name, sortOption === 'date' ? group.name : e.target.value, group.type)}
-                           onKeyDown={(e) => {
-                             if (e.key === 'Enter') handleGroupHeaderSave(group.name, sortOption === 'date' ? group.name : e.currentTarget.value, group.type);
-                             if (e.key === 'Escape') setEditingGroupHeader(null);
-                           }}
-                         />
-                       ) : (
-                         <span 
-                           className={`${sortOption !== 'date' ? 'cursor-pointer hover:bg-gray-100 rounded' : ''}`}
-                           onClick={() => sortOption !== 'date' && setEditingGroupHeader({ type: group.type, name: group.name })}
-                         >
+                       {editingGroupHeader?.name === group.name ? <input type="text" defaultValue={sortOption === 'date' ? formatDateLabel(group.name, true) : group.name} className="text-sm font-bold bg-transparent border-none outline-none focus:bg-white focus:border focus:border-gray-300 rounded w-full" autoFocus onBlur={e => handleGroupHeaderSave(group.name, sortOption === 'date' ? group.name : e.target.value, group.type)} onKeyDown={e => {
+                  if (e.key === 'Enter') handleGroupHeaderSave(group.name, sortOption === 'date' ? group.name : e.currentTarget.value, group.type);
+                  if (e.key === 'Escape') setEditingGroupHeader(null);
+                }} /> : <span className={`${sortOption !== 'date' ? 'cursor-pointer hover:bg-gray-100 rounded' : ''}`} onClick={() => sortOption !== 'date' && setEditingGroupHeader({
+                  type: group.type,
+                  name: group.name
+                })}>
                            {sortOption === 'date' ? formatDateLabel(group.name, true) : group.name}
-                         </span>
-                       )}
+                         </span>}
                      </div>
                      <div></div>
                      <div></div>
-                     {settings.invoiceMode && (
-                       <>
+                     {settings.invoiceMode && <>
                          <div></div>
                          <div></div>
-                       </>
-                     )}
+                       </>}
                    </div>
 
                    {/* Subgroups */}
-                   {group.subgroups?.map((subgroup: any, subIndex: number) => (
-                     <div key={`${subgroup.type}-${subgroup.name}-${subIndex}`}>
+                   {group.subgroups?.map((subgroup: any, subIndex: number) => <div key={`${subgroup.type}-${subgroup.name}-${subIndex}`}>
                        
                         {/* Subgroup Header */}
                        <div className="grid items-center font-bold text-[#09121F] text-sm py-2" style={{
-                         gridTemplateColumns: getEntryGridTemplate(settings.invoiceMode),
-                         gap: '0'
-                       }}>
+                gridTemplateColumns: getEntryGridTemplate(settings.invoiceMode),
+                gap: '0'
+              }}>
                         <div className="flex items-center justify-start">
                           {(() => {
-                            let entryIds: string[] = [];
-                            let isSelected = false;
-                            
-                            if (sortOption === 'project') {
-                              entryIds = getProjectGroupEntryIds(subgroup.name, group.name);
-                              isSelected = isProjectGroupSelected(subgroup.name, group.name);
-                              
-                              return (
-                                <div 
-                                  className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${isSelected ? 'bg-gray-300' : 'bg-white'}`}
-                                  onClick={() => toggleProjectGroupSelection(subgroup.name, group.name)}
-                                >
+                    let entryIds: string[] = [];
+                    let isSelected = false;
+                    if (sortOption === 'project') {
+                      entryIds = getProjectGroupEntryIds(subgroup.name, group.name);
+                      isSelected = isProjectGroupSelected(subgroup.name, group.name);
+                      return <div className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${isSelected ? 'bg-gray-300' : 'bg-white'}`} onClick={() => toggleProjectGroupSelection(subgroup.name, group.name)}>
                                   {isSelected && <div className="w-2 h-2 rounded-full bg-[#09121F]"></div>}
-                                </div>
-                              );
-                            } else {
-                              // For 'date' and 'task' views, no radio button on second-level subheads
-                              return <div className="w-4 h-4"></div>;
-                            }
-                          })()}
+                                </div>;
+                    } else {
+                      // For 'date' and 'task' views, no radio button on second-level subheads
+                      return <div className="w-4 h-4"></div>;
+                    }
+                  })()}
                          </div>
                          <div></div>
                          <div className="text-left font-bold text-[#09121F] text-sm col-span-3">
-                           {editingSubgroupHeader?.groupName === group.name && editingSubgroupHeader?.subgroupName === subgroup.name ? (
-                             <input
-                               type="text"
-                               defaultValue={subgroup.name}
-                               className="text-sm font-bold bg-transparent border-none outline-none focus:bg-white focus:border focus:border-gray-300 rounded w-full"
-                               autoFocus
-                               onBlur={(e) => handleSubgroupHeaderSave(group.name, subgroup.name, e.target.value, group.type)}
-                               onKeyDown={(e) => {
-                                 if (e.key === 'Enter') handleSubgroupHeaderSave(group.name, subgroup.name, e.currentTarget.value, group.type);
-                                 if (e.key === 'Escape') setEditingSubgroupHeader(null);
-                               }}
-                             />
-                           ) : (
-                             <span 
-                               className="cursor-pointer hover:bg-gray-100 rounded"
-                               onClick={() => setEditingSubgroupHeader({ groupName: group.name, subgroupName: subgroup.name })}
-                             >
+                           {editingSubgroupHeader?.groupName === group.name && editingSubgroupHeader?.subgroupName === subgroup.name ? <input type="text" defaultValue={subgroup.name} className="text-sm font-bold bg-transparent border-none outline-none focus:bg-white focus:border focus:border-gray-300 rounded w-full" autoFocus onBlur={e => handleSubgroupHeaderSave(group.name, subgroup.name, e.target.value, group.type)} onKeyDown={e => {
+                    if (e.key === 'Enter') handleSubgroupHeaderSave(group.name, subgroup.name, e.currentTarget.value, group.type);
+                    if (e.key === 'Escape') setEditingSubgroupHeader(null);
+                  }} /> : <span className="cursor-pointer hover:bg-gray-100 rounded" onClick={() => setEditingSubgroupHeader({
+                    groupName: group.name,
+                    subgroupName: subgroup.name
+                  })}>
                                {subgroup.name}
-                             </span>
-                           )}
+                             </span>}
                          </div>
                          <div></div>
                          <div></div>
-                         {settings.invoiceMode && (
-                           <>
+                         {settings.invoiceMode && <>
                              <div></div>
                              <div></div>
-                           </>
-                         )}
+                           </>}
                       </div>
 
                        {/* Entries */}
-                       {subgroup.entries?.map((entry: TimeEntry) => (
-                         <div key={entry.id} className="grid items-start hover:bg-gray-50 py-2" style={{
-                           gridTemplateColumns: getEntryGridTemplate(settings.invoiceMode),
-                           gap: '0'
-                         }}>
+                       {subgroup.entries?.map((entry: TimeEntry) => <div key={entry.id} className="grid items-start hover:bg-gray-50 py-2" style={{
+                gridTemplateColumns: getEntryGridTemplate(settings.invoiceMode),
+                gap: '0'
+              }}>
                           <div className="flex items-start justify-start self-start mt-1">
                             <div className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${selection.isSelected(entry.id) ? 'bg-gray-300' : 'bg-white'}`} onClick={() => selection.toggleSelectRecord(entry.id)} style={{
-                              marginTop: '-3px'
-                            }}>
+                    marginTop: '-3px'
+                  }}>
                               {selection.isSelected(entry.id) && <div className="w-2 h-2 rounded-full bg-[#09121F]"></div>}
                             </div>
                           </div>
@@ -884,207 +836,94 @@ export const TimeTally: React.FC<TimeTallyProps> = ({ onSwitchToSettings }) => {
                           <div></div>
                            
                            {/* Entry data based on sort option */}
-                           {sortOption === 'project' && (
-                             <React.Fragment>
+                           {sortOption === 'project' && <React.Fragment>
                                <div className="text-[#09121F] text-sm leading-tight flex items-start">
-                                {editingEntryId === entry.id && editingField === 'date' ? (
-                                  <input
-                                    type="date"
-                                    defaultValue={entry.date}
-                                    className="text-sm bg-transparent border-none outline-none focus:bg-white focus:border focus:border-gray-300 px-1 rounded"
-                                    autoFocus
-                                    onBlur={(e) => handleFieldSave(entry.id, 'date', e.target.value)}
-                                    onKeyDown={(e) => {
-                                      if (e.key === 'Enter') handleFieldSave(entry.id, 'date', e.currentTarget.value);
-                                      if (e.key === 'Escape') handleFieldCancel();
-                                    }}
-                                  />
-                                ) : (
-                                   <span 
-                                    className="cursor-pointer hover:bg-gray-100 rounded text-left"
-                                    onClick={() => handleFieldEdit(entry.id, 'date')}
-                                  >
+                                {editingEntryId === entry.id && editingField === 'date' ? <input type="date" defaultValue={entry.date} className="text-sm bg-transparent border-none outline-none focus:bg-white focus:border focus:border-gray-300 px-1 rounded" autoFocus onBlur={e => handleFieldSave(entry.id, 'date', e.target.value)} onKeyDown={e => {
+                      if (e.key === 'Enter') handleFieldSave(entry.id, 'date', e.currentTarget.value);
+                      if (e.key === 'Escape') handleFieldCancel();
+                    }} /> : <span className="cursor-pointer hover:bg-gray-100 rounded text-left" onClick={() => handleFieldEdit(entry.id, 'date')}>
                                     {formatDateLabel(entry.date)}
-                                  </span>
-                                )}
+                                  </span>}
                               </div>
                               <div></div>
                               <div className="text-[#09121F] text-sm leading-tight flex items-start">
-                                {editingEntryId === entry.id && editingField === 'task' ? (
-                                  <input
-                                    type="text"
-                                    defaultValue={entry.task}
-                                    className="text-sm bg-transparent border-none outline-none focus:bg-white focus:border focus:border-gray-300 px-1 rounded w-full"
-                                    autoFocus
-                                    onBlur={(e) => handleFieldSave(entry.id, 'task', e.target.value)}
-                                    onKeyDown={(e) => {
-                                      if (e.key === 'Enter') handleFieldSave(entry.id, 'task', e.currentTarget.value);
-                                      if (e.key === 'Escape') handleFieldCancel();
-                                    }}
-                                  />
-                                ) : (
-                                  <span 
-                                    className="cursor-pointer hover:bg-gray-100 px-1 rounded"
-                                    onClick={() => handleFieldEdit(entry.id, 'task')}
-                                  >
+                                {editingEntryId === entry.id && editingField === 'task' ? <input type="text" defaultValue={entry.task} className="text-sm bg-transparent border-none outline-none focus:bg-white focus:border focus:border-gray-300 px-1 rounded w-full" autoFocus onBlur={e => handleFieldSave(entry.id, 'task', e.target.value)} onKeyDown={e => {
+                      if (e.key === 'Enter') handleFieldSave(entry.id, 'task', e.currentTarget.value);
+                      if (e.key === 'Escape') handleFieldCancel();
+                    }} /> : <span className="cursor-pointer hover:bg-gray-100 px-1 rounded" onClick={() => handleFieldEdit(entry.id, 'task')}>
                                    {entry.task}
-                                 </span>
-                               )}
+                                 </span>}
                              </div>
-                             </React.Fragment>
-                           )}
+                             </React.Fragment>}
                            
-                           {sortOption === 'date' && (
-                             <React.Fragment>
+                           {sortOption === 'date' && <React.Fragment>
                               <div className="text-[#09121F] text-sm leading-tight flex items-start">
-                                {editingEntryId === entry.id && editingField === 'project' ? (
-                                  <input
-                                    type="text"
-                                    defaultValue={entry.project}
-                                    className="text-sm bg-transparent border-none outline-none focus:bg-white focus:border focus:border-gray-300 px-1 rounded w-full"
-                                    autoFocus
-                                    onBlur={(e) => handleFieldSave(entry.id, 'project', e.target.value)}
-                                    onKeyDown={(e) => {
-                                      if (e.key === 'Enter') handleFieldSave(entry.id, 'project', e.currentTarget.value);
-                                      if (e.key === 'Escape') handleFieldCancel();
-                                    }}
-                                  />
-                                ) : (
-                                   <span 
-                                    className="cursor-pointer hover:bg-gray-100 rounded"
-                                    onClick={() => handleFieldEdit(entry.id, 'project')}
-                                  >
+                                {editingEntryId === entry.id && editingField === 'project' ? <input type="text" defaultValue={entry.project} className="text-sm bg-transparent border-none outline-none focus:bg-white focus:border focus:border-gray-300 px-1 rounded w-full" autoFocus onBlur={e => handleFieldSave(entry.id, 'project', e.target.value)} onKeyDown={e => {
+                      if (e.key === 'Enter') handleFieldSave(entry.id, 'project', e.currentTarget.value);
+                      if (e.key === 'Escape') handleFieldCancel();
+                    }} /> : <span className="cursor-pointer hover:bg-gray-100 rounded" onClick={() => handleFieldEdit(entry.id, 'project')}>
                                     {entry.project}
-                                  </span>
-                                )}
+                                  </span>}
                               </div>
                               <div></div>
                               <div className="text-[#09121F] text-sm leading-tight flex items-start">
-                                {editingEntryId === entry.id && editingField === 'task' ? (
-                                  <input
-                                    type="text"
-                                    defaultValue={entry.task}
-                                    className="text-sm bg-transparent border-none outline-none focus:bg-white focus:border focus:border-gray-300 px-1 rounded w-full"
-                                    autoFocus
-                                    onBlur={(e) => handleFieldSave(entry.id, 'task', e.target.value)}
-                                    onKeyDown={(e) => {
-                                      if (e.key === 'Enter') handleFieldSave(entry.id, 'task', e.currentTarget.value);
-                                      if (e.key === 'Escape') handleFieldCancel();
-                                    }}
-                                  />
-                                ) : (
-                                  <span 
-                                    className="cursor-pointer hover:bg-gray-100 px-1 rounded"
-                                    onClick={() => handleFieldEdit(entry.id, 'task')}
-                                  >
+                                {editingEntryId === entry.id && editingField === 'task' ? <input type="text" defaultValue={entry.task} className="text-sm bg-transparent border-none outline-none focus:bg-white focus:border focus:border-gray-300 px-1 rounded w-full" autoFocus onBlur={e => handleFieldSave(entry.id, 'task', e.target.value)} onKeyDown={e => {
+                      if (e.key === 'Enter') handleFieldSave(entry.id, 'task', e.currentTarget.value);
+                      if (e.key === 'Escape') handleFieldCancel();
+                    }} /> : <span className="cursor-pointer hover:bg-gray-100 px-1 rounded" onClick={() => handleFieldEdit(entry.id, 'task')}>
                                    {entry.task}
-                                 </span>
-                               )}
+                                 </span>}
                              </div>
-                             </React.Fragment>
-                           )}
+                             </React.Fragment>}
                            
-                           {sortOption === 'task' && (
-                             <React.Fragment>
+                           {sortOption === 'task' && <React.Fragment>
                               <div className="text-[#09121F] text-sm leading-tight flex items-start">
-                                {editingEntryId === entry.id && editingField === 'date' ? (
-                                  <input
-                                    type="date"
-                                    defaultValue={entry.date}
-                                    className="text-sm bg-transparent border-none outline-none focus:bg-white focus:border focus:border-gray-300 px-1 rounded"
-                                    autoFocus
-                                    onBlur={(e) => handleFieldSave(entry.id, 'date', e.target.value)}
-                                    onKeyDown={(e) => {
-                                      if (e.key === 'Enter') handleFieldSave(entry.id, 'date', e.currentTarget.value);
-                                      if (e.key === 'Escape') handleFieldCancel();
-                                    }}
-                                  />
-                                ) : (
-                                   <span 
-                                    className="cursor-pointer hover:bg-gray-100 rounded"
-                                    onClick={() => handleFieldEdit(entry.id, 'date')}
-                                  >
+                                {editingEntryId === entry.id && editingField === 'date' ? <input type="date" defaultValue={entry.date} className="text-sm bg-transparent border-none outline-none focus:bg-white focus:border focus:border-gray-300 px-1 rounded" autoFocus onBlur={e => handleFieldSave(entry.id, 'date', e.target.value)} onKeyDown={e => {
+                      if (e.key === 'Enter') handleFieldSave(entry.id, 'date', e.currentTarget.value);
+                      if (e.key === 'Escape') handleFieldCancel();
+                    }} /> : <span className="cursor-pointer hover:bg-gray-100 rounded" onClick={() => handleFieldEdit(entry.id, 'date')}>
                                     {formatDateLabel(entry.date)}
-                                  </span>
-                                )}
+                                  </span>}
                               </div>
                               <div></div>
                               <div className="text-[#09121F] text-sm leading-tight flex items-start">
-                                {editingEntryId === entry.id && editingField === 'project' ? (
-                                  <input
-                                    type="text"
-                                    defaultValue={entry.project}
-                                    className="text-sm bg-transparent border-none outline-none focus:bg-white focus:border focus:border-gray-300 px-1 rounded w-full"
-                                    autoFocus
-                                    onBlur={(e) => handleFieldSave(entry.id, 'project', e.target.value)}
-                                    onKeyDown={(e) => {
-                                      if (e.key === 'Enter') handleFieldSave(entry.id, 'project', e.currentTarget.value);
-                                      if (e.key === 'Escape') handleFieldCancel();
-                                    }}
-                                  />
-                                ) : (
-                                  <span 
-                                    className="cursor-pointer hover:bg-gray-100 px-1 rounded"
-                                    onClick={() => handleFieldEdit(entry.id, 'project')}
-                                  >
+                                {editingEntryId === entry.id && editingField === 'project' ? <input type="text" defaultValue={entry.project} className="text-sm bg-transparent border-none outline-none focus:bg-white focus:border focus:border-gray-300 px-1 rounded w-full" autoFocus onBlur={e => handleFieldSave(entry.id, 'project', e.target.value)} onKeyDown={e => {
+                      if (e.key === 'Enter') handleFieldSave(entry.id, 'project', e.currentTarget.value);
+                      if (e.key === 'Escape') handleFieldCancel();
+                    }} /> : <span className="cursor-pointer hover:bg-gray-100 px-1 rounded" onClick={() => handleFieldEdit(entry.id, 'project')}>
                                      {entry.project}
-                                   </span>
-                                 )}
+                                   </span>}
                                </div>
-                             </React.Fragment>
-                           )}
+                             </React.Fragment>}
                           
                           <div></div>
                           <div className="text-[#09121F] text-sm leading-tight text-left flex items-start justify-start">
-                            {editingEntryId === entry.id && editingField === 'duration' ? (
-                              <input
-                                type="number"
-                                step="0.01"
-                                min="0"
-                                defaultValue={entry.duration.toString()}
-                                className="text-sm bg-transparent border-none outline-none focus:bg-white focus:border focus:border-gray-300 px-1 rounded w-12 text-left"
-                                autoFocus
-                                onBlur={(e) => handleFieldSave(entry.id, 'duration', e.target.value)}
-                                onKeyDown={(e) => {
-                                  if (e.key === 'Enter') handleFieldSave(entry.id, 'duration', e.currentTarget.value);
-                                  if (e.key === 'Escape') handleFieldCancel();
-                                }}
-                              />
-                            ) : (
-                              <span 
-                                className="cursor-pointer hover:bg-gray-100 rounded text-left"
-                                onClick={() => handleFieldEdit(entry.id, 'duration')}
-                              >
+                            {editingEntryId === entry.id && editingField === 'duration' ? <input type="number" step="0.01" min="0" defaultValue={entry.duration.toString()} className="text-sm bg-transparent border-none outline-none focus:bg-white focus:border focus:border-gray-300 px-1 rounded w-12 text-left" autoFocus onBlur={e => handleFieldSave(entry.id, 'duration', e.target.value)} onKeyDown={e => {
+                    if (e.key === 'Enter') handleFieldSave(entry.id, 'duration', e.currentTarget.value);
+                    if (e.key === 'Escape') handleFieldCancel();
+                  }} /> : <span className="cursor-pointer hover:bg-gray-100 rounded text-left" onClick={() => handleFieldEdit(entry.id, 'duration')}>
                                 {formatHours(entry.duration)}
-                              </span>
-                            )}
+                              </span>}
                           </div>
                           
-                          {settings.invoiceMode && (
-                            <>
+                          {settings.invoiceMode && <>
                               <div></div>
                               <div className="text-[#09121F] text-sm leading-tight flex items-start justify-end">
-                              {hasTaskRate(entry.task) ? (
-                                <span>{formatCurrency(calculateFee(entry))}</span>
-                              ) : (
-                                <div className="flex items-center gap-1">
+                              {hasTaskRate(entry.task) ? <span>{formatCurrency(calculateFee(entry))}</span> : <div className="flex items-center gap-1">
                                   <span className="text-gray-400">--</span>
                                   <button onClick={() => handleAddRate(entry.task)} className="text-xs text-blue-600 hover:text-blue-800 underline">
                                     <Plus className="h-3 w-3" />
                                   </button>
-                                </div>
-                              )}
+                                </div>}
                               </div>
-                            </>
-                          )}
-                        </div>
-                      ))}
+                            </>}
+                        </div>)}
 
                        {/* Sub-total */}
                        <div className="grid h-[32px] items-center" style={{
-                         gridTemplateColumns: getRegularGridTemplate(settings.invoiceMode),
-                         gap: '0'
-                       }}>
+                gridTemplateColumns: getRegularGridTemplate(settings.invoiceMode),
+                gap: '0'
+              }}>
                         <div></div>
                         <div></div>
                         <div className="text-[#09121F] text-sm font-bold text-left">Sub-total</div>
@@ -1094,23 +933,20 @@ export const TimeTally: React.FC<TimeTallyProps> = ({ onSwitchToSettings }) => {
                         <div className="text-[#09121F] text-sm font-bold text-left">
                           {formatHours(subgroup.subtotal.hours)}
                         </div>
-                        {settings.invoiceMode && (
-                          <>
+                        {settings.invoiceMode && <>
                             <div></div>
                             <div className="text-[#09121F] text-sm font-bold flex items-center justify-end">
                               {formatCurrency(subgroup.subtotal.fee)}
                             </div>
-                          </>
-                        )}
+                          </>}
                       </div>
-                    </div>
-                  ))}
+                    </div>)}
 
                    {/* TOTAL for this group */}
                    <div className="grid h-[32px] items-center" style={{
-                     gridTemplateColumns: getRegularGridTemplate(settings.invoiceMode),
-                     gap: '0'
-                   }}>
+              gridTemplateColumns: getRegularGridTemplate(settings.invoiceMode),
+              gap: '0'
+            }}>
                     <div></div>
                     <div></div>
                     <div className="text-[#09121F] text-sm font-bold text-left">TOTAL</div>
@@ -1120,25 +956,22 @@ export const TimeTally: React.FC<TimeTallyProps> = ({ onSwitchToSettings }) => {
                     <div className="text-[#09121F] text-sm font-bold text-left">
                       {formatHours(group.total.hours)}
                     </div>
-                    {settings.invoiceMode && (
-                      <>
+                    {settings.invoiceMode && <>
                         <div></div>
                         <div className="text-[#09121F] text-sm font-bold flex items-center justify-end">
                           {formatCurrency(group.total.fee)}
                         </div>
-                      </>
-                    )}
+                      </>}
                   </div>
-                </div>
-              ))}
+                </div>)}
             </div>
 
              {/* TOTAL-IN */}
              <div className="w-full border-t-2 border-[#09121F] mt-4">
                <div className="grid h-[32px] items-center" style={{
-                 gridTemplateColumns: getRegularGridTemplate(settings.invoiceMode),
-                 gap: '0'
-               }}>
+            gridTemplateColumns: getRegularGridTemplate(settings.invoiceMode),
+            gap: '0'
+          }}>
                 <div></div>
                 <div></div>
                 <div className="text-[#09121F] text-sm font-bold text-left">TOTAL-IN</div>
@@ -1148,18 +981,15 @@ export const TimeTally: React.FC<TimeTallyProps> = ({ onSwitchToSettings }) => {
                 <div className="text-[#09121F] text-sm font-bold text-left">
                   {formatHours(organizedData.totalIn.hours)}
                 </div>
-                {settings.invoiceMode && (
-                  <>
+                {settings.invoiceMode && <>
                     <div></div>
                     <div className="text-[#09121F] text-sm font-bold flex items-center justify-end">
                       {formatCurrency(organizedData.totalIn.fee)}
                     </div>
-                  </>
-                )}
+                  </>}
               </div>
             </div>
-          </>
-        )}
+          </>}
       </div>
 
       {/* Action Buttons */}
@@ -1171,18 +1001,10 @@ export const TimeTally: React.FC<TimeTallyProps> = ({ onSwitchToSettings }) => {
         </button>
         
         <div className="flex gap-3">
-          <button 
-            onClick={() => setShowDeleteDialog(true)} 
-            className="flex-1 bg-white border border-[#09121F] text-[#09121F] py-3.5 font-bold text-sm transition-colors hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-            disabled={!selection.hasAnySelected}
-          >
+          <button onClick={() => setShowDeleteDialog(true)} className="flex-1 bg-white border border-[#09121F] text-[#09121F] py-3.5 font-bold text-sm transition-colors hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed" disabled={!selection.hasAnySelected}>
             Delete
           </button>
-          <button 
-            onClick={handleArchive} 
-            className="flex-1 bg-white border border-[#09121F] text-[#09121F] py-3.5 font-bold text-sm transition-colors hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed"
-            disabled={!selection.hasAnySelected}
-          >
+          <button onClick={handleArchive} className="flex-1 bg-white border border-[#09121F] text-[#09121F] py-3.5 font-bold text-sm transition-colors hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed" disabled={!selection.hasAnySelected}>
             Archive
           </button>
         </div>
@@ -1208,16 +1030,6 @@ export const TimeTally: React.FC<TimeTallyProps> = ({ onSwitchToSettings }) => {
 
 
       {/* Export Dialog */}
-      <ExportDialog
-        isOpen={isExportDialogOpen}
-        onClose={() => setIsExportDialogOpen(false)}
-        timeEntries={activeTimeEntries}
-        selectedEntries={selection.selectedIds.length > 0 
-          ? activeTimeEntries.filter(entry => selection.selectedIds.includes(entry.id))
-          : undefined
-        }
-        settings={settings}
-        viewMode={settings.invoiceMode ? 'invoice' : 'timecard'}
-      />
+      <ExportDialog isOpen={isExportDialogOpen} onClose={() => setIsExportDialogOpen(false)} timeEntries={activeTimeEntries} selectedEntries={selection.selectedIds.length > 0 ? activeTimeEntries.filter(entry => selection.selectedIds.includes(entry.id)) : undefined} settings={settings} viewMode={settings.invoiceMode ? 'invoice' : 'timecard'} />
     </div>;
 };
