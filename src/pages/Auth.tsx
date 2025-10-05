@@ -107,7 +107,7 @@ const Auth = () => {
           {/* Title Section */}
           <header className="flex flex-col justify-start items-start gap-2 mb-8 w-full">
             <h1 className="text-[#09121F] text-[28px] font-bold leading-8 tracking-[-0.56px]">
-              {isSignUp ? 'Create Account' : 'Sign in to time in.'}
+              {isSignUp ? 'Create Account' : 'Sign in'}
             </h1>
             
           </header>
@@ -173,7 +173,7 @@ const Auth = () => {
           {/* Toggle Sign Up/In */}
           <div className="text-left mt-6 w-full">
             <button type="button" onClick={() => setIsSignUp(!isSignUp)} className="text-[#09121F] text-[15px] font-normal underline hover:opacity-70 transition-opacity">
-              {isSignUp ? 'Already have an account? Sign in' : 'No account? Sign up to time in.'}
+              {isSignUp ? 'Already have an account? Sign in' : 'Sign up'}
             </button>
           </div>
 
