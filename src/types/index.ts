@@ -59,6 +59,7 @@ export interface UserProfile {
 export interface AppSettings {
   accentColor: string;
   invoiceMode: boolean;
+  invoiceNumber: number;
   taskTypes: TaskType[];
   taxTypes: TaxType[];
   projects: Project[];

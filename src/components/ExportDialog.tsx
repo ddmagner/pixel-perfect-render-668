@@ -12,6 +12,7 @@ import { InvoicePreview } from '@/components/InvoicePreview';
 import { Share } from '@capacitor/share';
 import { format } from 'date-fns';
 import { X, Download, Mail, Printer, Eye } from 'lucide-react';
+import { useApp } from '@/context/AppContext';
 
 interface ExportDialogProps {
   isOpen: boolean;
@@ -36,6 +37,7 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
   const [isExporting, setIsExporting] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
   const [autoPrint, setAutoPrint] = useState(false);
+  const { incrementInvoiceNumber } = useApp();
 
   useEffect(() => {
     if (showPreview && autoPrint) {
@@ -215,6 +217,12 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
       }
 
       URL.revokeObjectURL(url);
+      
+      // Increment invoice number after successful export (only for invoice mode)
+      if (viewMode === 'invoice') {
+        await incrementInvoiceNumber();
+      }
+      
       try { window.dispatchEvent(new CustomEvent('set-active-tab', { detail: 'time-tally' })); } catch {}
       onClose();
     } catch (error) {

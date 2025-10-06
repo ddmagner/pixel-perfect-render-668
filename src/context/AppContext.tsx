@@ -15,6 +15,7 @@ interface AppContextType {
   requestMicrophonePermission: () => Promise<boolean>;
   addTimeEntry: (entry: Omit<TimeEntry, 'id' | 'submittedAt'>) => Promise<void>;
   updateSettings: (settings: Partial<AppSettings>) => Promise<void>;
+  incrementInvoiceNumber: () => Promise<void>;
   setSortOption: (option: SortOption) => void;
   setViewMode: (mode: ViewMode) => void;
   deleteTimeEntry: (id: string) => Promise<void>;
@@ -28,6 +29,7 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 const defaultSettings: AppSettings = {
   accentColor: 'hsl(0, 0%, 85%)', // Light gray as default secondary color
   invoiceMode: false,
+  invoiceNumber: 1,
   taskTypes: [],
   taxTypes: [],
   projects: [],
@@ -149,6 +151,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       const newSettings = {
         accentColor: settingsData?.accent_color || defaultSettings.accentColor,
         invoiceMode: settingsData?.invoice_mode || defaultSettings.invoiceMode,
+        invoiceNumber: settingsData?.invoice_number || defaultSettings.invoiceNumber,
         taskTypes: (taskTypesData || []).length > 0 ? (taskTypesData || []).map(task => ({
           id: task.id,
           name: task.name,
@@ -182,7 +185,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
           zipCode: profileData?.zip_code || '',
           city: profileData?.city || '',
           state: profileData?.state || '',
-          customFields: (profileData?.custom_fields as any as CustomField[]) || []
+          customFields: (profileData?.custom_fields as unknown as CustomField[]) || []
         }
       };
 
@@ -450,6 +453,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
           user_id: user.id,
           accent_color: updatedSettings.accentColor,
           invoice_mode: updatedSettings.invoiceMode,
+          invoice_number: updatedSettings.invoiceNumber,
           sort_option: sortOption
         }, {
           onConflict: 'user_id'
@@ -488,6 +492,21 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       console.error('Error updating settings:', error);
       toast({
         description: "Error saving settings. Please try again.",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const incrementInvoiceNumber = async () => {
+    if (!user) return;
+    
+    try {
+      const newNumber = settings.invoiceNumber + 1;
+      await updateSettings({ invoiceNumber: newNumber });
+    } catch (error) {
+      console.error('Error incrementing invoice number:', error);
+      toast({
+        description: "Error updating invoice number.",
         variant: "destructive"
       });
     }
@@ -644,6 +663,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     requestMicrophonePermission,
     addTimeEntry,
     updateSettings,
+    incrementInvoiceNumber,
     setSortOption: async (option: SortOption) => {
       setSortOption(option);
       // Save to database
@@ -655,6 +675,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
               user_id: user.id,
               accent_color: settings.accentColor,
               invoice_mode: settings.invoiceMode,
+              invoice_number: settings.invoiceNumber,
               sort_option: option
             }, {
               onConflict: 'user_id'

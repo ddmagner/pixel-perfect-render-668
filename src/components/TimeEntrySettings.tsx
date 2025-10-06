@@ -513,6 +513,35 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
         </section>
       )}
       
+      {/* Invoice Number */}
+      {settings.invoiceMode && (
+        <section className="px-2.5 pb-[22px]">
+          <div className="pt-5 mb-3">
+            <h3 className="text-[#09121F] text-sm font-bold">Invoice Number</h3>
+          </div>
+          <div className="border-b border-[#09121F] mb-3"></div>
+          
+          <div className="flex items-center justify-between">
+            <span className="text-[#09121F] text-sm">Next invoice number</span>
+            <input
+              type="number"
+              min="1"
+              value={settings.invoiceNumber}
+              onChange={(e) => {
+                const value = parseInt(e.target.value);
+                if (!isNaN(value) && value >= 1) {
+                  updateSettings({ invoiceNumber: value });
+                }
+              }}
+              className="text-[#09121F] text-sm bg-transparent border border-[#BFBFBF] rounded px-2 py-1 w-24 text-right"
+            />
+          </div>
+          <p className="text-[#BFBFBF] text-xs mt-2">
+            This number will auto-increment with each invoice generation
+          </p>
+        </section>
+      )}
+      
       {/* Maintain padding when Tax section is hidden */}
       {!settings.invoiceMode && <div className="pb-[22px]" />}
     </div>;
