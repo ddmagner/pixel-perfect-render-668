@@ -91,6 +91,7 @@ export type Database = {
           address: string | null
           city: string | null
           created_at: string
+          custom_fields: Json | null
           email: string | null
           id: string
           name: string | null
@@ -104,6 +105,7 @@ export type Database = {
           address?: string | null
           city?: string | null
           created_at?: string
+          custom_fields?: Json | null
           email?: string | null
           id?: string
           name?: string | null
@@ -117,6 +119,7 @@ export type Database = {
           address?: string | null
           city?: string | null
           created_at?: string
+          custom_fields?: Json | null
           email?: string | null
           id?: string
           name?: string | null

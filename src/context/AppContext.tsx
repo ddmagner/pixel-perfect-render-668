@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { useMicrophonePermission } from '@/hooks/useMicrophonePermission';
-import { TimeEntry, AppSettings, SortOption, ViewMode, TaxType } from '@/types';
+import { TimeEntry, AppSettings, SortOption, ViewMode, TaxType, CustomField } from '@/types';
 import { useToast } from '@/hooks/use-toast';
 
 interface AppContextType {
@@ -181,7 +181,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
           address: profileData?.address || '',
           zipCode: profileData?.zip_code || '',
           city: profileData?.city || '',
-          state: profileData?.state || ''
+          state: profileData?.state || '',
+          customFields: (profileData?.custom_fields as any as CustomField[]) || []
         }
       };
 
@@ -460,18 +461,17 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       if (newSettings.userProfile) {
         const { error: profileError } = await supabase
           .from('profiles')
-          .upsert({
-            user_id: user.id,
+          .update({
             name: updatedSettings.userProfile.name,
             email: updatedSettings.userProfile.email,
             phone: updatedSettings.userProfile.phone,
             address: updatedSettings.userProfile.address,
             zip_code: updatedSettings.userProfile.zipCode,
             city: updatedSettings.userProfile.city,
-            state: updatedSettings.userProfile.state
-          }, {
-            onConflict: 'user_id'
-          });
+            state: updatedSettings.userProfile.state,
+            custom_fields: (updatedSettings.userProfile.customFields || []) as any
+          })
+          .eq('user_id', user.id);
 
         if (profileError) throw profileError;
       }

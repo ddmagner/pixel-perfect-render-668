@@ -253,16 +253,6 @@ const currentDate = new Date();
             <div className="text-xs text-black print-text">
               Period: {entries.length > 0 ? format(new Date(Math.min(...entries.map(e => new Date(e.date).getTime()))), 'MM/dd/yy') : 'N/A'} - {entries.length > 0 ? format(new Date(Math.max(...entries.map(e => new Date(e.date).getTime()))), 'MM/dd/yy') : 'N/A'}
             </div>
-            {/* Custom Fields */}
-            {settings.userProfile.customFields && settings.userProfile.customFields.length > 0 && (
-              <div className="text-xs text-black print-text mt-1">
-                {settings.userProfile.customFields
-                  .filter(field => field.label && field.value)
-                  .map((field) => (
-                    <p key={field.id}>{field.label}: {field.value}</p>
-                  ))}
-              </div>
-            )}
           </div>
         </div>
 
@@ -270,7 +260,7 @@ const currentDate = new Date();
         <div className="grid grid-cols-5 gap-6 mb-6">
           <div className="col-span-2">
             <h3 className="text-sm font-bold text-black print-text uppercase tracking-wider mb-1.5">From</h3>
-            <div className="text-sm text-black print-text">
+            <div className="text-xs text-black print-text">
               <p>{settings.userProfile.name || 'Your Name'}</p>
               <p>{settings.userProfile.email || 'your.email@example.com'}</p>
               {settings.userProfile.address && <p>{settings.userProfile.address}</p>}
@@ -283,6 +273,12 @@ const currentDate = new Date();
                 </p>
               )}
               {settings.userProfile.phone && <p>Phone: {settings.userProfile.phone}</p>}
+              {/* Custom Fields */}
+              {settings.userProfile.customFields && settings.userProfile.customFields.length > 0 && settings.userProfile.customFields
+                .filter(field => field.label && field.value)
+                .map((field) => (
+                  <p key={field.id}>{field.label}: {field.value}</p>
+                ))}
             </div>
           </div>
           <div className="col-span-3 -ml-[15px]">
