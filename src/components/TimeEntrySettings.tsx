@@ -517,15 +517,17 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
       {/* Invoice/Time Card Number */}
       {settings.invoiceMode && (
         <section className="px-2.5 pb-[22px]">
-          <div className="pt-[22px] mb-3">
+          <div className="pt-5 mb-3">
             <h3 className="text-[#09121F] text-sm font-bold">{viewMode === 'invoice' ? 'Invoice #' : 'Time Card #'}</h3>
           </div>
           <div className="border-b border-[#09121F] mb-3"></div>
           
-          <div className="flex items-center justify-between">
+          <div className="grid grid-cols-[1fr_60px_56px] items-center gap-3">
             <span className="text-[#09121F] text-sm">Auto-advances on each export</span>
-            <div className="flex items-center gap-2">
+            <div className="text-right">
               <span className="text-[#09121F] text-sm font-mono">{String(settings.invoiceNumber).padStart(4, '0')}</span>
+            </div>
+            <div className="flex gap-3 w-[56px] justify-end">
               <button
                 onClick={() => {
                   const newNumber = prompt('Enter new number:', String(settings.invoiceNumber));
