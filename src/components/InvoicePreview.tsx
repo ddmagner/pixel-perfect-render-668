@@ -191,6 +191,16 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
               <div className="text-xs text-black">
                 Period: {entries.length > 0 ? format(new Date(Math.min(...entries.map(e => new Date(e.date).getTime()))), 'MM/dd/yy') : 'N/A'} - {entries.length > 0 ? format(new Date(Math.max(...entries.map(e => new Date(e.date).getTime()))), 'MM/dd/yy') : 'N/A'}
               </div>
+              {/* Custom Fields */}
+              {settings.userProfile.customFields && settings.userProfile.customFields.length > 0 && (
+                <div className="text-xs text-black mt-1">
+                  {settings.userProfile.customFields
+                    .filter(field => field.label && field.value)
+                    .map((field) => (
+                      <p key={field.id}>{field.label}: {field.value}</p>
+                    ))}
+                </div>
+              )}
             </div>
           </div>
 
