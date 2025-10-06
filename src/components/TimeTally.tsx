@@ -1021,7 +1021,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDelete} className="bg-red-600 hover:bg-red-700">
+            <AlertDialogAction onClick={handleDelete}>
               Delete
             </AlertDialogAction>
           </AlertDialogFooter>
