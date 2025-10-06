@@ -93,8 +93,8 @@ const Index = () => {
           <div className="w-full max-w-sm mx-auto px-2.5">
             <Navigation activeTab={activeTab} onTabChange={handleTabChange} />
             <TabNavigation activeTab={activeTab} onTabChange={handleTabChange} />
+            <Divider />
           </div>
-          <Divider />
           <div className="h-1" />
         </div>
 

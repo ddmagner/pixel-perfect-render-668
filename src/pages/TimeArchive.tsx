@@ -362,8 +362,8 @@ export const TimeArchivePage: React.FC = () => {
           <div className="w-full max-w-sm mx-auto px-2.5">
             <Navigation activeTab="" onTabChange={() => {}} />
             <TabNavigation activeTab="" onTabChange={() => {}} />
+            <Divider />
           </div>
-          <Divider />
           <div className="h-1" />
         </div>
 
