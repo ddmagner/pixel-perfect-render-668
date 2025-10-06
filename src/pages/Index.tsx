@@ -98,7 +98,7 @@ const Index = () => {
           <div className="h-1" />
         </div>
 
-        <div className={activeTab === 'enter-time' ? 'flex-1 overflow-hidden overflow-x-hidden' : 'flex-1 overflow-y-auto overflow-x-hidden'}>
+        <div className={activeTab === 'enter-time' ? 'flex-1 overflow-hidden overflow-x-hidden' : 'flex-1 overflow-y-auto overflow-x-hidden scrollbar-stable'}>
           <div className="w-full max-w-sm mx-auto px-2.5">
             {activeTab === 'enter-time' && (
               <>

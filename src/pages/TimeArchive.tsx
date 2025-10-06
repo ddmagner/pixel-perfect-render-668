@@ -367,7 +367,7 @@ export const TimeArchivePage: React.FC = () => {
           <div className="h-1" />
         </div>
 
-        <div className="flex-1 overflow-y-auto overflow-x-hidden">
+        <div className="flex-1 overflow-y-auto overflow-x-hidden scrollbar-stable">
           <div className="w-full max-w-sm mx-auto px-2.5">
             {/* Mode Toggle */}
             <div className="flex justify-center items-center w-full px-2.5 py-4">
