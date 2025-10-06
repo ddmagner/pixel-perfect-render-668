@@ -7,8 +7,9 @@ const config: CapacitorConfig = {
   // For production builds, comment out the server config below
   // For development with hot-reload, uncomment it
   server: {
-    url: 'https://90417b06-4690-4e77-b9f5-e0a1c7808d94.lovableproject.com?forceHideBadge=true&build=103',
-    cleartext: true
+    url: 'https://90417b06-4690-4e77-b9f5-e0a1c7808d94.lovableproject.com?forceHideBadge=true&build=104',
+    cleartext: true,
+    allowNavigation: ['*.lovableproject.com']
   },
   plugins: {
     SplashScreen: {
