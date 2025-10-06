@@ -172,7 +172,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
         </div>
 
         {/* Invoice Content - Letter Size (8.5" x 11") */}
-        <div id="document-preview" className="invoice-content mx-auto bg-white" style={{ width: '8.5in', maxWidth: '8.5in', padding: '0.75in 0.5in', boxSizing: 'border-box', fontSize: '12pt', lineHeight: 1.4 }}>
+        <div id="document-preview" className="invoice-content mx-auto bg-white" style={{ width: '8.5in', maxWidth: '8.5in', padding: '0.75in 0.5in', boxSizing: 'border-box', fontSize: '12pt', lineHeight: 1.2 }}>
           {/* Header */}
           <div className="mb-6">
             <div>
@@ -181,14 +181,14 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
               </h1>
               {settings.invoiceMode && (
                 <>
-                  <div className="text-black" style={{ fontSize: '11px' }}>
+                  <div className="text-black" style={{ fontSize: '11px', lineHeight: '1.2' }}>
                     <p>Invoice Date: {format(currentDate, 'MM/dd/yy')}</p>
                     <p>Due Date: {format(new Date(currentDate.getTime() + 30 * 24 * 60 * 60 * 1000), 'MM/dd/yy')}</p>
                   </div>
-                  <div className="text-black" style={{ fontSize: '11px' }}>Invoice #001</div>
+                  <div className="text-black" style={{ fontSize: '11px', lineHeight: '1.2' }}>Invoice #001</div>
                 </>
               )}
-              <div className="text-black" style={{ fontSize: '11px' }}>
+              <div className="text-black" style={{ fontSize: '11px', lineHeight: '1.2' }}>
                 Period: {entries.length > 0 ? format(new Date(Math.min(...entries.map(e => new Date(e.date).getTime()))), 'MM/dd/yy') : 'N/A'} - {entries.length > 0 ? format(new Date(Math.max(...entries.map(e => new Date(e.date).getTime()))), 'MM/dd/yy') : 'N/A'}
               </div>
             </div>
@@ -197,8 +197,8 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
           {/* From/To Section */}
           <div className="grid grid-cols-5 gap-6 mb-6">
             <div className="col-span-2">
-              <h3 className="font-bold text-black uppercase tracking-wider mb-1.5" style={{ fontSize: '11px' }}>From</h3>
-              <div className="text-black" style={{ fontSize: '11px' }}>
+              <h3 className="font-bold text-black uppercase tracking-wider mb-1.5" style={{ fontSize: '11px', lineHeight: '1.2' }}>From</h3>
+              <div className="text-black" style={{ fontSize: '11px', lineHeight: '1.2' }}>
                 <p>{settings.userProfile.name || 'Your Name'}</p>
                 <p>{settings.userProfile.email || 'your.email@example.com'}</p>
                 {settings.userProfile.address && <p>{settings.userProfile.address}</p>}
@@ -220,10 +220,10 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
               </div>
             </div>
             <div className="col-span-3 -ml-[15px]">
-              <h3 className="font-bold text-black uppercase tracking-wider mb-1.5" style={{ fontSize: '11px' }}>
+              <h3 className="font-bold text-black uppercase tracking-wider mb-1.5" style={{ fontSize: '11px', lineHeight: '1.2' }}>
                 {settings.invoiceMode ? 'Bill To' : 'To'}
               </h3>
-              <div className="text-black" style={{ fontSize: '11px' }}>
+              <div className="text-black" style={{ fontSize: '11px', lineHeight: '1.2' }}>
                  {primaryClient ? (
                    <>
                      <p>{primaryClient.name}</p>
@@ -257,7 +257,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
               {/* Table Header */}
               <div className="border-t border-b border-black">
                 {settings.invoiceMode ? (
-                  <div className="grid grid-cols-12 gap-4 py-1 font-bold text-black uppercase tracking-wider items-center" style={{ fontSize: '11px' }}>
+                  <div className="grid grid-cols-12 gap-4 py-1 font-bold text-black uppercase tracking-wider items-center" style={{ fontSize: '11px', lineHeight: '1.2' }}>
                     <div className="col-span-2 text-left">Date</div>
                     <div className="col-span-3">Project</div>
                     <div className="col-span-3 -ml-[25px]">Task</div>
@@ -266,7 +266,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                     <div className="col-span-2 text-right">Amount</div>
                   </div>
                 ) : (
-                  <div className="grid grid-cols-8 gap-4 py-1 font-bold text-black uppercase tracking-wider items-center" style={{ fontSize: '11px' }}>
+                  <div className="grid grid-cols-8 gap-4 py-1 font-bold text-black uppercase tracking-wider items-center" style={{ fontSize: '11px', lineHeight: '1.2' }}>
                     <div className="col-span-2 text-left">Date</div>
                     <div className="col-span-3">Project</div>
                     <div className="col-span-2">Task</div>
@@ -282,7 +282,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                   const amount = calculateAmount(entry);
                   
                   return settings.invoiceMode ? (
-                    <div key={entry.id || index} className="grid grid-cols-12 gap-4 py-1 text-black items-center" style={{ fontSize: '11px' }}>
+                    <div key={entry.id || index} className="grid grid-cols-12 gap-4 py-1 text-black items-center" style={{ fontSize: '11px', lineHeight: '1.2' }}>
                       <div className="col-span-2">{format(new Date(entry.date), 'MM/dd/yy')}</div>
                       <div className="col-span-3 font-medium">{entry.project}</div>
                       <div className="col-span-3 -ml-[25px]">{entry.task}</div>
@@ -291,7 +291,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                       <div className="col-span-2 text-right font-medium">{formatCurrency(amount)}</div>
                     </div>
                   ) : (
-                    <div key={entry.id || index} className="grid grid-cols-8 gap-4 py-1 text-black items-center" style={{ fontSize: '11px' }}>
+                    <div key={entry.id || index} className="grid grid-cols-8 gap-4 py-1 text-black items-center" style={{ fontSize: '11px', lineHeight: '1.2' }}>
                       <div className="col-span-2">{format(new Date(entry.date), 'MM/dd/yy')}</div>
                       <div className="col-span-3 font-medium">{entry.project}</div>
                       <div className="col-span-2">{entry.task}</div>
@@ -313,7 +313,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                 <div className="grid grid-cols-12 gap-4">
                   <div className="col-span-12">
                     <div className="space-y-0">
-                      <div className="grid grid-cols-12 gap-4 py-1 text-black items-center border-t border-gray-300" style={{ fontSize: '11px' }}>
+                      <div className="grid grid-cols-12 gap-4 py-1 text-black items-center border-t border-gray-300" style={{ fontSize: '11px', lineHeight: '1.2' }}>
                         <div className="col-span-2"></div>
                         <div className="col-span-3"></div>
                         <div className="col-span-3 -ml-[25px]">Subtotal:</div>
@@ -322,7 +322,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                         <div className="col-span-2 text-right font-medium">{formatCurrency(subtotalAmount)}</div>
                       </div>
                       {taxCalculations.map((tax, index) => (
-                        <div key={index} className="grid grid-cols-12 gap-4 py-1 text-black items-center border-t border-gray-300" style={{ fontSize: '11px' }}>
+                        <div key={index} className="grid grid-cols-12 gap-4 py-1 text-black items-center border-t border-gray-300" style={{ fontSize: '11px', lineHeight: '1.2' }}>
                           <div className="col-span-2"></div>
                           <div className="col-span-3"></div>
                           <div className="col-span-3 -ml-[25px]">{tax.name} ({tax.rate}%):</div>
@@ -331,7 +331,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                           <div className="col-span-2 text-right font-medium">{formatCurrency(tax.amount)}</div>
                         </div>
                       ))}
-                      <div className="grid grid-cols-12 gap-4 py-1 text-black items-center border-t border-black" style={{ borderTopWidth: '1pt', fontSize: '11px' }}>
+                      <div className="grid grid-cols-12 gap-4 py-1 text-black items-center border-t border-black" style={{ borderTopWidth: '1pt', fontSize: '11px', lineHeight: '1.2' }}>
                         <div className="col-span-2"></div>
                         <div className="col-span-3"></div>
                         <div className="col-span-3 -ml-[25px] font-bold">Total Due:</div>
@@ -345,7 +345,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
               ) : (
                 <div className="grid grid-cols-8 gap-4">
                   <div className="col-span-8">
-                    <div className="grid grid-cols-8 gap-4 py-1 text-black items-center border-t border-black" style={{ borderTopWidth: '1pt', fontSize: '11px' }}>
+                    <div className="grid grid-cols-8 gap-4 py-1 text-black items-center border-t border-black" style={{ borderTopWidth: '1pt', fontSize: '11px', lineHeight: '1.2' }}>
                       <div className="col-span-2"></div>
                       <div className="col-span-3"></div>
                       <div className="col-span-2 font-bold">Total Hours:</div>
@@ -358,7 +358,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
             
             {/* Footer */}
             <div className="mt-4" data-pdf-context="footer">
-              <div className="text-muted-foreground" style={{ fontSize: '11px' }}>
+              <div className="text-muted-foreground" style={{ fontSize: '11px', lineHeight: '1.2' }}>
                 <span className="inline-flex items-baseline gap-1 leading-4 align-baseline">
                   <span>MADE WITH</span>
                   <img 
