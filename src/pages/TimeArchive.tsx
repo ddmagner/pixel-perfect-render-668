@@ -357,16 +357,16 @@ export const TimeArchivePage: React.FC = () => {
         rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Gilroy:wght@400;700;800;900&display=swap"
       />
-      <div className="fixed inset-0 flex flex-col bg-white">
-        <div className="w-full max-w-sm mx-auto flex flex-col h-full" style={{ fontFamily: 'Gilroy, sans-serif' }}>
-          <div className="sticky top-0 z-40 bg-white" style={{ paddingTop: 'max(1rem, env(safe-area-inset-top))' }}>
-            <Navigation activeTab="" onTabChange={() => {}} />
-            <TabNavigation activeTab="" onTabChange={() => {}} />
-            <Divider />
-            <div className="h-1" />
-          </div>
+      <div className="fixed inset-0 flex flex-col bg-white" style={{ fontFamily: 'Gilroy, sans-serif' }}>
+        <div className="w-full max-w-sm mx-auto sticky top-0 z-40 bg-white" style={{ paddingTop: 'max(1rem, env(safe-area-inset-top))' }}>
+          <Navigation activeTab="" onTabChange={() => {}} />
+          <TabNavigation activeTab="" onTabChange={() => {}} />
+          <Divider />
+          <div className="h-1" />
+        </div>
 
-          <div className="flex-1 overflow-y-auto overflow-x-hidden">
+        <div className="flex-1 overflow-y-auto overflow-x-hidden">
+          <div className="w-full max-w-sm mx-auto">
             {/* Mode Toggle */}
             <div className="flex justify-center items-center w-full px-2.5 py-4">
             <div className="flex items-center gap-4">
