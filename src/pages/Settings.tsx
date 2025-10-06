@@ -18,9 +18,9 @@ const SettingsPage = () => {
   return (
     <>
       <div className="fixed inset-0 flex flex-col bg-white">
-        <div className="w-full max-w-sm mx-auto flex flex-col h-full" style={{ fontFamily: 'Gilroy, sans-serif' }}>
-          <div className="sticky top-0 z-40 bg-white">
-            <nav className="flex justify-center items-center self-stretch px-2.5 pb-1 bg-white relative" style={{ paddingTop: 'max(1rem, env(safe-area-inset-top))' }}>
+        <div className="sticky top-0 z-40 bg-white" style={{ paddingTop: 'max(1rem, env(safe-area-inset-top))' }}>
+          <div className="w-full max-w-sm mx-auto px-2.5">
+            <nav className="flex justify-center items-center self-stretch pb-1 bg-white relative">
               <button 
                 onClick={handleBack}
                 className="flex items-center gap-2 text-[#09121F] absolute left-2.5"
@@ -51,8 +51,10 @@ const SettingsPage = () => {
             <Divider />
             <div className="h-1" />
           </div>
+        </div>
 
-          <div className="flex-1 overflow-y-auto overflow-x-hidden">
+        <div className="flex-1 overflow-y-auto overflow-x-hidden">
+          <div className="w-full max-w-sm mx-auto px-2.5">
             <Settings highlightSection={section} />
           </div>
         </div>

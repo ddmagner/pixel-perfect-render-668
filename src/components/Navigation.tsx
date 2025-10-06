@@ -16,7 +16,7 @@ export const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }
   return (
     <nav className={`flex justify-center items-center w-full px-2.5 pb-1 bg-white ${
       isArchivePage ? 'pointer-events-none' : ''
-    }`} style={{ paddingTop: 'max(1rem, env(safe-area-inset-top))' }}>
+    }`}>
       <div className="flex h-3.5 justify-end items-center">
         <div className="flex items-center gap-[9px]">
           <div>
