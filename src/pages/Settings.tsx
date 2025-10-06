@@ -47,6 +47,7 @@ const SettingsPage = () => {
                   </div>
                 </div>
               </div>
+              <span className="absolute right-2.5 text-[10px] leading-none text-gray-500">v1.0.1</span>
             </nav>
             <Divider />
             
