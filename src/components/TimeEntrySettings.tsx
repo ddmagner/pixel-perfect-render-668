@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useApp } from '@/context/AppContext';
 import { TaskType, TaxType, Project, Client } from '@/types';
-import { Edit3, Trash2, Plus, Pencil } from 'lucide-react';
+import { Edit3, Trash2, Plus } from 'lucide-react';
 import { formatCurrency } from '@/lib/utils';
 import { toast } from '@/hooks/use-toast';
 interface TimeEntrySettingsProps {
@@ -524,8 +524,8 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
           
           <div className="grid grid-cols-[1fr_60px_56px] items-center gap-3">
             <span className="text-[#09121F] text-sm">Auto-advances on each export</span>
-            <div className="text-right">
-              <span className="text-[#09121F] text-sm font-mono">{String(settings.invoiceNumber).padStart(4, '0')}</span>
+            <div className="min-w-[60px] text-right">
+              <span className="text-[#09121F] text-sm leading-5 h-5 inline-block">{String(settings.invoiceNumber).padStart(4, '0')}</span>
             </div>
             <div className="flex gap-3 w-[56px] justify-end">
               <button
@@ -538,9 +538,9 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
                     }
                   }
                 }}
-                className="text-gray-400 hover:text-[#09121F]"
+                className="text-gray-400 hover:text-[#09121F] flex items-center justify-center w-4 h-4"
               >
-                <Pencil size={16} />
+                <Edit3 size={16} />
               </button>
             </div>
           </div>
