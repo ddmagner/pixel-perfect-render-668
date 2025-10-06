@@ -114,7 +114,15 @@ const InvoicePage: React.FC = () => {
   }, [loading, settings]);
 
   const getRate = (entry: TimeEntry): number => {
-    const rate = settings?.taskTypes?.find(t => t.name === entry.task)?.hourlyRate ?? 0;
+    // Use the hourlyRate from the entry first, then fallback to task type rate from settings
+    let rate = entry.hourlyRate || 0;
+    
+    // Additional fallback: try to find rate from settings by task name
+    if (!rate) {
+      const taskType = settings?.taskTypes.find(t => t.name === entry.task);
+      rate = taskType?.hourlyRate || 0;
+    }
+    
     return rate;
   };
 
