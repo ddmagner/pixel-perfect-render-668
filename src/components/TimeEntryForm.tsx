@@ -376,9 +376,13 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
                 <Calendar
                   mode="single"
                   selected={formData.date}
-                  onSelect={(date) => date && setFormData(prev => ({ ...prev, date }))}
+                  onSelect={(date) => {
+                    if (date) {
+                      setFormData(prev => ({ ...prev, date }));
+                    }
+                  }}
                   initialFocus
-                  className="pointer-events-auto"
+                  className={cn("p-3 pointer-events-auto")}
                 />
               </PopoverContent>
             </Popover>
