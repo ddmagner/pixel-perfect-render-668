@@ -21,6 +21,8 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
   const [editingTax, setEditingTax] = useState<TaxType | null>(null);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
   const [editingClient, setEditingClient] = useState<Client | null>(null);
+  const [editingInvoiceNumber, setEditingInvoiceNumber] = useState(false);
+  const [invoiceNumberInput, setInvoiceNumberInput] = useState('');
   const [newTaskName, setNewTaskName] = useState('');
   const [newTaskRate, setNewTaskRate] = useState('');
   const [newTaxName, setNewTaxName] = useState('');
@@ -525,18 +527,50 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
           <div className="grid grid-cols-[1fr_60px_56px] items-center gap-3">
             <span className="text-[#09121F] text-sm">Auto-advances on each export</span>
             <div className="min-w-[60px] text-right">
-              <span className="text-[#09121F] text-sm leading-5 h-5 inline-block">{String(settings.invoiceNumber).padStart(4, '0')}</span>
+              {editingInvoiceNumber ? (
+                <input
+                  type="text"
+                  value={invoiceNumberInput}
+                  onChange={(e) => {
+                    const value = e.target.value.replace(/\D/g, '');
+                    if (value.length <= 4) {
+                      setInvoiceNumberInput(value);
+                    }
+                  }}
+                  onBlur={() => {
+                    const value = parseInt(invoiceNumberInput);
+                    if (!isNaN(value) && value >= 1) {
+                      updateSettings({ invoiceNumber: value });
+                    }
+                    setEditingInvoiceNumber(false);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      const value = parseInt(invoiceNumberInput);
+                      if (!isNaN(value) && value >= 1) {
+                        updateSettings({ invoiceNumber: value });
+                      }
+                      setEditingInvoiceNumber(false);
+                    }
+                    if (e.key === 'Escape') {
+                      setEditingInvoiceNumber(false);
+                    }
+                  }}
+                  className="text-[#09121F] text-sm bg-transparent border-none outline-none w-full text-right leading-5"
+                  autoFocus
+                  onFocus={(e) => e.target.select()}
+                />
+              ) : (
+                <span className="text-[#09121F] text-sm leading-5 h-5 inline-block">
+                  {String(settings.invoiceNumber).padStart(4, '0')}
+                </span>
+              )}
             </div>
             <div className="flex gap-3 w-[56px] justify-end">
               <button
                 onClick={() => {
-                  const newNumber = prompt('Enter new number:', String(settings.invoiceNumber));
-                  if (newNumber) {
-                    const value = parseInt(newNumber);
-                    if (!isNaN(value) && value >= 1) {
-                      updateSettings({ invoiceNumber: value });
-                    }
-                  }
+                  setInvoiceNumberInput(String(settings.invoiceNumber));
+                  setEditingInvoiceNumber(true);
                 }}
                 className="text-gray-400 hover:text-[#09121F] flex items-center justify-center w-4 h-4"
               >
