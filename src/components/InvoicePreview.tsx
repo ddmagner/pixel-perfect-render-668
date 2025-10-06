@@ -184,7 +184,6 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                 <>
                   <div className="text-black" style={{ fontSize: '11px', lineHeight: '1.2' }}>
                     <p>Invoice Date: {format(currentDate, 'MM/dd/yy')}</p>
-                    <p>Due Date: {format(new Date(currentDate.getTime() + 30 * 24 * 60 * 60 * 1000), 'MM/dd/yy')}</p>
                   </div>
                   <div className="text-black" style={{ fontSize: '11px', lineHeight: '1.2' }}>
                     Invoice #{String(invoiceNumber).padStart(4, '0')}
