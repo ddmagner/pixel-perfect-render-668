@@ -357,7 +357,7 @@ export const TimeArchivePage: React.FC = () => {
         rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Gilroy:wght@400;700;800;900&display=swap"
       />
-      <div className="fixed inset-0 flex flex-col bg-white">
+      <div className="fixed inset-0 flex flex-col bg-white safe-top">
         <div className="w-full max-w-sm mx-auto flex flex-col h-full" style={{ fontFamily: 'Gilroy, sans-serif' }}>
           <div className="sticky top-0 z-40 bg-white" style={{ paddingTop: 'max(1rem, env(safe-area-inset-top))' }}>
             <Navigation activeTab="" onTabChange={() => {}} />
