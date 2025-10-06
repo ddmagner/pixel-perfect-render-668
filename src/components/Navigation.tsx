@@ -14,7 +14,7 @@ export const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }
   const isArchivePage = location.pathname === '/archive';
   
   return (
-    <nav className={`flex justify-center items-center w-full px-2.5 pb-0 bg-white relative ${
+    <nav className={`flex justify-center items-center w-full px-2.5 pb-0 bg-white ${
       isArchivePage ? 'pointer-events-none' : ''
     }`}>
       <div className="flex h-3.5 justify-end items-center">
@@ -35,7 +35,6 @@ export const Navigation: React.FC<NavigationProps> = ({ activeTab, onTabChange }
           </div>
         </div>
       </div>
-      <span className="absolute right-2.5 text-[10px] leading-none text-gray-500">v1.0.1</span>
     </nav>
   );
 };
