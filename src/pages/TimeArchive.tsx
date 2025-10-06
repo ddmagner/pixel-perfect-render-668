@@ -686,7 +686,7 @@ export const TimeArchivePage: React.FC = () => {
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction onClick={handleClearArchive} className="bg-red-600 hover:bg-red-700">
+                <AlertDialogAction onClick={handleClearArchive}>
                   Delete All
                 </AlertDialogAction>
               </AlertDialogFooter>
@@ -707,7 +707,7 @@ export const TimeArchivePage: React.FC = () => {
                 <AlertDialogAction onClick={() => {
                 handleDelete(selection.selectedIds);
                 setShowDeleteDialog(false);
-              }} className="bg-red-600 hover:bg-red-700">
+              }}>
                   Delete Selected
                 </AlertDialogAction>
               </AlertDialogFooter>
