@@ -18,9 +18,9 @@ const SettingsPage = () => {
   return (
     <>
       <div className="fixed inset-0 flex flex-col bg-white">
-        <div className="sticky top-0 z-40 bg-white" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
+        <div className="sticky top-0 z-40 bg-white" style={{ paddingTop: 0 }}>
           <div className="w-full max-w-sm mx-auto px-2.5">
-            <nav className="flex justify-center items-center self-stretch pb-1 bg-white relative">
+            <nav className="flex justify-center items-center self-stretch pb-0 bg-white relative">
               <button 
                 onClick={handleBack}
                 className="flex items-center gap-2 text-[#09121F] absolute left-2.5"
@@ -49,7 +49,7 @@ const SettingsPage = () => {
               </div>
             </nav>
             <Divider />
-            <div className="h-1" />
+            
           </div>
         </div>
 

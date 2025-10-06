@@ -89,13 +89,13 @@ const Index = () => {
         href="https://fonts.googleapis.com/css2?family=Gilroy:wght@400;700;800;900&display=swap"
       />
       <div className="fixed inset-0 flex flex-col bg-white" style={{ fontFamily: 'Gilroy, sans-serif' }}>
-        <div className="sticky top-0 z-40 bg-white" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
+        <div className="sticky top-0 z-40 bg-white" style={{ paddingTop: 0 }}>
           <div className="w-full max-w-sm mx-auto px-2.5">
             <Navigation activeTab={activeTab} onTabChange={handleTabChange} />
             <TabNavigation activeTab={activeTab} onTabChange={handleTabChange} />
             <Divider />
           </div>
-          <div className="h-1" />
+          
         </div>
 
         <div className={'flex-1 overflow-y-auto overflow-x-hidden'}>
