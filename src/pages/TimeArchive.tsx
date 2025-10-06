@@ -359,7 +359,7 @@ export const TimeArchivePage: React.FC = () => {
       />
       <div className="fixed inset-0 flex flex-col bg-white">
         <div className="w-full max-w-sm mx-auto flex flex-col h-full" style={{ fontFamily: 'Gilroy, sans-serif' }}>
-          <div className="sticky top-0 z-40 bg-white">
+          <div className="sticky top-0 z-40 bg-white" style={{ paddingTop: 'max(1rem, env(safe-area-inset-top))' }}>
             <Navigation activeTab="" onTabChange={() => {}} />
             <TabNavigation activeTab="" onTabChange={() => {}} />
             <Divider />
