@@ -18,7 +18,7 @@ const SettingsPage = () => {
   return (
     <>
       <div className="fixed inset-0 flex flex-col bg-white">
-        <div className="sticky top-0 z-40 bg-white" style={{ paddingTop: 'max(1rem, env(safe-area-inset-top))' }}>
+        <div className="sticky top-0 z-40 bg-white" style={{ paddingTop: 'env(safe-area-inset-top)' }}>
           <div className="w-full max-w-sm mx-auto px-2.5">
             <nav className="flex justify-center items-center self-stretch pb-1 bg-white relative">
               <button 
