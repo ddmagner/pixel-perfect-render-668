@@ -245,12 +245,12 @@ const currentDate = new Date();
         <div className="mb-6">
           <div>
             <h1 className="text-2xl font-bold text-black print-text mb-2">INVOICE</h1>
-            <div className="text-sm text-black print-text">
+            <div className="text-xs text-black print-text">
               <p>Invoice Date: {format(currentDate, 'MM/dd/yy')}</p>
               <p>Due Date: {format(new Date(currentDate.getTime() + 30 * 24 * 60 * 60 * 1000), 'MM/dd/yy')}</p>
             </div>
-            <div className="text-sm text-black print-text">Invoice #001</div>
-            <div className="text-sm text-black print-text">
+            <div className="text-xs text-black print-text">Invoice #001</div>
+            <div className="text-xs text-black print-text">
               Period: {entries.length > 0 ? format(new Date(Math.min(...entries.map(e => new Date(e.date).getTime()))), 'MM/dd/yy') : 'N/A'} - {entries.length > 0 ? format(new Date(Math.max(...entries.map(e => new Date(e.date).getTime()))), 'MM/dd/yy') : 'N/A'}
             </div>
           </div>
@@ -327,7 +327,7 @@ const currentDate = new Date();
                 const amount = calculateAmount(entry);
                 
                 return (
-                  <div key={entry.id || index} className="grid grid-cols-12 gap-4 py-1 text-sm text-black print-text items-center">
+                  <div key={entry.id || index} className="grid grid-cols-12 gap-4 py-1 text-xs text-black print-text items-center">
                     <div className="col-span-2">{format(new Date(entry.date), 'MM/dd/yy')}</div>
                     <div className="col-span-3 font-medium">{entry.project}</div>
                     <div className="col-span-3 -ml-[25px]">{entry.task}</div>
