@@ -272,12 +272,15 @@ const currentDate = new Date();
                   {settings.userProfile.zipCode && ` ${settings.userProfile.zipCode}`}
                 </p>
               )}
-              {settings.userProfile.phone && <p>Phone: {settings.userProfile.phone}</p>}
+              {settings.userProfile.phone && <p>{settings.userProfile.phone}</p>}
               {/* Custom Fields */}
               {settings.userProfile.customFields && settings.userProfile.customFields.length > 0 && settings.userProfile.customFields
                 .filter(field => field.label && field.value)
                 .map((field) => (
-                  <p key={field.id}>{field.label}: {field.value}</p>
+                  <React.Fragment key={field.id}>
+                    <p>{field.label}</p>
+                    <p>{field.value}</p>
+                  </React.Fragment>
                 ))}
             </div>
           </div>
