@@ -23,7 +23,26 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
         setLoading(true);
         
         if (selectedEntries) {
-          setEntries(selectedEntries);
+          // Ensure selectedEntries have hourly rates populated from settings
+          const enrichedEntries = selectedEntries.map(entry => {
+            let hourlyRate = entry.hourlyRate || 0;
+            
+            // Try to find rate from settings by task name if not already present
+            if (!hourlyRate) {
+              const taskType = settings.taskTypes.find(t => t.name === entry.task);
+              if (taskType?.hourlyRate) {
+                hourlyRate = Number(taskType.hourlyRate);
+              }
+            }
+            
+            return {
+              ...entry,
+              hourlyRate
+            };
+          });
+          
+          setEntries(enrichedEntries);
+          setLoading(false);
           return;
         }
 
@@ -82,7 +101,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
     };
 
     fetchTimeEntries();
-  }, [selectedEntries, toast]);
+  }, [selectedEntries, toast, settings.taskTypes]);
 
   const calculateAmount = (entry: TimeEntry): number => {
     // Use the hourlyRate from the entry first, then fallback to task type rate from settings
