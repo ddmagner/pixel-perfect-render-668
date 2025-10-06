@@ -12,6 +12,7 @@ import { Clock, LogOut, FileText } from 'lucide-react';
 import type { Client } from '@/types';
 import { Capacitor } from '@capacitor/core';
 import { App as CapApp } from '@capacitor/app';
+import { WEB_BUILD, WEB_SEMVER } from '@/version';
 interface SettingsProps {
   highlightSection?: string | null;
 }
@@ -31,7 +32,8 @@ export const Settings: React.FC<SettingsProps> = ({
   const [showClientDetails, setShowClientDetails] = useState(false);
   const [selectedClient, setSelectedClient] = useState<Client | null>(null);
   const [nativeVersion, setNativeVersion] = useState<string | null>(null);
-  const [nativeBuild, setNativeBuild] = useState<string | null>(null);
+const [nativeBuild, setNativeBuild] = useState<string | null>(null);
+const [nativeId, setNativeId] = useState<string | null>(null);
 
   const handleClientDetailsOpen = (client: Client) => {
     setSelectedClient(client);
@@ -53,6 +55,7 @@ useEffect(() => {
       setNativeVersion(info.version ?? null);
       const buildVal = (info as any).build ?? null;
       setNativeBuild(buildVal != null ? String(buildVal) : null);
+      setNativeId((info as any).id ?? null);
     }).catch(() => {});
   }
 }, []);
@@ -134,12 +137,13 @@ return <div className="flex flex-col w-full bg-white overflow-x-hidden">
                 Privacy Policy
               </button>
               <div className="text-[#BFBFBF] text-xs font-normal">
-                <div>Web Version 1.0.3</div>
+                <div>Web Version {WEB_SEMVER} (build {WEB_BUILD})</div>
                 {nativeVersion && (
                   <div>
                     {`Native App ${nativeVersion}${nativeBuild ? ` (${nativeBuild})` : ''}`}
                   </div>
                 )}
+                {nativeId && <span className="block">Bundle ID: {nativeId}</span>}
                 <span className="block">Loaded from: {typeof window !== 'undefined' ? window.location.host : 'bundle'}</span>
                 <span className="block">Query: {typeof window !== 'undefined' ? window.location.search : ''}</span>
               </div>
