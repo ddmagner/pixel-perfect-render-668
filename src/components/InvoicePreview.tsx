@@ -4,7 +4,6 @@ import { format } from 'date-fns';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { formatCurrency, formatHours } from '@/lib/utils';
-import { useApp } from '@/context/AppContext';
 
 interface InvoicePreviewProps {
   settings: AppSettings;
@@ -17,7 +16,6 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
   const [loading, setLoading] = useState(true);
   const [invoiceNumber, setInvoiceNumber] = useState(settings.invoiceNumber);
   const { toast } = useToast();
-  const { incrementInvoiceNumber } = useApp();
 
   useEffect(() => {
     const fetchTimeEntries = async () => {
