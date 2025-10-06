@@ -536,9 +536,9 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
                     }
                   }
                 }}
-                className="text-[#09121F] hover:text-[#BFBFBF] transition-colors"
+                className="text-gray-400 hover:text-[#09121F]"
               >
-                <Pencil className="w-4 h-4" />
+                <Pencil size={16} />
               </button>
             </div>
           </div>
