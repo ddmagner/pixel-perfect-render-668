@@ -119,7 +119,9 @@ export const Settings: React.FC<SettingsProps> = ({
                 Privacy Policy
               </button>
               <div className="text-[#BFBFBF] text-xs font-normal">
-                Version 1.0.2
+                Version 1.0.3
+                <span className="block">Loaded from: {typeof window !== 'undefined' ? window.location.host : 'bundle'}</span>
+                <span className="block">Query: {typeof window !== 'undefined' ? window.location.search : ''}</span>
               </div>
             </div>
           </div>
