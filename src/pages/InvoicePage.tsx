@@ -250,7 +250,7 @@ const currentDate = new Date();
               <p>Due Date: {format(new Date(currentDate.getTime() + 30 * 24 * 60 * 60 * 1000), 'MM/dd/yy')}</p>
             </div>
             <div className="text-black print-text" style={{ fontSize: '11px', lineHeight: '1.2' }}>
-              Invoice #{settings?.invoiceNumber || 1}
+              Invoice #{String(settings?.invoiceNumber || 1).padStart(4, '0')}
             </div>
             <div className="text-black print-text" style={{ fontSize: '11px', lineHeight: '1.2' }}>
               Period: {entries.length > 0 ? format(new Date(Math.min(...entries.map(e => new Date(e.date).getTime()))), 'MM/dd/yy') : 'N/A'} - {entries.length > 0 ? format(new Date(Math.max(...entries.map(e => new Date(e.date).getTime()))), 'MM/dd/yy') : 'N/A'}

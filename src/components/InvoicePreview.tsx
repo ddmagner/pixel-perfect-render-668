@@ -188,21 +188,8 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                     <p>Invoice Date: {format(currentDate, 'MM/dd/yy')}</p>
                     <p>Due Date: {format(new Date(currentDate.getTime() + 30 * 24 * 60 * 60 * 1000), 'MM/dd/yy')}</p>
                   </div>
-                  <div className="flex items-center gap-2" style={{ fontSize: '11px', lineHeight: '1.2' }}>
-                    <span className="text-black">Invoice #</span>
-                    <input
-                      type="number"
-                      min="1"
-                      value={invoiceNumber}
-                      onChange={(e) => {
-                        const value = parseInt(e.target.value);
-                        if (!isNaN(value) && value >= 1) {
-                          setInvoiceNumber(value);
-                        }
-                      }}
-                      className="text-black border border-gray-300 rounded px-1 w-20 print:border-none print:bg-transparent"
-                      style={{ fontSize: '11px' }}
-                    />
+                  <div className="text-black" style={{ fontSize: '11px', lineHeight: '1.2' }}>
+                    Invoice #{String(invoiceNumber).padStart(4, '0')}
                   </div>
                 </>
               )}

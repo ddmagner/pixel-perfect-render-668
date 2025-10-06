@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useApp } from '@/context/AppContext';
 import { TaskType, TaxType, Project, Client } from '@/types';
-import { Edit3, Trash2, Plus } from 'lucide-react';
+import { Edit3, Trash2, Plus, Pencil } from 'lucide-react';
 import { formatCurrency } from '@/lib/utils';
 import { toast } from '@/hooks/use-toast';
 interface TimeEntrySettingsProps {
@@ -14,7 +14,8 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
 }) => {
   const {
     settings,
-    updateSettings
+    updateSettings,
+    viewMode
   } = useApp();
   const [editingTask, setEditingTask] = useState<TaskType | null>(null);
   const [editingTax, setEditingTax] = useState<TaxType | null>(null);
@@ -513,32 +514,34 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
         </section>
       )}
       
-      {/* Invoice Number */}
+      {/* Invoice/Time Card Number */}
       {settings.invoiceMode && (
         <section className="px-2.5 pb-[22px]">
-          <div className="pt-5 mb-3">
-            <h3 className="text-[#09121F] text-sm font-bold">Invoice Number</h3>
+          <div className="pt-[22px] mb-3">
+            <h3 className="text-[#09121F] text-sm font-bold">{viewMode === 'invoice' ? 'Invoice #' : 'Time Card #'}</h3>
           </div>
           <div className="border-b border-[#09121F] mb-3"></div>
           
           <div className="flex items-center justify-between">
-            <span className="text-[#09121F] text-sm">Next invoice number</span>
-            <input
-              type="number"
-              min="1"
-              value={settings.invoiceNumber}
-              onChange={(e) => {
-                const value = parseInt(e.target.value);
-                if (!isNaN(value) && value >= 1) {
-                  updateSettings({ invoiceNumber: value });
-                }
-              }}
-              className="text-[#09121F] text-sm bg-transparent border border-[#BFBFBF] rounded px-2 py-1 w-24 text-right"
-            />
+            <span className="text-[#09121F] text-sm">Auto-advances on each export</span>
+            <div className="flex items-center gap-2">
+              <span className="text-[#09121F] text-sm font-mono">{String(settings.invoiceNumber).padStart(4, '0')}</span>
+              <button
+                onClick={() => {
+                  const newNumber = prompt('Enter new number:', String(settings.invoiceNumber));
+                  if (newNumber) {
+                    const value = parseInt(newNumber);
+                    if (!isNaN(value) && value >= 1) {
+                      updateSettings({ invoiceNumber: value });
+                    }
+                  }
+                }}
+                className="text-[#09121F] hover:text-[#BFBFBF] transition-colors"
+              >
+                <Pencil className="w-4 h-4" />
+              </button>
+            </div>
           </div>
-          <p className="text-[#BFBFBF] text-xs mt-2">
-            This number will auto-increment with each invoice generation
-          </p>
         </section>
       )}
       
