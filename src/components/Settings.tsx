@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TimeEntrySettings } from './TimeEntrySettings';
 import { UserProfile } from './UserProfile';
@@ -10,6 +10,8 @@ import { useApp } from '@/context/AppContext';
 import { useAuth } from '@/hooks/useAuth';
 import { Clock, LogOut, FileText } from 'lucide-react';
 import type { Client } from '@/types';
+import { Capacitor } from '@capacitor/core';
+import { App as CapApp } from '@capacitor/app';
 interface SettingsProps {
   highlightSection?: string | null;
 }
@@ -28,6 +30,8 @@ export const Settings: React.FC<SettingsProps> = ({
   const [showInvoicePreview, setShowInvoicePreview] = useState(false);
   const [showClientDetails, setShowClientDetails] = useState(false);
   const [selectedClient, setSelectedClient] = useState<Client | null>(null);
+  const [nativeVersion, setNativeVersion] = useState<string | null>(null);
+  const [nativeBuild, setNativeBuild] = useState<string | null>(null);
 
   const handleClientDetailsOpen = (client: Client) => {
     setSelectedClient(client);
@@ -42,7 +46,18 @@ export const Settings: React.FC<SettingsProps> = ({
       invoiceMode: !settings.invoiceMode
     });
   };
-  return <div className="flex flex-col w-full bg-white overflow-x-hidden">
+useEffect(() => {
+  if (Capacitor.isNativePlatform()) {
+    CapApp.getInfo().then((info) => {
+      // info.version and info.build reflect the native app's Info.plist / Android manifest
+      setNativeVersion(info.version ?? null);
+      const buildVal = (info as any).build ?? null;
+      setNativeBuild(buildVal != null ? String(buildVal) : null);
+    }).catch(() => {});
+  }
+}, []);
+
+return <div className="flex flex-col w-full bg-white overflow-x-hidden">
       {/* Mode Toggle */}
       <div className="flex justify-center items-center w-full px-2.5 py-4">
         <div className="flex items-center gap-4">
@@ -119,7 +134,12 @@ export const Settings: React.FC<SettingsProps> = ({
                 Privacy Policy
               </button>
               <div className="text-[#BFBFBF] text-xs font-normal">
-                Version 1.0.3
+                <div>Web Version 1.0.3</div>
+                {nativeVersion && (
+                  <div>
+                    {`Native App ${nativeVersion}${nativeBuild ? ` (${nativeBuild})` : ''}`}
+                  </div>
+                )}
                 <span className="block">Loaded from: {typeof window !== 'undefined' ? window.location.host : 'bundle'}</span>
                 <span className="block">Query: {typeof window !== 'undefined' ? window.location.search : ''}</span>
               </div>
