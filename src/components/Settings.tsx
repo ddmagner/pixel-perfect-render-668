@@ -119,7 +119,7 @@ export const Settings: React.FC<SettingsProps> = ({
                 Privacy Policy
               </button>
               <div className="text-[#BFBFBF] text-xs font-normal">
-                Version 1.0.0
+                Version 1.0.2
               </div>
             </div>
           </div>
