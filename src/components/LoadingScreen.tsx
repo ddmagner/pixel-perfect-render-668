@@ -131,24 +131,12 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onLoadingComplete 
       <div className={`absolute bottom-1/3 flex items-center gap-3 transition-all duration-700 ${
         stage >= 4 ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
       }`}>
-        <div className="w-[28px] h-[28px] relative overflow-hidden">
+        <div className="relative overflow-hidden">
           <img 
-            src="/lovable-uploads/8829a351-d8df-4d66-829d-f34b1754bd35.png" 
-            alt="Logo" 
-            className={`w-full h-full transition-all duration-500 ${
+            src="/time-in-logo.png" 
+            alt="Time In Logo" 
+            className={`h-[28px] transition-all duration-500 ${
               stage >= 4 ? 'scale-100' : 'scale-0'
-            }`}
-            style={{
-              filter: 'brightness(0) invert(1)', // Make it white
-            }}
-          />
-        </div>
-        <div className="w-[182px] relative overflow-hidden">
-          <img 
-            src="/lovable-uploads/21706651-e7f7-4eec-b5d7-cd8ccf2a385f.png" 
-            alt="TIME IN Logo" 
-            className={`h-[28px] w-[182px] transition-all duration-700 delay-200 ${
-              stage >= 4 ? 'translate-x-0' : '-translate-x-full'
             }`}
             style={{
               filter: 'brightness(0) invert(1)', // Make it white

@@ -40,6 +40,6 @@ export const FONTS = {
 } as const;
 
 export const BRAND = {
-  icon: '/lovable-uploads/8829a351-d8df-4d66-829d-f34b1754bd35.png',
-  wordmark: '/lovable-uploads/21706651-e7f7-4eec-b5d7-cd8ccf2a385f.png',
+  icon: '/time-in-logo.png',
+  wordmark: '/time-in-logo.png',
 } as const;

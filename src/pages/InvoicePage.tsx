@@ -433,14 +433,8 @@ const currentDate = new Date();
               <span className="inline-flex items-baseline gap-1 leading-4 align-baseline">
                 <span>MADE WITH</span>
                 <img 
-                  src="/lovable-uploads/8829a351-d8df-4d66-829d-f34b1754bd35.png" 
-                  alt="Time In icon" 
-                  className="inline-block w-[9px] h-[9px] align-text-bottom"
-                  style={{ filter: 'grayscale(100%) brightness(0) invert(60%)' }}
-                />
-                <img 
-                  src="/lovable-uploads/21706651-e7f7-4eec-b5d7-cd8ccf2a385f.png" 
-                  alt="TIME IN wordmark" 
+                  src="/time-in-logo.png" 
+                  alt="Time In Logo" 
                   className="inline-block h-[9px] w-auto align-text-bottom"
                   style={{ filter: 'grayscale(100%) brightness(0) invert(60%)' }}
                 />
