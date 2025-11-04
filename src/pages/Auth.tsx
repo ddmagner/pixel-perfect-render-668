@@ -74,9 +74,12 @@ const Auth = () => {
           navigate('/');
         }
       }
-    } catch (error) {
+    } catch (error: any) {
+      console.error('Auth error:', error);
+      const errorMessage = error?.message || 'Network connection failed. Please check your internet connection and try again.';
       toast({
-        description: "An unexpected error occurred",
+        title: "Connection Error",
+        description: errorMessage,
         variant: "destructive"
       });
     } finally {
