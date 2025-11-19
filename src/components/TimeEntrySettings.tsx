@@ -287,6 +287,12 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
                           name: e.target.value,
                         })
                       }
+                      onBlur={() => {
+                        handleUpdateTask({
+                          ...editingTask,
+                          name: editingTask.name.trim(),
+                        });
+                      }}
                       onKeyDown={(e) => {
                         if (e.key === 'Enter') {
                           handleUpdateTask({
@@ -332,6 +338,10 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
                             ...editingTask,
                             hourlyRate: amount,
                           });
+                        }}
+                        onBlur={() => {
+                          handleUpdateTask(editingTask);
+                          setEditingTaskRateInput('');
                         }}
                         onKeyDown={(e) => {
                           if (e.key === 'Enter') {
