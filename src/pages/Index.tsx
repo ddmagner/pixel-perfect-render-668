@@ -67,10 +67,10 @@ const Index = () => {
     setFinalTranscript(transcript);
   };
 
-  const handleTimeEntrySubmit = (data: { duration: string; task: string; project: string; client: string }) => {
-    // Build a local YYYY-MM-DD string to avoid timezone shifts
-    const now = new Date();
-    const localDate = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+  const handleTimeEntrySubmit = (data: { duration: string; task: string; project: string; client: string; date: Date }) => {
+    // Build a local YYYY-MM-DD string from the selected date to avoid timezone shifts
+    const selectedDate = data.date;
+    const localDate = `${selectedDate.getFullYear()}-${String(selectedDate.getMonth() + 1).padStart(2, '0')}-${String(selectedDate.getDate()).padStart(2, '0')}`;
 
     addTimeEntry({
       duration: parseFloat(data.duration) || 0,
