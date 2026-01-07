@@ -319,6 +319,7 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
                     editingTask?.id === task.id ? (
                       <input
                         type="text"
+                        inputMode="decimal"
                         value={
                           editingTaskRateInput !== ''
                             ? editingTaskRateInput
@@ -353,7 +354,11 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
                             setEditingTaskRateInput('');
                           }
                         }}
-                        className="text-[#09121F] text-sm bg-transparent border-none outline-none w-full text-right h-5 leading-5 p-0 appearance-none"
+                        className="text-[#09121F] text-sm bg-transparent border-none outline-none w-full text-right h-5 leading-5 p-0 appearance-none cursor-text select-all"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          (e.target as HTMLInputElement).select();
+                        }}
                         onFocus={(e) => e.target.select()}
                         required
                       />
