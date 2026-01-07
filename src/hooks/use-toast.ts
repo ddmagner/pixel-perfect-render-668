@@ -1,4 +1,6 @@
 import * as React from "react"
+import { Haptics, ImpactStyle, NotificationType } from '@capacitor/haptics';
+import { Capacitor } from '@capacitor/core';
 
 import type {
   ToastActionElement,
@@ -14,7 +16,64 @@ type ToasterToast = ToastProps & {
   description?: React.ReactNode
   action?: ToastActionElement
   duration?: number
+  haptic?: 'success' | 'warning' | 'error' | 'reminder' | 'none'
 }
+
+// Haptic feedback functions for toasts
+const triggerHaptic = async (type: ToasterToast['haptic'], variant?: string) => {
+  const isNative = Capacitor.isNativePlatform();
+  
+  const webVibrate = (pattern: number | number[]) => {
+    if ('vibrate' in navigator) {
+      try {
+        navigator.vibrate(pattern);
+      } catch {}
+    }
+  };
+
+  // Determine haptic type based on variant if not explicitly set
+  const hapticType = type || (variant === 'destructive' ? 'error' : 'success');
+  
+  if (hapticType === 'none') return;
+
+  try {
+    if (isNative) {
+      switch (hapticType) {
+        case 'success':
+          await Haptics.notification({ type: NotificationType.Success });
+          break;
+        case 'warning':
+          await Haptics.notification({ type: NotificationType.Warning });
+          break;
+        case 'error':
+          await Haptics.notification({ type: NotificationType.Error });
+          break;
+        case 'reminder':
+          await Haptics.notification({ type: NotificationType.Warning });
+          await new Promise(r => setTimeout(r, 200));
+          await Haptics.impact({ style: ImpactStyle.Light });
+          break;
+      }
+    } else {
+      switch (hapticType) {
+        case 'success':
+          webVibrate([30, 80, 30]);
+          break;
+        case 'warning':
+          webVibrate([20, 60, 20, 60, 20]);
+          break;
+        case 'error':
+          webVibrate([50, 100, 50]);
+          break;
+        case 'reminder':
+          webVibrate([15, 100, 15, 100, 30]);
+          break;
+      }
+    }
+  } catch (error) {
+    console.debug('Toast haptics not available:', error);
+  }
+};
 
 const actionTypes = {
   ADD_TOAST: "ADD_TOAST",
@@ -140,7 +199,7 @@ function dispatch(action: Action) {
 
 type Toast = Omit<ToasterToast, "id">
 
-function toast({ ...props }: Toast) {
+function toast({ haptic, ...props }: Toast) {
   const id = genId()
 
   const update = (props: ToasterToast) =>
@@ -149,6 +208,9 @@ function toast({ ...props }: Toast) {
       toast: { ...props, id },
     })
   const dismiss = () => dispatch({ type: "DISMISS_TOAST", toastId: id })
+
+  // Trigger haptic feedback based on type or variant
+  triggerHaptic(haptic, props.variant);
 
   dispatch({
     type: "ADD_TOAST",
