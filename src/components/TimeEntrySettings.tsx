@@ -288,17 +288,28 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
                         })
                       }
                       onBlur={() => {
-                        handleUpdateTask({
-                          ...editingTask,
-                          name: editingTask.name.trim(),
+                        // Persist name changes, but keep edit mode so the user can tap into the rate field
+                        updateSettings({
+                          taskTypes: settings.taskTypes.map((t) =>
+                            t.id === editingTask.id
+                              ? { ...editingTask, name: editingTask.name.trim() }
+                              : t
+                          ),
                         });
+                        setEditingTask((prev) =>
+                          prev ? { ...prev, name: prev.name.trim() } : prev
+                        );
                       }}
                       onKeyDown={(e) => {
                         if (e.key === 'Enter') {
-                          handleUpdateTask({
-                            ...editingTask,
-                            name: editingTask.name.trim(),
+                          updateSettings({
+                            taskTypes: settings.taskTypes.map((t) =>
+                              t.id === editingTask.id
+                                ? { ...editingTask, name: editingTask.name.trim() }
+                                : t
+                            ),
                           });
+                          setEditingTask(null);
                         }
                         if (e.key === 'Escape') {
                           setEditingTask(null);
