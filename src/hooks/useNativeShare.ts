@@ -1,7 +1,7 @@
 import { useCallback } from 'react';
 import { Share } from '@capacitor/share';
-import { Capacitor } from '@capacitor/core';
 import despia from 'despia-native';
+import { useDespia } from './useDespia';
 import { useHaptics } from './useHaptics';
 
 interface ShareOptions {
@@ -12,8 +12,7 @@ interface ShareOptions {
 }
 
 export const useNativeShare = () => {
-  const isDespia = typeof navigator !== 'undefined' && navigator.userAgent.includes('despia');
-  const isNative = Capacitor.isNativePlatform();
+  const { isDespia, isNative } = useDespia();
   const { successNotification } = useHaptics();
 
   const canShare = useCallback(async (): Promise<boolean> => {

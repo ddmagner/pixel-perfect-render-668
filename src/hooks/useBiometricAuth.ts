@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import despia from 'despia-native';
+import { useDespia } from './useDespia';
 
 interface BiometricAuthState {
   isAvailable: boolean;
@@ -17,6 +18,8 @@ declare global {
 }
 
 export function useBiometricAuth() {
+  const { isDespia } = useDespia();
+  
   const [state, setState] = useState<BiometricAuthState>({
     isAvailable: false,
     isAuthenticated: false,
@@ -24,10 +27,8 @@ export function useBiometricAuth() {
     error: null,
   });
 
-  const isDespiaNative = typeof navigator !== 'undefined' && navigator.userAgent.includes('despia');
-
   useEffect(() => {
-    if (!isDespiaNative) {
+    if (!isDespia) {
       return;
     }
 
@@ -71,10 +72,10 @@ export function useBiometricAuth() {
       delete window.onBioAuthFailure;
       delete window.onBioAuthUnavailable;
     };
-  }, [isDespiaNative]);
+  }, [isDespia]);
 
   const authenticate = useCallback(() => {
-    if (!isDespiaNative) {
+    if (!isDespia) {
       setState(prev => ({
         ...prev,
         error: 'Biometric authentication is only available in the native app',
@@ -90,21 +91,21 @@ export function useBiometricAuth() {
 
     // Trigger biometric authentication
     despia('bioauth://');
-  }, [isDespiaNative]);
+  }, [isDespia]);
 
   const reset = useCallback(() => {
     setState({
-      isAvailable: isDespiaNative,
+      isAvailable: isDespia,
       isAuthenticated: false,
       isAuthenticating: false,
       error: null,
     });
-  }, [isDespiaNative]);
+  }, [isDespia]);
 
   return {
     ...state,
     authenticate,
     reset,
-    isDespiaNative,
+    isDespiaNative: isDespia,
   };
 }
