@@ -2,12 +2,16 @@ import { useMemo, useCallback } from 'react';
 import { Capacitor } from '@capacitor/core';
 import despia from 'despia-native';
 
-export type Platform = 'despia' | 'ios' | 'android' | 'web';
+export type Platform = 'despia-ios' | 'despia-android' | 'despia' | 'ios' | 'android' | 'web';
 
 export interface DespiaEnvironment {
   isDespia: boolean;
+  isDespiaIOS: boolean;
+  isDespiaAndroid: boolean;
   isNative: boolean;
   isWeb: boolean;
+  isIOS: boolean;
+  isAndroid: boolean;
   platform: Platform;
 }
 
@@ -26,19 +30,34 @@ export interface UseDespia extends DespiaEnvironment {
 
 // Static detection (runs once at module load)
 const detectEnvironment = (): DespiaEnvironment => {
-  const isDespia = typeof navigator !== 'undefined' && navigator.userAgent.includes('despia');
+  const ua = typeof navigator !== 'undefined' ? navigator.userAgent.toLowerCase() : '';
+  
+  const isDespia = ua.includes('despia');
+  const isDespiaIOS = isDespia && (ua.includes('iphone') || ua.includes('ipad'));
+  const isDespiaAndroid = isDespia && ua.includes('android');
+  
   const isCapacitorNative = Capacitor.isNativePlatform();
+  const capacitorPlatform = isCapacitorNative ? Capacitor.getPlatform() : null;
+  
   const isNative = isDespia || isCapacitorNative;
   const isWeb = !isNative;
+  const isIOS = isDespiaIOS || capacitorPlatform === 'ios';
+  const isAndroid = isDespiaAndroid || capacitorPlatform === 'android';
   
   let platform: Platform = 'web';
-  if (isDespia) {
+  if (isDespiaIOS) {
+    platform = 'despia-ios';
+  } else if (isDespiaAndroid) {
+    platform = 'despia-android';
+  } else if (isDespia) {
     platform = 'despia';
-  } else if (isCapacitorNative) {
-    platform = Capacitor.getPlatform() as 'ios' | 'android';
+  } else if (capacitorPlatform === 'ios') {
+    platform = 'ios';
+  } else if (capacitorPlatform === 'android') {
+    platform = 'android';
   }
   
-  return { isDespia, isNative, isWeb, platform };
+  return { isDespia, isDespiaIOS, isDespiaAndroid, isNative, isWeb, isIOS, isAndroid, platform };
 };
 
 // Cached environment detection
