@@ -6,6 +6,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AppProvider } from "./context/AppContext";
 import { SubscriptionProvider } from "./context/SubscriptionContext";
 import { ProtectedRoute } from "./components/ProtectedRoute";
+import SpaRedirector from "./components/SpaRedirector";
 import Index from "./pages/Index";
 import { TimeArchivePage } from "./pages/TimeArchive";
 import SettingsPage from "./pages/Settings";
@@ -13,6 +14,7 @@ import ClientAddressPage from "./pages/ClientAddress";
 import TermsOfUsePage from "./pages/TermsOfUse";
 import PrivacyPolicyPage from "./pages/PrivacyPolicy";
 import Auth from "./pages/Auth";
+import NativeCallback from "./pages/NativeCallback";
 import NotFound from "./pages/NotFound";
 import ScrollToTop from "./components/ScrollToTop";
 import InvoicePage from "./pages/InvoicePage";
@@ -27,9 +29,11 @@ const App = () => (
           <Toaster />
           <Sonner />
           <BrowserRouter>
+            <SpaRedirector />
             <ScrollToTop />
             <Routes>
               <Route path="/auth" element={<Auth />} />
+              <Route path="/native-callback" element={<NativeCallback />} />
               <Route path="/" element={
                 <ProtectedRoute>
                   <Index />
