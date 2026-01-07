@@ -801,7 +801,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                   })()}
                          </div>
                          <div></div>
-                         <div className="text-left font-bold text-[#09121F] text-sm col-span-3">
+                         <div className={`text-left font-bold text-[#09121F] text-sm ${settings.invoiceMode ? 'col-span-7' : 'col-span-5'}`}>
                            {editingSubgroupHeader?.groupName === group.name && editingSubgroupHeader?.subgroupName === subgroup.name ? <input type="text" defaultValue={subgroup.name} className="text-sm font-bold bg-transparent border-none outline-none focus:bg-white focus:border focus:border-gray-300 rounded w-full" autoFocus onBlur={e => handleSubgroupHeaderSave(group.name, subgroup.name, e.target.value, group.type)} onKeyDown={e => {
                     if (e.key === 'Enter') handleSubgroupHeaderSave(group.name, subgroup.name, e.currentTarget.value, group.type);
                     if (e.key === 'Escape') setEditingSubgroupHeader(null);
@@ -812,12 +812,6 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                                {subgroup.name}
                              </span>}
                          </div>
-                         <div></div>
-                         <div></div>
-                         {settings.invoiceMode && <>
-                             <div></div>
-                             <div></div>
-                           </>}
                       </div>
 
                        {/* Entries */}
