@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Eye, EyeOff } from 'lucide-react';
+import { Eye, EyeOff, Scan } from 'lucide-react';
+import { useBiometricAuth } from '@/hooks/useBiometricAuth';
 const Auth = () => {
   const navigate = useNavigate();
   const {
@@ -18,6 +19,41 @@ const Auth = () => {
     password: '',
     confirmPassword: ''
   });
+
+  const {
+    isAvailable: isBiometricAvailable,
+    isAuthenticated: isBiometricAuthenticated,
+    isAuthenticating: isBiometricAuthenticating,
+    authenticate: authenticateWithBiometric,
+    error: biometricError,
+    isDespiaNative
+  } = useBiometricAuth();
+
+  // Handle successful biometric authentication
+  useEffect(() => {
+    if (isBiometricAuthenticated) {
+      // Check if there's a stored session
+      supabase.auth.getSession().then(({ data: { session } }) => {
+        if (session) {
+          navigate('/');
+        } else {
+          toast({
+            description: "Face ID verified. Please sign in with your credentials.",
+          });
+        }
+      });
+    }
+  }, [isBiometricAuthenticated, navigate, toast]);
+
+  // Show biometric error
+  useEffect(() => {
+    if (biometricError) {
+      toast({
+        description: biometricError,
+        variant: "destructive"
+      });
+    }
+  }, [biometricError, toast]);
   const handleAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -159,12 +195,26 @@ const Auth = () => {
                 </div>
               </div>}
 
-            <div className="w-full px-0 pt-[25px] pb-1">
+            <div className="w-full px-0 pt-[25px] pb-1 flex flex-col gap-3">
               <button type="submit" disabled={loading} className="w-full text-white py-3.5 font-bold text-[15px] transition-colors" style={{
               backgroundColor: '#09121F'
             }} aria-label={isSignUp ? 'Create Account' : 'Sign In'}>
                 {loading ? 'Please wait...' : isSignUp ? 'Create Account' : 'Sign In'}
               </button>
+
+              {/* Face ID Button - Only show on sign in and when in Despia native environment */}
+              {!isSignUp && isDespiaNative && (
+                <button
+                  type="button"
+                  onClick={authenticateWithBiometric}
+                  disabled={isBiometricAuthenticating}
+                  className="w-full py-3.5 font-bold text-[15px] transition-colors flex items-center justify-center gap-2 border border-[#09121F] text-[#09121F] hover:bg-[#09121F]/5"
+                  aria-label="Sign in with Face ID"
+                >
+                  <Scan size={20} />
+                  {isBiometricAuthenticating ? 'Authenticating...' : 'Sign in with Face ID'}
+                </button>
+              )}
             </div>
           </form>
 
