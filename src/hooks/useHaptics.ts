@@ -1,8 +1,10 @@
 import { Haptics, ImpactStyle, NotificationType } from '@capacitor/haptics';
 import { Capacitor } from '@capacitor/core';
+import despia from 'despia-native';
 
 export const useHaptics = () => {
   const isNative = Capacitor.isNativePlatform();
+  const isDespia = typeof navigator !== 'undefined' && navigator.userAgent.includes('despia');
 
   // Web vibration fallback function
   const webVibrate = (pattern: number | number[]) => {
@@ -19,7 +21,9 @@ export const useHaptics = () => {
 
   const lightImpact = async () => {
     try {
-      if (isNative) {
+      if (isDespia) {
+        despia('lighthaptic://');
+      } else if (isNative) {
         await Haptics.impact({ style: ImpactStyle.Light });
       } else {
         webVibrate(20);
@@ -32,7 +36,9 @@ export const useHaptics = () => {
 
   const mediumImpact = async () => {
     try {
-      if (isNative) {
+      if (isDespia) {
+        despia('lighthaptic://');
+      } else if (isNative) {
         await Haptics.impact({ style: ImpactStyle.Medium });
       } else {
         webVibrate(40);
@@ -45,7 +51,9 @@ export const useHaptics = () => {
 
   const heavyImpact = async () => {
     try {
-      if (isNative) {
+      if (isDespia) {
+        despia('heavyhaptic://');
+      } else if (isNative) {
         await Haptics.impact({ style: ImpactStyle.Heavy });
       } else {
         webVibrate(60);
@@ -58,7 +66,9 @@ export const useHaptics = () => {
 
   const selectionStart = async () => {
     try {
-      if (isNative) {
+      if (isDespia) {
+        despia('lighthaptic://');
+      } else if (isNative) {
         await Haptics.selectionStart();
       } else {
         webVibrate(15);
@@ -71,7 +81,9 @@ export const useHaptics = () => {
 
   const selectionChanged = async () => {
     try {
-      if (isNative) {
+      if (isDespia) {
+        despia('lighthaptic://');
+      } else if (isNative) {
         await Haptics.selectionChanged();
       } else {
         webVibrate(10);
@@ -84,7 +96,9 @@ export const useHaptics = () => {
 
   const selectionEnd = async () => {
     try {
-      if (isNative) {
+      if (isDespia) {
+        despia('lighthaptic://');
+      } else if (isNative) {
         await Haptics.selectionEnd();
       } else {
         webVibrate([15, 50, 15]);
@@ -98,10 +112,11 @@ export const useHaptics = () => {
   // Notification-specific haptic patterns
   const successNotification = async () => {
     try {
-      if (isNative) {
+      if (isDespia) {
+        despia('successhaptic://');
+      } else if (isNative) {
         await Haptics.notification({ type: NotificationType.Success });
       } else {
-        // Double tap pattern for success
         webVibrate([30, 80, 30]);
       }
     } catch (error) {
@@ -112,10 +127,11 @@ export const useHaptics = () => {
 
   const warningNotification = async () => {
     try {
-      if (isNative) {
+      if (isDespia) {
+        despia('warninghaptic://');
+      } else if (isNative) {
         await Haptics.notification({ type: NotificationType.Warning });
       } else {
-        // Triple short pulses for warning
         webVibrate([20, 60, 20, 60, 20]);
       }
     } catch (error) {
@@ -126,10 +142,11 @@ export const useHaptics = () => {
 
   const errorNotification = async () => {
     try {
-      if (isNative) {
+      if (isDespia) {
+        despia('errorhaptic://');
+      } else if (isNative) {
         await Haptics.notification({ type: NotificationType.Error });
       } else {
-        // Strong double buzz for error
         webVibrate([50, 100, 50]);
       }
     } catch (error) {
@@ -141,12 +158,13 @@ export const useHaptics = () => {
   // Custom patterns for specific app actions
   const timerStart = async () => {
     try {
-      if (isNative) {
+      if (isDespia) {
+        despia('successhaptic://');
+      } else if (isNative) {
         await Haptics.impact({ style: ImpactStyle.Medium });
         await new Promise(r => setTimeout(r, 100));
         await Haptics.impact({ style: ImpactStyle.Light });
       } else {
-        // Ascending pattern for start
         webVibrate([25, 50, 40]);
       }
     } catch (error) {
@@ -157,12 +175,13 @@ export const useHaptics = () => {
 
   const timerStop = async () => {
     try {
-      if (isNative) {
+      if (isDespia) {
+        despia('lighthaptic://');
+      } else if (isNative) {
         await Haptics.impact({ style: ImpactStyle.Light });
         await new Promise(r => setTimeout(r, 100));
         await Haptics.impact({ style: ImpactStyle.Medium });
       } else {
-        // Descending pattern for stop
         webVibrate([40, 50, 25]);
       }
     } catch (error) {
@@ -173,12 +192,13 @@ export const useHaptics = () => {
 
   const reminder = async () => {
     try {
-      if (isNative) {
+      if (isDespia) {
+        despia('warninghaptic://');
+      } else if (isNative) {
         await Haptics.notification({ type: NotificationType.Warning });
         await new Promise(r => setTimeout(r, 200));
         await Haptics.impact({ style: ImpactStyle.Light });
       } else {
-        // Gentle reminder pattern
         webVibrate([15, 100, 15, 100, 30]);
       }
     } catch (error) {
@@ -189,14 +209,17 @@ export const useHaptics = () => {
 
   const celebration = async () => {
     try {
-      if (isNative) {
+      if (isDespia) {
+        despia('successhaptic://');
+        await new Promise(r => setTimeout(r, 150));
+        despia('lighthaptic://');
+      } else if (isNative) {
         await Haptics.notification({ type: NotificationType.Success });
         await new Promise(r => setTimeout(r, 150));
         await Haptics.impact({ style: ImpactStyle.Light });
         await new Promise(r => setTimeout(r, 100));
         await Haptics.impact({ style: ImpactStyle.Light });
       } else {
-        // Celebratory burst pattern
         webVibrate([30, 60, 20, 60, 20, 60, 40]);
       }
     } catch (error) {
