@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import despia from 'despia-native';
+import { useDespia } from './useDespia';
 
 interface PurchaseData {
   planID: string;
@@ -21,6 +22,8 @@ declare global {
 }
 
 export function useRevenueCat() {
+  const { isDespia } = useDespia();
+  
   const [state, setState] = useState<RevenueCatState>({
     isPurchasing: false,
     purchaseSuccess: false,
@@ -28,10 +31,8 @@ export function useRevenueCat() {
     lastPurchase: null,
   });
 
-  const isDespiaNative = typeof navigator !== 'undefined' && navigator.userAgent.includes('despia');
-
   useEffect(() => {
-    if (!isDespiaNative) {
+    if (!isDespia) {
       return;
     }
 
@@ -50,10 +51,10 @@ export function useRevenueCat() {
     return () => {
       delete window.iapSuccess;
     };
-  }, [isDespiaNative]);
+  }, [isDespia]);
 
   const purchase = useCallback((userId: string, productId: string) => {
-    if (!isDespiaNative) {
+    if (!isDespia) {
       setState(prev => ({
         ...prev,
         purchaseError: 'In-app purchases are only available in the native app',
@@ -70,7 +71,7 @@ export function useRevenueCat() {
 
     // Trigger RevenueCat purchase
     despia(`revenuecat://purchase?external_id=${userId}&product=${productId}`);
-  }, [isDespiaNative]);
+  }, [isDespia]);
 
   const reset = useCallback(() => {
     setState({
@@ -85,6 +86,6 @@ export function useRevenueCat() {
     ...state,
     purchase,
     reset,
-    isDespiaNative,
+    isDespiaNative: isDespia,
   };
 }
