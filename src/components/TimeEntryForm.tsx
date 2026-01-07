@@ -36,7 +36,7 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
     updateSettings
   } = useApp();
   const { toast } = useToast();
-  const { lightImpact, mediumImpact } = useHaptics();
+  const { successNotification, errorNotification } = useHaptics();
   const [formData, setFormData] = useState<TimeEntryData>({
     duration: '',
     task: '',
@@ -103,7 +103,7 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
     
     // Validate that all fields have data
     if (!formData.duration.trim() || !formData.task.trim() || !formData.project.trim() || !formData.client.trim()) {
-      mediumImpact(); // Error haptic feedback
+      errorNotification();
       toast({
         description: "Please fill in all fields.",
         variant: "destructive",
@@ -126,7 +126,7 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
       // Wait a moment for the settings to be updated
       await new Promise(resolve => setTimeout(resolve, 100));
       
-      lightImpact(); // Success haptic feedback
+      successNotification();
       onSubmit(formData);
       
       // Show toast notification

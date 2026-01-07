@@ -31,8 +31,8 @@ export const RecordButton: React.FC<RecordButtonProps> = ({
     requestMicrophonePermission
   } = useApp();
   const {
-    mediumImpact,
-    lightImpact
+    timerStart,
+    timerStop
   } = useHaptics();
   useEffect(() => {
     if (transcript) {
@@ -58,7 +58,7 @@ export const RecordButton: React.FC<RecordButtonProps> = ({
       (e.currentTarget as any).setPointerCapture?.(e.pointerId);
     } catch {}
     setIsPressed(true);
-    mediumImpact();
+    timerStart();
     onRecordStart();
     if (isSupported) {
       resetTranscript();
@@ -68,7 +68,7 @@ export const RecordButton: React.FC<RecordButtonProps> = ({
   const stopRecordingIfActive = () => {
     if (!isPressed) return;
     setIsPressed(false);
-    lightImpact();
+    timerStop();
     onRecordStop();
     if (isSupported) {
       stopListening();
