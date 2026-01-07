@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AppProvider } from "./context/AppContext";
+import { SubscriptionProvider } from "./context/SubscriptionContext";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import Index from "./pages/Index";
 import { TimeArchivePage } from "./pages/TimeArchive";
@@ -21,49 +22,51 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <AppProvider>
-      <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <BrowserRouter>
-          <ScrollToTop />
-          <Routes>
-            <Route path="/auth" element={<Auth />} />
-            <Route path="/" element={
-              <ProtectedRoute>
-                <Index />
-              </ProtectedRoute>
-            } />
-            <Route path="/archive" element={
-              <ProtectedRoute>
-                <TimeArchivePage />
-              </ProtectedRoute>
-            } />
-            <Route path="/settings" element={
-              <ProtectedRoute>
-                <SettingsPage />
-              </ProtectedRoute>
-            } />
-            <Route path="/client-address" element={
-              <ProtectedRoute>
-                <ClientAddressPage />
-              </ProtectedRoute>
-            } />
-            <Route path="/terms" element={
-              <ProtectedRoute>
-                <TermsOfUsePage />
-              </ProtectedRoute>
-            } />
-            <Route path="/privacy" element={
-              <ProtectedRoute>
-                <PrivacyPolicyPage />
-              </ProtectedRoute>
-            } />
-            <Route path="/invoice" element={<InvoicePage />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </BrowserRouter>
-      </TooltipProvider>
+      <SubscriptionProvider>
+        <TooltipProvider>
+          <Toaster />
+          <Sonner />
+          <BrowserRouter>
+            <ScrollToTop />
+            <Routes>
+              <Route path="/auth" element={<Auth />} />
+              <Route path="/" element={
+                <ProtectedRoute>
+                  <Index />
+                </ProtectedRoute>
+              } />
+              <Route path="/archive" element={
+                <ProtectedRoute>
+                  <TimeArchivePage />
+                </ProtectedRoute>
+              } />
+              <Route path="/settings" element={
+                <ProtectedRoute>
+                  <SettingsPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/client-address" element={
+                <ProtectedRoute>
+                  <ClientAddressPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/terms" element={
+                <ProtectedRoute>
+                  <TermsOfUsePage />
+                </ProtectedRoute>
+              } />
+              <Route path="/privacy" element={
+                <ProtectedRoute>
+                  <PrivacyPolicyPage />
+                </ProtectedRoute>
+              } />
+              <Route path="/invoice" element={<InvoicePage />} />
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </BrowserRouter>
+        </TooltipProvider>
+      </SubscriptionProvider>
     </AppProvider>
   </QueryClientProvider>
 );
