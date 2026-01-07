@@ -32,9 +32,8 @@ export const Settings: React.FC<SettingsProps> = ({
   const [showClientDetails, setShowClientDetails] = useState(false);
   const [selectedClient, setSelectedClient] = useState<Client | null>(null);
   const [nativeVersion, setNativeVersion] = useState<string | null>(null);
-const [nativeBuild, setNativeBuild] = useState<string | null>(null);
-const [nativeId, setNativeId] = useState<string | null>(null);
-
+  const [nativeBuild, setNativeBuild] = useState<string | null>(null);
+  const [nativeId, setNativeId] = useState<string | null>(null);
   const handleClientDetailsOpen = (client: Client) => {
     setSelectedClient(client);
     setShowClientDetails(true);
@@ -48,19 +47,18 @@ const [nativeId, setNativeId] = useState<string | null>(null);
       invoiceMode: !settings.invoiceMode
     });
   };
-useEffect(() => {
-  if (Capacitor.isNativePlatform()) {
-    CapApp.getInfo().then((info) => {
-      // info.version and info.build reflect the native app's Info.plist / Android manifest
-      setNativeVersion(info.version ?? null);
-      const buildVal = (info as any).build ?? null;
-      setNativeBuild(buildVal != null ? String(buildVal) : null);
-      setNativeId((info as any).id ?? null);
-    }).catch(() => {});
-  }
-}, []);
-
-return <div className="flex flex-col w-full bg-white overflow-x-hidden">
+  useEffect(() => {
+    if (Capacitor.isNativePlatform()) {
+      CapApp.getInfo().then(info => {
+        // info.version and info.build reflect the native app's Info.plist / Android manifest
+        setNativeVersion(info.version ?? null);
+        const buildVal = (info as any).build ?? null;
+        setNativeBuild(buildVal != null ? String(buildVal) : null);
+        setNativeId((info as any).id ?? null);
+      }).catch(() => {});
+    }
+  }, []);
+  return <div className="flex flex-col w-full bg-white overflow-x-hidden">
       {/* Mode Toggle */}
       <div className="flex justify-center items-center w-full px-2.5 py-4">
         <div className="flex items-center gap-4">
@@ -138,14 +136,12 @@ return <div className="flex flex-col w-full bg-white overflow-x-hidden">
               </button>
               <div className="text-[#BFBFBF] text-xs font-normal">
                 <div>Web Version {WEB_SEMVER} (build {WEB_BUILD})</div>
-                {nativeVersion && (
-                  <div>
+                {nativeVersion && <div>
                     {`Native App ${nativeVersion}${nativeBuild ? ` (${nativeBuild})` : ''}`}
-                  </div>
-                )}
+                  </div>}
                 {nativeId && <span className="block">Bundle ID: {nativeId}</span>}
-                <span className="block">Loaded from: {typeof window !== 'undefined' ? window.location.host : 'bundle'}</span>
-                <span className="block">Query: {typeof window !== 'undefined' ? window.location.search : ''}</span>
+                
+                
               </div>
             </div>
           </div>
@@ -169,12 +165,8 @@ return <div className="flex flex-col w-full bg-white overflow-x-hidden">
       {showInvoicePreview && <InvoicePreview settings={settings} onClose={() => setShowInvoicePreview(false)} />}
 
       {/* Client Details Drawer */}
-      <ClientDetailsDrawer 
-        isOpen={showClientDetails} 
-        onClose={() => {
-          setShowClientDetails(false);
-        }} 
-        client={selectedClient} 
-      />
+      <ClientDetailsDrawer isOpen={showClientDetails} onClose={() => {
+      setShowClientDetails(false);
+    }} client={selectedClient} />
     </div>;
 };
