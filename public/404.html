@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Redirecting...</title>
+    <script>
+      // SPA fallback - preserves path and hash for OAuth tokens
+      // When static hosts return 404 for routes like /auth#access_token=xxx,
+      // this script stores the path and redirects to the main page
+      var path = window.location.pathname + window.location.search;
+      var hash = window.location.hash;
+      // Redirect to /?redirect=path, hash is preserved automatically
+      window.location.replace('/?redirect=' + encodeURIComponent(path) + hash);
+    </script>
+  </head>
+  <body>
+    <p>Redirecting...</p>
+  </body>
+</html>

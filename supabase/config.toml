@@ -1,5 +1,8 @@
 project_id = "umvhwbshppchbkgqhepk"
 
+[functions.auth-start]
+verify_jwt = false
+
 [functions.revenuecat-webhook]
 verify_jwt = false
 
