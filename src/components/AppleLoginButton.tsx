@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import despia from 'despia-native';
-import { useDespia } from '@/hooks/useDespia';
 import { useHaptics } from '@/hooks/useHaptics';
 
 interface AppleLoginButtonProps {
@@ -16,13 +15,15 @@ interface AppleLoginButtonProps {
  */
 const AppleLoginButton = ({ className }: AppleLoginButtonProps) => {
   const [isLoading, setIsLoading] = useState(false);
-  const { isDespia, isIOS } = useDespia();
   const { lightImpact } = useHaptics();
+  
+  // Direct userAgent check per Despia docs
+  const isNative = navigator.userAgent.toLowerCase().includes('despia');
 
   const handleAppleLogin = async () => {
     lightImpact();
     
-    if (isDespia) {
+    if (isNative) {
       // NATIVE FLOW
       setIsLoading(true);
       
