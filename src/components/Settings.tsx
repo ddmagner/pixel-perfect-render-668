@@ -6,9 +6,12 @@ import { ColorCustomization } from './ColorCustomization';
 import { TimeArchive } from './TimeArchive';
 import { InvoicePreview } from './InvoicePreview';
 import { ClientDetailsDrawer } from './ClientDetailsDrawer';
+import { Paywall } from './Paywall';
 import { useApp } from '@/context/AppContext';
 import { useAuth } from '@/hooks/useAuth';
-import { Clock, LogOut, FileText } from 'lucide-react';
+import { useSubscription } from '@/context/SubscriptionContext';
+import { usePaywall } from '@/hooks/usePaywall';
+import { Clock, LogOut, FileText, Crown } from 'lucide-react';
 import type { Client } from '@/types';
 import { Capacitor } from '@capacitor/core';
 import { App as CapApp } from '@capacitor/app';
@@ -27,6 +30,8 @@ export const Settings: React.FC<SettingsProps> = ({
     settings,
     updateSettings
   } = useApp();
+  const { isPremium } = useSubscription();
+  const { isOpen: isPaywallOpen, openPaywall, closePaywall } = usePaywall();
   const [showColorOverlay, setShowColorOverlay] = useState(false);
   const [showInvoicePreview, setShowInvoicePreview] = useState(false);
   const [showClientDetails, setShowClientDetails] = useState(false);
@@ -115,6 +120,53 @@ export const Settings: React.FC<SettingsProps> = ({
             </div>
           </div>
         </div>
+
+        {/* Premium Subscription Section */}
+        {!isPremium && (
+          <>
+            <div className="w-full h-[10px] bg-[#E5E5E5]" />
+            <div className="px-2.5 pt-0.5 pb-1">
+              <div className="py-4">
+                <button
+                  onClick={openPaywall}
+                  className="w-full flex items-center justify-between p-4 bg-primary/5 rounded-xl hover:bg-primary/10 transition-colors"
+                >
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center">
+                      <Crown size={20} className="text-primary-foreground" />
+                    </div>
+                    <div className="text-left">
+                      <div className="text-foreground font-semibold">Upgrade to Premium</div>
+                      <div className="text-muted-foreground text-sm">Unlock all features</div>
+                    </div>
+                  </div>
+                  <svg width="8" height="14" viewBox="0 0 8 14" fill="none" className="text-muted-foreground">
+                    <path d="M1 1L7 7L1 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </>
+        )}
+
+        {isPremium && (
+          <>
+            <div className="w-full h-[10px] bg-[#E5E5E5]" />
+            <div className="px-2.5 pt-0.5 pb-1">
+              <div className="py-4">
+                <div className="flex items-center gap-3 p-4 bg-primary/5 rounded-xl">
+                  <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center">
+                    <Crown size={20} className="text-primary-foreground" />
+                  </div>
+                  <div>
+                    <div className="text-foreground font-semibold">Premium Member</div>
+                    <div className="text-muted-foreground text-sm">All features unlocked</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </>
+        )}
         
         {/* Sign Out Section */}
         <div className="w-full h-[10px] bg-[#E5E5E5]" />
@@ -168,5 +220,8 @@ export const Settings: React.FC<SettingsProps> = ({
       <ClientDetailsDrawer isOpen={showClientDetails} onClose={() => {
       setShowClientDetails(false);
     }} client={selectedClient} />
+
+      {/* Paywall */}
+      <Paywall isOpen={isPaywallOpen} onClose={closePaywall} />
     </div>;
 };
