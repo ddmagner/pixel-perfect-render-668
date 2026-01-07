@@ -1,4 +1,4 @@
-import { Haptics, ImpactStyle } from '@capacitor/haptics';
+import { Haptics, ImpactStyle, NotificationType } from '@capacitor/haptics';
 import { Capacitor } from '@capacitor/core';
 
 export const useHaptics = () => {
@@ -6,21 +6,14 @@ export const useHaptics = () => {
 
   // Web vibration fallback function
   const webVibrate = (pattern: number | number[]) => {
-    console.log('Attempting web vibration, isNative:', isNative);
-    console.log('Navigator vibrate available:', 'vibrate' in navigator);
-    console.log('User agent:', navigator.userAgent);
-    
     if ('vibrate' in navigator) {
       try {
-        const result = navigator.vibrate(pattern);
-        console.log('Vibration result:', result);
-        return result;
+        return navigator.vibrate(pattern);
       } catch (error) {
         console.debug('Web vibration failed:', error);
         return false;
       }
     }
-    console.log('Vibration API not available');
     return false;
   };
 
@@ -29,12 +22,10 @@ export const useHaptics = () => {
       if (isNative) {
         await Haptics.impact({ style: ImpactStyle.Light });
       } else {
-        // Light vibration: short pulse
         webVibrate(20);
       }
     } catch (error) {
       console.debug('Haptics not available:', error);
-      // Fallback to web vibration if Capacitor fails
       webVibrate(20);
     }
   };
@@ -44,7 +35,6 @@ export const useHaptics = () => {
       if (isNative) {
         await Haptics.impact({ style: ImpactStyle.Medium });
       } else {
-        // Medium vibration: medium pulse
         webVibrate(40);
       }
     } catch (error) {
@@ -58,7 +48,6 @@ export const useHaptics = () => {
       if (isNative) {
         await Haptics.impact({ style: ImpactStyle.Heavy });
       } else {
-        // Heavy vibration: strong pulse
         webVibrate(60);
       }
     } catch (error) {
@@ -72,7 +61,6 @@ export const useHaptics = () => {
       if (isNative) {
         await Haptics.selectionStart();
       } else {
-        // Selection start: subtle pulse
         webVibrate(15);
       }
     } catch (error) {
@@ -86,7 +74,6 @@ export const useHaptics = () => {
       if (isNative) {
         await Haptics.selectionChanged();
       } else {
-        // Selection changed: very light pulse
         webVibrate(10);
       }
     } catch (error) {
@@ -100,7 +87,6 @@ export const useHaptics = () => {
       if (isNative) {
         await Haptics.selectionEnd();
       } else {
-        // Selection end: double light pulse
         webVibrate([15, 50, 15]);
       }
     } catch (error) {
@@ -109,12 +95,133 @@ export const useHaptics = () => {
     }
   };
 
+  // Notification-specific haptic patterns
+  const successNotification = async () => {
+    try {
+      if (isNative) {
+        await Haptics.notification({ type: NotificationType.Success });
+      } else {
+        // Double tap pattern for success
+        webVibrate([30, 80, 30]);
+      }
+    } catch (error) {
+      console.debug('Haptics not available:', error);
+      webVibrate([30, 80, 30]);
+    }
+  };
+
+  const warningNotification = async () => {
+    try {
+      if (isNative) {
+        await Haptics.notification({ type: NotificationType.Warning });
+      } else {
+        // Triple short pulses for warning
+        webVibrate([20, 60, 20, 60, 20]);
+      }
+    } catch (error) {
+      console.debug('Haptics not available:', error);
+      webVibrate([20, 60, 20, 60, 20]);
+    }
+  };
+
+  const errorNotification = async () => {
+    try {
+      if (isNative) {
+        await Haptics.notification({ type: NotificationType.Error });
+      } else {
+        // Strong double buzz for error
+        webVibrate([50, 100, 50]);
+      }
+    } catch (error) {
+      console.debug('Haptics not available:', error);
+      webVibrate([50, 100, 50]);
+    }
+  };
+
+  // Custom patterns for specific app actions
+  const timerStart = async () => {
+    try {
+      if (isNative) {
+        await Haptics.impact({ style: ImpactStyle.Medium });
+        await new Promise(r => setTimeout(r, 100));
+        await Haptics.impact({ style: ImpactStyle.Light });
+      } else {
+        // Ascending pattern for start
+        webVibrate([25, 50, 40]);
+      }
+    } catch (error) {
+      console.debug('Haptics not available:', error);
+      webVibrate([25, 50, 40]);
+    }
+  };
+
+  const timerStop = async () => {
+    try {
+      if (isNative) {
+        await Haptics.impact({ style: ImpactStyle.Light });
+        await new Promise(r => setTimeout(r, 100));
+        await Haptics.impact({ style: ImpactStyle.Medium });
+      } else {
+        // Descending pattern for stop
+        webVibrate([40, 50, 25]);
+      }
+    } catch (error) {
+      console.debug('Haptics not available:', error);
+      webVibrate([40, 50, 25]);
+    }
+  };
+
+  const reminder = async () => {
+    try {
+      if (isNative) {
+        await Haptics.notification({ type: NotificationType.Warning });
+        await new Promise(r => setTimeout(r, 200));
+        await Haptics.impact({ style: ImpactStyle.Light });
+      } else {
+        // Gentle reminder pattern
+        webVibrate([15, 100, 15, 100, 30]);
+      }
+    } catch (error) {
+      console.debug('Haptics not available:', error);
+      webVibrate([15, 100, 15, 100, 30]);
+    }
+  };
+
+  const celebration = async () => {
+    try {
+      if (isNative) {
+        await Haptics.notification({ type: NotificationType.Success });
+        await new Promise(r => setTimeout(r, 150));
+        await Haptics.impact({ style: ImpactStyle.Light });
+        await new Promise(r => setTimeout(r, 100));
+        await Haptics.impact({ style: ImpactStyle.Light });
+      } else {
+        // Celebratory burst pattern
+        webVibrate([30, 60, 20, 60, 20, 60, 40]);
+      }
+    } catch (error) {
+      console.debug('Haptics not available:', error);
+      webVibrate([30, 60, 20, 60, 20, 60, 40]);
+    }
+  };
+
   return {
+    // Basic impacts
     lightImpact,
     mediumImpact,
     heavyImpact,
+    // Selection feedback
     selectionStart,
     selectionChanged,
-    selectionEnd
+    selectionEnd,
+    // Notification types
+    successNotification,
+    warningNotification,
+    errorNotification,
+    // Custom app patterns
+    timerStart,
+    timerStop,
+    reminder,
+    celebration
   };
 };
