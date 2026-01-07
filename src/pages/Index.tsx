@@ -88,17 +88,34 @@ const Index = () => {
         rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Gilroy:wght@400;700;800;900&display=swap"
       />
-      <div className="fixed inset-0 flex flex-col bg-white" style={{ fontFamily: 'Gilroy, sans-serif' }}>
-        <div className="sticky top-0 z-40 bg-white" style={{ paddingTop: 0 }}>
+      <main 
+        className="fixed inset-0 flex flex-col bg-white" 
+        style={{ 
+          fontFamily: 'Gilroy, sans-serif',
+          height: '100vh'
+        }}
+      >
+        {/* Safe area top spacer */}
+        <div style={{ height: 'var(--safe-area-top, 0px)', flexShrink: 0 }} />
+        
+        {/* Top bar - relative, iOS style */}
+        <header className="relative z-40 bg-white flex-shrink-0">
           <div className="w-full max-w-sm mx-auto px-2.5">
             <Navigation activeTab={activeTab} onTabChange={handleTabChange} />
             <TabNavigation activeTab={activeTab} onTabChange={handleTabChange} />
             <Divider />
           </div>
-          
-        </div>
+        </header>
 
-        <div className={'flex-1 overflow-y-auto overflow-x-hidden'}>
+        {/* App container - scrollable content area */}
+        <div 
+          className="flex-1 overflow-y-auto overflow-x-hidden"
+          style={{ 
+            scrollbarWidth: 'none',
+            msOverflowStyle: 'none'
+          }}
+        >
+          <style>{`.flex-1::-webkit-scrollbar { width: 0; display: none; }`}</style>
           <div className="w-full max-w-sm mx-auto px-2.5">
             {activeTab === 'enter-time' && (
               <>
@@ -126,8 +143,14 @@ const Index = () => {
           </div>
         </div>
 
-        <HomeIndicator />
-      </div>
+        {/* Menu bar - relative with safe area bottom padding */}
+        <nav 
+          className="relative flex-shrink-0 bg-white"
+          style={{ paddingBottom: 'var(--safe-area-bottom, 0px)' }}
+        >
+          <HomeIndicator />
+        </nav>
+      </main>
     </>
   );
 };
