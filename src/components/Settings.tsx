@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { TimeEntrySettings } from './TimeEntrySettings';
 import { UserProfile } from './UserProfile';
@@ -13,11 +13,9 @@ import { useAuth } from '@/hooks/useAuth';
 import { useSubscription } from '@/context/SubscriptionContext';
 import { usePaywall } from '@/hooks/usePaywall';
 import { useHaptics } from '@/hooks/useHaptics';
+import { useAppVersion } from '@/hooks/useAppVersion';
 import { Clock, LogOut, FileText, Crown, Bell } from 'lucide-react';
 import type { Client } from '@/types';
-import { Capacitor } from '@capacitor/core';
-import { App as CapApp } from '@capacitor/app';
-import { WEB_BUILD, WEB_SEMVER } from '@/version';
 interface SettingsProps {
   highlightSection?: string | null;
 }
@@ -35,13 +33,11 @@ export const Settings: React.FC<SettingsProps> = ({
   const { isPremium } = useSubscription();
   const { isOpen: isPaywallOpen, openPaywall, closePaywall } = usePaywall();
   const { lightImpact, selectionChanged } = useHaptics();
+  const versionInfo = useAppVersion();
   const [showColorOverlay, setShowColorOverlay] = useState(false);
   const [showInvoicePreview, setShowInvoicePreview] = useState(false);
   const [showClientDetails, setShowClientDetails] = useState(false);
   const [selectedClient, setSelectedClient] = useState<Client | null>(null);
-  const [nativeVersion, setNativeVersion] = useState<string | null>(null);
-  const [nativeBuild, setNativeBuild] = useState<string | null>(null);
-  const [nativeId, setNativeId] = useState<string | null>(null);
   const handleClientDetailsOpen = (client: Client) => {
     selectionChanged();
     setSelectedClient(client);
@@ -58,17 +54,6 @@ export const Settings: React.FC<SettingsProps> = ({
       invoiceMode: !settings.invoiceMode
     });
   };
-  useEffect(() => {
-    if (Capacitor.isNativePlatform()) {
-      CapApp.getInfo().then(info => {
-        // info.version and info.build reflect the native app's Info.plist / Android manifest
-        setNativeVersion(info.version ?? null);
-        const buildVal = (info as any).build ?? null;
-        setNativeBuild(buildVal != null ? String(buildVal) : null);
-        setNativeId((info as any).id ?? null);
-      }).catch(() => {});
-    }
-  }, []);
   return <div className="flex flex-col w-full bg-white overflow-x-hidden">
       {/* Mode Toggle */}
       <div className="flex justify-center items-center w-full px-2.5 py-4">
@@ -205,13 +190,12 @@ export const Settings: React.FC<SettingsProps> = ({
                 Privacy Policy
               </button>
               <div className="text-[#BFBFBF] text-xs font-normal">
-                <div>Web Version {WEB_SEMVER} (build {WEB_BUILD})</div>
-                {nativeVersion && <div>
-                    {`Native App ${nativeVersion}${nativeBuild ? ` (${nativeBuild})` : ''}`}
+                <div>Web Version {versionInfo.webVersion} (build {versionInfo.webBuild})</div>
+                {versionInfo.nativeVersion && <div>
+                    {`Native App ${versionInfo.nativeVersion}${versionInfo.nativeBuild ? ` (${versionInfo.nativeBuild})` : ''}`}
                   </div>}
-                {nativeId && <span className="block">Bundle ID: {nativeId}</span>}
-                
-                
+                {versionInfo.bundleId && <span className="block">Bundle ID: {versionInfo.bundleId}</span>}
+                {versionInfo.platform !== 'web' && <span className="block capitalize">Platform: {versionInfo.platform}</span>}
               </div>
             </div>
           </div>
