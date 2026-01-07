@@ -56,6 +56,13 @@ export interface UserProfile {
   customFields?: CustomField[];
 }
 
+export interface NotificationPreferences {
+  notificationsEnabled: boolean;
+  reminderFrequency: 'never' | 'daily' | 'weekdays' | 'weekly';
+  reminderTime: string; // HH:mm format
+  weekendReminders: boolean;
+}
+
 export interface AppSettings {
   accentColor: string;
   invoiceMode: boolean;
@@ -65,6 +72,7 @@ export interface AppSettings {
   projects: Project[];
   clients: Client[];
   userProfile: UserProfile;
+  notificationPreferences: NotificationPreferences;
 }
 
 export type SortOption = 'date' | 'project' | 'task' | 'client';

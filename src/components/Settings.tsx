@@ -7,11 +7,12 @@ import { TimeArchive } from './TimeArchive';
 import { InvoicePreview } from './InvoicePreview';
 import { ClientDetailsDrawer } from './ClientDetailsDrawer';
 import { Paywall } from './Paywall';
+import { NotificationSettings } from './NotificationSettings';
 import { useApp } from '@/context/AppContext';
 import { useAuth } from '@/hooks/useAuth';
 import { useSubscription } from '@/context/SubscriptionContext';
 import { usePaywall } from '@/hooks/usePaywall';
-import { Clock, LogOut, FileText, Crown } from 'lucide-react';
+import { Clock, LogOut, FileText, Crown, Bell } from 'lucide-react';
 import type { Client } from '@/types';
 import { Capacitor } from '@capacitor/core';
 import { App as CapApp } from '@capacitor/app';
@@ -101,6 +102,18 @@ export const Settings: React.FC<SettingsProps> = ({
         <div className="w-full h-[10px] bg-[#E5E5E5]" />
         <div className="px-2.5 pt-4 pb-4">
           <TimeArchive />
+        </div>
+
+        {/* Notification Settings Section */}
+        <div className="w-full h-[10px] bg-[#E5E5E5]" />
+        <div className="px-2.5 pt-0.5 pb-1">
+          <div className="py-4">
+            <div className="flex items-center gap-2 mb-4">
+              <Bell size={20} className="text-foreground" />
+              <h2 className="text-[#09121F] text-[18px] font-bold">Notifications</h2>
+            </div>
+            <NotificationSettings />
+          </div>
         </div>
         
         {/* Coloring Time Section */}

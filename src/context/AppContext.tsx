@@ -2,7 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useAuth } from '@/hooks/useAuth';
 import { useMicrophonePermission } from '@/hooks/useMicrophonePermission';
-import { TimeEntry, AppSettings, SortOption, ViewMode, TaxType, CustomField } from '@/types';
+import { TimeEntry, AppSettings, SortOption, ViewMode, TaxType, CustomField, NotificationPreferences } from '@/types';
 import { useToast } from '@/hooks/use-toast';
 
 interface AppContextType {
@@ -26,6 +26,13 @@ interface AppContextType {
 
 const AppContext = createContext<AppContextType | undefined>(undefined);
 
+const defaultNotificationPreferences: NotificationPreferences = {
+  notificationsEnabled: true,
+  reminderFrequency: 'daily',
+  reminderTime: '18:00',
+  weekendReminders: false,
+};
+
 const defaultSettings: AppSettings = {
   accentColor: 'hsl(0, 0%, 85%)', // Light gray as default secondary color
   invoiceMode: false,
@@ -43,6 +50,7 @@ const defaultSettings: AppSettings = {
     city: '',
     state: '',
   },
+  notificationPreferences: defaultNotificationPreferences,
 };
 
 export function AppProvider({ children }: { children: React.ReactNode }) {
@@ -148,7 +156,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
       const loadedSortOption = (settingsData?.sort_option as SortOption) || 'project';
       setSortOption(loadedSortOption);
 
-      const newSettings = {
+      const newSettings: AppSettings = {
         accentColor: settingsData?.accent_color || defaultSettings.accentColor,
         invoiceMode: settingsData?.invoice_mode || defaultSettings.invoiceMode,
         invoiceNumber: settingsData?.invoice_number || defaultSettings.invoiceNumber,
@@ -186,7 +194,13 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
           city: profileData?.city || '',
           state: profileData?.state || '',
           customFields: (profileData?.custom_fields as unknown as CustomField[]) || []
-        }
+        },
+        notificationPreferences: {
+          notificationsEnabled: settingsData?.notifications_enabled ?? defaultNotificationPreferences.notificationsEnabled,
+          reminderFrequency: (settingsData?.reminder_frequency as NotificationPreferences['reminderFrequency']) || defaultNotificationPreferences.reminderFrequency,
+          reminderTime: settingsData?.reminder_time || defaultNotificationPreferences.reminderTime,
+          weekendReminders: settingsData?.weekend_reminders ?? defaultNotificationPreferences.weekendReminders,
+        },
       };
 
       setSettings(newSettings);
@@ -446,7 +460,7 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         }
       }
       
-      // Update app settings (including sort_option if it exists in context)
+      // Update app settings (including sort_option and notification preferences)
       const { error: settingsError } = await supabase
         .from('app_settings')
         .upsert({
@@ -454,7 +468,11 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
           accent_color: updatedSettings.accentColor,
           invoice_mode: updatedSettings.invoiceMode,
           invoice_number: updatedSettings.invoiceNumber,
-          sort_option: sortOption
+          sort_option: sortOption,
+          notifications_enabled: updatedSettings.notificationPreferences.notificationsEnabled,
+          reminder_frequency: updatedSettings.notificationPreferences.reminderFrequency,
+          reminder_time: updatedSettings.notificationPreferences.reminderTime,
+          weekend_reminders: updatedSettings.notificationPreferences.weekendReminders,
         }, {
           onConflict: 'user_id'
         });
@@ -676,7 +694,11 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
               accent_color: settings.accentColor,
               invoice_mode: settings.invoiceMode,
               invoice_number: settings.invoiceNumber,
-              sort_option: option
+              sort_option: option,
+              notifications_enabled: settings.notificationPreferences.notificationsEnabled,
+              reminder_frequency: settings.notificationPreferences.reminderFrequency,
+              reminder_time: settings.notificationPreferences.reminderTime,
+              weekend_reminders: settings.notificationPreferences.weekendReminders,
             }, {
               onConflict: 'user_id'
             });
