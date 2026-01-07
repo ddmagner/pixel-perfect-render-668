@@ -9,9 +9,9 @@ import { TimeEntry, AppSettings, ViewMode } from '@/types';
 import { createPdfFromPreview } from '@/utils/domPdf';
 import { generateSpreadsheet } from '@/utils/spreadsheetGenerator';
 import { InvoicePreview } from '@/components/InvoicePreview';
-import { Share } from '@capacitor/share';
+import { useNativeShare } from '@/hooks/useNativeShare';
 import { format } from 'date-fns';
-import { X, Download, Mail, Printer, Eye } from 'lucide-react';
+import { X, Download, Mail, Printer, Eye, Share2 } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 
 interface ExportDialogProps {
@@ -32,12 +32,13 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
   viewMode
 }) => {
   const [isPdfFormat, setIsPdfFormat] = useState(true);
-  const [exportMethod, setExportMethod] = useState<'download' | 'email' | 'print' | 'preview'>('preview');
+  const [exportMethod, setExportMethod] = useState<'download' | 'share' | 'print' | 'preview'>('preview');
   const [fileName, setFileName] = useState(`${settings.userProfile.name || 'User'} ${viewMode === 'invoice' ? 'Invoice' : 'Time Card'} ${format(new Date(), 'yyyy-MM-dd')}`);
   const [isExporting, setIsExporting] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
   const [autoPrint, setAutoPrint] = useState(false);
   const { incrementInvoiceNumber } = useApp();
+  const { share, shareReport, canShare } = useNativeShare();
 
   useEffect(() => {
     if (showPreview && autoPrint) {
@@ -165,19 +166,20 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
         document.body.removeChild(a);
       }
 
-      if (exportMethod === 'email') {
+      if (exportMethod === 'share') {
         try {
-          // For mobile devices, use native sharing
-          if (await Share.canShare()) {
-            await Share.share({
-              title: `Time ${viewMode} Report`,
-              text: `Please find attached the time ${viewMode} report.`,
-              url: url,
-              dialogTitle: 'Share Report'
-            });
-          } else {
-            // For web browsers, we can't auto-attach files to email
-            // So we download the file and provide instructions
+          // Calculate total hours for the report
+          const totalHours = entriesToUse.reduce((sum, entry) => sum + entry.duration, 0);
+          
+          // Try native share first
+          const shareSuccess = await shareReport({
+            reportType: viewMode === 'invoice' ? 'invoice' : 'timecard',
+            totalHours,
+            url: url
+          });
+
+          if (!shareSuccess) {
+            // Fallback to download with instructions
             const a = document.createElement('a');
             a.href = url;
             a.download = finalFileName;
@@ -185,12 +187,11 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
             a.click();
             document.body.removeChild(a);
             
-            // Show user-friendly message instead of opening empty email
-            alert(`File "${finalFileName}" has been downloaded to your device.\n\nDue to browser security restrictions, files cannot be automatically attached to emails. Please manually attach the downloaded file to your email.`);
+            alert(`File "${finalFileName}" has been downloaded.\n\nPlease share it manually from your device.`);
           }
         } catch (error) {
-          console.error('Error sharing via email:', error);
-          // Fallback to download with instructions
+          console.error('Error sharing:', error);
+          // Fallback to download
           const a = document.createElement('a');
           a.href = url;
           a.download = finalFileName;
@@ -198,7 +199,7 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
           a.click();
           document.body.removeChild(a);
           
-          alert(`File "${finalFileName}" has been downloaded.\n\nPlease manually attach this file to your email.`);
+          alert(`File "${finalFileName}" has been downloaded.\n\nPlease share it manually from your device.`);
         }
       }
 
@@ -307,14 +308,14 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
               
               <div className="flex items-center justify-between">
                 <div className="flex items-center space-x-3">
-                  <Mail className="h-5 w-5" />
-                  <span className="text-base">Share via email</span>
+                  <Share2 className="h-5 w-5" />
+                  <span className="text-base">Share</span>
                 </div>
                 <div 
-                  className={`w-6 h-6 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${exportMethod === 'email' ? 'bg-gray-300' : 'bg-white'}`}
-                  onClick={() => setExportMethod('email')}
+                  className={`w-6 h-6 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${exportMethod === 'share' ? 'bg-gray-300' : 'bg-white'}`}
+                  onClick={() => setExportMethod('share')}
                 >
-                  {exportMethod === 'email' && <div className="w-3 h-3 rounded-full bg-[#09121F]"></div>}
+                  {exportMethod === 'share' && <div className="w-3 h-3 rounded-full bg-[#09121F]"></div>}
                 </div>
               </div>
               
