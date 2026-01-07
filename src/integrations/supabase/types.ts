@@ -21,9 +21,13 @@ export type Database = {
           id: string
           invoice_mode: boolean | null
           invoice_number: number
+          notifications_enabled: boolean
+          reminder_frequency: string
+          reminder_time: string
           sort_option: string
           updated_at: string
           user_id: string
+          weekend_reminders: boolean
         }
         Insert: {
           accent_color?: string
@@ -31,9 +35,13 @@ export type Database = {
           id?: string
           invoice_mode?: boolean | null
           invoice_number?: number
+          notifications_enabled?: boolean
+          reminder_frequency?: string
+          reminder_time?: string
           sort_option?: string
           updated_at?: string
           user_id: string
+          weekend_reminders?: boolean
         }
         Update: {
           accent_color?: string
@@ -41,9 +49,13 @@ export type Database = {
           id?: string
           invoice_mode?: boolean | null
           invoice_number?: number
+          notifications_enabled?: boolean
+          reminder_frequency?: string
+          reminder_time?: string
           sort_option?: string
           updated_at?: string
           user_id?: string
+          weekend_reminders?: boolean
         }
         Relationships: []
       }
