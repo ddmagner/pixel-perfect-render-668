@@ -19,7 +19,7 @@ export default {
 		},
 		extend: {
 		fontFamily: {
-			'gilroy': ['Plus Jakarta Sans', 'sans-serif'],
+			'gilroy': ['Inter', 'sans-serif'],
 		},
 			colors: {
 				border: 'hsl(var(--border))',
