@@ -4,12 +4,15 @@ import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
 import { Eye, EyeOff, Scan } from 'lucide-react';
 import { useBiometricAuth } from '@/hooks/useBiometricAuth';
+import { useDespia } from '@/hooks/useDespia';
 import GoogleLoginButton from '@/components/GoogleLoginButton';
+import AppleLoginButton from '@/components/AppleLoginButton';
 
 const Auth = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const { toast } = useToast();
+  const { isIOS } = useDespia();
   const [isSignUp, setIsSignUp] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -310,6 +313,9 @@ const Auth = () => {
 
               {/* Google Sign In */}
               {!isSignUp && <GoogleLoginButton />}
+
+              {/* Apple Sign In - Show on iOS or always on web for Apple users */}
+              {!isSignUp && <AppleLoginButton />}
 
               {/* Face ID Button - Only show on sign in and when in Despia native environment */}
               {!isSignUp && isDespiaNative && (
