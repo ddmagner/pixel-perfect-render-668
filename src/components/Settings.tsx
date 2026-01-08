@@ -47,6 +47,7 @@ export const Settings: React.FC<SettingsProps> = ({
   const [showInvoicePreview, setShowInvoicePreview] = useState(false);
   const [showClientDetails, setShowClientDetails] = useState(false);
   const [selectedClient, setSelectedClient] = useState<Client | null>(null);
+  const [isCommunicationsExpanded, setIsCommunicationsExpanded] = useState(true);
   const handleClientDetailsOpen = (client: Client) => {
     selectionChanged();
     setSelectedClient(client);
@@ -107,11 +108,20 @@ export const Settings: React.FC<SettingsProps> = ({
         <div className="w-full h-[10px] bg-[#E5E5E5]" />
         <div className="px-2.5 pt-0.5 pb-1">
           <div className="py-4">
-            <div className="flex items-center justify-between mb-4">
+            <div 
+              className="flex items-center justify-between mb-4 cursor-pointer"
+              onClick={() => {
+                selectionChanged();
+                setIsCommunicationsExpanded(!isCommunicationsExpanded);
+              }}
+            >
               <h1 className="text-[#09121F] text-[28px] font-bold leading-8">Communications</h1>
-              <ChevronRight size={24} className="text-[#09121F]" />
+              <ChevronRight 
+                size={24} 
+                className={`text-[#09121F] transition-transform duration-200 ${isCommunicationsExpanded ? 'rotate-90' : ''}`} 
+              />
             </div>
-            <NotificationSettings />
+            {isCommunicationsExpanded && <NotificationSettings />}
           </div>
         </div>
         
