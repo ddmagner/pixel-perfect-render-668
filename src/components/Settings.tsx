@@ -106,23 +106,21 @@ export const Settings: React.FC<SettingsProps> = ({
 
         {/* Communications Section */}
         <div className="w-full h-[10px] bg-[#E5E5E5]" />
-        <div className="px-2.5 pt-0.5 pb-1">
-          <div className="py-4">
-            <div 
-              className="flex items-center justify-between mb-4 cursor-pointer"
-              onClick={() => {
-                selectionChanged();
-                setIsCommunicationsExpanded(!isCommunicationsExpanded);
-              }}
-            >
-              <h1 className="text-[#09121F] text-[28px] font-bold leading-8">Communications</h1>
-              <ChevronRight 
-                size={24} 
-                className={`text-[#09121F] transition-transform duration-200 ${isCommunicationsExpanded ? 'rotate-90' : ''}`} 
-              />
-            </div>
-            {isCommunicationsExpanded && <NotificationSettings />}
+        <div className="px-2.5 pt-4 pb-4">
+          <div 
+            className="flex items-center justify-between mb-4 cursor-pointer"
+            onClick={() => {
+              selectionChanged();
+              setIsCommunicationsExpanded(!isCommunicationsExpanded);
+            }}
+          >
+            <h1 className="text-[#09121F] text-[28px] font-bold leading-8">Communications</h1>
+            <ChevronRight 
+              size={24} 
+              className={`text-[#09121F] transition-transform duration-200 ${isCommunicationsExpanded ? 'rotate-90' : ''}`} 
+            />
           </div>
+          {isCommunicationsExpanded && <NotificationSettings />}
         </div>
         
         {/* Coloring Time Section */}
