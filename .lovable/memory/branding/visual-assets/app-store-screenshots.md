@@ -37,8 +37,12 @@
 
 *Note: Google Play screenshots were adapted from 6.7" App Store versions with letterboxing to meet the 9:16 aspect ratio requirement (original was ~9:19.5).*
 
+### Feature Graphic - 1024x500
+| File | Description |
+|------|-------------|
+| `public/playstore/feature-graphic.png` | Hero image with phone mockup, app branding, and tagline "Time is your most valuable asset. Easily bank it with a simple app." |
+
 ### Still Needed for Google Play
-- **Feature Graphic**: 1024x500 (required for Play Store listing)
 - **Tablet Screenshots**: 1920x1080 or 2560x1440 (16:9 landscape, optional)
 
 ---
