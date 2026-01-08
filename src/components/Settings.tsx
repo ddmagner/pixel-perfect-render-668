@@ -14,7 +14,7 @@ import { useSubscription } from '@/context/SubscriptionContext';
 import { usePaywall } from '@/hooks/usePaywall';
 import { useHaptics } from '@/hooks/useHaptics';
 import { useAppVersion } from '@/hooks/useAppVersion';
-import { Clock, LogOut, FileText, Crown, Bell } from 'lucide-react';
+import { Clock, LogOut, FileText, Crown } from 'lucide-react';
 import type { Client } from '@/types';
 interface SettingsProps {
   highlightSection?: string | null;
@@ -30,9 +30,18 @@ export const Settings: React.FC<SettingsProps> = ({
     settings,
     updateSettings
   } = useApp();
-  const { isPremium } = useSubscription();
-  const { isOpen: isPaywallOpen, openPaywall, closePaywall } = usePaywall();
-  const { lightImpact, selectionChanged } = useHaptics();
+  const {
+    isPremium
+  } = useSubscription();
+  const {
+    isOpen: isPaywallOpen,
+    openPaywall,
+    closePaywall
+  } = usePaywall();
+  const {
+    lightImpact,
+    selectionChanged
+  } = useHaptics();
   const versionInfo = useAppVersion();
   const [showColorOverlay, setShowColorOverlay] = useState(false);
   const [showInvoicePreview, setShowInvoicePreview] = useState(false);
@@ -99,7 +108,7 @@ export const Settings: React.FC<SettingsProps> = ({
         <div className="px-2.5 pt-0.5 pb-1">
           <div className="py-4">
             <div className="flex items-center gap-2 mb-4">
-              <Bell size={20} className="text-foreground" />
+              
               <h2 className="text-[#09121F] text-[18px] font-bold">Notifications</h2>
             </div>
             <NotificationSettings />
@@ -110,7 +119,10 @@ export const Settings: React.FC<SettingsProps> = ({
         <div className="w-full h-[10px] bg-[#E5E5E5]" />
         <div className="px-2.5 pt-0.5 pb-1">
           <div className="py-4 pb-4">
-            <div className="flex items-center justify-between cursor-pointer" onClick={() => { selectionChanged(); setShowColorOverlay(true); }}>
+            <div className="flex items-center justify-between cursor-pointer" onClick={() => {
+            selectionChanged();
+            setShowColorOverlay(true);
+          }}>
               <div>
                 <h1 className="text-[#09121F] text-[28px] font-bold leading-8">Coloring time</h1>
                 <p className="text-[#09121F] text-sm underline">Customize your accent color</p>
@@ -125,15 +137,14 @@ export const Settings: React.FC<SettingsProps> = ({
         </div>
 
         {/* Premium Subscription Section */}
-        {!isPremium && (
-          <>
+        {!isPremium && <>
             <div className="w-full h-[10px] bg-[#E5E5E5]" />
             <div className="px-2.5 pt-0.5 pb-1">
               <div className="py-4">
-                <button
-                  onClick={() => { selectionChanged(); openPaywall(); }}
-                  className="w-full flex items-center justify-between p-4 bg-primary/5 rounded-xl hover:bg-primary/10 transition-colors"
-                >
+                <button onClick={() => {
+              selectionChanged();
+              openPaywall();
+            }} className="w-full flex items-center justify-between p-4 bg-primary/5 rounded-xl hover:bg-primary/10 transition-colors">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center">
                       <Crown size={20} className="text-primary-foreground" />
@@ -144,16 +155,14 @@ export const Settings: React.FC<SettingsProps> = ({
                     </div>
                   </div>
                   <svg width="8" height="14" viewBox="0 0 8 14" fill="none" className="text-muted-foreground">
-                    <path d="M1 1L7 7L1 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                    <path d="M1 1L7 7L1 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                   </svg>
                 </button>
               </div>
             </div>
-          </>
-        )}
+          </>}
 
-        {isPremium && (
-          <>
+        {isPremium && <>
             <div className="w-full h-[10px] bg-[#E5E5E5]" />
             <div className="px-2.5 pt-0.5 pb-1">
               <div className="py-4">
@@ -168,8 +177,7 @@ export const Settings: React.FC<SettingsProps> = ({
                 </div>
               </div>
             </div>
-          </>
-        )}
+          </>}
         
         {/* Sign Out Section */}
         <div className="w-full h-[10px] bg-[#E5E5E5]" />
@@ -183,10 +191,16 @@ export const Settings: React.FC<SettingsProps> = ({
             {/* Preview Link - Show in both modes with different text */}
             
             <div className="space-y-6">
-              <button onClick={() => { lightImpact(); navigate('/terms'); }} className="text-[#BFBFBF] text-xs font-normal underline hover:opacity-70 transition-opacity block">
+              <button onClick={() => {
+              lightImpact();
+              navigate('/terms');
+            }} className="text-[#BFBFBF] text-xs font-normal underline hover:opacity-70 transition-opacity block">
                 Terms of Use
               </button>
-              <button onClick={() => { lightImpact(); navigate('/privacy'); }} className="text-[#BFBFBF] text-xs font-normal underline hover:opacity-70 transition-opacity block">
+              <button onClick={() => {
+              lightImpact();
+              navigate('/privacy');
+            }} className="text-[#BFBFBF] text-xs font-normal underline hover:opacity-70 transition-opacity block">
                 Privacy Policy
               </button>
               <div className="text-[#BFBFBF] text-xs font-normal">
