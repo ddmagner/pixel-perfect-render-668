@@ -31,6 +31,18 @@ const defaultNotificationPreferences: NotificationPreferences = {
   reminderFrequency: 'daily',
   reminderTime: '18:00',
   weekendReminders: false,
+  // Push notification preferences
+  useBasedReminders: true,
+  includeWeekends: false,
+  subscriptionAlerts: true,
+  productUpdates: true,
+  recommendations: true,
+  userFeedbackSurveys: true,
+  discountsRewards: true,
+  // Email preferences
+  emailSubscriptionAlerts: true,
+  emailProductUpdates: true,
+  emailMarketingOffers: false,
 };
 
 const defaultSettings: AppSettings = {
@@ -200,6 +212,17 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
           reminderFrequency: (settingsData?.reminder_frequency as NotificationPreferences['reminderFrequency']) || defaultNotificationPreferences.reminderFrequency,
           reminderTime: settingsData?.reminder_time || defaultNotificationPreferences.reminderTime,
           weekendReminders: settingsData?.weekend_reminders ?? defaultNotificationPreferences.weekendReminders,
+          // New preferences with defaults (stored locally until DB schema updated)
+          useBasedReminders: defaultNotificationPreferences.useBasedReminders,
+          includeWeekends: defaultNotificationPreferences.includeWeekends,
+          subscriptionAlerts: defaultNotificationPreferences.subscriptionAlerts,
+          productUpdates: defaultNotificationPreferences.productUpdates,
+          recommendations: defaultNotificationPreferences.recommendations,
+          userFeedbackSurveys: defaultNotificationPreferences.userFeedbackSurveys,
+          discountsRewards: defaultNotificationPreferences.discountsRewards,
+          emailSubscriptionAlerts: defaultNotificationPreferences.emailSubscriptionAlerts,
+          emailProductUpdates: defaultNotificationPreferences.emailProductUpdates,
+          emailMarketingOffers: defaultNotificationPreferences.emailMarketingOffers,
         },
       };
 

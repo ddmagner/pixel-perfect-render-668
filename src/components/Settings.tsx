@@ -103,14 +103,11 @@ export const Settings: React.FC<SettingsProps> = ({
           <TimeArchive />
         </div>
 
-        {/* Notification Settings Section */}
+        {/* Communications Section */}
         <div className="w-full h-[10px] bg-[#E5E5E5]" />
         <div className="px-2.5 pt-0.5 pb-1">
           <div className="py-4">
-            <div className="flex items-center gap-2 mb-4">
-              
-              <h1 className="text-[#09121F] text-[28px] font-bold leading-8">Notifications</h1>
-            </div>
+            <h1 className="text-[#09121F] text-[28px] font-bold leading-8 mb-4">Communications</h1>
             <NotificationSettings />
           </div>
         </div>

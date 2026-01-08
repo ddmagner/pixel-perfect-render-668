@@ -61,6 +61,18 @@ export interface NotificationPreferences {
   reminderFrequency: 'never' | 'daily' | 'weekdays' | 'weekly';
   reminderTime: string; // HH:mm format
   weekendReminders: boolean;
+  // Push notification preferences
+  useBasedReminders: boolean;
+  includeWeekends: boolean;
+  subscriptionAlerts: boolean;
+  productUpdates: boolean;
+  recommendations: boolean;
+  userFeedbackSurveys: boolean;
+  discountsRewards: boolean;
+  // Email preferences
+  emailSubscriptionAlerts: boolean;
+  emailProductUpdates: boolean;
+  emailMarketingOffers: boolean;
 }
 
 export interface AppSettings {
