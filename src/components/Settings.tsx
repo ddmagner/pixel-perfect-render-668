@@ -108,7 +108,7 @@ export const Settings: React.FC<SettingsProps> = ({
         <div className="w-full h-[10px] bg-[#E5E5E5]" />
         <div className="px-2.5 pt-4 pb-4">
           <div 
-            className="flex items-center justify-between mb-4 cursor-pointer"
+            className={`flex items-center justify-between cursor-pointer py-2 rounded-lg transition-colors ${isCommunicationsExpanded ? 'mb-2' : ''}`}
             onClick={() => {
               selectionChanged();
               setIsCommunicationsExpanded(!isCommunicationsExpanded);
