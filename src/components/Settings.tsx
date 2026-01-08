@@ -109,7 +109,7 @@ export const Settings: React.FC<SettingsProps> = ({
           <div className="py-4">
             <div className="flex items-center gap-2 mb-4">
               
-              <h2 className="text-[#09121F] text-[18px] font-bold">Notifications</h2>
+              <h1 className="text-[#09121F] text-[18px] font-bold">Notifications</h1>
             </div>
             <NotificationSettings />
           </div>
