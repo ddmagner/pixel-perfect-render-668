@@ -1,156 +1,139 @@
 import React from 'react';
-import { Bell, BellOff, Clock } from 'lucide-react';
 import { useApp } from '@/context/AppContext';
 import { Switch } from '@/components/ui/switch';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
+import { Checkbox } from '@/components/ui/checkbox';
+import { NotificationPreferences } from '@/types';
 
-const FREQUENCY_OPTIONS = [
-  { value: 'never', label: 'Never' },
-  { value: 'daily', label: 'Daily' },
-  { value: 'weekdays', label: 'Weekdays only' },
-  { value: 'weekly', label: 'Weekly (Fridays)' },
-];
+interface NotificationCheckboxProps {
+  checked: boolean;
+  onCheckedChange: (checked: boolean) => void;
+  label: string;
+}
 
-const TIME_OPTIONS = [
-  { value: '09:00', label: '9:00 AM' },
-  { value: '12:00', label: '12:00 PM' },
-  { value: '15:00', label: '3:00 PM' },
-  { value: '17:00', label: '5:00 PM' },
-  { value: '18:00', label: '6:00 PM' },
-  { value: '19:00', label: '7:00 PM' },
-  { value: '20:00', label: '8:00 PM' },
-  { value: '21:00', label: '9:00 PM' },
-];
+const NotificationCheckbox: React.FC<NotificationCheckboxProps> = ({ 
+  checked, 
+  onCheckedChange, 
+  label 
+}) => (
+  <div className="flex items-center justify-between py-3">
+    <span className="text-[15px] font-medium text-[#09121F]">{label}</span>
+    <Checkbox
+      checked={checked}
+      onCheckedChange={onCheckedChange}
+      className="h-6 w-6 rounded border-2 border-[#09121F] data-[state=checked]:bg-[#09121F] data-[state=checked]:border-[#09121F]"
+    />
+  </div>
+);
+
+interface NestedToggleProps {
+  checked: boolean;
+  onCheckedChange: (checked: boolean) => void;
+  label: string;
+}
+
+const NestedToggle: React.FC<NestedToggleProps> = ({ 
+  checked, 
+  onCheckedChange, 
+  label 
+}) => (
+  <div className="flex items-center justify-between py-3 pl-4">
+    <span className="text-[15px] font-medium text-[#09121F]">{label}</span>
+    <Switch
+      checked={checked}
+      onCheckedChange={onCheckedChange}
+    />
+  </div>
+);
 
 export function NotificationSettings() {
   const { settings, updateSettings } = useApp();
   const prefs = settings.notificationPreferences;
 
-  const handleToggleNotifications = () => {
+  const updatePref = (key: keyof NotificationPreferences, value: boolean) => {
     updateSettings({
       notificationPreferences: {
         ...prefs,
-        notificationsEnabled: !prefs.notificationsEnabled,
-      },
-    });
-  };
-
-  const handleFrequencyChange = (value: string) => {
-    updateSettings({
-      notificationPreferences: {
-        ...prefs,
-        reminderFrequency: value as 'never' | 'daily' | 'weekdays' | 'weekly',
-      },
-    });
-  };
-
-  const handleTimeChange = (value: string) => {
-    updateSettings({
-      notificationPreferences: {
-        ...prefs,
-        reminderTime: value,
-      },
-    });
-  };
-
-  const handleWeekendToggle = () => {
-    updateSettings({
-      notificationPreferences: {
-        ...prefs,
-        weekendReminders: !prefs.weekendReminders,
+        [key]: value,
       },
     });
   };
 
   return (
-    <div className="space-y-4">
-      {/* Master toggle */}
-      <div className="flex items-center justify-between py-3">
-        <div className="flex items-center gap-3">
-          {prefs.notificationsEnabled ? (
-            <Bell size={20} className="text-foreground" />
-          ) : (
-            <BellOff size={20} className="text-muted-foreground" />
-          )}
-          <div>
-            <div className="text-[15px] font-medium text-foreground">
-              Push Notifications
-            </div>
-            <div className="text-sm text-muted-foreground">
-              Get reminded to log your time
-            </div>
-          </div>
-        </div>
-        <Switch
-          checked={prefs.notificationsEnabled}
-          onCheckedChange={handleToggleNotifications}
+    <div className="space-y-0">
+      {/* Push notifications section */}
+      <div>
+        <h2 className="text-[15px] font-bold text-[#09121F] pb-2">Push notifications</h2>
+        <div className="h-px bg-[#09121F] mb-1" />
+        
+        {/* Use-based reminders with nested Include weekends */}
+        <NotificationCheckbox
+          checked={prefs.useBasedReminders}
+          onCheckedChange={(checked) => updatePref('useBasedReminders', checked)}
+          label="Use-based reminders"
+        />
+        
+        {prefs.useBasedReminders && (
+          <NestedToggle
+            checked={prefs.includeWeekends}
+            onCheckedChange={(checked) => updatePref('includeWeekends', checked)}
+            label="Include weekends"
+          />
+        )}
+        
+        <NotificationCheckbox
+          checked={prefs.subscriptionAlerts}
+          onCheckedChange={(checked) => updatePref('subscriptionAlerts', checked)}
+          label="Subscription alerts"
+        />
+        
+        <NotificationCheckbox
+          checked={prefs.productUpdates}
+          onCheckedChange={(checked) => updatePref('productUpdates', checked)}
+          label="Product updates & news"
+        />
+        
+        <NotificationCheckbox
+          checked={prefs.recommendations}
+          onCheckedChange={(checked) => updatePref('recommendations', checked)}
+          label="Recommendations"
+        />
+        
+        <NotificationCheckbox
+          checked={prefs.userFeedbackSurveys}
+          onCheckedChange={(checked) => updatePref('userFeedbackSurveys', checked)}
+          label="User feedback surveys"
+        />
+        
+        <NotificationCheckbox
+          checked={prefs.discountsRewards}
+          onCheckedChange={(checked) => updatePref('discountsRewards', checked)}
+          label="Discounts, rewards & referral offers"
         />
       </div>
 
-      {prefs.notificationsEnabled && (
-        <>
-          {/* Frequency */}
-          <div className="flex items-center justify-between py-3 border-t border-border">
-            <div className="text-[15px] text-foreground">Reminder frequency</div>
-            <Select
-              value={prefs.reminderFrequency}
-              onValueChange={handleFrequencyChange}
-            >
-              <SelectTrigger className="w-[140px]">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {FREQUENCY_OPTIONS.map((option) => (
-                  <SelectItem key={option.value} value={option.value}>
-                    {option.label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
-
-          {/* Time */}
-          {prefs.reminderFrequency !== 'never' && (
-            <div className="flex items-center justify-between py-3 border-t border-border">
-              <div className="flex items-center gap-3">
-                <Clock size={18} className="text-muted-foreground" />
-                <div className="text-[15px] text-foreground">Reminder time</div>
-              </div>
-              <Select value={prefs.reminderTime} onValueChange={handleTimeChange}>
-                <SelectTrigger className="w-[120px]">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  {TIME_OPTIONS.map((option) => (
-                    <SelectItem key={option.value} value={option.value}>
-                      {option.label}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-          )}
-
-          {/* Weekend toggle - only show for daily frequency */}
-          {prefs.reminderFrequency === 'daily' && (
-            <div className="flex items-center justify-between py-3 border-t border-border">
-              <div className="text-[15px] text-foreground">
-                Include weekends
-              </div>
-              <Switch
-                checked={prefs.weekendReminders}
-                onCheckedChange={handleWeekendToggle}
-              />
-            </div>
-          )}
-        </>
-      )}
+      {/* Email section */}
+      <div className="pt-6">
+        <h2 className="text-[15px] font-bold text-[#09121F] pb-2">Email</h2>
+        <div className="h-px bg-[#09121F] mb-1" />
+        
+        <NotificationCheckbox
+          checked={prefs.emailSubscriptionAlerts}
+          onCheckedChange={(checked) => updatePref('emailSubscriptionAlerts', checked)}
+          label="Subscription alerts"
+        />
+        
+        <NotificationCheckbox
+          checked={prefs.emailProductUpdates}
+          onCheckedChange={(checked) => updatePref('emailProductUpdates', checked)}
+          label="Product updates & news"
+        />
+        
+        <NotificationCheckbox
+          checked={prefs.emailMarketingOffers}
+          onCheckedChange={(checked) => updatePref('emailMarketingOffers', checked)}
+          label="Marketing offers"
+        />
+      </div>
     </div>
   );
 }
