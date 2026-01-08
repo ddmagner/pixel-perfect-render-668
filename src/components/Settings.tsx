@@ -14,7 +14,7 @@ import { useSubscription } from '@/context/SubscriptionContext';
 import { usePaywall } from '@/hooks/usePaywall';
 import { useHaptics } from '@/hooks/useHaptics';
 import { useAppVersion } from '@/hooks/useAppVersion';
-import { Clock, LogOut, FileText, Crown } from 'lucide-react';
+import { Clock, LogOut, FileText, Crown, ChevronRight } from 'lucide-react';
 import type { Client } from '@/types';
 interface SettingsProps {
   highlightSection?: string | null;
@@ -107,7 +107,10 @@ export const Settings: React.FC<SettingsProps> = ({
         <div className="w-full h-[10px] bg-[#E5E5E5]" />
         <div className="px-2.5 pt-0.5 pb-1">
           <div className="py-4">
-            <h1 className="text-[#09121F] text-[28px] font-bold leading-8 mb-4">Communications</h1>
+            <div className="flex items-center justify-between mb-4">
+              <h1 className="text-[#09121F] text-[28px] font-bold leading-8">Communications</h1>
+              <ChevronRight size={24} className="text-[#09121F]" />
+            </div>
             <NotificationSettings />
           </div>
         </div>

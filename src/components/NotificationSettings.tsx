@@ -1,27 +1,27 @@
 import React from 'react';
 import { useApp } from '@/context/AppContext';
 import { Switch } from '@/components/ui/switch';
-import { Checkbox } from '@/components/ui/checkbox';
 import { NotificationPreferences } from '@/types';
 
-interface NotificationCheckboxProps {
+interface CircularCheckboxProps {
   checked: boolean;
   onCheckedChange: (checked: boolean) => void;
   label: string;
 }
 
-const NotificationCheckbox: React.FC<NotificationCheckboxProps> = ({ 
+const CircularCheckbox: React.FC<CircularCheckboxProps> = ({ 
   checked, 
   onCheckedChange, 
   label 
 }) => (
   <div className="flex items-center justify-between py-3">
     <span className="text-[15px] font-medium text-[#09121F]">{label}</span>
-    <Checkbox
-      checked={checked}
-      onCheckedChange={onCheckedChange}
-      className="h-6 w-6 rounded border-2 border-[#09121F] data-[state=checked]:bg-[#09121F] data-[state=checked]:border-[#09121F]"
-    />
+    <div 
+      className={`w-4 h-4 rounded-full border-2 border-gray-300 cursor-pointer flex items-center justify-center ${checked ? 'bg-gray-300' : 'bg-white'}`}
+      onClick={() => onCheckedChange(!checked)}
+    >
+      {checked && <div className="w-2 h-2 rounded-full bg-[#09121F]"></div>}
+    </div>
   </div>
 );
 
@@ -66,7 +66,7 @@ export function NotificationSettings() {
         <div className="h-px bg-[#09121F] mb-1" />
         
         {/* Use-based reminders with nested Include weekends */}
-        <NotificationCheckbox
+        <CircularCheckbox
           checked={prefs.useBasedReminders}
           onCheckedChange={(checked) => updatePref('useBasedReminders', checked)}
           label="Use-based reminders"
@@ -80,31 +80,31 @@ export function NotificationSettings() {
           />
         )}
         
-        <NotificationCheckbox
+        <CircularCheckbox
           checked={prefs.subscriptionAlerts}
           onCheckedChange={(checked) => updatePref('subscriptionAlerts', checked)}
           label="Subscription alerts"
         />
         
-        <NotificationCheckbox
+        <CircularCheckbox
           checked={prefs.productUpdates}
           onCheckedChange={(checked) => updatePref('productUpdates', checked)}
           label="Product updates & news"
         />
         
-        <NotificationCheckbox
+        <CircularCheckbox
           checked={prefs.recommendations}
           onCheckedChange={(checked) => updatePref('recommendations', checked)}
           label="Recommendations"
         />
         
-        <NotificationCheckbox
+        <CircularCheckbox
           checked={prefs.userFeedbackSurveys}
           onCheckedChange={(checked) => updatePref('userFeedbackSurveys', checked)}
           label="User feedback surveys"
         />
         
-        <NotificationCheckbox
+        <CircularCheckbox
           checked={prefs.discountsRewards}
           onCheckedChange={(checked) => updatePref('discountsRewards', checked)}
           label="Discounts, rewards & referral offers"
@@ -116,19 +116,19 @@ export function NotificationSettings() {
         <h2 className="text-[15px] font-bold text-[#09121F] pb-2">Email</h2>
         <div className="h-px bg-[#09121F] mb-1" />
         
-        <NotificationCheckbox
+        <CircularCheckbox
           checked={prefs.emailSubscriptionAlerts}
           onCheckedChange={(checked) => updatePref('emailSubscriptionAlerts', checked)}
           label="Subscription alerts"
         />
         
-        <NotificationCheckbox
+        <CircularCheckbox
           checked={prefs.emailProductUpdates}
           onCheckedChange={(checked) => updatePref('emailProductUpdates', checked)}
           label="Product updates & news"
         />
         
-        <NotificationCheckbox
+        <CircularCheckbox
           checked={prefs.emailMarketingOffers}
           onCheckedChange={(checked) => updatePref('emailMarketingOffers', checked)}
           label="Marketing offers"
