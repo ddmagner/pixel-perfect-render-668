@@ -15,6 +15,7 @@ import { usePaywall } from '@/hooks/usePaywall';
 import { useHaptics } from '@/hooks/useHaptics';
 import { useAppVersion } from '@/hooks/useAppVersion';
 import { Clock, LogOut, FileText, Crown, ChevronRight } from 'lucide-react';
+import { Switch } from '@/components/ui/switch';
 import type { Client } from '@/types';
 interface SettingsProps {
   highlightSection?: string | null;
@@ -73,9 +74,10 @@ const [isTimeInSettingsExpanded, setIsTimeInSettingsExpanded] = useState(true);
           <span className={`text-sm font-medium ${!settings.invoiceMode ? 'text-[#09121F]' : 'text-[#BFBFBF]'}`}>
             Time Card Mode
           </span>
-          <button onClick={handleModeToggle} className={`w-12 h-6 rounded-full transition-colors ${settings.invoiceMode ? 'bg-[#09121F]' : 'bg-[#BFBFBF]'}`}>
-            <div className={`w-5 h-5 bg-white rounded-full transition-transform ${settings.invoiceMode ? 'translate-x-6' : 'translate-x-0.5'}`} />
-          </button>
+          <Switch
+            checked={settings.invoiceMode}
+            onCheckedChange={handleModeToggle}
+          />
           <span className={`text-sm font-medium ${settings.invoiceMode ? 'text-[#09121F]' : 'text-[#BFBFBF]'}`}>
             Invoice Mode
           </span>
