@@ -191,9 +191,9 @@ const [isTimeInSettingsExpanded, setIsTimeInSettingsExpanded] = useState(false);
                 Privacy Policy
               </button>
               <div className="text-[#BFBFBF] text-xs font-normal">
-                <div>Web Version {versionInfo.webVersion} (build {versionInfo.webBuild})</div>
+                <div>Web Version {versionInfo.webVersion}</div>
                 {versionInfo.nativeVersion && <div>
-                    {`Native App ${versionInfo.nativeVersion}${versionInfo.nativeBuild ? ` (${versionInfo.nativeBuild})` : ''}`}
+                    {`Native App ${versionInfo.nativeVersion}`}
                   </div>}
                 {versionInfo.bundleId && <span className="block">Bundle ID: {versionInfo.bundleId}</span>}
                 {versionInfo.platform !== 'web' && <span className="block capitalize">Platform: {versionInfo.platform}</span>}
