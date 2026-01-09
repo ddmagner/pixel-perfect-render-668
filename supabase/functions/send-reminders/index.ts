@@ -221,7 +221,7 @@ serve(async (req) => {
         ONESIGNAL_APP_ID,
         ONESIGNAL_REST_API_KEY,
         usersForMorningQuote,
-        "Tap to Time In",
+        "Time In Reminder",
         `"${quoteData.quote}" — ${quoteData.author}`,
         { action: 'morning_quote' }
       );
