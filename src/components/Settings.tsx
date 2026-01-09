@@ -47,6 +47,8 @@ export const Settings: React.FC<SettingsProps> = ({
   const [showInvoicePreview, setShowInvoicePreview] = useState(false);
   const [showClientDetails, setShowClientDetails] = useState(false);
   const [selectedClient, setSelectedClient] = useState<Client | null>(null);
+const [isTimeInSettingsExpanded, setIsTimeInSettingsExpanded] = useState(true);
+  const [isUserProfileExpanded, setIsUserProfileExpanded] = useState(true);
   const [isCommunicationsExpanded, setIsCommunicationsExpanded] = useState(true);
   const handleClientDetailsOpen = (client: Client) => {
     selectionChanged();
@@ -85,17 +87,44 @@ export const Settings: React.FC<SettingsProps> = ({
 
       {/* Settings Content */}
       <div className="w-full">
-        {/* Header */}
-        <div className="flex items-baseline justify-between px-2.5 pt-0.5 pb-1">
-          <h1 className="text-[#09121F] text-[28px] font-bold leading-8">Time In settings</h1>
+        {/* Time In Settings Section */}
+        <div className="px-2.5 pt-4 pb-4">
+          <div 
+            className={`flex items-center justify-between cursor-pointer py-2 rounded-lg transition-colors ${isTimeInSettingsExpanded ? 'mb-2' : ''}`}
+            onClick={() => {
+              selectionChanged();
+              setIsTimeInSettingsExpanded(!isTimeInSettingsExpanded);
+            }}
+          >
+            <h1 className="text-[#09121F] text-[28px] font-bold leading-8">Time In settings</h1>
+            <ChevronRight 
+              size={24} 
+              className={`text-[#09121F] transition-transform duration-200 ${isTimeInSettingsExpanded ? 'rotate-90' : ''}`} 
+            />
+          </div>
+          {isTimeInSettingsExpanded && <TimeEntrySettings highlightSection={highlightSection} onClientDetailsOpen={handleClientDetailsOpen} />}
         </div>
-
-        <TimeEntrySettings highlightSection={highlightSection} onClientDetailsOpen={handleClientDetailsOpen} />
         
         {/* User Profile Section */}
         <div className="w-full h-[10px] bg-[#E5E5E5]" />
-        <div className="pt-0.5 pb-1">
-          <UserProfile />
+        <div className="px-2.5 pt-4 pb-4">
+          <div 
+            className={`flex items-center justify-between cursor-pointer py-2 rounded-lg transition-colors ${isUserProfileExpanded ? 'mb-2' : ''}`}
+            onClick={() => {
+              selectionChanged();
+              setIsUserProfileExpanded(!isUserProfileExpanded);
+            }}
+          >
+            <div className="flex items-baseline gap-2">
+              <h1 className="text-[#09121F] text-[28px] font-bold leading-8">User profile</h1>
+              <p className="text-[#09121F] text-sm">(Displays on {settings.invoiceMode ? 'invoice' : 'time card'})</p>
+            </div>
+            <ChevronRight 
+              size={24} 
+              className={`text-[#09121F] transition-transform duration-200 ${isUserProfileExpanded ? 'rotate-90' : ''}`} 
+            />
+          </div>
+          {isUserProfileExpanded && <UserProfile showHeader={false} />}
         </div>
         
         {/* Time Archive Section */}
