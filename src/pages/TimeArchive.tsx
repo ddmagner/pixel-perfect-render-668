@@ -673,7 +673,7 @@ export const TimeArchivePage: React.FC = () => {
                 backgroundColor: '#09121F'
               }}
             >
-              Exit
+              Close
             </button>
           </div>
 
