@@ -88,7 +88,7 @@ const [isTimeInSettingsExpanded, setIsTimeInSettingsExpanded] = useState(true);
       {/* Settings Content */}
       <div className="w-full">
         {/* Time In Settings Section */}
-        <div className="px-2.5 pb-4">
+        <div className="px-2.5 pt-4 pb-4">
           <div 
             className={`flex items-center justify-between cursor-pointer py-2 rounded-lg transition-colors ${isTimeInSettingsExpanded ? 'mb-2' : ''}`}
             onClick={() => {
