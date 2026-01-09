@@ -287,7 +287,7 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
           <div className="flex items-start gap-2.5 w-full px-2.5 py-1">
             <AutocompleteInput
               id="task"
-              placeholder="Doing what?"
+              placeholder="Of what?"
               value={formData.task}
               onChange={(value) => handleInputChange('task', value)}
               suggestions={settings.taskTypes.map(t => t.name)}
