@@ -987,7 +987,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
       </div>
 
       {/* Action Buttons */}
-      <div className="w-full px-2.5 py-5 space-y-3">
+      <div className="w-full px-2.5 pt-2.5 pb-5 space-y-3">
         <button onClick={handleExport} className="w-full text-white py-3.5 font-bold text-sm transition-colors" style={{
         backgroundColor: '#09121F'
       }}>
