@@ -3,7 +3,11 @@ import { useApp } from '@/context/AppContext';
 import { Edit3, Plus, X } from 'lucide-react';
 import { CustomField } from '@/types';
 
-export const UserProfile: React.FC = () => {
+interface UserProfileProps {
+  showHeader?: boolean;
+}
+
+export const UserProfile: React.FC<UserProfileProps> = ({ showHeader = true }) => {
   const { settings, updateSettings } = useApp();
   const [profile, setProfile] = useState(settings.userProfile);
 
@@ -107,13 +111,15 @@ export const UserProfile: React.FC = () => {
   }, [profile.zipCode]);
 
   return (
-    <div className="px-2.5">
-      <div className="pt-5 mb-3">
-        <div className="flex items-baseline gap-2">
-          <h1 className="text-[#09121F] text-[28px] font-bold leading-8">User profile</h1>
-          <p className="text-[#09121F] text-sm">(Displays on {settings.invoiceMode ? 'invoice' : 'time card'})</p>
+    <div>
+      {showHeader && (
+        <div className="pt-5 mb-3 px-2.5">
+          <div className="flex items-baseline gap-2">
+            <h1 className="text-[#09121F] text-[28px] font-bold leading-8">User profile</h1>
+            <p className="text-[#09121F] text-sm">(Displays on {settings.invoiceMode ? 'invoice' : 'time card'})</p>
+          </div>
         </div>
-      </div>
+      )}
       
       <div className="space-y-4 pb-4">
         <div>

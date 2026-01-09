@@ -158,7 +158,7 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
   };
   return <div>
       {/* Clients */}
-      <section className="px-2.5">
+      <section>
         <div className="pt-1.5 mb-3">
           <h3 className="text-[#09121F] text-sm font-bold">Clients</h3>
         </div>
@@ -211,7 +211,7 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
       </section>
 
       {/* Projects */}
-      <section className="px-2.5">
+      <section>
         <div className="pt-5 mb-3">
           <h3 className="text-[#09121F] text-sm font-bold">Projects</h3>
         </div>
@@ -262,7 +262,7 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
       </section>
 
       {/* Tasks */}
-      <section className="px-2.5">
+      <section>
         <div className="pt-5 mb-3">
           <h3 className="text-[#09121F] text-sm font-bold">Tasks</h3>
         </div>
@@ -452,7 +452,7 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
 
       {/* Tax */}
       {settings.invoiceMode && (
-        <section className="px-2.5 pb-[22px]">
+        <section className="pb-[22px]">
           <div className="pt-5 mb-3">
             <div className="flex justify-between items-center">
               <h3 className="text-[#09121F] text-sm font-bold">Tax</h3>
@@ -544,7 +544,7 @@ export const TimeEntrySettings: React.FC<TimeEntrySettingsProps> = ({
       
       {/* Invoice/Time Card Number */}
       {settings.invoiceMode && (
-        <section className="px-2.5 pb-[22px]">
+        <section className="pb-[22px]">
           <div className="pt-5 mb-3">
             <h3 className="text-[#09121F] text-sm font-bold">{viewMode === 'invoice' ? 'Invoice #' : 'Time Card #'}</h3>
           </div>
