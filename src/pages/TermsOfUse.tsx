@@ -76,17 +76,47 @@ const TermsOfUsePage = () => {
           </section>
 
           <section>
-            <h2 className="text-lg font-semibold">7. Limitation of Liability</h2>
+            <h2 className="text-lg font-semibold">7. Subscription Terms</h2>
+            <p className="mb-2">Time In offers subscription plans that provide access to premium features. By subscribing, you agree to the following:</p>
+            <ul className="list-disc pl-5 space-y-1">
+              <li><strong>Free Trial:</strong> New users receive a 14-day free trial. You will not be charged during the trial period. If you do not cancel before the trial ends, your subscription will automatically begin.</li>
+              <li><strong>Pricing:</strong> Subscriptions are available at $24.99/month or $199.99/year. Prices are subject to change with notice.</li>
+              <li><strong>Auto-Renewal:</strong> Subscriptions automatically renew at the end of each billing period unless canceled at least 24 hours before the renewal date. Your payment method will be charged automatically.</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2 className="text-lg font-semibold">8. Cancellation Policy</h2>
+            <p className="mb-2">You may cancel your subscription at any time through your device's subscription management:</p>
+            <ul className="list-disc pl-5 space-y-1">
+              <li><strong>iOS:</strong> Go to Settings → [Your Name] → Subscriptions → Time In → Cancel Subscription</li>
+              <li><strong>Android:</strong> Go to Google Play Store → Menu → Subscriptions → Time In → Cancel Subscription</li>
+            </ul>
+            <p className="mt-2">Cancellation takes effect at the end of your current billing period. You will retain access to premium features until then.</p>
+          </section>
+
+          <section>
+            <h2 className="text-lg font-semibold">9. Refund Policy</h2>
+            <p className="mb-2">Refunds are processed according to the policies of your app store:</p>
+            <ul className="list-disc pl-5 space-y-1">
+              <li><strong>Apple App Store:</strong> Refund requests must be submitted through Apple. Visit reportaproblem.apple.com to request a refund.</li>
+              <li><strong>Google Play Store:</strong> Refund requests within 48 hours of purchase may be processed automatically. For later requests, contact Google Play support.</li>
+            </ul>
+            <p className="mt-2">Time In does not process refunds directly as all payments are handled through the respective app stores.</p>
+          </section>
+
+          <section>
+            <h2 className="text-lg font-semibold">10. Limitation of Liability</h2>
             <p>In no event shall Time In be liable for any damages arising out of the use or inability to use the service, including but not limited to lost profits or data.</p>
           </section>
 
           <section>
-            <h2 className="text-lg font-semibold">8. Changes to Terms</h2>
+            <h2 className="text-lg font-semibold">11. Changes to Terms</h2>
             <p>We reserve the right to modify these terms at any time. Changes will be effective immediately upon posting. Continued use of the service constitutes acceptance of the modified terms.</p>
           </section>
 
           <section>
-            <h2 className="text-lg font-semibold">9. Contact Information</h2>
+            <h2 className="text-lg font-semibold">12. Contact Information</h2>
             <p>If you have any questions about these Terms of Use, please contact us through the app's support channels.</p>
           </section>
         </div>
