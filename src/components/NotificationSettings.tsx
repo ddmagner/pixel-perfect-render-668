@@ -36,7 +36,7 @@ const NestedToggle: React.FC<NestedToggleProps> = ({
   onCheckedChange, 
   label 
 }) => (
-  <div className="flex items-center justify-between py-3 pl-4">
+  <div className="flex items-center justify-between py-3 pl-8 pr-4">
     <span className="text-[15px] font-medium text-[#09121F]">{label}</span>
     <Switch
       checked={checked}
