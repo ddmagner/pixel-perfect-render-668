@@ -26,6 +26,19 @@ async function fetchTimeQuote(): Promise<{ quote: string; author: string } | nul
   }
 }
 
+// Fallback quotes in case the API fails
+const fallbackQuotes = [
+  { quote: "Time is the most valuable thing a man can spend.", author: "Theophrastus" },
+  { quote: "Lost time is never found again.", author: "Benjamin Franklin" },
+  { quote: "The key is not spending time, but investing it.", author: "Stephen Covey" },
+  { quote: "Time you enjoy wasting is not wasted time.", author: "Marthe Troly-Curtin" },
+  { quote: "Better three hours too soon than a minute too late.", author: "William Shakespeare" },
+];
+
+function getRandomFallbackQuote(): { quote: string; author: string } {
+  return fallbackQuotes[Math.floor(Math.random() * fallbackQuotes.length)];
+}
+
 // Day-specific inactivity reminder messages (0 = Sunday, 1 = Monday, etc.)
 const inactivityMessages: Record<number, { title: string; body: string }> = {
   1: { title: "Time is on your side.", body: "Tap to record it." },
@@ -118,10 +131,10 @@ serve(async (req) => {
     console.log(`Running reminder check at ${now.toISOString()}`);
     console.log(`Current hour (UTC): ${currentHour}, Day: ${dayOfWeek}, Is weekend: ${isWeekend}`);
 
-    // Fetch all users with notification settings
+    // Fetch all users with notification settings (including timezone)
     const { data: settings, error: settingsError } = await supabase
       .from('app_settings')
-      .select('user_id, notifications_enabled, reminder_frequency, reminder_time, weekend_reminders');
+      .select('user_id, notifications_enabled, reminder_frequency, reminder_time, weekend_reminders, timezone');
 
     if (settingsError) {
       console.error('Error fetching settings:', settingsError);
@@ -139,93 +152,158 @@ serve(async (req) => {
       inactivityReminder: { sent: 0, users: [] as string[] },
     };
 
-    // ========================================
-    // 1. MORNING QUOTE AT 9 AM (local time approximation)
-    // ========================================
-    // We check if user's reminder_time suggests they're in a timezone where it's ~9 AM
-    // For device-based approach, we'll send quotes at 9 AM UTC to all users with notifications enabled
-    const usersForMorningQuote: string[] = [];
-    
-    if (currentHour === 9) {
-      for (const setting of settings || []) {
-        if (!setting.notifications_enabled) continue;
-        if (isWeekend && !setting.weekend_reminders) continue;
-        usersForMorningQuote.push(setting.user_id);
+    // Helper: Get local day of week for a user based on their timezone
+    function getUserLocalDayOfWeek(timezone: string | null): number {
+      try {
+        const tz = timezone || 'UTC';
+        const formatter = new Intl.DateTimeFormat('en-US', { 
+          weekday: 'long', 
+          timeZone: tz 
+        });
+        const dayName = formatter.format(now);
+        const dayMap: Record<string, number> = {
+          'Sunday': 0, 'Monday': 1, 'Tuesday': 2, 'Wednesday': 3,
+          'Thursday': 4, 'Friday': 5, 'Saturday': 6
+        };
+        return dayMap[dayName] ?? dayOfWeek;
+      } catch {
+        return dayOfWeek; // Fallback to UTC day
       }
+    }
 
-      if (usersForMorningQuote.length > 0) {
-        // Fetch a quote
-        let quoteData = await fetchTimeQuote();
-        if (!quoteData) {
-          quoteData = getRandomFallbackQuote();
-        }
+    // Helper: Check if it's weekend in user's timezone
+    function isUserWeekend(timezone: string | null): boolean {
+      const localDay = getUserLocalDayOfWeek(timezone);
+      return localDay === 0 || localDay === 6;
+    }
 
-        const quoteResult = await sendNotification(
-          ONESIGNAL_APP_ID,
-          ONESIGNAL_REST_API_KEY,
-          usersForMorningQuote,
-          "✨ Morning Inspiration",
-          `"${quoteData.quote}" — ${quoteData.author}`,
-          { action: 'morning_quote' }
-        );
-
-        if (quoteResult.success) {
-          results.morningQuote.sent = usersForMorningQuote.length;
-          results.morningQuote.users = usersForMorningQuote;
-          console.log(`Sent morning quote to ${usersForMorningQuote.length} users`);
-        }
+    // Helper: Get local hour for a user based on their timezone
+    function getUserLocalHour(timezone: string | null): number {
+      try {
+        const tz = timezone || 'UTC';
+        const formatter = new Intl.DateTimeFormat('en-US', { 
+          hour: 'numeric', 
+          hour12: false,
+          timeZone: tz 
+        });
+        return parseInt(formatter.format(now), 10);
+      } catch {
+        return currentHour; // Fallback to UTC hour
       }
     }
 
     // ========================================
-    // 2. 48-HOUR INACTIVITY REMINDER AT 1 PM
+    // 1. MORNING QUOTE AT 9 AM LOCAL TIME
     // ========================================
-    const usersForInactivityReminder: string[] = [];
+    const usersForMorningQuote: string[] = [];
+    
+    for (const setting of settings || []) {
+      if (!setting.notifications_enabled) continue;
+      
+      const userLocalHour = getUserLocalHour(setting.timezone);
+      const userIsWeekend = isUserWeekend(setting.timezone);
+      
+      // Send at 9 AM local time
+      if (userLocalHour === 9) {
+        if (userIsWeekend && !setting.weekend_reminders) continue;
+        usersForMorningQuote.push(setting.user_id);
+      }
+    }
 
-    if (currentHour === 13) {
-      // Get all users who have notifications enabled
-      const activeUserIds = (settings || [])
-        .filter(s => s.notifications_enabled)
-        .filter(s => !isWeekend || s.weekend_reminders)
-        .map(s => s.user_id);
+    if (usersForMorningQuote.length > 0) {
+      // Fetch a quote
+      let quoteData = await fetchTimeQuote();
+      if (!quoteData) {
+        quoteData = getRandomFallbackQuote();
+      }
 
-      if (activeUserIds.length > 0) {
-        // Check who has logged time in the last 48 hours
-        const { data: recentEntries, error: recentError } = await supabase
-          .from('time_entries')
-          .select('user_id')
-          .gte('date', fortyEightHoursAgoDate)
-          .in('user_id', activeUserIds);
+      const quoteResult = await sendNotification(
+        ONESIGNAL_APP_ID,
+        ONESIGNAL_REST_API_KEY,
+        usersForMorningQuote,
+        "✨ Morning Inspiration",
+        `"${quoteData.quote}" — ${quoteData.author}`,
+        { action: 'morning_quote' }
+      );
 
-        if (recentError) {
-          console.error('Error fetching recent entries:', recentError);
-        } else {
-          const usersWithRecentEntries = new Set(recentEntries?.map(e => e.user_id) || []);
-          
-          // Users who haven't logged in 48 hours
-          for (const userId of activeUserIds) {
-            if (!usersWithRecentEntries.has(userId)) {
-              usersForInactivityReminder.push(userId);
-            }
+      if (quoteResult.success) {
+        results.morningQuote.sent = usersForMorningQuote.length;
+        results.morningQuote.users = usersForMorningQuote;
+        console.log(`Sent morning quote to ${usersForMorningQuote.length} users at their local 9 AM`);
+      }
+    }
+
+    // ========================================
+    // 2. 48-HOUR INACTIVITY REMINDER AT 1 PM LOCAL TIME
+    // ========================================
+    // Collect users who should receive inactivity reminders based on their local 1 PM
+    const usersForInactivityCheck: Array<{ userId: string; timezone: string | null }> = [];
+
+    for (const setting of settings || []) {
+      if (!setting.notifications_enabled) continue;
+      
+      const userLocalHour = getUserLocalHour(setting.timezone);
+      const userIsWeekend = isUserWeekend(setting.timezone);
+      
+      // Send at 1 PM local time
+      if (userLocalHour === 13) {
+        if (userIsWeekend && !setting.weekend_reminders) continue;
+        usersForInactivityCheck.push({ userId: setting.user_id, timezone: setting.timezone });
+      }
+    }
+
+    const usersForInactivityReminder: Array<{ userId: string; timezone: string | null }> = [];
+
+    if (usersForInactivityCheck.length > 0) {
+      const activeUserIds = usersForInactivityCheck.map(u => u.userId);
+      
+      // Check who has logged time in the last 48 hours
+      const { data: recentEntries, error: recentError } = await supabase
+        .from('time_entries')
+        .select('user_id')
+        .gte('date', fortyEightHoursAgoDate)
+        .in('user_id', activeUserIds);
+
+      if (recentError) {
+        console.error('Error fetching recent entries:', recentError);
+      } else {
+        const usersWithRecentEntries = new Set(recentEntries?.map(e => e.user_id) || []);
+        
+        // Users who haven't logged in 48 hours
+        for (const user of usersForInactivityCheck) {
+          if (!usersWithRecentEntries.has(user.userId)) {
+            usersForInactivityReminder.push(user);
           }
+        }
 
-          if (usersForInactivityReminder.length > 0) {
-            const message = getInactivityMessage(dayOfWeek);
-            const inactivityResult = await sendNotification(
-              ONESIGNAL_APP_ID,
-              ONESIGNAL_REST_API_KEY,
-              usersForInactivityReminder,
-              message.title,
-              message.body,
-              { action: 'inactivity_reminder' }
-            );
+        // Group users by their local day of week to send correct day-specific messages
+        const usersByLocalDay: Record<number, string[]> = {};
+        for (const user of usersForInactivityReminder) {
+          const localDay = getUserLocalDayOfWeek(user.timezone);
+          if (!usersByLocalDay[localDay]) {
+            usersByLocalDay[localDay] = [];
+          }
+          usersByLocalDay[localDay].push(user.userId);
+        }
 
-            if (inactivityResult.success) {
-              results.inactivityReminder.sent = usersForInactivityReminder.length;
-              results.inactivityReminder.users = usersForInactivityReminder;
-              console.log(`Sent inactivity reminders to ${usersForInactivityReminder.length} users (${message.title})`);
-              console.log(`Day of week: ${dayOfWeek}, Message: ${message.title} - ${message.body}`);
-            }
+        // Send notifications grouped by day
+        for (const [dayStr, userIds] of Object.entries(usersByLocalDay)) {
+          const localDay = parseInt(dayStr, 10);
+          const message = getInactivityMessage(localDay);
+          
+          const inactivityResult = await sendNotification(
+            ONESIGNAL_APP_ID,
+            ONESIGNAL_REST_API_KEY,
+            userIds,
+            message.title,
+            message.body,
+            { action: 'inactivity_reminder' }
+          );
+
+          if (inactivityResult.success) {
+            results.inactivityReminder.sent += userIds.length;
+            results.inactivityReminder.users.push(...userIds);
+            console.log(`Sent inactivity reminders to ${userIds.length} users for local day ${localDay} (${message.title})`);
           }
         }
       }

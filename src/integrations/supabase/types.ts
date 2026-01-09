@@ -25,6 +25,7 @@ export type Database = {
           reminder_frequency: string
           reminder_time: string
           sort_option: string
+          timezone: string | null
           updated_at: string
           user_id: string
           weekend_reminders: boolean
@@ -39,6 +40,7 @@ export type Database = {
           reminder_frequency?: string
           reminder_time?: string
           sort_option?: string
+          timezone?: string | null
           updated_at?: string
           user_id: string
           weekend_reminders?: boolean
@@ -53,6 +55,7 @@ export type Database = {
           reminder_frequency?: string
           reminder_time?: string
           sort_option?: string
+          timezone?: string | null
           updated_at?: string
           user_id?: string
           weekend_reminders?: boolean
