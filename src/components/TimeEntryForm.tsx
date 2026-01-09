@@ -337,7 +337,7 @@ export const TimeEntryForm: React.FC<TimeEntryFormProps> = ({
           <div className="flex items-start gap-2.5 w-full px-2.5 py-1">
             <AutocompleteInput
               id="client"
-              placeholder="For who?"
+              placeholder="For whom?"
               value={formData.client}
               onChange={(value) => handleInputChange('client', value)}
               suggestions={settings.clients.map(c => c.name)}
