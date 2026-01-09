@@ -83,7 +83,7 @@ const [isTimeInSettingsExpanded, setIsTimeInSettingsExpanded] = useState(true);
       </div>
 
       {/* Divider */}
-      <div className="w-full px-2.5 mb-6"><div className="h-px bg-[#09121F]" /></div>
+      <div className="w-full px-2.5"><div className="h-px bg-[#09121F]" /></div>
 
       {/* Settings Content */}
       <div className="w-full">
