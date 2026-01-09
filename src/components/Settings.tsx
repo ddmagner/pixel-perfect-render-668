@@ -90,7 +90,7 @@ const [isTimeInSettingsExpanded, setIsTimeInSettingsExpanded] = useState(true);
         {/* Time In Settings Section */}
         <div className="px-2.5 pb-4">
           <div 
-            className={`flex items-center justify-between cursor-pointer pt-4 pb-2 rounded-lg transition-colors ${isTimeInSettingsExpanded ? 'mb-2' : ''}`}
+            className={`flex items-center justify-between cursor-pointer py-2 rounded-lg transition-colors ${isTimeInSettingsExpanded ? 'mb-2' : ''}`}
             onClick={() => {
               selectionChanged();
               setIsTimeInSettingsExpanded(!isTimeInSettingsExpanded);
