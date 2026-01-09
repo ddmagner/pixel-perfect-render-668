@@ -26,23 +26,20 @@ async function fetchTimeQuote(): Promise<{ quote: string; author: string } | nul
   }
 }
 
-// Fallback quotes about time if API fails
-const fallbackTimeQuotes = [
-  { quote: "Time is what we want most, but what we use worst.", author: "William Penn" },
-  { quote: "The key is in not spending time, but in investing it.", author: "Stephen R. Covey" },
-  { quote: "Time flies over us, but leaves its shadow behind.", author: "Nathaniel Hawthorne" },
-  { quote: "Lost time is never found again.", author: "Benjamin Franklin" },
-  { quote: "Time is the wisest counselor of all.", author: "Pericles" },
-  { quote: "The two most powerful warriors are patience and time.", author: "Leo Tolstoy" },
-  { quote: "Time is the most valuable thing a man can spend.", author: "Theophrastus" },
-  { quote: "Yesterday is gone. Tomorrow has not yet come. We have only today.", author: "Mother Teresa" },
-  { quote: "Time you enjoy wasting is not wasted time.", author: "Marthe Troly-Curtin" },
-  { quote: "Better three hours too soon than a minute too late.", author: "William Shakespeare" },
-];
+// Day-specific inactivity reminder messages (0 = Sunday, 1 = Monday, etc.)
+const inactivityMessages: Record<number, { title: string; body: string }> = {
+  1: { title: "Time is on your side.", body: "Tap to record it." },
+  2: { title: "Get your time in.", body: "Tap to track it." },
+  3: { title: "Time getting away?", body: "Tap to capture it." },
+  4: { title: "Have time?", body: "Tap to capture minutes." },
+  5: { title: "Time flies!", body: "Tap to recap the week." },
+};
 
-function getRandomFallbackQuote() {
-  const index = Math.floor(Math.random() * fallbackTimeQuotes.length);
-  return fallbackTimeQuotes[index];
+// Default fallback for weekends (if ever triggered)
+const defaultInactivityMessage = { title: "Time is on your side.", body: "Tap to record it." };
+
+function getInactivityMessage(dayOfWeek: number): { title: string; body: string } {
+  return inactivityMessages[dayOfWeek] || defaultInactivityMessage;
 }
 
 // Send notification via OneSignal
@@ -140,7 +137,6 @@ serve(async (req) => {
     const results = {
       morningQuote: { sent: 0, users: [] as string[] },
       inactivityReminder: { sent: 0, users: [] as string[] },
-      dailyReminder: { sent: 0, users: [] as string[] },
     };
 
     // ========================================
@@ -214,99 +210,30 @@ serve(async (req) => {
           }
 
           if (usersForInactivityReminder.length > 0) {
+            const message = getInactivityMessage(dayOfWeek);
             const inactivityResult = await sendNotification(
               ONESIGNAL_APP_ID,
               ONESIGNAL_REST_API_KEY,
               usersForInactivityReminder,
-              "⏰ We miss you!",
-              "You haven't logged any time in 48 hours. Take a moment to track your work!",
+              message.title,
+              message.body,
               { action: 'inactivity_reminder' }
             );
 
             if (inactivityResult.success) {
               results.inactivityReminder.sent = usersForInactivityReminder.length;
               results.inactivityReminder.users = usersForInactivityReminder;
-              console.log(`Sent inactivity reminders to ${usersForInactivityReminder.length} users`);
+              console.log(`Sent inactivity reminders to ${usersForInactivityReminder.length} users (${message.title})`);
+              console.log(`Day of week: ${dayOfWeek}, Message: ${message.title} - ${message.body}`);
             }
           }
         }
       }
     }
 
-    // ========================================
-    // 3. REGULAR DAILY REMINDERS (based on user preferences)
-    // ========================================
-    const usersForDailyReminder: string[] = [];
+    // Daily reminder section removed - only morning quotes and inactivity reminders are active
 
-    for (const setting of settings || []) {
-      // Skip if notifications disabled or frequency is 'never'
-      if (!setting.notifications_enabled || setting.reminder_frequency === 'never') {
-        continue;
-      }
-
-      // Check weekend preference
-      if (isWeekend && !setting.weekend_reminders) {
-        continue;
-      }
-
-      // Check if frequency matches today
-      if (setting.reminder_frequency === 'weekdays' && isWeekend) {
-        continue;
-      }
-
-      if (setting.reminder_frequency === 'weekly' && dayOfWeek !== 5) {
-        continue;
-      }
-
-      // Check if current hour matches reminder time
-      const reminderHour = parseInt(setting.reminder_time?.split(':')[0] || '18', 10);
-      if (currentHour !== reminderHour) {
-        continue;
-      }
-
-      // Skip users who already got morning quote or inactivity reminder this hour
-      if (usersForMorningQuote.includes(setting.user_id) || usersForInactivityReminder.includes(setting.user_id)) {
-        continue;
-      }
-
-      usersForDailyReminder.push(setting.user_id);
-    }
-
-    if (usersForDailyReminder.length > 0) {
-      // Check which users have NOT logged time today
-      const { data: todayEntries, error: entriesError } = await supabase
-        .from('time_entries')
-        .select('user_id')
-        .gte('date', todayStart)
-        .lte('date', todayStart)
-        .in('user_id', usersForDailyReminder);
-
-      if (entriesError) {
-        console.error('Error fetching time entries:', entriesError);
-      } else {
-        const usersWithEntries = new Set(todayEntries?.map(e => e.user_id) || []);
-        const usersNeedingReminder = usersForDailyReminder.filter(userId => !usersWithEntries.has(userId));
-
-        if (usersNeedingReminder.length > 0) {
-          const dailyResult = await sendNotification(
-            ONESIGNAL_APP_ID,
-            ONESIGNAL_REST_API_KEY,
-            usersNeedingReminder,
-            "Don't forget to log your time!",
-            "You haven't logged any time today. Tap to add your hours.",
-            { action: 'log_time' }
-          );
-
-          if (dailyResult.success) {
-            results.dailyReminder.sent = usersNeedingReminder.length;
-            results.dailyReminder.users = usersNeedingReminder;
-            console.log(`Sent daily reminders to ${usersNeedingReminder.length} users`);
-          }
-        }
-      }
-    }
-
-    const totalSent = results.morningQuote.sent + results.inactivityReminder.sent + results.dailyReminder.sent;
+    const totalSent = results.morningQuote.sent + results.inactivityReminder.sent;
 
     console.log(`Total notifications sent: ${totalSent}`);
     console.log('Results:', JSON.stringify(results, null, 2));
