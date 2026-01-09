@@ -41,6 +41,18 @@ interface RevenueCatWebhookEvent {
   };
 }
 
+// Constant-time string comparison to prevent timing attacks
+function constantTimeEqual(a: string, b: string): boolean {
+  if (a.length !== b.length) {
+    return false;
+  }
+  let result = 0;
+  for (let i = 0; i < a.length; i++) {
+    result |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  }
+  return result === 0;
+}
+
 serve(async (req) => {
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
@@ -48,11 +60,11 @@ serve(async (req) => {
   }
 
   try {
-    // Verify webhook authorization
-    const authHeader = req.headers.get('authorization');
-    const expectedAuth = Deno.env.get('REVENUECAT_WEBHOOK_AUTH_HEADER');
+    // Verify webhook authorization using constant-time comparison
+    const authHeader = req.headers.get('authorization') || '';
+    const expectedAuth = Deno.env.get('REVENUECAT_WEBHOOK_AUTH_HEADER') || '';
     
-    if (!expectedAuth || authHeader !== expectedAuth) {
+    if (!expectedAuth || !constantTimeEqual(authHeader, expectedAuth)) {
       console.error('Unauthorized webhook request');
       return new Response(JSON.stringify({ error: 'Unauthorized' }), {
         status: 401,
