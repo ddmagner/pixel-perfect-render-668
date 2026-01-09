@@ -80,19 +80,21 @@ serve(async (req) => {
       case 'RENEWAL':
       case 'UNCANCELLATION':
       case 'NON_RENEWING_PURCHASE':
+        // User has converted from trial or renewed - set to active
         status = 'active';
         if (event.expiration_at_ms) {
           expiresAt = new Date(event.expiration_at_ms).toISOString();
         }
         break;
       case 'CANCELLATION':
-        // Keep active until expiration
+        // Keep active until expiration, but mark as cancelled
         status = 'cancelled';
         if (event.expiration_at_ms) {
           expiresAt = new Date(event.expiration_at_ms).toISOString();
         }
         break;
       case 'EXPIRATION':
+        // Subscription has expired - user needs to resubscribe
         status = 'expired';
         break;
       case 'SUBSCRIPTION_PAUSED':
@@ -110,17 +112,22 @@ serve(async (req) => {
 
     console.log(`Updating subscription for user ${userId}: status=${status}, expires_at=${expiresAt}`);
 
-    // Upsert subscription record
+    // Upsert subscription record - clearing trial fields when user converts to paid
+    const updateData: Record<string, unknown> = {
+      user_id: userId,
+      status,
+      plan_id: event.product_id,
+      transaction_id: event.id,
+      expires_at: expiresAt,
+      updated_at: new Date().toISOString(),
+    };
+
+    // If user is converting to paid subscription, we keep trial_started_at for records
+    // but the status change to 'active' means they're no longer in trial
+
     const { error: upsertError } = await supabase
       .from('subscriptions')
-      .upsert({
-        user_id: userId,
-        status,
-        plan_id: event.product_id,
-        transaction_id: event.id,
-        expires_at: expiresAt,
-        updated_at: new Date().toISOString(),
-      }, {
+      .upsert(updateData, {
         onConflict: 'user_id',
       });
 
