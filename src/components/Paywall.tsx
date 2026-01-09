@@ -128,7 +128,7 @@ export function Paywall({ isOpen, onClose }: PaywallProps) {
               }`}
             >
               <div className="absolute -top-2 right-4 px-2 py-0.5 bg-primary text-primary-foreground text-xs font-semibold rounded-full">
-                Save 40%
+                Save 33%
               </div>
               <div className="flex justify-between items-start">
                 <div>
@@ -136,8 +136,8 @@ export function Paywall({ isOpen, onClose }: PaywallProps) {
                   <div className="text-sm text-muted-foreground">Billed annually</div>
                 </div>
                 <div className="text-right">
-                  <div className="font-bold text-lg text-foreground">$4.99</div>
-                  <div className="text-xs text-muted-foreground">/month</div>
+                  <div className="font-bold text-lg text-foreground">$199.99</div>
+                  <div className="text-xs text-muted-foreground">/year</div>
                 </div>
               </div>
             </button>
@@ -156,7 +156,7 @@ export function Paywall({ isOpen, onClose }: PaywallProps) {
                   <div className="text-sm text-muted-foreground">Billed monthly</div>
                 </div>
                 <div className="text-right">
-                  <div className="font-bold text-lg text-foreground">$7.99</div>
+                  <div className="font-bold text-lg text-foreground">$24.99</div>
                   <div className="text-xs text-muted-foreground">/month</div>
                 </div>
               </div>

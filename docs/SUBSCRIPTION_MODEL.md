@@ -7,8 +7,8 @@ Time In uses a **14-day free trial** model with automatic conversion to paid sub
 ## Pricing Model
 
 - **Free Trial**: 14 days from account creation
-- **Monthly**: $7.99/month
-- **Yearly**: $4.99/month (billed annually at $59.88)
+- **Monthly**: $24.99/month (auto-renewing)
+- **Yearly**: $199.99/year (auto-renewing, ~33% savings)
 
 ## Billing Platforms
 
@@ -98,8 +98,8 @@ Create these products in your app stores and configure in RevenueCat:
 
 | Product ID | Description | Price |
 |------------|-------------|-------|
-| `premium_monthly` | Monthly subscription | $7.99 |
-| `premium_yearly` | Annual subscription | $59.88 |
+| `premium_monthly` | Monthly subscription (auto-renewing) | $24.99 |
+| `premium_yearly` | Annual subscription (auto-renewing) | $199.99 |
 
 ### RevenueCat Entitlements
 
