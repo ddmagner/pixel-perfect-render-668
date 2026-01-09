@@ -48,9 +48,9 @@ export const Settings: React.FC<SettingsProps> = ({
   const [showInvoicePreview, setShowInvoicePreview] = useState(false);
   const [showClientDetails, setShowClientDetails] = useState(false);
   const [selectedClient, setSelectedClient] = useState<Client | null>(null);
-const [isTimeInSettingsExpanded, setIsTimeInSettingsExpanded] = useState(true);
-  const [isUserProfileExpanded, setIsUserProfileExpanded] = useState(true);
-  const [isCommunicationsExpanded, setIsCommunicationsExpanded] = useState(true);
+const [isTimeInSettingsExpanded, setIsTimeInSettingsExpanded] = useState(false);
+  const [isUserProfileExpanded, setIsUserProfileExpanded] = useState(false);
+  const [isCommunicationsExpanded, setIsCommunicationsExpanded] = useState(false);
   const handleClientDetailsOpen = (client: Client) => {
     selectionChanged();
     setSelectedClient(client);
