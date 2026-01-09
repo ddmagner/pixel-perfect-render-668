@@ -1,5 +1,7 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useApp } from '@/context/AppContext';
+import { getDespiaEnvironment } from '@/hooks/useDespia';
+import { SpeechRecognition as CapacitorSpeechRecognition } from '@capacitor-community/speech-recognition';
 
 interface SpeechRecognitionHook {
   isListening: boolean;
@@ -11,86 +13,163 @@ interface SpeechRecognitionHook {
   isSupported: boolean;
 }
 
+// Check environment once
+const { isNative } = getDespiaEnvironment();
+
 export function useSpeechRecognition(): SpeechRecognitionHook {
   const { hasMicrophonePermission } = useApp();
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState('');
   const [finalTranscript, setFinalTranscript] = useState('');
-  const recognition = useRef<SpeechRecognition | null>(null);
+  const [isNativeAvailable, setIsNativeAvailable] = useState<boolean | null>(null);
+  const webRecognition = useRef<SpeechRecognition | null>(null);
 
-  // Check if speech recognition is supported and we have microphone permission
-  const isSupported = typeof window !== 'undefined' && 
-    ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) &&
-    hasMicrophonePermission;
-
+  // Check native speech recognition availability
   useEffect(() => {
-    if (!isSupported) return;
+    const checkNativeAvailability = async () => {
+      if (isNative) {
+        try {
+          const { available } = await CapacitorSpeechRecognition.available();
+          setIsNativeAvailable(available);
+        } catch (error) {
+          console.debug('Native speech recognition not available:', error);
+          setIsNativeAvailable(false);
+        }
+      } else {
+        setIsNativeAvailable(false);
+      }
+    };
+    checkNativeAvailability();
+  }, []);
 
-    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-    recognition.current = new SpeechRecognition();
+  // Check if Web Speech API is supported
+  const isWebSupported = typeof window !== 'undefined' && 
+    ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window);
 
-    recognition.current.continuous = true;
-    recognition.current.interimResults = true;
-    recognition.current.lang = 'en-US';
+  // Overall support check
+  const isSupported = (isNativeAvailable === true || (isNativeAvailable === false && isWebSupported)) && hasMicrophonePermission;
 
-    recognition.current.onresult = (event: any) => {
+  // Initialize Web Speech API (fallback for web)
+  useEffect(() => {
+    if (isNativeAvailable !== false || !isWebSupported) return;
+
+    const SpeechRecognitionAPI = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    webRecognition.current = new SpeechRecognitionAPI();
+
+    webRecognition.current.continuous = true;
+    webRecognition.current.interimResults = true;
+    webRecognition.current.lang = 'en-US';
+
+    webRecognition.current.onresult = (event: any) => {
       let currentFinalTranscript = '';
       let interimTranscript = '';
 
       for (let i = event.resultIndex; i < event.results.length; i++) {
-        const transcript = event.results[i][0].transcript;
+        const transcriptText = event.results[i][0].transcript;
         if (event.results[i].isFinal) {
-          currentFinalTranscript += transcript;
+          currentFinalTranscript += transcriptText;
         } else {
-          interimTranscript += transcript;
+          interimTranscript += transcriptText;
         }
       }
 
-      // Update the final transcript when we have finalized speech
       if (currentFinalTranscript) {
         setFinalTranscript(prev => prev + currentFinalTranscript);
       }
 
-      // Show both final and interim for UI display
-      setTranscript(finalTranscript + currentFinalTranscript + interimTranscript);
+      setTranscript(prev => {
+        const base = finalTranscript + currentFinalTranscript;
+        return base + interimTranscript;
+      });
     };
 
-    recognition.current.onstart = () => {
+    webRecognition.current.onstart = () => {
       setIsListening(true);
     };
 
-    recognition.current.onend = () => {
+    webRecognition.current.onend = () => {
       setIsListening(false);
     };
 
-    recognition.current.onerror = (event: any) => {
-      console.error('Speech recognition error:', event.error);
+    webRecognition.current.onerror = (event: any) => {
+      console.error('Web speech recognition error:', event.error);
       setIsListening(false);
     };
 
     return () => {
-      if (recognition.current) {
-        recognition.current.stop();
+      if (webRecognition.current) {
+        webRecognition.current.stop();
       }
     };
-  }, [isSupported]);
+  }, [isNativeAvailable, isWebSupported, finalTranscript]);
 
-  const startListening = () => {
-    if (recognition.current && !isListening && hasMicrophonePermission) {
-      recognition.current.start();
+  // Set up native speech recognition listeners
+  useEffect(() => {
+    if (!isNativeAvailable) return;
+
+    // Listen to partial results from native
+    const partialListener = CapacitorSpeechRecognition.addListener('partialResults', (data: any) => {
+      if (data.matches && data.matches.length > 0) {
+        // Update transcript with partial results
+        setTranscript(finalTranscript + data.matches[0]);
+      }
+    });
+
+    return () => {
+      partialListener.then(l => l.remove()).catch(() => {});
+    };
+  }, [isNativeAvailable, finalTranscript]);
+
+  const startListening = useCallback(async () => {
+    if (!hasMicrophonePermission) return;
+
+    if (isNativeAvailable) {
+      // Use native speech recognition
+      try {
+        // Check/request permissions first
+        const permissionStatus = await CapacitorSpeechRecognition.checkPermissions();
+        if (permissionStatus.speechRecognition !== 'granted') {
+          const requestResult = await CapacitorSpeechRecognition.requestPermissions();
+          if (requestResult.speechRecognition !== 'granted') {
+            console.error('Speech recognition permission denied');
+            return;
+          }
+        }
+
+        setIsListening(true);
+        await CapacitorSpeechRecognition.start({
+          language: 'en-US',
+          partialResults: true,
+          popup: false, // Don't show Android popup
+        });
+      } catch (error) {
+        console.error('Native speech recognition error:', error);
+        setIsListening(false);
+      }
+    } else if (webRecognition.current && !isListening) {
+      // Fallback to Web Speech API
+      webRecognition.current.start();
     }
-  };
+  }, [hasMicrophonePermission, isNativeAvailable, isListening]);
 
-  const stopListening = () => {
-    if (recognition.current && isListening) {
-      recognition.current.stop();
+  const stopListening = useCallback(async () => {
+    if (isNativeAvailable) {
+      try {
+        await CapacitorSpeechRecognition.stop();
+        setIsListening(false);
+      } catch (error) {
+        console.error('Error stopping native speech recognition:', error);
+        setIsListening(false);
+      }
+    } else if (webRecognition.current && isListening) {
+      webRecognition.current.stop();
     }
-  };
+  }, [isNativeAvailable, isListening]);
 
-  const resetTranscript = () => {
+  const resetTranscript = useCallback(() => {
     setTranscript('');
     setFinalTranscript('');
-  };
+  }, []);
 
   return {
     isListening,
