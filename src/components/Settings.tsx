@@ -127,12 +127,6 @@ const [isTimeInSettingsExpanded, setIsTimeInSettingsExpanded] = useState(true);
           {isUserProfileExpanded && <UserProfile showHeader={false} />}
         </div>
         
-        {/* Time Archive Section */}
-        <div className="w-full h-[10px] bg-[#E5E5E5]" />
-        <div className="px-2.5 pt-4 pb-4">
-          <TimeArchive />
-        </div>
-
         {/* Communications Section */}
         <div className="w-full h-[10px] bg-[#E5E5E5]" />
         <div className="px-2.5 pt-4 pb-4">
@@ -171,6 +165,12 @@ const [isTimeInSettingsExpanded, setIsTimeInSettingsExpanded] = useState(true);
               </div>
             </div>
           </div>
+        </div>
+
+        {/* Time Archive Section */}
+        <div className="w-full h-[10px] bg-[#E5E5E5]" />
+        <div className="px-2.5 pt-4 pb-4">
+          <TimeArchive />
         </div>
 
         {/* Premium Subscription Section */}
