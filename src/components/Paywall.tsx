@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { X, Check, Crown, Zap } from 'lucide-react';
+import { X, Check, Crown, Zap, Clock } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useRevenueCat } from '@/hooks/useRevenueCat';
 import { useSubscription } from '@/context/SubscriptionContext';
@@ -27,7 +27,7 @@ const FEATURES = [
 export function Paywall({ isOpen, onClose }: PaywallProps) {
   const { user } = useAuth();
   const { purchase, isPurchasing, purchaseSuccess, isDespiaNative, reset } = useRevenueCat();
-  const { refetch, isPremium } = useSubscription();
+  const { refetch, isPremium, isTrialExpired, trialDaysRemaining } = useSubscription();
   const [selectedPlan, setSelectedPlan] = useState<'monthly' | 'yearly'>('yearly');
   const [pollingCount, setPollingCount] = useState(0);
 
@@ -65,23 +65,36 @@ export function Paywall({ isOpen, onClose }: PaywallProps) {
         className="relative w-full max-w-sm mx-4 bg-white rounded-2xl overflow-hidden"
         style={{ maxHeight: 'calc(100vh - 40px)' }}
       >
-        {/* Close button */}
-        <button
-          onClick={onClose}
-          className="absolute top-4 right-4 z-10 p-2 rounded-full bg-white/80 hover:bg-white transition-colors"
-          aria-label="Close"
-        >
-          <X size={20} className="text-foreground" />
-        </button>
+        {/* Close button - only show if not trial expired */}
+        {!isTrialExpired && (
+          <button
+            onClick={onClose}
+            className="absolute top-4 right-4 z-10 p-2 rounded-full bg-white/80 hover:bg-white transition-colors"
+            aria-label="Close"
+          >
+            <X size={20} className="text-foreground" />
+          </button>
+        )}
 
         {/* Header */}
         <div className="bg-primary text-primary-foreground px-6 py-8 text-center">
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-white/20 mb-4">
-            <Crown size={32} className="text-white" />
+            {isTrialExpired ? (
+              <Clock size={32} className="text-white" />
+            ) : (
+              <Crown size={32} className="text-white" />
+            )}
           </div>
-          <h2 className="text-2xl font-bold mb-2">Upgrade to Premium</h2>
+          <h2 className="text-2xl font-bold mb-2">
+            {isTrialExpired ? 'Trial Ended' : 'Continue with Time In'}
+          </h2>
           <p className="text-primary-foreground/80 text-sm">
-            Unlock all features and supercharge your time tracking
+            {isTrialExpired 
+              ? 'Subscribe to keep using all features'
+              : trialDaysRemaining !== null && trialDaysRemaining > 0
+                ? `${trialDaysRemaining} day${trialDaysRemaining === 1 ? '' : 's'} left in your trial`
+                : 'Subscribe to unlock all features'
+            }
           </p>
         </div>
 
