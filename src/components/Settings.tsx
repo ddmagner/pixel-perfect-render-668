@@ -13,6 +13,7 @@ import { useHaptics } from '@/hooks/useHaptics';
 import { useAppVersion } from '@/hooks/useAppVersion';
 import { ChevronRight } from 'lucide-react';
 import { Switch } from '@/components/ui/switch';
+import { sanitizeColor } from '@/utils/colorSanitizer';
 import type { Client } from '@/types';
 interface SettingsProps {
   highlightSection?: string | null;
@@ -150,9 +151,9 @@ const [isTimeInSettingsExpanded, setIsTimeInSettingsExpanded] = useState(false);
                 <p className="text-[#09121F] text-sm underline">Customize your accent color</p>
               </div>
               <div className="w-8 h-8 bg-white rounded-lg flex items-center ml-auto">
-                <div dangerouslySetInnerHTML={{
-                __html: `<svg width="32" height="32" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" style="width: 32px; height: 32px; aspect-ratio: 1/1; fill: ${settings.accentColor};"> <path d="M5.75 0.5C8.78765 0.5 11.25 2.96235 11.25 6C11.25 9.03765 8.78765 11.5 5.75 11.5C4.8139 11.5 3.93225 11.2663 3.1606 10.8538L0.25 11.5L0.8968 8.5905C0.4843 7.8183 0.25 6.93665 0.25 6C0.25 2.96235 2.71235 0.5 5.75 0.5Z" fill="${settings.accentColor}"></path> </svg>`
-              }} />
+                <svg width="32" height="32" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ width: '32px', height: '32px', aspectRatio: '1/1' }}>
+                  <path d="M5.75 0.5C8.78765 0.5 11.25 2.96235 11.25 6C11.25 9.03765 8.78765 11.5 5.75 11.5C4.8139 11.5 3.93225 11.2663 3.1606 10.8538L0.25 11.5L0.8968 8.5905C0.4843 7.8183 0.25 6.93665 0.25 6C0.25 2.96235 2.71235 0.5 5.75 0.5Z" fill={sanitizeColor(settings.accentColor)} />
+                </svg>
               </div>
             </div>
           </div>
