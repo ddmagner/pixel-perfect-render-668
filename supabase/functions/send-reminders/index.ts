@@ -6,6 +6,86 @@ const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
+// Fetch a random quote about time from ZenQuotes API
+async function fetchTimeQuote(): Promise<{ quote: string; author: string } | null> {
+  try {
+    // Use ZenQuotes random endpoint
+    const response = await fetch('https://zenquotes.io/api/random');
+    if (!response.ok) {
+      console.error('ZenQuotes API error:', response.status);
+      return null;
+    }
+    const data = await response.json();
+    if (data && data[0]) {
+      return { quote: data[0].q, author: data[0].a };
+    }
+    return null;
+  } catch (error) {
+    console.error('Error fetching quote:', error);
+    return null;
+  }
+}
+
+// Fallback quotes about time if API fails
+const fallbackTimeQuotes = [
+  { quote: "Time is what we want most, but what we use worst.", author: "William Penn" },
+  { quote: "The key is in not spending time, but in investing it.", author: "Stephen R. Covey" },
+  { quote: "Time flies over us, but leaves its shadow behind.", author: "Nathaniel Hawthorne" },
+  { quote: "Lost time is never found again.", author: "Benjamin Franklin" },
+  { quote: "Time is the wisest counselor of all.", author: "Pericles" },
+  { quote: "The two most powerful warriors are patience and time.", author: "Leo Tolstoy" },
+  { quote: "Time is the most valuable thing a man can spend.", author: "Theophrastus" },
+  { quote: "Yesterday is gone. Tomorrow has not yet come. We have only today.", author: "Mother Teresa" },
+  { quote: "Time you enjoy wasting is not wasted time.", author: "Marthe Troly-Curtin" },
+  { quote: "Better three hours too soon than a minute too late.", author: "William Shakespeare" },
+];
+
+function getRandomFallbackQuote() {
+  const index = Math.floor(Math.random() * fallbackTimeQuotes.length);
+  return fallbackTimeQuotes[index];
+}
+
+// Send notification via OneSignal
+async function sendNotification(
+  appId: string,
+  apiKey: string,
+  userIds: string[],
+  heading: string,
+  content: string,
+  data: Record<string, string>
+): Promise<{ success: boolean; result?: any; error?: string }> {
+  if (userIds.length === 0) {
+    return { success: true, result: { message: 'No users to notify' } };
+  }
+
+  const payload = {
+    app_id: appId,
+    include_external_user_ids: userIds,
+    headings: { en: heading },
+    contents: { en: content },
+    target_channel: 'push',
+    data,
+  };
+
+  const response = await fetch('https://onesignal.com/api/v1/notifications', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Basic ${apiKey}`,
+    },
+    body: JSON.stringify(payload),
+  });
+
+  const result = await response.json();
+
+  if (!response.ok) {
+    console.error('OneSignal API error:', result);
+    return { success: false, error: JSON.stringify(result) };
+  }
+
+  return { success: true, result };
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -25,15 +105,18 @@ serve(async (req) => {
       });
     }
 
-    // Use service role to access all user data
     const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
-    // Get current time info
+    // Get current time info (UTC)
     const now = new Date();
     const currentHour = now.getUTCHours();
-    const dayOfWeek = now.getUTCDay(); // 0 = Sunday, 6 = Saturday
+    const dayOfWeek = now.getUTCDay();
     const isWeekend = dayOfWeek === 0 || dayOfWeek === 6;
     const todayStart = new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString().split('T')[0];
+    
+    // Calculate 48 hours ago
+    const fortyEightHoursAgo = new Date(now.getTime() - 48 * 60 * 60 * 1000);
+    const fortyEightHoursAgoDate = fortyEightHoursAgo.toISOString().split('T')[0];
 
     console.log(`Running reminder check at ${now.toISOString()}`);
     console.log(`Current hour (UTC): ${currentHour}, Day: ${dayOfWeek}, Is weekend: ${isWeekend}`);
@@ -53,8 +136,107 @@ serve(async (req) => {
 
     console.log(`Found ${settings?.length || 0} users with settings`);
 
-    // Filter users who should receive notifications this hour
-    const usersToNotify: string[] = [];
+    // Track results for each notification type
+    const results = {
+      morningQuote: { sent: 0, users: [] as string[] },
+      inactivityReminder: { sent: 0, users: [] as string[] },
+      dailyReminder: { sent: 0, users: [] as string[] },
+    };
+
+    // ========================================
+    // 1. MORNING QUOTE AT 9 AM (local time approximation)
+    // ========================================
+    // We check if user's reminder_time suggests they're in a timezone where it's ~9 AM
+    // For device-based approach, we'll send quotes at 9 AM UTC to all users with notifications enabled
+    const usersForMorningQuote: string[] = [];
+    
+    if (currentHour === 9) {
+      for (const setting of settings || []) {
+        if (!setting.notifications_enabled) continue;
+        if (isWeekend && !setting.weekend_reminders) continue;
+        usersForMorningQuote.push(setting.user_id);
+      }
+
+      if (usersForMorningQuote.length > 0) {
+        // Fetch a quote
+        let quoteData = await fetchTimeQuote();
+        if (!quoteData) {
+          quoteData = getRandomFallbackQuote();
+        }
+
+        const quoteResult = await sendNotification(
+          ONESIGNAL_APP_ID,
+          ONESIGNAL_REST_API_KEY,
+          usersForMorningQuote,
+          "✨ Morning Inspiration",
+          `"${quoteData.quote}" — ${quoteData.author}`,
+          { action: 'morning_quote' }
+        );
+
+        if (quoteResult.success) {
+          results.morningQuote.sent = usersForMorningQuote.length;
+          results.morningQuote.users = usersForMorningQuote;
+          console.log(`Sent morning quote to ${usersForMorningQuote.length} users`);
+        }
+      }
+    }
+
+    // ========================================
+    // 2. 48-HOUR INACTIVITY REMINDER AT 1 PM
+    // ========================================
+    const usersForInactivityReminder: string[] = [];
+
+    if (currentHour === 13) {
+      // Get all users who have notifications enabled
+      const activeUserIds = (settings || [])
+        .filter(s => s.notifications_enabled)
+        .filter(s => !isWeekend || s.weekend_reminders)
+        .map(s => s.user_id);
+
+      if (activeUserIds.length > 0) {
+        // Check who has logged time in the last 48 hours
+        const { data: recentEntries, error: recentError } = await supabase
+          .from('time_entries')
+          .select('user_id')
+          .gte('date', fortyEightHoursAgoDate)
+          .in('user_id', activeUserIds);
+
+        if (recentError) {
+          console.error('Error fetching recent entries:', recentError);
+        } else {
+          const usersWithRecentEntries = new Set(recentEntries?.map(e => e.user_id) || []);
+          
+          // Users who haven't logged in 48 hours
+          for (const userId of activeUserIds) {
+            if (!usersWithRecentEntries.has(userId)) {
+              usersForInactivityReminder.push(userId);
+            }
+          }
+
+          if (usersForInactivityReminder.length > 0) {
+            const inactivityResult = await sendNotification(
+              ONESIGNAL_APP_ID,
+              ONESIGNAL_REST_API_KEY,
+              usersForInactivityReminder,
+              "⏰ We miss you!",
+              "You haven't logged any time in 48 hours. Take a moment to track your work!",
+              { action: 'inactivity_reminder' }
+            );
+
+            if (inactivityResult.success) {
+              results.inactivityReminder.sent = usersForInactivityReminder.length;
+              results.inactivityReminder.users = usersForInactivityReminder;
+              console.log(`Sent inactivity reminders to ${usersForInactivityReminder.length} users`);
+            }
+          }
+        }
+      }
+    }
+
+    // ========================================
+    // 3. REGULAR DAILY REMINDERS (based on user preferences)
+    // ========================================
+    const usersForDailyReminder: string[] = [];
 
     for (const setting of settings || []) {
       // Skip if notifications disabled or frequency is 'never'
@@ -72,94 +254,67 @@ serve(async (req) => {
         continue;
       }
 
-      if (setting.reminder_frequency === 'weekly' && dayOfWeek !== 5) { // Only Friday
+      if (setting.reminder_frequency === 'weekly' && dayOfWeek !== 5) {
         continue;
       }
 
-      // Check if current hour matches reminder time (format: "HH:00")
+      // Check if current hour matches reminder time
       const reminderHour = parseInt(setting.reminder_time?.split(':')[0] || '18', 10);
       if (currentHour !== reminderHour) {
         continue;
       }
 
-      usersToNotify.push(setting.user_id);
+      // Skip users who already got morning quote or inactivity reminder this hour
+      if (usersForMorningQuote.includes(setting.user_id) || usersForInactivityReminder.includes(setting.user_id)) {
+        continue;
+      }
+
+      usersForDailyReminder.push(setting.user_id);
     }
 
-    console.log(`${usersToNotify.length} users match notification criteria for this hour`);
+    if (usersForDailyReminder.length > 0) {
+      // Check which users have NOT logged time today
+      const { data: todayEntries, error: entriesError } = await supabase
+        .from('time_entries')
+        .select('user_id')
+        .gte('date', todayStart)
+        .lte('date', todayStart)
+        .in('user_id', usersForDailyReminder);
 
-    if (usersToNotify.length === 0) {
-      return new Response(JSON.stringify({ success: true, message: 'No users to notify', sent: 0 }), {
-        status: 200,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
+      if (entriesError) {
+        console.error('Error fetching time entries:', entriesError);
+      } else {
+        const usersWithEntries = new Set(todayEntries?.map(e => e.user_id) || []);
+        const usersNeedingReminder = usersForDailyReminder.filter(userId => !usersWithEntries.has(userId));
+
+        if (usersNeedingReminder.length > 0) {
+          const dailyResult = await sendNotification(
+            ONESIGNAL_APP_ID,
+            ONESIGNAL_REST_API_KEY,
+            usersNeedingReminder,
+            "Don't forget to log your time!",
+            "You haven't logged any time today. Tap to add your hours.",
+            { action: 'log_time' }
+          );
+
+          if (dailyResult.success) {
+            results.dailyReminder.sent = usersNeedingReminder.length;
+            results.dailyReminder.users = usersNeedingReminder;
+            console.log(`Sent daily reminders to ${usersNeedingReminder.length} users`);
+          }
+        }
+      }
     }
 
-    // Check which users have NOT logged time today
-    const { data: todayEntries, error: entriesError } = await supabase
-      .from('time_entries')
-      .select('user_id')
-      .gte('date', todayStart)
-      .lte('date', todayStart)
-      .in('user_id', usersToNotify);
+    const totalSent = results.morningQuote.sent + results.inactivityReminder.sent + results.dailyReminder.sent;
 
-    if (entriesError) {
-      console.error('Error fetching time entries:', entriesError);
-      return new Response(JSON.stringify({ error: 'Failed to fetch time entries' }), {
-        status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
-    }
-
-    // Get unique user IDs who have logged time today
-    const usersWithEntries = new Set(todayEntries?.map(e => e.user_id) || []);
-    
-    // Filter to users who haven't logged time
-    const usersNeedingReminder = usersToNotify.filter(userId => !usersWithEntries.has(userId));
-
-    console.log(`${usersNeedingReminder.length} users need reminders (haven't logged time today)`);
-
-    if (usersNeedingReminder.length === 0) {
-      return new Response(JSON.stringify({ success: true, message: 'All users have logged time', sent: 0 }), {
-        status: 200,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
-    }
-
-    // Send notifications via OneSignal
-    const notificationPayload = {
-      app_id: ONESIGNAL_APP_ID,
-      include_external_user_ids: usersNeedingReminder,
-      headings: { en: "Don't forget to log your time!" },
-      contents: { en: "You haven't logged any time today. Tap to add your hours." },
-      target_channel: 'push',
-      data: { action: 'log_time' },
-    };
-
-    const response = await fetch('https://onesignal.com/api/v1/notifications', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Basic ${ONESIGNAL_REST_API_KEY}`,
-      },
-      body: JSON.stringify(notificationPayload),
-    });
-
-    const result = await response.json();
-
-    if (!response.ok) {
-      console.error('OneSignal API error:', result);
-      return new Response(JSON.stringify({ error: 'Failed to send notifications', details: result }), {
-        status: response.status,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      });
-    }
-
-    console.log(`Successfully sent reminders to ${usersNeedingReminder.length} users:`, result);
+    console.log(`Total notifications sent: ${totalSent}`);
+    console.log('Results:', JSON.stringify(results, null, 2));
 
     return new Response(JSON.stringify({ 
       success: true, 
-      sent: usersNeedingReminder.length,
-      notification_id: result.id 
+      totalSent,
+      results,
     }), {
       status: 200,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
