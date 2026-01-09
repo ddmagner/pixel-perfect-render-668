@@ -647,8 +647,11 @@ export const TimeArchivePage: React.FC = () => {
             )}
           </div>
 
-          {/* Action Buttons */}
-          <div className="w-full px-2.5 py-5 space-y-3">
+          {/* Action Buttons - Pinned to bottom */}
+          <div 
+            className="fixed left-0 right-0 bottom-0 w-full max-w-sm mx-auto px-2.5 py-5 space-y-3 bg-white"
+            style={{ paddingBottom: `calc(20px + var(--safe-area-bottom, 0px))` }}
+          >
             <div className="flex gap-3">
               <button 
                 onClick={() => handleRestore(selection.selectedIds)} 
