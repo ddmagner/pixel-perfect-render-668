@@ -79,10 +79,27 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
   });
   const [loading, setLoading] = useState(true);
 
+  // Save device timezone to database
+  const saveDeviceTimezone = async () => {
+    if (!user) return;
+    
+    try {
+      const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      await supabase
+        .from('app_settings')
+        .update({ timezone })
+        .eq('user_id', user.id);
+      console.log('Saved device timezone:', timezone);
+    } catch (error) {
+      console.error('Error saving timezone:', error);
+    }
+  };
+
   // Load user data when user changes
   useEffect(() => {
     if (user) {
       loadUserData();
+      saveDeviceTimezone(); // Update timezone on every app open
     } else if (!authLoading) {
       // Reset data when user logs out
       setTimeEntries([]);
