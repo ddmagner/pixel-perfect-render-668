@@ -88,7 +88,7 @@ const [isTimeInSettingsExpanded, setIsTimeInSettingsExpanded] = useState(false);
               setIsTimeInSettingsExpanded(!isTimeInSettingsExpanded);
             }}
           >
-            <h1 className="text-[#09121F] text-[28px] font-bold leading-8">Time In settings</h1>
+            <h1 className="text-[#09121F] text-[28px] font-bold leading-8">Time settings</h1>
             <ChevronRight 
               size={24} 
               className={`text-[#09121F] transition-transform duration-200 ${isTimeInSettingsExpanded ? 'rotate-90' : ''}`} 
