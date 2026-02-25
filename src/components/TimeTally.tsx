@@ -614,8 +614,8 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
   const hoursColWidth = 58; // fixed width for hours column
 
   const getGridTemplate = (invoice: boolean, hasDateColumn?: boolean) => {
-    const col1 = hasDateColumn ? '0.5fr' : '1fr';
-    const col2 = hasDateColumn ? '1.5fr' : '1fr';
+    const col1 = hasDateColumn ? 'minmax(0, 0.5fr)' : 'minmax(0, 1fr)';
+    const col2 = hasDateColumn ? 'minmax(0, 1.5fr)' : 'minmax(0, 1fr)';
     return invoice
       ? `16px 8px ${col1} 8px ${col2} 8px ${hoursColWidth}px 8px ${feeColWidth}px`
       : `16px 8px ${col1} 8px ${col2} 8px ${hoursColWidth}px`;
