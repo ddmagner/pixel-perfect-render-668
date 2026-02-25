@@ -777,7 +777,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
       </div>
 
       {/* Content */}
-      <div className="w-full px-2.5 pb-44">
+      <div className="w-full px-2.5 pb-56">
         {organizedData.groups.length === 0 ? <div className="text-center py-8">
             <p className="text-[#BFBFBF] text-lg">No time entered yet. Get busy.</p>
           </div> : <>
