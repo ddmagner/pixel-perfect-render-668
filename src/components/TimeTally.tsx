@@ -586,15 +586,15 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
   const getEntryGridTemplate = (invoice: boolean) => {
     const hasDateColumn = sortOption === 'project' || sortOption === 'task';
     if (hasDateColumn) {
-      return invoice ? '16px 8px 0.5fr 8px 1.5fr 8px 58px 8px 60px' : '16px 8px 0.5fr 8px 1.5fr 8px 58px';
+      return invoice ? '16px 8px 0.5fr 8px 1.5fr 8px 58px 8px minmax(60px, auto)' : '16px 8px 0.5fr 8px 1.5fr 8px 58px';
     } else {
-      return invoice ? '16px 8px 1fr 8px 1fr 8px 58px 8px 60px' : '16px 8px 1fr 8px 1fr 8px 58px';
+      return invoice ? '16px 8px 1fr 8px 1fr 8px 58px 8px minmax(60px, auto)' : '16px 8px 1fr 8px 1fr 8px 58px';
     }
   };
 
   // Helper to get grid template for sub-total/total rows (always use equal columns)
   const getRegularGridTemplate = (invoice: boolean) => {
-    return invoice ? '16px 8px 1fr 8px 1fr 8px 58px 8px 60px' : '16px 8px 1fr 8px 1fr 8px 58px';
+    return invoice ? '16px 8px 1fr 8px 1fr 8px 58px 8px minmax(60px, auto)' : '16px 8px 1fr 8px 1fr 8px 58px';
   };
   const headers = getTableHeaders();
   // Compute fixed widths for the two content columns at half their previous width
@@ -620,9 +620,9 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
   }, [recomputeWidths, sortOption]);
   const buildCols = (invoice: boolean) => {
     if (contentColWidth > 0) {
-      return invoice ? `16px 8px ${contentColWidth}px 8px ${contentColWidth}px 8px 58px 8px 60px` : `16px 8px ${contentColWidth}px 8px ${contentColWidth}px 8px 58px`;
+      return invoice ? `16px 8px ${contentColWidth}px 8px ${contentColWidth}px 8px 58px 8px minmax(60px, auto)` : `16px 8px ${contentColWidth}px 8px ${contentColWidth}px 8px 58px`;
     }
-    return invoice ? '16px 8px 1fr 8px 1fr 8px 58px 8px 60px' : '16px 8px 1fr 8px 1fr 8px 58px';
+    return invoice ? '16px 8px 1fr 8px 1fr 8px 58px 8px minmax(60px, auto)' : '16px 8px 1fr 8px 1fr 8px 58px';
   };
   const isAllSelected = allEntryIds.length > 0 && allEntryIds.every(id => selection.isSelected(id));
 
