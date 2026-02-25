@@ -116,7 +116,7 @@ const Index = () => {
           }}
         >
           <style>{`.flex-1::-webkit-scrollbar { width: 0; display: none; }`}</style>
-          <div className="w-full max-w-sm mx-auto px-2.5">
+          <div className="w-full max-w-sm mx-auto px-2.5 pb-8" style={{ paddingBottom: 'calc(2rem + var(--safe-area-bottom, 0px))' }}>
             {activeTab === 'enter-time' && (
               <>
                 <RecordButton
