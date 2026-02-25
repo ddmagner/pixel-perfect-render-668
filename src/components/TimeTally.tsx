@@ -1036,8 +1036,8 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
           </>}
       </div>
 
-      {/* Action Buttons */}
-      <div className="w-full px-2.5 pt-2.5 pb-5 space-y-3">
+      {/* Action Buttons - Fixed overlay at bottom */}
+      <div className="fixed bottom-0 left-0 right-0 z-50 bg-background px-2.5 pt-2.5 space-y-3 mx-auto max-w-sm" style={{ paddingBottom: 'calc(12px + var(--safe-area-bottom, 0px))' }}>
         <button onClick={handleExport} className="w-full text-white py-3.5 font-bold text-sm transition-colors" style={{
         backgroundColor: '#09121F'
       }}>
