@@ -583,18 +583,46 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
   };
 
   // Helper to get grid template for headers and entry rows (with narrow date column for project/task views)
+  // Compute fee column width from the largest fee value (TOTAL-IN)
+  const feeColWidth = useMemo(() => {
+    if (!settings.invoiceMode) return 60;
+    // Find the largest fee value across all groups + totalIn
+    let maxFee = organizedData.totalIn.fee;
+    organizedData.groups.forEach((group: any) => {
+      if (group.total?.fee > maxFee) maxFee = group.total.fee;
+      group.subgroups?.forEach((sg: any) => {
+        if (sg.subtotal?.fee > maxFee) maxFee = sg.subtotal.fee;
+        sg.entries?.forEach((e: TimeEntry) => {
+          const fee = calculateFee(e);
+          if (fee > maxFee) maxFee = fee;
+        });
+      });
+    });
+    // Measure the formatted text width using a hidden canvas
+    const formatted = formatCurrency(maxFee);
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    if (ctx) {
+      ctx.font = 'bold 14px ui-sans-serif, system-ui, sans-serif';
+      const measured = Math.ceil(ctx.measureText(formatted).width);
+      return Math.max(60, measured + 4); // 4px padding
+    }
+    // Fallback: estimate based on character count
+    return Math.max(60, formatted.length * 8);
+  }, [organizedData, settings.invoiceMode]);
+
   const getEntryGridTemplate = (invoice: boolean) => {
     const hasDateColumn = sortOption === 'project' || sortOption === 'task';
     if (hasDateColumn) {
-      return invoice ? '16px 8px 0.5fr 8px 1.5fr 8px 58px 8px minmax(60px, auto)' : '16px 8px 0.5fr 8px 1.5fr 8px 58px';
+      return invoice ? `16px 8px 0.5fr 8px 1.5fr 8px 58px 8px ${feeColWidth}px` : '16px 8px 0.5fr 8px 1.5fr 8px 58px';
     } else {
-      return invoice ? '16px 8px 1fr 8px 1fr 8px 58px 8px minmax(60px, auto)' : '16px 8px 1fr 8px 1fr 8px 58px';
+      return invoice ? `16px 8px 1fr 8px 1fr 8px 58px 8px ${feeColWidth}px` : '16px 8px 1fr 8px 1fr 8px 58px';
     }
   };
 
   // Helper to get grid template for sub-total/total rows (always use equal columns)
   const getRegularGridTemplate = (invoice: boolean) => {
-    return invoice ? '16px 8px 1fr 8px 1fr 8px 58px 8px minmax(60px, auto)' : '16px 8px 1fr 8px 1fr 8px 58px';
+    return invoice ? `16px 8px 1fr 8px 1fr 8px 58px 8px ${feeColWidth}px` : '16px 8px 1fr 8px 1fr 8px 58px';
   };
   const headers = getTableHeaders();
   // Compute fixed widths for the two content columns at half their previous width
@@ -602,7 +630,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
   const [contentColWidth, setContentColWidth] = useState<number>(0);
 
   // Sum of fixed tracks and gaps (px)
-  const fixedBaseWidth = settings.invoiceMode ? 166 : 98; // 16 + 8 + 8 + 8 + 58 (+ 8 + 60 when invoice)
+  const fixedBaseWidth = settings.invoiceMode ? (106 + feeColWidth) : 98; // 16 + 8 + 8 + 8 + 58 + 8 + feeColWidth
 
   const recomputeWidths = React.useCallback(() => {
     const el = gridRef.current;
@@ -620,9 +648,9 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
   }, [recomputeWidths, sortOption]);
   const buildCols = (invoice: boolean) => {
     if (contentColWidth > 0) {
-      return invoice ? `16px 8px ${contentColWidth}px 8px ${contentColWidth}px 8px 58px 8px minmax(60px, auto)` : `16px 8px ${contentColWidth}px 8px ${contentColWidth}px 8px 58px`;
+      return invoice ? `16px 8px ${contentColWidth}px 8px ${contentColWidth}px 8px 58px 8px ${feeColWidth}px` : `16px 8px ${contentColWidth}px 8px ${contentColWidth}px 8px 58px`;
     }
-    return invoice ? '16px 8px 1fr 8px 1fr 8px 58px 8px minmax(60px, auto)' : '16px 8px 1fr 8px 1fr 8px 58px';
+    return invoice ? `16px 8px 1fr 8px 1fr 8px 58px 8px ${feeColWidth}px` : '16px 8px 1fr 8px 1fr 8px 58px';
   };
   const isAllSelected = allEntryIds.length > 0 && allEntryIds.every(id => selection.isSelected(id));
 
