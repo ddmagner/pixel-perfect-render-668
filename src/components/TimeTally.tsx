@@ -1018,7 +1018,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
           }}>
                 <div></div>
                 <div></div>
-                <div className="text-[#09121F] text-sm font-bold text-left">TOTAL-IN</div>
+                <div className="text-[#09121F] text-sm font-bold text-left whitespace-nowrap">TOTAL-IN</div>
                 <div></div>
                 <div></div>
                 <div></div>
