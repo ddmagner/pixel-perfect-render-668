@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { TimeEntry, AppSettings } from '@/types';
+import { TimeEntry, AppSettings, SortOption } from '@/types';
 import { format } from 'date-fns';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
@@ -8,10 +8,11 @@ import { formatCurrency, formatHours } from '@/lib/utils';
 interface InvoicePreviewProps {
   settings: AppSettings;
   onClose: () => void;
-  selectedEntries?: TimeEntry[]; // Optional pre-selected entries
+  selectedEntries?: TimeEntry[];
+  sortOption?: SortOption;
 }
 
-export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries, settings, onClose }) => {
+export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries, settings, onClose, sortOption = 'date' }) => {
   const [entries, setEntries] = useState<TimeEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [invoiceNumber, setInvoiceNumber] = useState(settings.invoiceNumber);
@@ -121,8 +122,34 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
     return entry.duration * rate;
   };
 
-  const totalHours = entries.reduce((sum, entry) => sum + entry.duration, 0);
-  const subtotalAmount = entries.reduce((sum, entry) => sum + calculateAmount(entry), 0);
+  // Sort entries based on sortOption
+  const sortedEntries = React.useMemo(() => {
+    const sorted = [...entries];
+    if (sortOption === 'project') {
+      sorted.sort((a, b) => a.project.localeCompare(b.project) || new Date(a.date).getTime() - new Date(b.date).getTime());
+    } else if (sortOption === 'task') {
+      sorted.sort((a, b) => a.task.localeCompare(b.task) || new Date(a.date).getTime() - new Date(b.date).getTime());
+    } else {
+      sorted.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime() || a.project.localeCompare(b.project));
+    }
+    return sorted;
+  }, [entries, sortOption]);
+
+  // Column order helpers based on sortOption
+  const getColumnLabels = () => {
+    if (sortOption === 'project') return { col1: 'Project', col2: 'Date', col3: 'Task' };
+    if (sortOption === 'task') return { col1: 'Task', col2: 'Date', col3: 'Project' };
+    return { col1: 'Date', col2: 'Project', col3: 'Task' }; // default 'date'
+  };
+  const getColumnValues = (entry: TimeEntry) => {
+    if (sortOption === 'project') return { col1: entry.project, col2: format(new Date(entry.date), 'MM/dd/yy'), col3: entry.task };
+    if (sortOption === 'task') return { col1: entry.task, col2: format(new Date(entry.date), 'MM/dd/yy'), col3: entry.project };
+    return { col1: format(new Date(entry.date), 'MM/dd/yy'), col2: entry.project, col3: entry.task };
+  };
+  const columnLabels = getColumnLabels();
+
+  const totalHours = sortedEntries.reduce((sum, entry) => sum + entry.duration, 0);
+  const subtotalAmount = sortedEntries.reduce((sum, entry) => sum + calculateAmount(entry), 0);
   
   // Calculate tax amounts
   const taxCalculations = (settings.taxTypes || []).map(taxType => ({
@@ -136,11 +163,11 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
 
   // Determine primary client for BILL TO section
   const primaryClient = React.useMemo(() => {
-    if (entries.length === 0) return null;
+    if (sortedEntries.length === 0) return null;
     
     // Get all unique clients from entries
     const clientCounts: { [key: string]: number } = {};
-    entries.forEach(entry => {
+    sortedEntries.forEach(entry => {
       let clientName = entry.client || '';
       
       // If no direct client, try to find via project mapping
@@ -166,7 +193,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
     }
     
     return null;
-  }, [entries, settings.clients, settings.projects]);
+  }, [sortedEntries, settings.clients, settings.projects]);
 
   const currentDate = new Date();
 
@@ -215,7 +242,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                 </>
               )}
               <div className="text-black" style={{ fontSize: '11px', lineHeight: '1.2' }}>
-                Period: {entries.length > 0 ? format(new Date(Math.min(...entries.map(e => new Date(e.date).getTime()))), 'MM/dd/yy') : 'N/A'} - {entries.length > 0 ? format(new Date(Math.max(...entries.map(e => new Date(e.date).getTime()))), 'MM/dd/yy') : 'N/A'}
+                Period: {sortedEntries.length > 0 ? format(new Date(Math.min(...sortedEntries.map(e => new Date(e.date).getTime()))), 'MM/dd/yy') : 'N/A'} - {sortedEntries.length > 0 ? format(new Date(Math.max(...sortedEntries.map(e => new Date(e.date).getTime()))), 'MM/dd/yy') : 'N/A'}
               </div>
             </div>
           </div>
@@ -287,18 +314,18 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
               <div className="border-t border-b border-black">
                 {settings.invoiceMode ? (
                   <div className="grid grid-cols-12 gap-4 py-1 font-bold text-black uppercase tracking-wider items-center" style={{ fontSize: '11px', lineHeight: '1.2' }}>
-                    <div className="col-span-2 text-left">Date</div>
-                    <div className="col-span-3">Project</div>
-                    <div className="col-span-3 -ml-[25px]">Task</div>
+                    <div className="col-span-2 text-left">{columnLabels.col1}</div>
+                    <div className="col-span-3">{columnLabels.col2}</div>
+                    <div className="col-span-3 -ml-[25px]">{columnLabels.col3}</div>
                     <div className="col-span-1 text-left">Hours</div>
                     <div className="col-span-1 flex justify-end pl-[75px]">Rate</div>
                     <div className="col-span-2 text-right">Amount</div>
                   </div>
                 ) : (
                   <div className="grid grid-cols-8 gap-4 py-1 font-bold text-black uppercase tracking-wider items-center" style={{ fontSize: '11px', lineHeight: '1.2' }}>
-                    <div className="col-span-2 text-left">Date</div>
-                    <div className="col-span-3">Project</div>
-                    <div className="col-span-2">Task</div>
+                    <div className="col-span-2 text-left">{columnLabels.col1}</div>
+                    <div className="col-span-3">{columnLabels.col2}</div>
+                    <div className="col-span-2">{columnLabels.col3}</div>
                     <div className="col-span-1 text-left">Hours</div>
                   </div>
                 )}
@@ -306,15 +333,16 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
               
               {/* Table Body */}
               <div className="divide-y divide-gray-200">
-                {entries.map((entry, index) => {
-                  const rate = entry.noCharge ? 0 : (entry.hourlyRate || 0);
-                  const amount = calculateAmount(entry);
-                  
-                  return settings.invoiceMode ? (
+                {sortedEntries.map((entry, index) => {
+                   const rate = entry.noCharge ? 0 : (entry.hourlyRate || 0);
+                   const amount = calculateAmount(entry);
+                   const cols = getColumnValues(entry);
+                   
+                   return settings.invoiceMode ? (
                     <div key={entry.id || index} className="grid grid-cols-12 gap-4 py-1 text-black items-center" style={{ fontSize: '11px', lineHeight: '1.2' }}>
-                      <div className="col-span-2">{format(new Date(entry.date), 'MM/dd/yy')}</div>
-                      <div className="col-span-3 font-medium">{entry.project}</div>
-                      <div className="col-span-3 -ml-[25px]">{entry.task}</div>
+                      <div className="col-span-2">{cols.col1}</div>
+                      <div className="col-span-3 font-medium">{cols.col2}</div>
+                      <div className="col-span-3 -ml-[25px]">{cols.col3}</div>
                       <div className="col-span-1 text-left">{formatHours(entry.duration)}</div>
                       <div className="col-span-1 flex items-center justify-end pl-[75px]">
                         {entry.noCharge ? <span className="italic text-gray-400">N/C</span> : formatCurrency(rate)}
@@ -325,9 +353,9 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                     </div>
                   ) : (
                     <div key={entry.id || index} className="grid grid-cols-8 gap-4 py-1 text-black items-center" style={{ fontSize: '11px', lineHeight: '1.2' }}>
-                      <div className="col-span-2">{format(new Date(entry.date), 'MM/dd/yy')}</div>
-                      <div className="col-span-3 font-medium">{entry.project}</div>
-                      <div className="col-span-2">{entry.task}</div>
+                      <div className="col-span-2">{cols.col1}</div>
+                      <div className="col-span-3 font-medium">{cols.col2}</div>
+                      <div className="col-span-2">{cols.col3}</div>
                       <div className="col-span-1 text-left">{formatHours(entry.duration)}</div>
                     </div>
                   );
