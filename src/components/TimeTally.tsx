@@ -611,47 +611,28 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
     return Math.max(60, formatted.length * 8);
   }, [organizedData, settings.invoiceMode]);
 
+  const hoursColWidth = 58; // fixed width for hours column
+
+  const getGridTemplate = (invoice: boolean, hasDateColumn?: boolean) => {
+    const col1 = hasDateColumn ? '0.5fr' : '1fr';
+    const col2 = hasDateColumn ? '1.5fr' : '1fr';
+    return invoice
+      ? `16px 8px ${col1} 8px ${col2} 8px ${hoursColWidth}px 8px ${feeColWidth}px`
+      : `16px 8px ${col1} 8px ${col2} 8px ${hoursColWidth}px`;
+  };
+
   const getEntryGridTemplate = (invoice: boolean) => {
     const hasDateColumn = sortOption === 'project' || sortOption === 'task';
-    if (hasDateColumn) {
-      return invoice ? `16px 8px 0.5fr 8px 1.5fr 8px 58px 8px ${feeColWidth}px` : '16px 8px 0.5fr 8px 1.5fr 8px 58px';
-    } else {
-      return invoice ? `16px 8px 1fr 8px 1fr 8px 58px 8px ${feeColWidth}px` : '16px 8px 1fr 8px 1fr 8px 58px';
-    }
+    return getGridTemplate(invoice, hasDateColumn);
   };
 
   // Helper to get grid template for sub-total/total rows (always use equal columns)
   const getRegularGridTemplate = (invoice: boolean) => {
-    return invoice ? `16px 8px 1fr 8px 1fr 8px 58px 8px ${feeColWidth}px` : '16px 8px 1fr 8px 1fr 8px 58px';
+    return getGridTemplate(invoice, false);
   };
   const headers = getTableHeaders();
-  // Compute fixed widths for the two content columns at half their previous width
   const gridRef = React.useRef<HTMLDivElement | null>(null);
-  const [contentColWidth, setContentColWidth] = useState<number>(0);
-
-  // Sum of fixed tracks and gaps (px)
-  const fixedBaseWidth = settings.invoiceMode ? (106 + feeColWidth) : 98; // 16 + 8 + 8 + 8 + 58 + 8 + feeColWidth
-
-  const recomputeWidths = React.useCallback(() => {
-    const el = gridRef.current;
-    if (!el) return;
-    const containerWidth = el.clientWidth;
-    const remaining = Math.max(0, containerWidth - fixedBaseWidth);
-    // Each 1fr used to be remaining/2, half of that is remaining/4
-    const halfOfEach = Math.floor(remaining / 4);
-    setContentColWidth(halfOfEach);
-  }, [fixedBaseWidth]);
-  React.useEffect(() => {
-    recomputeWidths();
-    window.addEventListener('resize', recomputeWidths);
-    return () => window.removeEventListener('resize', recomputeWidths);
-  }, [recomputeWidths, sortOption]);
-  const buildCols = (invoice: boolean) => {
-    if (contentColWidth > 0) {
-      return invoice ? `16px 8px ${contentColWidth}px 8px ${contentColWidth}px 8px 58px 8px ${feeColWidth}px` : `16px 8px ${contentColWidth}px 8px ${contentColWidth}px 8px 58px`;
-    }
-    return invoice ? `16px 8px 1fr 8px 1fr 8px 58px 8px ${feeColWidth}px` : '16px 8px 1fr 8px 1fr 8px 58px';
-  };
+  const buildCols = (invoice: boolean) => getEntryGridTemplate(invoice);
   const isAllSelected = allEntryIds.length > 0 && allEntryIds.every(id => selection.isSelected(id));
 
   // Helper functions to get entry IDs for different groupings
