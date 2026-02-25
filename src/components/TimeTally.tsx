@@ -626,9 +626,10 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
     return getGridTemplate(invoice, hasDateColumn);
   };
 
-  // Helper to get grid template for sub-total/total rows (always use equal columns)
+  // Helper to get grid template for sub-total/total rows (match entry column ratios)
   const getRegularGridTemplate = (invoice: boolean) => {
-    return getGridTemplate(invoice, false);
+    const hasDateColumn = sortOption === 'project' || sortOption === 'task';
+    return getGridTemplate(invoice, hasDateColumn);
   };
   const headers = getTableHeaders();
   const gridRef = React.useRef<HTMLDivElement | null>(null);
