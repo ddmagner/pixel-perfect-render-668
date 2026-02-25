@@ -37,7 +37,8 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
             
             return {
               ...entry,
-              hourlyRate
+              hourlyRate,
+              noCharge: entry.noCharge || false
             };
           });
           
@@ -83,7 +84,8 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
             date: entry.date,
             submittedAt: entry.submitted_at,
             hourlyRate,
-            archived: entry.archived
+            archived: entry.archived,
+            noCharge: (entry as any).no_charge || false
           };
         });
 
@@ -104,6 +106,9 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
   }, [selectedEntries, toast, settings.taskTypes]);
 
   const calculateAmount = (entry: TimeEntry): number => {
+    // No-charge entries always return 0
+    if (entry.noCharge) return 0;
+    
     // Use the hourlyRate from the entry first, then fallback to task type rate from settings
     let rate = entry.hourlyRate || 0;
     
@@ -302,7 +307,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
               {/* Table Body */}
               <div className="divide-y divide-gray-200">
                 {entries.map((entry, index) => {
-                  const rate = entry.hourlyRate || 0;
+                  const rate = entry.noCharge ? 0 : (entry.hourlyRate || 0);
                   const amount = calculateAmount(entry);
                   
                   return settings.invoiceMode ? (
@@ -311,8 +316,12 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                       <div className="col-span-3 font-medium">{entry.project}</div>
                       <div className="col-span-3 -ml-[25px]">{entry.task}</div>
                       <div className="col-span-1 text-left">{formatHours(entry.duration)}</div>
-                      <div className="col-span-1 flex items-center justify-end pl-[75px]">{formatCurrency(rate)}</div>
-                      <div className="col-span-2 text-right font-medium">{formatCurrency(amount)}</div>
+                      <div className="col-span-1 flex items-center justify-end pl-[75px]">
+                        {entry.noCharge ? <span className="italic text-gray-400">N/C</span> : formatCurrency(rate)}
+                      </div>
+                      <div className="col-span-2 text-right font-medium">
+                        {entry.noCharge ? <span className="italic text-gray-400">No-charge</span> : formatCurrency(amount)}
+                      </div>
                     </div>
                   ) : (
                     <div key={entry.id || index} className="grid grid-cols-8 gap-4 py-1 text-black items-center" style={{ fontSize: '11px', lineHeight: '1.2' }}>

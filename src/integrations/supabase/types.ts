@@ -287,6 +287,7 @@ export type Database = {
           duration: number
           hourly_rate: number | null
           id: string
+          no_charge: boolean
           project: string
           project_id: string | null
           submitted_at: string
@@ -304,6 +305,7 @@ export type Database = {
           duration: number
           hourly_rate?: number | null
           id?: string
+          no_charge?: boolean
           project: string
           project_id?: string | null
           submitted_at?: string
@@ -321,6 +323,7 @@ export type Database = {
           duration?: number
           hourly_rate?: number | null
           id?: string
+          no_charge?: boolean
           project?: string
           project_id?: string | null
           submitted_at?: string
