@@ -279,8 +279,8 @@ export async function generateSpreadsheet(
   // Body rows
   let subtotalAmount = 0;
   entries.forEach((entry) => {
-    const rate = entry.hourlyRate || 0;
-    const amount = entry.duration * rate;
+    const rate = entry.noCharge ? 0 : (entry.hourlyRate || 0);
+    const amount = entry.noCharge ? 0 : (entry.duration * rate);
     subtotalAmount += amount;
 
     const values = isInvoice
@@ -289,8 +289,8 @@ export async function generateSpreadsheet(
           entry.project,
           entry.task,
           formatHours(entry.duration),
-          formatCurrency(rate),
-          formatCurrency(amount),
+          entry.noCharge ? 'N/C' : formatCurrency(rate),
+          entry.noCharge ? 'No-charge' : formatCurrency(amount),
         ]
       : [
           format(new Date(entry.date), 'MM/dd/yy'),

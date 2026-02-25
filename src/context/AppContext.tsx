@@ -178,7 +178,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         date: entry.date,
         submittedAt: entry.submitted_at,
         hourlyRate: entry.hourly_rate ? Number(entry.hourly_rate) : undefined,
-        archived: entry.archived || false
+        archived: entry.archived || false,
+        noCharge: (entry as any).no_charge || false
       })));
 
       // Load sort option from settings
@@ -328,7 +329,8 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         date: data.date,
         submittedAt: data.submitted_at,
         hourlyRate: data.hourly_rate ? Number(data.hourly_rate) : undefined,
-        archived: data.archived || false
+        archived: data.archived || false,
+        noCharge: (data as any).no_charge || false
       };
 
       setTimeEntries(prev => [transformedEntry, ...prev]);
@@ -595,17 +597,21 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
     if (!user) return;
     
     try {
-      const { error } = await supabase
-        .from('time_entries')
-        .update({
+      const updateData: any = {
           duration: updates.duration,
           task: updates.task,
           project: updates.project,
           client: updates.client,
           date: updates.date,
           hourly_rate: updates.hourlyRate,
-          archived: updates.archived
-        })
+          archived: updates.archived,
+        };
+      if (updates.noCharge !== undefined) {
+        updateData.no_charge = updates.noCharge;
+      }
+      const { error } = await supabase
+        .from('time_entries')
+        .update(updateData)
         .eq('id', id)
         .eq('user_id', user.id);
 

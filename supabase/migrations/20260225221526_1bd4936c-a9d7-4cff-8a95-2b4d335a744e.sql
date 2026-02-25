@@ -1,0 +1,1 @@
+ALTER TABLE public.time_entries ADD COLUMN no_charge boolean NOT NULL DEFAULT false;

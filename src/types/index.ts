@@ -8,6 +8,7 @@ export interface TimeEntry {
   submittedAt: string; // ISO datetime string
   hourlyRate?: number; // for invoice mode
   archived?: boolean; // for archive functionality
+  noCharge?: boolean; // for no-charge entries (fee = $0, doesn't affect hourly rate settings)
 }
 
 export interface TaskType {

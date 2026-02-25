@@ -134,8 +134,8 @@ export async function generatePDF(
           entry.project,
           entry.task,
           entry.duration.toString(),
-          `$${entry.hourlyRate?.toFixed(2) || '0.00'}`,
-          `$${((entry.duration * (entry.hourlyRate || 0))).toFixed(2)}`
+          entry.noCharge ? 'N/C' : `$${entry.hourlyRate?.toFixed(2) || '0.00'}`,
+          entry.noCharge ? 'No-charge' : `$${((entry.duration * (entry.hourlyRate || 0))).toFixed(2)}`
         ]
       : [
           format(new Date(entry.date), 'MMM d'),
@@ -165,7 +165,7 @@ export async function generatePDF(
   
   // Totals section - match preview exactly
   if (viewMode === 'invoice') {
-    const subtotal = entries.reduce((sum, entry) => sum + (entry.duration * (entry.hourlyRate || 0)), 0);
+    const subtotal = entries.reduce((sum, entry) => sum + (entry.noCharge ? 0 : (entry.duration * (entry.hourlyRate || 0))), 0);
     const taxCalculations = (settings.taxTypes || []).map(taxType => ({
       name: taxType.name,
       rate: taxType.rate || 0,

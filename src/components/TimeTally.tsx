@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { useApp } from '@/context/AppContext';
 import { TimeEntry } from '@/types';
 import { formatCurrency, formatHours } from '@/lib/utils';
-import { ChevronDown, Pencil, Trash2, Archive, Edit, X, Plus, PlusCircle } from 'lucide-react';
+import { ChevronDown, Pencil, Trash2, Archive, Edit, X, Plus, PlusCircle, BanIcon } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
@@ -108,6 +108,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
   // Calculate fee for an entry
   const calculateFee = (entry: TimeEntry): number => {
     if (!settings.invoiceMode) return 0;
+    if (entry.noCharge) return 0;
     return entry.duration * getTaskRate(entry.task);
   };
 
@@ -517,6 +518,24 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
       description: selection.selectedCount === 1 ? "Time entry deleted." : `${selection.selectedCount} entries deleted.`
     });
   };
+  const handleNoCharge = async () => {
+    const ids = selection.selectedIds;
+    const count = ids.length;
+    // Check if all selected are already no-charge (toggle off)
+    const allNoCharge = ids.every(id => {
+      const entry = activeTimeEntries.find(e => e.id === id);
+      return entry?.noCharge;
+    });
+    for (const id of ids) {
+      await updateTimeEntry(id, { noCharge: !allNoCharge });
+    }
+    selection.clearSelection();
+    toast({
+      description: allNoCharge
+        ? (count === 1 ? "Entry charge restored." : `${count} entries charge restored.`)
+        : (count === 1 ? "Entry set to no-charge." : `${count} entries set to no-charge.`)
+    });
+  };
   const handleArchive = () => {
     const count = selection.selectedCount;
     archiveTimeEntries(selection.selectedIds);
@@ -903,7 +922,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                           {settings.invoiceMode && <>
                               <div></div>
                               <div className="text-[#09121F] text-sm leading-tight flex items-start justify-end">
-                              {hasTaskRate(entry.task) ? <span>{formatCurrency(calculateFee(entry))}</span> : <div className="flex items-center gap-1">
+                              {entry.noCharge ? <span className="text-gray-400 italic text-xs">No-charge</span> : hasTaskRate(entry.task) ? <span>{formatCurrency(calculateFee(entry))}</span> : <div className="flex items-center gap-1">
                                   <span className="text-gray-400">--</span>
                                   <button onClick={() => handleAddRate(entry.task)} className="text-xs text-blue-600 hover:text-blue-800 underline">
                                     <Plus className="h-3 w-3" />
@@ -995,6 +1014,11 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
         </button>
         
         <div className="flex gap-3">
+          {settings.invoiceMode && (
+            <button onClick={handleNoCharge} className="flex-1 bg-white border border-[#09121F] text-[#09121F] py-3.5 font-bold text-sm transition-colors hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed" disabled={!selection.hasAnySelected}>
+              No-charge
+            </button>
+          )}
           <button onClick={() => setShowDeleteDialog(true)} className="flex-1 bg-white border border-[#09121F] text-[#09121F] py-3.5 font-bold text-sm transition-colors hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed" disabled={!selection.hasAnySelected}>
             Delete
           </button>
