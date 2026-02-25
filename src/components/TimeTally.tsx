@@ -1,4 +1,5 @@
-import React, { useMemo, useState } from 'react';
+import React, { useMemo, useState, useRef, useCallback } from 'react';
+import { useHaptics } from '@/hooks/useHaptics';
 import { useApp } from '@/context/AppContext';
 import { TimeEntry } from '@/types';
 import { formatCurrency, formatHours } from '@/lib/utils';
@@ -44,6 +45,26 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
   const {
     toast
   } = useToast();
+  const { mediumImpact } = useHaptics();
+  const longPressTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const longPressFiredRef = useRef(false);
+
+  const handleNoChargeLongPressStart = useCallback((entryId: string, currentNoCharge: boolean) => {
+    longPressFiredRef.current = false;
+    longPressTimerRef.current = setTimeout(() => {
+      longPressFiredRef.current = true;
+      mediumImpact();
+      updateTimeEntry(entryId, { noCharge: !currentNoCharge });
+      toast({ description: currentNoCharge ? "Entry charge restored." : "Entry set to no-charge." });
+    }, 500);
+  }, [mediumImpact, updateTimeEntry, toast]);
+
+  const handleNoChargeLongPressEnd = useCallback(() => {
+    if (longPressTimerRef.current) {
+      clearTimeout(longPressTimerRef.current);
+      longPressTimerRef.current = null;
+    }
+  }, []);
 
   // Filter out archived entries
   const activeTimeEntries = timeEntries.filter(entry => !entry.archived);
@@ -932,7 +953,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                           {settings.invoiceMode && <>
                               <div></div>
                               <div className="text-[#09121F] text-sm leading-tight flex items-start justify-end">
-                              {entry.noCharge ? <span className="text-[#09121F] text-sm cursor-pointer hover:opacity-70" onClick={() => { updateTimeEntry(entry.id, { noCharge: false }); toast({ description: "Entry charge restored." }); }}>No-charge</span> : hasTaskRate(entry.task) ? <span className="cursor-pointer hover:opacity-70" onClick={() => { updateTimeEntry(entry.id, { noCharge: true }); toast({ description: "Entry set to no-charge." }); }}>{formatCurrency(calculateFee(entry))}</span> : <div className="flex items-center gap-1">
+                              {entry.noCharge ? <span className="text-[#09121F] text-sm select-none" onTouchStart={() => handleNoChargeLongPressStart(entry.id, true)} onTouchEnd={handleNoChargeLongPressEnd} onTouchCancel={handleNoChargeLongPressEnd} onMouseDown={() => handleNoChargeLongPressStart(entry.id, true)} onMouseUp={handleNoChargeLongPressEnd} onMouseLeave={handleNoChargeLongPressEnd} onContextMenu={e => e.preventDefault()}>No-charge</span> : hasTaskRate(entry.task) ? <span className="select-none" onTouchStart={() => handleNoChargeLongPressStart(entry.id, false)} onTouchEnd={handleNoChargeLongPressEnd} onTouchCancel={handleNoChargeLongPressEnd} onMouseDown={() => handleNoChargeLongPressStart(entry.id, false)} onMouseUp={handleNoChargeLongPressEnd} onMouseLeave={handleNoChargeLongPressEnd} onContextMenu={e => e.preventDefault()}>{formatCurrency(calculateFee(entry))}</span> : <div className="flex items-center gap-1">
                                   <span className="text-gray-400">--</span>
                                   <button onClick={() => handleAddRate(entry.task)} className="text-xs text-blue-600 hover:text-blue-800 underline">
                                     <Plus className="h-3 w-3" />
