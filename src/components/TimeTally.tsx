@@ -932,7 +932,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                           {settings.invoiceMode && <>
                               <div></div>
                               <div className="text-[#09121F] text-sm leading-tight flex items-start justify-end">
-                              {entry.noCharge ? <span className="text-[#09121F] text-sm">No-charge</span> : hasTaskRate(entry.task) ? <span>{formatCurrency(calculateFee(entry))}</span> : <div className="flex items-center gap-1">
+                              {entry.noCharge ? <span className="text-[#09121F] text-sm cursor-pointer hover:opacity-70" onClick={() => { updateTimeEntry(entry.id, { noCharge: false }); toast({ description: "Entry charge restored." }); }}>No-charge</span> : hasTaskRate(entry.task) ? <span className="cursor-pointer hover:opacity-70" onClick={() => { updateTimeEntry(entry.id, { noCharge: true }); toast({ description: "Entry set to no-charge." }); }}>{formatCurrency(calculateFee(entry))}</span> : <div className="flex items-center gap-1">
                                   <span className="text-gray-400">--</span>
                                   <button onClick={() => handleAddRate(entry.task)} className="text-xs text-blue-600 hover:text-blue-800 underline">
                                     <Plus className="h-3 w-3" />
