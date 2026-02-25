@@ -586,15 +586,15 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
   const getEntryGridTemplate = (invoice: boolean) => {
     const hasDateColumn = sortOption === 'project' || sortOption === 'task';
     if (hasDateColumn) {
-      return invoice ? '16px 8px 0.5fr 8px 1.5fr 8px 50px 8px 60px' : '16px 8px 0.5fr 8px 1.5fr 8px 50px';
+      return invoice ? '16px 8px 0.5fr 8px 1.5fr 8px 58px 8px 60px' : '16px 8px 0.5fr 8px 1.5fr 8px 58px';
     } else {
-      return invoice ? '16px 8px 1fr 8px 1fr 8px 50px 8px 60px' : '16px 8px 1fr 8px 1fr 8px 50px';
+      return invoice ? '16px 8px 1fr 8px 1fr 8px 58px 8px 60px' : '16px 8px 1fr 8px 1fr 8px 58px';
     }
   };
 
   // Helper to get grid template for sub-total/total rows (always use equal columns)
   const getRegularGridTemplate = (invoice: boolean) => {
-    return invoice ? '16px 8px 1fr 8px 1fr 8px 50px 8px 60px' : '16px 8px 1fr 8px 1fr 8px 50px';
+    return invoice ? '16px 8px 1fr 8px 1fr 8px 58px 8px 60px' : '16px 8px 1fr 8px 1fr 8px 58px';
   };
   const headers = getTableHeaders();
   // Compute fixed widths for the two content columns at half their previous width
@@ -602,7 +602,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
   const [contentColWidth, setContentColWidth] = useState<number>(0);
 
   // Sum of fixed tracks and gaps (px)
-  const fixedBaseWidth = settings.invoiceMode ? 158 : 90; // 16 + 8 + 8 + 8 + 50 (+ 8 + 60 when invoice)
+  const fixedBaseWidth = settings.invoiceMode ? 166 : 98; // 16 + 8 + 8 + 8 + 58 (+ 8 + 60 when invoice)
 
   const recomputeWidths = React.useCallback(() => {
     const el = gridRef.current;
@@ -620,9 +620,9 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
   }, [recomputeWidths, sortOption]);
   const buildCols = (invoice: boolean) => {
     if (contentColWidth > 0) {
-      return invoice ? `16px 8px ${contentColWidth}px 8px ${contentColWidth}px 8px 50px 8px 60px` : `16px 8px ${contentColWidth}px 8px ${contentColWidth}px 8px 50px`;
+      return invoice ? `16px 8px ${contentColWidth}px 8px ${contentColWidth}px 8px 58px 8px 60px` : `16px 8px ${contentColWidth}px 8px ${contentColWidth}px 8px 58px`;
     }
-    return invoice ? '16px 8px 1fr 8px 1fr 8px 50px 8px 60px' : '16px 8px 1fr 8px 1fr 8px 50px';
+    return invoice ? '16px 8px 1fr 8px 1fr 8px 58px 8px 60px' : '16px 8px 1fr 8px 1fr 8px 58px';
   };
   const isAllSelected = allEntryIds.length > 0 && allEntryIds.every(id => selection.isSelected(id));
 
@@ -736,7 +736,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
           </div>
           <div></div>
           {headers.map((header, index) => <React.Fragment key={header}>
-              <span className={`text-[#09121F] text-sm font-bold ${header === 'Fee' ? 'text-right' : 'text-left'}`}>
+              <span className={`text-[#09121F] text-sm font-bold ${header === 'Fee' || header === 'Hours' ? 'text-right' : 'text-left'}`}>
                 {header}
               </span>
               {index < headers.length - 1 && <div></div>}
@@ -910,11 +910,11 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                              </React.Fragment>}
                           
                           <div></div>
-                          <div className="text-[#09121F] text-sm leading-tight text-left flex items-start justify-start">
-                            {editingEntryId === entry.id && editingField === 'duration' ? <input type="number" step="0.01" min="0" defaultValue={entry.duration.toString()} className="text-sm bg-transparent border-none outline-none focus:bg-white focus:border focus:border-gray-300 px-1 rounded w-12 text-left" autoFocus onBlur={e => handleFieldSave(entry.id, 'duration', e.target.value)} onKeyDown={e => {
+                          <div className="text-[#09121F] text-sm leading-tight text-right flex items-start justify-end" style={{ fontVariantNumeric: 'tabular-nums' }}>
+                            {editingEntryId === entry.id && editingField === 'duration' ? <input type="number" step="0.01" min="0" defaultValue={entry.duration.toString()} className="text-sm bg-transparent border-none outline-none focus:bg-white focus:border focus:border-gray-300 px-1 rounded w-14 text-right" style={{ fontVariantNumeric: 'tabular-nums' }} autoFocus onBlur={e => handleFieldSave(entry.id, 'duration', e.target.value)} onKeyDown={e => {
                     if (e.key === 'Enter') handleFieldSave(entry.id, 'duration', e.currentTarget.value);
                     if (e.key === 'Escape') handleFieldCancel();
-                  }} /> : <span className="cursor-pointer hover:bg-gray-100 rounded text-left" onClick={() => handleFieldEdit(entry.id, 'duration')}>
+                  }} /> : <span className="cursor-pointer hover:bg-gray-100 rounded text-right" onClick={() => handleFieldEdit(entry.id, 'duration')}>
                                 {formatHours(entry.duration)}
                               </span>}
                           </div>
@@ -943,7 +943,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                         <div></div>
                         <div></div>
                         <div></div>
-                        <div className="text-[#09121F] text-sm font-bold text-left">
+                        <div className="text-[#09121F] text-sm font-bold text-right" style={{ fontVariantNumeric: 'tabular-nums' }}>
                           {formatHours(subgroup.subtotal.hours)}
                         </div>
                         {settings.invoiceMode && <>
@@ -966,7 +966,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                     <div></div>
                     <div></div>
                     <div></div>
-                    <div className="text-[#09121F] text-sm font-bold text-left">
+                    <div className="text-[#09121F] text-sm font-bold text-right" style={{ fontVariantNumeric: 'tabular-nums' }}>
                       {formatHours(group.total.hours)}
                     </div>
                     {settings.invoiceMode && <>
@@ -991,7 +991,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
                 <div></div>
                 <div></div>
                 <div></div>
-                <div className="text-[#09121F] text-sm font-bold text-left">
+                <div className="text-[#09121F] text-sm font-bold text-right" style={{ fontVariantNumeric: 'tabular-nums' }}>
                   {formatHours(organizedData.totalIn.hours)}
                 </div>
                 {settings.invoiceMode && <>
