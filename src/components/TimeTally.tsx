@@ -1079,6 +1079,6 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
 
 
       {/* Export Dialog */}
-      <ExportDialog isOpen={isExportDialogOpen} onClose={() => setIsExportDialogOpen(false)} timeEntries={activeTimeEntries} selectedEntries={selection.selectedIds.length > 0 ? activeTimeEntries.filter(entry => selection.selectedIds.includes(entry.id)) : undefined} settings={settings} viewMode={settings.invoiceMode ? 'invoice' : 'timecard'} />
+      <ExportDialog isOpen={isExportDialogOpen} onClose={() => setIsExportDialogOpen(false)} timeEntries={activeTimeEntries} selectedEntries={selection.selectedIds.length > 0 ? activeTimeEntries.filter(entry => selection.selectedIds.includes(entry.id)) : undefined} settings={settings} viewMode={settings.invoiceMode ? 'invoice' : 'timecard'} sortOption={sortOption} />
     </div>;
 };

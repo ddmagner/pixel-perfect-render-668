@@ -1,5 +1,5 @@
 import ExcelJS from 'exceljs';
-import { TimeEntry, AppSettings, ViewMode } from '@/types';
+import { TimeEntry, AppSettings, ViewMode, SortOption } from '@/types';
 import { format } from 'date-fns';
 import { formatCurrency, formatHours } from '@/lib/utils';
 import { BRAND, FONTS } from '@/utils/documentLayout';
@@ -127,9 +127,33 @@ async function composeBrandImage(
 export async function generateSpreadsheet(
   entries: TimeEntry[],
   settings: AppSettings,
-  viewMode: ViewMode
+  viewMode: ViewMode,
+  sortOption: SortOption = 'date'
 ): Promise<Blob> {
   const isInvoice = viewMode === 'invoice';
+
+  // Sort entries based on sortOption
+  const sortedEntries = [...entries];
+  if (sortOption === 'project') {
+    sortedEntries.sort((a, b) => a.project.localeCompare(b.project) || new Date(a.date).getTime() - new Date(b.date).getTime());
+  } else if (sortOption === 'task') {
+    sortedEntries.sort((a, b) => a.task.localeCompare(b.task) || new Date(a.date).getTime() - new Date(b.date).getTime());
+  } else {
+    sortedEntries.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime() || a.project.localeCompare(b.project));
+  }
+
+  // Column labels based on sortOption
+  const getColLabels = () => {
+    if (sortOption === 'project') return ['PROJECT', 'DATE', 'TASK'];
+    if (sortOption === 'task') return ['TASK', 'DATE', 'PROJECT'];
+    return ['DATE', 'PROJECT', 'TASK'];
+  };
+  const getColValues = (entry: TimeEntry) => {
+    if (sortOption === 'project') return [entry.project, format(new Date(entry.date), 'MM/dd/yy'), entry.task];
+    if (sortOption === 'task') return [entry.task, format(new Date(entry.date), 'MM/dd/yy'), entry.project];
+    return [format(new Date(entry.date), 'MM/dd/yy'), entry.project, entry.task];
+  };
+  const colLabels = getColLabels();
 
   const workbook = new ExcelJS.Workbook();
   const sheet = workbook.addWorksheet(isInvoice ? 'Invoice' : 'Time Card', {
@@ -248,18 +272,18 @@ export async function generateSpreadsheet(
   // Table columns (approximate spans using widths)
   if (isInvoice) {
     sheet.columns = [
-      { header: 'DATE', key: 'date', width: 16 },
-      { header: 'PROJECT', key: 'project', width: 24 },
-      { header: 'TASK', key: 'task', width: 24 },
+      { header: colLabels[0], key: 'col1', width: 16 },
+      { header: colLabels[1], key: 'col2', width: 24 },
+      { header: colLabels[2], key: 'col3', width: 24 },
       { header: 'HOURS', key: 'hours', width: 8 },
       { header: 'RATE', key: 'rate', width: 8 },
       { header: 'AMOUNT', key: 'amount', width: 16 },
     ];
   } else {
     sheet.columns = [
-      { header: 'DATE', key: 'date', width: 16 },
-      { header: 'PROJECT', key: 'project', width: 24 },
-      { header: 'TASK', key: 'task', width: 16 },
+      { header: colLabels[0], key: 'col1', width: 16 },
+      { header: colLabels[1], key: 'col2', width: 24 },
+      { header: colLabels[2], key: 'col3', width: 16 },
       { header: 'HOURS', key: 'hours', width: 8 },
     ];
   }
@@ -278,24 +302,21 @@ export async function generateSpreadsheet(
 
   // Body rows
   let subtotalAmount = 0;
-  entries.forEach((entry) => {
+  sortedEntries.forEach((entry) => {
     const rate = entry.noCharge ? 0 : (entry.hourlyRate || 0);
     const amount = entry.noCharge ? 0 : (entry.duration * rate);
     subtotalAmount += amount;
+    const cv = getColValues(entry);
 
     const values = isInvoice
       ? [
-          format(new Date(entry.date), 'MM/dd/yy'),
-          entry.project,
-          entry.task,
+          cv[0], cv[1], cv[2],
           formatHours(entry.duration),
           entry.noCharge ? 'N/C' : formatCurrency(rate),
           entry.noCharge ? 'No-charge' : formatCurrency(amount),
         ]
       : [
-          format(new Date(entry.date), 'MM/dd/yy'),
-          entry.project,
-          entry.task,
+          cv[0], cv[1], cv[2],
           formatHours(entry.duration),
         ];
 
@@ -313,7 +334,7 @@ export async function generateSpreadsheet(
   });
 
   // Totals
-  const totalHours = entries.reduce((sum, entry) => sum + entry.duration, 0);
+  const totalHours = sortedEntries.reduce((sum, entry) => sum + entry.duration, 0);
   rowIdx++;
 
   // Separator line (top border)

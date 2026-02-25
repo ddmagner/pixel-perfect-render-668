@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Switch } from '@/components/ui/switch';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Input } from '@/components/ui/input';
-import { TimeEntry, AppSettings, ViewMode } from '@/types';
+import { TimeEntry, AppSettings, ViewMode, SortOption } from '@/types';
 import { createPdfFromPreview } from '@/utils/domPdf';
 import { generateSpreadsheet } from '@/utils/spreadsheetGenerator';
 import { InvoicePreview } from '@/components/InvoicePreview';
@@ -21,6 +21,7 @@ interface ExportDialogProps {
   selectedEntries?: TimeEntry[];
   settings: AppSettings;
   viewMode: ViewMode;
+  sortOption?: SortOption;
 }
 
 export const ExportDialog: React.FC<ExportDialogProps> = ({
@@ -29,7 +30,8 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
   timeEntries,
   selectedEntries,
   settings,
-  viewMode
+  viewMode,
+  sortOption = 'date'
 }) => {
   const [isPdfFormat, setIsPdfFormat] = useState(true);
   const [exportMethod, setExportMethod] = useState<'download' | 'share' | 'print' | 'preview'>('preview');
@@ -102,7 +104,8 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
           React.createElement(InvoicePreview, {
             selectedEntries: entriesToUse,
             settings: { ...settings, invoiceMode: viewMode === 'invoice' },
-            onClose: () => {}
+            onClose: () => {},
+            sortOption
           })
         );
 
@@ -150,7 +153,7 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
         }
         fileExtension = 'pdf';
       } else {
-        blob = await generateSpreadsheet(entriesToUse, settings, viewMode);
+        blob = await generateSpreadsheet(entriesToUse, settings, viewMode, sortOption);
         fileExtension = 'xlsx';
       }
 
@@ -240,6 +243,7 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
         selectedEntries={entriesToUse}
         settings={{ ...settings, invoiceMode: viewMode === 'invoice' }}
         onClose={() => setShowPreview(false)}
+        sortOption={sortOption}
       />
     );
   }
