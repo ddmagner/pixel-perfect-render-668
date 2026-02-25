@@ -949,7 +949,7 @@ export const TimeTally: React.FC<TimeTallyProps> = ({
               }}>
                         <div></div>
                         <div></div>
-                        <div className="text-[#09121F] text-sm font-bold text-left">Sub-total</div>
+                        <div className="text-[#09121F] text-sm font-bold text-left whitespace-nowrap">Sub-total</div>
                         <div></div>
                         <div></div>
                         <div></div>
