@@ -12,7 +12,7 @@ interface InvoicePreviewProps {
   sortOption?: SortOption;
 }
 
-export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries, settings, onClose, sortOption = 'date' }) => {
+export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries, settings, onClose, sortOption = 'project' }) => {
   const [entries, setEntries] = useState<TimeEntry[]>([]);
   const [loading, setLoading] = useState(true);
   const [invoiceNumber, setInvoiceNumber] = useState(settings.invoiceNumber);
@@ -135,14 +135,29 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
     return sorted;
   }, [entries, sortOption]);
 
+  // Group entries by project (alphabetically) for "By Project" view
+  const groupedByProject = React.useMemo(() => {
+    const groups: { project: string; entries: TimeEntry[] }[] = [];
+    const projectMap = new Map<string, TimeEntry[]>();
+    sortedEntries.forEach(entry => {
+      if (!projectMap.has(entry.project)) projectMap.set(entry.project, []);
+      projectMap.get(entry.project)!.push(entry);
+    });
+    // Sort project names alphabetically
+    [...projectMap.keys()].sort((a, b) => a.localeCompare(b)).forEach(project => {
+      groups.push({ project, entries: projectMap.get(project)! });
+    });
+    return groups;
+  }, [sortedEntries]);
+
   // Column order helpers based on sortOption
   const getColumnLabels = () => {
     if (sortOption === 'project') return { col1: 'Project', col2: 'Date', col3: 'Task' };
     if (sortOption === 'task') return { col1: 'Task', col2: 'Date', col3: 'Project' };
     return { col1: 'Date', col2: 'Project', col3: 'Task' }; // default 'date'
   };
-  const getColumnValues = (entry: TimeEntry) => {
-    if (sortOption === 'project') return { col1: entry.project, col2: format(new Date(entry.date), 'MM/dd/yy'), col3: entry.task };
+  const getColumnValues = (entry: TimeEntry, isFirstInGroup = false) => {
+    if (sortOption === 'project') return { col1: isFirstInGroup ? entry.project : '', col2: format(new Date(entry.date), 'MM/dd/yy'), col3: entry.task };
     if (sortOption === 'task') return { col1: entry.task, col2: format(new Date(entry.date), 'MM/dd/yy'), col3: entry.project };
     return { col1: format(new Date(entry.date), 'MM/dd/yy'), col2: entry.project, col3: entry.task };
   };
@@ -333,33 +348,70 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
               
               {/* Table Body */}
               <div className="divide-y divide-gray-200">
-                {sortedEntries.map((entry, index) => {
-                   const rate = entry.noCharge ? 0 : (entry.hourlyRate || 0);
-                   const amount = calculateAmount(entry);
-                   const cols = getColumnValues(entry);
-                   
-                   return settings.invoiceMode ? (
-                    <div key={entry.id || index} className="grid grid-cols-12 gap-4 py-1 text-black items-center" style={{ fontSize: '11px', lineHeight: '1.2' }}>
-                      <div className="col-span-2">{cols.col1}</div>
-                      <div className="col-span-3 font-medium">{cols.col2}</div>
-                      <div className="col-span-3 -ml-[25px]">{cols.col3}</div>
-                      <div className="col-span-1 text-left">{formatHours(entry.duration)}</div>
-                      <div className="col-span-1 flex items-center justify-end pl-[75px]">
-                        {entry.noCharge ? <span className="italic text-gray-400">N/C</span> : formatCurrency(rate)}
+                {sortOption === 'project' ? (
+                  // Grouped by project: show project name only on first row of each group
+                  groupedByProject.map((group, groupIndex) => (
+                    <React.Fragment key={group.project}>
+                      {group.entries.map((entry, entryIndex) => {
+                        const rate = entry.noCharge ? 0 : (entry.hourlyRate || 0);
+                        const amount = calculateAmount(entry);
+                        const isFirst = entryIndex === 0;
+                        const cols = getColumnValues(entry, isFirst);
+
+                        return settings.invoiceMode ? (
+                          <div key={entry.id || `${groupIndex}-${entryIndex}`} className={`grid grid-cols-12 gap-4 py-1 text-black items-center ${isFirst && groupIndex > 0 ? 'border-t border-gray-300' : ''}`} style={{ fontSize: '11px', lineHeight: '1.2' }}>
+                            <div className={`col-span-2 ${isFirst ? 'font-bold' : ''}`}>{cols.col1}</div>
+                            <div className="col-span-3 font-medium">{cols.col2}</div>
+                            <div className="col-span-3 -ml-[25px]">{cols.col3}</div>
+                            <div className="col-span-1 text-left">{formatHours(entry.duration)}</div>
+                            <div className="col-span-1 flex items-center justify-end pl-[75px]">
+                              {entry.noCharge ? <span className="italic text-gray-400">N/C</span> : formatCurrency(rate)}
+                            </div>
+                            <div className="col-span-2 text-right font-medium">
+                              {entry.noCharge ? <span className="italic text-gray-400">No-charge</span> : formatCurrency(amount)}
+                            </div>
+                          </div>
+                        ) : (
+                          <div key={entry.id || `${groupIndex}-${entryIndex}`} className={`grid grid-cols-8 gap-4 py-1 text-black items-center ${isFirst && groupIndex > 0 ? 'border-t border-gray-300' : ''}`} style={{ fontSize: '11px', lineHeight: '1.2' }}>
+                            <div className={`col-span-2 ${isFirst ? 'font-bold' : ''}`}>{cols.col1}</div>
+                            <div className="col-span-3 font-medium">{cols.col2}</div>
+                            <div className="col-span-2">{cols.col3}</div>
+                            <div className="col-span-1 text-left">{formatHours(entry.duration)}</div>
+                          </div>
+                        );
+                      })}
+                    </React.Fragment>
+                  ))
+                ) : (
+                  // Default flat rendering for date/task sort
+                  sortedEntries.map((entry, index) => {
+                    const rate = entry.noCharge ? 0 : (entry.hourlyRate || 0);
+                    const amount = calculateAmount(entry);
+                    const cols = getColumnValues(entry);
+
+                    return settings.invoiceMode ? (
+                      <div key={entry.id || index} className="grid grid-cols-12 gap-4 py-1 text-black items-center" style={{ fontSize: '11px', lineHeight: '1.2' }}>
+                        <div className="col-span-2">{cols.col1}</div>
+                        <div className="col-span-3 font-medium">{cols.col2}</div>
+                        <div className="col-span-3 -ml-[25px]">{cols.col3}</div>
+                        <div className="col-span-1 text-left">{formatHours(entry.duration)}</div>
+                        <div className="col-span-1 flex items-center justify-end pl-[75px]">
+                          {entry.noCharge ? <span className="italic text-gray-400">N/C</span> : formatCurrency(rate)}
+                        </div>
+                        <div className="col-span-2 text-right font-medium">
+                          {entry.noCharge ? <span className="italic text-gray-400">No-charge</span> : formatCurrency(amount)}
+                        </div>
                       </div>
-                      <div className="col-span-2 text-right font-medium">
-                        {entry.noCharge ? <span className="italic text-gray-400">No-charge</span> : formatCurrency(amount)}
+                    ) : (
+                      <div key={entry.id || index} className="grid grid-cols-8 gap-4 py-1 text-black items-center" style={{ fontSize: '11px', lineHeight: '1.2' }}>
+                        <div className="col-span-2">{cols.col1}</div>
+                        <div className="col-span-3 font-medium">{cols.col2}</div>
+                        <div className="col-span-2">{cols.col3}</div>
+                        <div className="col-span-1 text-left">{formatHours(entry.duration)}</div>
                       </div>
-                    </div>
-                  ) : (
-                    <div key={entry.id || index} className="grid grid-cols-8 gap-4 py-1 text-black items-center" style={{ fontSize: '11px', lineHeight: '1.2' }}>
-                      <div className="col-span-2">{cols.col1}</div>
-                      <div className="col-span-3 font-medium">{cols.col2}</div>
-                      <div className="col-span-2">{cols.col3}</div>
-                      <div className="col-span-1 text-left">{formatHours(entry.duration)}</div>
-                    </div>
-                  );
-                })}
+                    );
+                  })
+                )}
               </div>
               
               {/* Footer divider */}
