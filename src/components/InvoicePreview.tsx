@@ -347,7 +347,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
               </div>
               
               {/* Table Body */}
-              <div className="divide-y divide-gray-200">
+              <div>
                 {sortOption === 'project' ? (
                   // Grouped by project: show project name only on first row of each group
                   groupedByProject.map((group, groupIndex) => {
