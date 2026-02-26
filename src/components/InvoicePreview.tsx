@@ -239,7 +239,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
         </div>
 
         {/* Invoice Content - Letter Size (8.5" x 11") */}
-        <div id="document-preview" className="invoice-content mx-auto bg-white" style={{ width: '8.5in', maxWidth: '8.5in', padding: 'calc(0.75in - 15px) 0.5in 0.75in 0.5in', boxSizing: 'border-box', fontSize: '12pt', lineHeight: 1.2 }}>
+        <div id="document-preview" className="invoice-content mx-auto bg-white" style={{ width: '8.5in', maxWidth: '8.5in', padding: 'calc(0.75in - 10px) 0.5in 0.75in 0.5in', boxSizing: 'border-box', fontSize: '12pt', lineHeight: 1.2 }}>
           {/* Header */}
           <div className="mb-6">
             <div className="space-y-[1px]">
