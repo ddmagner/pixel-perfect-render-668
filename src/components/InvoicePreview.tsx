@@ -363,7 +363,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                         const cols = getColumnValues(entry, isFirst);
 
                         return settings.invoiceMode ? (
-                          <div key={entry.id || `${groupIndex}-${entryIndex}`} className={`grid grid-cols-12 gap-4 py-1 text-black items-center ${isFirst && groupIndex > 0 ? 'border-t border-gray-300' : ''} ${!isFirst ? 'border-t border-gray-200' : ''}`} style={{ fontSize: '11px', lineHeight: '1.2' }}>
+                          <div key={entry.id || `${groupIndex}-${entryIndex}`} className={`grid grid-cols-12 gap-4 py-1 text-black items-center ${isFirst && groupIndex > 0 ? 'border-t border-gray-300' : ''} ${!isFirst ? 'border-t border-gray-300' : ''}`} style={{ fontSize: '11px', lineHeight: '1.2' }}>
                             <div className={`col-span-3 ${isFirst ? 'font-bold' : ''}`}>{cols.col1}</div>
                             <div className="col-span-2 font-medium">{cols.col2}</div>
                             <div className="col-span-3">{cols.col3}</div>
@@ -376,7 +376,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                             </div>
                           </div>
                         ) : (
-                          <div key={entry.id || `${groupIndex}-${entryIndex}`} className={`grid grid-cols-8 gap-4 py-1 text-black items-center ${isFirst && groupIndex > 0 ? 'border-t border-gray-300' : ''} ${!isFirst ? 'border-t border-gray-200' : ''}`} style={{ fontSize: '11px', lineHeight: '1.2' }}>
+                          <div key={entry.id || `${groupIndex}-${entryIndex}`} className={`grid grid-cols-8 gap-4 py-1 text-black items-center ${isFirst && groupIndex > 0 ? 'border-t border-gray-300' : ''} ${!isFirst ? 'border-t border-gray-300' : ''}`} style={{ fontSize: '11px', lineHeight: '1.2' }}>
                             <div className={`col-span-3 ${isFirst ? 'font-bold' : ''}`}>{cols.col1}</div>
                             <div className="col-span-2 font-medium">{cols.col2}</div>
                             <div className="col-span-2">{cols.col3}</div>
@@ -408,7 +408,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                     const cols = getColumnValues(entry);
 
                     return settings.invoiceMode ? (
-                      <div key={entry.id || index} className={`grid grid-cols-12 gap-4 py-1 text-black items-center ${index > 0 ? 'border-t border-gray-200' : ''}`} style={{ fontSize: '11px', lineHeight: '1.2' }}>
+                      <div key={entry.id || index} className={`grid grid-cols-12 gap-4 py-1 text-black items-center ${index > 0 ? 'border-t border-gray-300' : ''}`} style={{ fontSize: '11px', lineHeight: '1.2' }}>
                         <div className="col-span-2">{cols.col1}</div>
                         <div className="col-span-3 font-medium">{cols.col2}</div>
                         <div className="col-span-3">{cols.col3}</div>
@@ -421,7 +421,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                         </div>
                       </div>
                     ) : (
-                      <div key={entry.id || index} className={`grid grid-cols-8 gap-4 py-1 text-black items-center ${index > 0 ? 'border-t border-gray-200' : ''}`} style={{ fontSize: '11px', lineHeight: '1.2' }}>
+                      <div key={entry.id || index} className={`grid grid-cols-8 gap-4 py-1 text-black items-center ${index > 0 ? 'border-t border-gray-300' : ''}`} style={{ fontSize: '11px', lineHeight: '1.2' }}>
                         <div className="col-span-2">{cols.col1}</div>
                         <div className="col-span-3 font-medium">{cols.col2}</div>
                         <div className="col-span-2">{cols.col3}</div>
