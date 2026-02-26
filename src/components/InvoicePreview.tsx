@@ -332,7 +332,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                     <div className={`${sortOption === 'project' ? 'col-span-3' : 'col-span-2'} text-left`}>{columnLabels.col1}</div>
                     <div className={sortOption === 'project' ? 'col-span-2' : 'col-span-3'}>{columnLabels.col2}</div>
                     <div className={`${sortOption === 'project' ? 'col-span-3' : 'col-span-3'}`}>{columnLabels.col3}</div>
-                    <div className="col-span-1 text-left">Hours</div>
+                    <div className="col-span-1 text-right">Hours</div>
                     <div className="col-span-1 flex justify-end">Rate</div>
                     <div className="col-span-2 text-right">Amount</div>
                   </div>
@@ -341,7 +341,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                     <div className={`${sortOption === 'project' ? 'col-span-3' : 'col-span-2'} text-left`}>{columnLabels.col1}</div>
                     <div className={sortOption === 'project' ? 'col-span-2' : 'col-span-3'}>{columnLabels.col2}</div>
                     <div className="col-span-2">{columnLabels.col3}</div>
-                    <div className="col-span-1 text-left">Hours</div>
+                    <div className="col-span-1 text-right">Hours</div>
                   </div>
                 )}
               </div>
@@ -430,7 +430,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                         <div className="col-span-2"></div>
                         <div className="col-span-3"></div>
                         <div className="col-span-3">Subtotal:</div>
-                        <div className="col-span-1 text-left">{formatHours(totalHours)}</div>
+                        <div className="col-span-1 text-right">{formatHours(totalHours)}</div>
                         <div className="col-span-1"></div>
                         <div className="col-span-2 text-right font-medium">{formatCurrency(subtotalAmount)}</div>
                       </div>
@@ -462,7 +462,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                       <div className="col-span-2"></div>
                       <div className="col-span-3"></div>
                       <div className="col-span-2 font-bold">Total Hours:</div>
-                      <div className="col-span-1 text-left font-bold">{formatHours(totalHours)}</div>
+                      <div className="col-span-1 text-right font-bold">{formatHours(totalHours)}</div>
                     </div>
                   </div>
                 </div>
