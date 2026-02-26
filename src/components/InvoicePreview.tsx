@@ -395,8 +395,10 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                           <div className="col-span-2 text-right font-bold">{formatCurrency(groupAmount)}</div>
                         </div>
                       )}
-                      {/* Blank spacer row */}
-                      <div className="py-1" style={{ fontSize: '11px', lineHeight: '1.2' }}>&nbsp;</div>
+                      {/* Blank spacer row - only between groups, not after last */}
+                      {groupIndex < groupedByProject.length - 1 && (
+                        <div className="py-1" style={{ fontSize: '11px', lineHeight: '1.2' }}>&nbsp;</div>
+                      )}
                     </React.Fragment>
                     );
                   })
