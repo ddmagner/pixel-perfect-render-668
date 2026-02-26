@@ -364,7 +364,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
 
                         return settings.invoiceMode ? (
                           <div key={entry.id || `${groupIndex}-${entryIndex}`} className={`grid grid-cols-12 gap-4 py-1 text-black items-center ${isFirst && groupIndex > 0 ? 'border-t border-gray-300' : ''}`} style={{ fontSize: '11px', lineHeight: '1.2' }}>
-                            <div className="col-span-3">{cols.col1}</div>
+                            <div className={`col-span-3 ${isFirst ? 'font-bold' : ''}`}>{cols.col1}</div>
                             <div className="col-span-2 font-medium">{cols.col2}</div>
                             <div className="col-span-3">{cols.col3}</div>
                             <div className="col-span-1 flex justify-end pr-8">{formatHours(entry.duration)}</div>
@@ -377,7 +377,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                           </div>
                         ) : (
                           <div key={entry.id || `${groupIndex}-${entryIndex}`} className={`grid grid-cols-8 gap-4 py-1 text-black items-center ${isFirst && groupIndex > 0 ? 'border-t border-gray-300' : ''}`} style={{ fontSize: '11px', lineHeight: '1.2' }}>
-                            <div className="col-span-3">{cols.col1}</div>
+                            <div className={`col-span-3 ${isFirst ? 'font-bold' : ''}`}>{cols.col1}</div>
                             <div className="col-span-2 font-medium">{cols.col2}</div>
                             <div className="col-span-2">{cols.col3}</div>
                             <div className="col-span-1 flex justify-end pr-8">{formatHours(entry.duration)}</div>
@@ -386,7 +386,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                       })}
                       {/* Project subtotal row */}
                       {settings.invoiceMode && (
-                        <div className="grid grid-cols-12 gap-4 py-1 text-black items-center border-t border-gray-300" style={{ fontSize: '11px', lineHeight: '1.2' }}>
+                        <div className="grid grid-cols-12 gap-4 py-1 text-black items-center border-t border-black" style={{ fontSize: '11px', lineHeight: '1.2' }}>
                           <div className="col-span-3"></div>
                           <div className="col-span-2"></div>
                           <div className="col-span-3 font-bold">Sub-total:</div>
