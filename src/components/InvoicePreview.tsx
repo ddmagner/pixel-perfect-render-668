@@ -332,7 +332,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                     <div className={`${sortOption === 'project' ? 'col-span-3' : 'col-span-2'} text-left`}>{columnLabels.col1}</div>
                     <div className={sortOption === 'project' ? 'col-span-2' : 'col-span-3'}>{columnLabels.col2}</div>
                     <div className={`${sortOption === 'project' ? 'col-span-3' : 'col-span-3'}`}>{columnLabels.col3}</div>
-                    <div className="col-span-1 flex justify-end pr-4">Hours</div>
+                    <div className="col-span-1 flex justify-end pr-8">Hours</div>
                     <div className="col-span-1 flex justify-end">Rate</div>
                     <div className="col-span-2 text-right">Amount</div>
                   </div>
@@ -341,7 +341,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                     <div className={`${sortOption === 'project' ? 'col-span-3' : 'col-span-2'} text-left`}>{columnLabels.col1}</div>
                     <div className={sortOption === 'project' ? 'col-span-2' : 'col-span-3'}>{columnLabels.col2}</div>
                     <div className="col-span-2">{columnLabels.col3}</div>
-                    <div className="col-span-1 flex justify-end pr-4">Hours</div>
+                    <div className="col-span-1 flex justify-end pr-8">Hours</div>
                   </div>
                 )}
               </div>
@@ -363,7 +363,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                             <div className="col-span-3">{cols.col1}</div>
                             <div className="col-span-2 font-medium">{cols.col2}</div>
                             <div className="col-span-3">{cols.col3}</div>
-                            <div className="col-span-1 flex justify-end pr-4">{formatHours(entry.duration)}</div>
+                            <div className="col-span-1 flex justify-end pr-8">{formatHours(entry.duration)}</div>
                             <div className="col-span-1 flex justify-end whitespace-nowrap">
                               {entry.noCharge ? <span className="italic text-gray-400">No-charge</span> : formatCurrency(rate)}
                             </div>
@@ -376,7 +376,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                             <div className="col-span-3">{cols.col1}</div>
                             <div className="col-span-2 font-medium">{cols.col2}</div>
                             <div className="col-span-2">{cols.col3}</div>
-                            <div className="col-span-1 flex justify-end pr-4">{formatHours(entry.duration)}</div>
+                            <div className="col-span-1 flex justify-end pr-8">{formatHours(entry.duration)}</div>
                           </div>
                         );
                       })}
@@ -394,7 +394,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                         <div className="col-span-2">{cols.col1}</div>
                         <div className="col-span-3 font-medium">{cols.col2}</div>
                         <div className="col-span-3">{cols.col3}</div>
-                        <div className="col-span-1 flex justify-end pr-4">{formatHours(entry.duration)}</div>
+                        <div className="col-span-1 flex justify-end pr-8">{formatHours(entry.duration)}</div>
                         <div className="col-span-1 flex justify-end whitespace-nowrap">
                           {entry.noCharge ? <span className="italic text-gray-400">No-charge</span> : formatCurrency(rate)}
                         </div>
@@ -407,7 +407,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                         <div className="col-span-2">{cols.col1}</div>
                         <div className="col-span-3 font-medium">{cols.col2}</div>
                         <div className="col-span-2">{cols.col3}</div>
-                        <div className="col-span-1 flex justify-end pr-4">{formatHours(entry.duration)}</div>
+                        <div className="col-span-1 flex justify-end pr-8">{formatHours(entry.duration)}</div>
                       </div>
                     );
                   })
@@ -430,7 +430,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                         <div className="col-span-2"></div>
                         <div className="col-span-3"></div>
                         <div className="col-span-3">Subtotal:</div>
-                        <div className="col-span-1 flex justify-end pr-4">{formatHours(totalHours)}</div>
+                        <div className="col-span-1 flex justify-end pr-8">{formatHours(totalHours)}</div>
                         <div className="col-span-1"></div>
                         <div className="col-span-2 text-right font-medium">{formatCurrency(subtotalAmount)}</div>
                       </div>
@@ -462,7 +462,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                       <div className="col-span-2"></div>
                       <div className="col-span-3"></div>
                       <div className="col-span-2 font-bold">Total Hours:</div>
-                      <div className="col-span-1 flex justify-end pr-4 font-bold">{formatHours(totalHours)}</div>
+                      <div className="col-span-1 flex justify-end pr-8 font-bold">{formatHours(totalHours)}</div>
                     </div>
                   </div>
                 </div>
