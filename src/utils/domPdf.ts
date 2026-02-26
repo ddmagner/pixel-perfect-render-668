@@ -10,6 +10,14 @@ const LOGO_MATCHERS = [
   '21706651-e7f7-4eec-b5d7-cd8ccf2a385f'
 ];
 
+const CAPTURE_SCALE = 2;
+const CSS_PX_PER_INCH = 96;
+const LETTER_PAGE = {
+  widthPx: 8.5 * CSS_PX_PER_INCH,
+  heightPx: 11 * CSS_PX_PER_INCH,
+  topBottomClearAreaPx: CSS_PX_PER_INCH,
+} as const;
+
 async function greyifyImageElement(img: HTMLImageElement): Promise<void> {
   try {
     // Ensure the image is decoded
@@ -69,25 +77,67 @@ async function greyifyLogosIn(root: HTMLElement): Promise<void> {
   await Promise.all(targets.map((img) => greyifyImageElement(img)));
 }
 
+function splitCanvasIntoLetterPages(
+  fullCanvas: HTMLCanvasElement,
+  options?: {
+    scale?: number;
+    sourceTopPaddingPx?: number;
+    sourceBottomPaddingPx?: number;
+  }
+): HTMLCanvasElement[] {
+  const scale = options?.scale ?? CAPTURE_SCALE;
+  const targetPageHeightPx = Math.round(LETTER_PAGE.heightPx * scale);
+  const targetTopPaddingPx = Math.round(LETTER_PAGE.topBottomClearAreaPx * scale);
+  const targetContentHeightPx = targetPageHeightPx - (targetTopPaddingPx * 2);
+
+  const sourceTopPaddingPx = Math.max(0, options?.sourceTopPaddingPx ?? LETTER_PAGE.topBottomClearAreaPx);
+  const sourceBottomPaddingPx = Math.max(0, options?.sourceBottomPaddingPx ?? LETTER_PAGE.topBottomClearAreaPx);
+  const sourceStartY = Math.min(fullCanvas.height, Math.round(sourceTopPaddingPx * scale));
+  const sourceEndY = Math.max(sourceStartY, fullCanvas.height - Math.round(sourceBottomPaddingPx * scale));
+
+  const canvases: HTMLCanvasElement[] = [];
+  for (let y = sourceStartY; y < sourceEndY; y += targetContentHeightPx) {
+    const sliceHeight = Math.min(targetContentHeightPx, sourceEndY - y);
+    const pageCanvas = document.createElement('canvas');
+    pageCanvas.width = fullCanvas.width;
+    pageCanvas.height = targetPageHeightPx;
+
+    const ctx = pageCanvas.getContext('2d');
+    if (ctx) {
+      ctx.fillStyle = '#ffffff';
+      ctx.fillRect(0, 0, pageCanvas.width, pageCanvas.height);
+      ctx.drawImage(
+        fullCanvas,
+        0,
+        y,
+        fullCanvas.width,
+        sliceHeight,
+        0,
+        targetTopPaddingPx,
+        fullCanvas.width,
+        sliceHeight
+      );
+    }
+
+    canvases.push(pageCanvas);
+  }
+
+  return canvases.length > 0 ? canvases : [fullCanvas];
+}
+
 async function canvasToPdfBlob(canvas: HTMLCanvasElement): Promise<Blob> {
   const pdf = new jsPDF({ unit: 'pt', format: 'letter' });
-  const pageWidth = pdf.internal.pageSize.getWidth(); // 612pt
-  const pageHeight = pdf.internal.pageSize.getHeight(); // 792pt
+  const pageWidth = pdf.internal.pageSize.getWidth();
+  const pageHeight = pdf.internal.pageSize.getHeight();
 
   const imgData = canvas.toDataURL('image/jpeg', 0.85);
-
-  // Fit image within page bounds preserving aspect ratio with a tiny safety inset
   const cW = canvas.width;
   const cH = canvas.height;
-  const safety = 2; // pt inset to avoid right-edge clipping due to rounding
-  const maxW = pageWidth - safety * 2;
-  const maxH = pageHeight - safety * 2;
-  const scale = Math.min(maxW / cW, maxH / cH);
-  const drawW = Math.floor(cW * scale);
-  const drawH = Math.floor(cH * scale);
-
-  const x = Math.round((pageWidth - drawW) / 2);
-  const y = Math.round((pageHeight - drawH) / 2);
+  const scale = Math.min(pageWidth / cW, pageHeight / cH);
+  const drawW = cW * scale;
+  const drawH = cH * scale;
+  const x = (pageWidth - drawW) / 2;
+  const y = (pageHeight - drawH) / 2;
 
   pdf.addImage(imgData, 'JPEG', x, y, drawW, drawH);
 
@@ -103,14 +153,11 @@ async function canvasesToPdfBlob(canvases: HTMLCanvasElement[]): Promise<Blob> {
     const imgData = canvas.toDataURL('image/jpeg', 0.85);
     const cW = canvas.width;
     const cH = canvas.height;
-    const safety = 2;
-    const maxW = pageWidth - safety * 2;
-    const maxH = pageHeight - safety * 2;
-    const scale = Math.min(maxW / cW, maxH / cH);
-    const drawW = Math.floor(cW * scale);
-    const drawH = Math.floor(cH * scale);
-    const x = Math.round((pageWidth - drawW) / 2);
-    const y = Math.round((pageHeight - drawH) / 2);
+    const scale = Math.min(pageWidth / cW, pageHeight / cH);
+    const drawW = cW * scale;
+    const drawH = cH * scale;
+    const x = (pageWidth - drawW) / 2;
+    const y = (pageHeight - drawH) / 2;
 
     if (idx > 0) pdf.addPage();
     pdf.addImage(imgData, 'JPEG', x, y, drawW, drawH);
@@ -149,13 +196,14 @@ export async function createPdfFromPreview(
       );
     } catch {}
 
-    const PAGE_W = 816;
-    const PAGE_H = 1056;
-    
+    const liveStyles = window.getComputedStyle(liveEl);
+    const sourceTopPaddingPx = parseFloat(liveStyles.paddingTop) || LETTER_PAGE.topBottomClearAreaPx;
+    const sourceBottomPaddingPx = parseFloat(liveStyles.paddingBottom) || LETTER_PAGE.topBottomClearAreaPx;
+
     await greyifyLogosIn(liveEl);
     // Capture the entire element into a single high-res canvas, then slice into pages
     const fullCanvas = await html2canvas(liveEl, {
-      scale: 2,
+      scale: CAPTURE_SCALE,
       backgroundColor: '#ffffff',
       useCORS: true,
       allowTaint: false,
@@ -312,33 +360,11 @@ export async function createPdfFromPreview(
       }
     } as any);
 
-    // Slice the big canvas into page-sized canvases
-    const canvases: HTMLCanvasElement[] = [];
-    const scale = 2; // matches html2canvas scale (~150 PPI for letter size)
-    const pageHeightPx = Math.floor(PAGE_H * scale);
-    const totalHeightPx = fullCanvas.height;
-
-    for (let y = 0; y < totalHeightPx; y += pageHeightPx) {
-      const sliceHeight = Math.min(pageHeightPx, totalHeightPx - y);
-      const slice = document.createElement('canvas');
-      slice.width = fullCanvas.width;
-      slice.height = sliceHeight;
-      const ctx = slice.getContext('2d');
-      if (ctx) {
-        ctx.drawImage(
-          fullCanvas,
-          0,
-          y,
-          fullCanvas.width,
-          sliceHeight,
-          0,
-          0,
-          fullCanvas.width,
-          sliceHeight
-        );
-      }
-      canvases.push(slice);
-    }
+    const canvases = splitCanvasIntoLetterPages(fullCanvas, {
+      scale: CAPTURE_SCALE,
+      sourceTopPaddingPx,
+      sourceBottomPaddingPx,
+    });
 
     return canvasesToPdfBlob(canvases);
   }
@@ -399,13 +425,14 @@ export async function createPdfFromPreview(
     );
   } catch {}
 
-  const PAGE_W = 816;
-  const PAGE_H = 1056;
-  
+  const previewStyles = window.getComputedStyle(el);
+  const sourceTopPaddingPx = parseFloat(previewStyles.paddingTop) || LETTER_PAGE.topBottomClearAreaPx;
+  const sourceBottomPaddingPx = parseFloat(previewStyles.paddingBottom) || LETTER_PAGE.topBottomClearAreaPx;
+
   await greyifyLogosIn(el);
   // Capture the entire element once, then slice into PDF pages
   const fullCanvas = await html2canvas(el, {
-    scale: 2,
+    scale: CAPTURE_SCALE,
     backgroundColor: '#ffffff',
     useCORS: true,
     allowTaint: false,
@@ -561,32 +588,11 @@ export async function createPdfFromPreview(
     }
   } as any);
 
-  const canvases: HTMLCanvasElement[] = [];
-  const scale = 2; // matches html2canvas scale (~150 PPI for letter size)
-  const pageHeightPx = Math.floor(PAGE_H * scale);
-  const totalHeightPx = fullCanvas.height;
-
-  for (let y = 0; y < totalHeightPx; y += pageHeightPx) {
-    const sliceHeight = Math.min(pageHeightPx, totalHeightPx - y);
-    const slice = document.createElement('canvas');
-    slice.width = fullCanvas.width;
-    slice.height = sliceHeight;
-    const ctx = slice.getContext('2d');
-    if (ctx) {
-      ctx.drawImage(
-        fullCanvas,
-        0,
-        y,
-        fullCanvas.width,
-        sliceHeight,
-        0,
-        0,
-        fullCanvas.width,
-        sliceHeight
-      );
-    }
-    canvases.push(slice);
-  }
+  const canvases = splitCanvasIntoLetterPages(fullCanvas, {
+    scale: CAPTURE_SCALE,
+    sourceTopPaddingPx,
+    sourceBottomPaddingPx,
+  });
   const blob = await canvasesToPdfBlob(canvases);
 
   root.unmount();
