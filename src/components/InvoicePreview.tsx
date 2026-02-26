@@ -433,7 +433,6 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
               </div>
               
               {/* Footer divider */}
-              <div className="border-b border-gray-200"></div>
             </div>
           </div>
 
@@ -444,14 +443,6 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                 <div className="grid grid-cols-12 gap-4">
                   <div className="col-span-12">
                     <div className="space-y-0">
-                      <div className="grid grid-cols-12 gap-4 py-1 text-black items-center border-t border-gray-300" style={{ fontSize: '11px', lineHeight: '1.2' }}>
-                        <div className="col-span-2"></div>
-                        <div className="col-span-3"></div>
-                        <div className="col-span-3">Subtotal:</div>
-                        <div className="col-span-1 flex justify-end pr-8">{formatHours(totalHours)}</div>
-                        <div className="col-span-1"></div>
-                        <div className="col-span-2 text-right font-medium">{formatCurrency(subtotalAmount)}</div>
-                      </div>
                       {taxCalculations.map((tax, index) => (
                         <div key={index} className="grid grid-cols-12 gap-4 py-1 text-black items-center border-t border-gray-300" style={{ fontSize: '11px', lineHeight: '1.2' }}>
                           <div className="col-span-2"></div>
