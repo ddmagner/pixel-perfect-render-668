@@ -365,7 +365,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                             <div className="col-span-3 -ml-[25px]">{cols.col3}</div>
                             <div className="col-span-1 text-left">{formatHours(entry.duration)}</div>
                             <div className="col-span-1 flex items-center justify-end pl-[75px]">
-                              {entry.noCharge ? <span className="italic text-gray-400">N/C</span> : formatCurrency(rate)}
+                              {entry.noCharge ? <span className="italic text-gray-400">No-charge</span> : formatCurrency(rate)}
                             </div>
                             <div className="col-span-2 text-right font-medium">
                               {entry.noCharge ? <span className="italic text-gray-400">No-charge</span> : formatCurrency(amount)}
@@ -396,7 +396,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                         <div className="col-span-3 -ml-[25px]">{cols.col3}</div>
                         <div className="col-span-1 text-left">{formatHours(entry.duration)}</div>
                         <div className="col-span-1 flex items-center justify-end pl-[75px]">
-                          {entry.noCharge ? <span className="italic text-gray-400">N/C</span> : formatCurrency(rate)}
+                          {entry.noCharge ? <span className="italic text-gray-400">No-charge</span> : formatCurrency(rate)}
                         </div>
                         <div className="col-span-2 text-right font-medium">
                           {entry.noCharge ? <span className="italic text-gray-400">No-charge</span> : formatCurrency(amount)}
