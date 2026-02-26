@@ -242,7 +242,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
         <div id="document-preview" className="invoice-content mx-auto bg-white" style={{ width: '8.5in', maxWidth: '8.5in', padding: '0.75in 0.5in', boxSizing: 'border-box', fontSize: '12pt', lineHeight: 1.2 }}>
           {/* Header */}
           <div className="mb-6">
-            <div>
+            <div className="space-y-[1px]">
               <h1 className="text-2xl font-bold text-black mb-2">
                 {settings.invoiceMode ? 'INVOICE' : 'TIME CARD'}
               </h1>
@@ -266,7 +266,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
           <div className="grid grid-cols-5 gap-6 mb-6">
             <div className="col-span-2">
               <h3 className="font-bold text-black uppercase tracking-wider mb-1.5" style={{ fontSize: '11px', lineHeight: '1.2' }}>From</h3>
-              <div className="text-black" style={{ fontSize: '11px', lineHeight: '1.2' }}>
+              <div className="text-black space-y-[1px]" style={{ fontSize: '11px', lineHeight: '1.2' }}>
                 <p>{settings.userProfile.name || 'Your Name'}</p>
                 <p>{settings.userProfile.email || 'your.email@example.com'}</p>
                 {settings.userProfile.address && <p>{settings.userProfile.address}</p>}
@@ -294,7 +294,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
               <h3 className="font-bold text-black uppercase tracking-wider mb-1.5" style={{ fontSize: '11px', lineHeight: '1.2' }}>
                 {settings.invoiceMode ? 'Bill To' : 'To'}
               </h3>
-              <div className="text-black" style={{ fontSize: '11px', lineHeight: '1.2' }}>
+              <div className="text-black space-y-[1px]" style={{ fontSize: '11px', lineHeight: '1.2' }}>
                  {primaryClient ? (
                    <>
                      <p>{primaryClient.name}</p>
