@@ -350,7 +350,11 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
               <div className="divide-y divide-gray-200">
                 {sortOption === 'project' ? (
                   // Grouped by project: show project name only on first row of each group
-                  groupedByProject.map((group, groupIndex) => (
+                  groupedByProject.map((group, groupIndex) => {
+                    const groupHours = group.entries.reduce((sum, e) => sum + e.duration, 0);
+                    const groupAmount = group.entries.reduce((sum, e) => sum + calculateAmount(e), 0);
+
+                    return (
                     <React.Fragment key={group.project}>
                       {group.entries.map((entry, entryIndex) => {
                         const rate = entry.noCharge ? 0 : (entry.hourlyRate || 0);
@@ -380,8 +384,22 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                           </div>
                         );
                       })}
+                      {/* Project subtotal row */}
+                      {settings.invoiceMode && (
+                        <div className="grid grid-cols-12 gap-4 py-1 text-black items-center border-t border-gray-300" style={{ fontSize: '11px', lineHeight: '1.2' }}>
+                          <div className="col-span-3"></div>
+                          <div className="col-span-2"></div>
+                          <div className="col-span-3 font-bold">Sub-total:</div>
+                          <div className="col-span-1 flex justify-end pr-8 font-bold">{formatHours(groupHours)}</div>
+                          <div className="col-span-1"></div>
+                          <div className="col-span-2 text-right font-bold">{formatCurrency(groupAmount)}</div>
+                        </div>
+                      )}
+                      {/* Blank spacer row */}
+                      <div className="py-1" style={{ fontSize: '11px', lineHeight: '1.2' }}>&nbsp;</div>
                     </React.Fragment>
-                  ))
+                    );
+                  })
                 ) : (
                   // Default flat rendering for date/task sort
                   sortedEntries.map((entry, index) => {
