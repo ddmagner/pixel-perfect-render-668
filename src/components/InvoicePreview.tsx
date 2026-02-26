@@ -439,7 +439,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
           </div>
 
           {/* Totals Section */}
-          <div className="mb-12">
+          <div className={`mb-12 ${!settings.invoiceMode ? '-mt-2' : ''}`}>
             <div className="w-full">
               {settings.invoiceMode ? (
                 <div className="grid grid-cols-12 gap-4">
