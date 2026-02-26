@@ -74,7 +74,7 @@ async function canvasToPdfBlob(canvas: HTMLCanvasElement): Promise<Blob> {
   const pageWidth = pdf.internal.pageSize.getWidth(); // 612pt
   const pageHeight = pdf.internal.pageSize.getHeight(); // 792pt
 
-  const imgData = canvas.toDataURL('image/png');
+  const imgData = canvas.toDataURL('image/jpeg', 0.85);
 
   // Fit image within page bounds preserving aspect ratio with a tiny safety inset
   const cW = canvas.width;
@@ -89,7 +89,7 @@ async function canvasToPdfBlob(canvas: HTMLCanvasElement): Promise<Blob> {
   const x = Math.round((pageWidth - drawW) / 2);
   const y = Math.round((pageHeight - drawH) / 2);
 
-  pdf.addImage(imgData, 'PNG', x, y, drawW, drawH);
+  pdf.addImage(imgData, 'JPEG', x, y, drawW, drawH);
 
   return pdf.output('blob');
 }
@@ -100,7 +100,7 @@ async function canvasesToPdfBlob(canvases: HTMLCanvasElement[]): Promise<Blob> {
   const pageHeight = pdf.internal.pageSize.getHeight();
 
   canvases.forEach((canvas, idx) => {
-    const imgData = canvas.toDataURL('image/png');
+    const imgData = canvas.toDataURL('image/jpeg', 0.85);
     const cW = canvas.width;
     const cH = canvas.height;
     const safety = 2;
@@ -113,7 +113,7 @@ async function canvasesToPdfBlob(canvases: HTMLCanvasElement[]): Promise<Blob> {
     const y = Math.round((pageHeight - drawH) / 2);
 
     if (idx > 0) pdf.addPage();
-    pdf.addImage(imgData, 'PNG', x, y, drawW, drawH);
+    pdf.addImage(imgData, 'JPEG', x, y, drawW, drawH);
   });
 
   return pdf.output('blob');
@@ -155,7 +155,7 @@ export async function createPdfFromPreview(
     await greyifyLogosIn(liveEl);
     // Capture the entire element into a single high-res canvas, then slice into pages
     const fullCanvas = await html2canvas(liveEl, {
-      scale: 3,
+      scale: 2,
       backgroundColor: '#ffffff',
       useCORS: true,
       allowTaint: false,
@@ -314,7 +314,7 @@ export async function createPdfFromPreview(
 
     // Slice the big canvas into page-sized canvases
     const canvases: HTMLCanvasElement[] = [];
-    const scale = 3; // matches html2canvas scale
+    const scale = 2; // matches html2canvas scale (~150 PPI for letter size)
     const pageHeightPx = Math.floor(PAGE_H * scale);
     const totalHeightPx = fullCanvas.height;
 
@@ -405,7 +405,7 @@ export async function createPdfFromPreview(
   await greyifyLogosIn(el);
   // Capture the entire element once, then slice into PDF pages
   const fullCanvas = await html2canvas(el, {
-    scale: 3,
+    scale: 2,
     backgroundColor: '#ffffff',
     useCORS: true,
     allowTaint: false,
@@ -562,7 +562,7 @@ export async function createPdfFromPreview(
   } as any);
 
   const canvases: HTMLCanvasElement[] = [];
-  const scale = 3; // matches html2canvas scale
+  const scale = 2; // matches html2canvas scale (~150 PPI for letter size)
   const pageHeightPx = Math.floor(PAGE_H * scale);
   const totalHeightPx = fullCanvas.height;
 
