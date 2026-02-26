@@ -329,17 +329,17 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
               <div className="border-t border-b border-black">
                 {settings.invoiceMode ? (
                   <div className="grid grid-cols-12 gap-4 py-1 font-bold text-black uppercase tracking-wider items-center" style={{ fontSize: '11px', lineHeight: '1.2' }}>
-                    <div className="col-span-2 text-left">{columnLabels.col1}</div>
-                    <div className="col-span-3">{columnLabels.col2}</div>
-                    <div className="col-span-3 -ml-[25px]">{columnLabels.col3}</div>
+                    <div className={`${sortOption === 'project' ? 'col-span-3' : 'col-span-2'} text-left`}>{columnLabels.col1}</div>
+                    <div className={sortOption === 'project' ? 'col-span-2' : 'col-span-3'}>{columnLabels.col2}</div>
+                    <div className={`${sortOption === 'project' ? 'col-span-3' : 'col-span-3'} -ml-[25px]`}>{columnLabels.col3}</div>
                     <div className="col-span-1 text-left">Hours</div>
                     <div className="col-span-1 flex justify-end pl-[75px]">Rate</div>
                     <div className="col-span-2 text-right">Amount</div>
                   </div>
                 ) : (
                   <div className="grid grid-cols-8 gap-4 py-1 font-bold text-black uppercase tracking-wider items-center" style={{ fontSize: '11px', lineHeight: '1.2' }}>
-                    <div className="col-span-2 text-left">{columnLabels.col1}</div>
-                    <div className="col-span-3">{columnLabels.col2}</div>
+                    <div className={`${sortOption === 'project' ? 'col-span-3' : 'col-span-2'} text-left`}>{columnLabels.col1}</div>
+                    <div className={sortOption === 'project' ? 'col-span-2' : 'col-span-3'}>{columnLabels.col2}</div>
                     <div className="col-span-2">{columnLabels.col3}</div>
                     <div className="col-span-1 text-left">Hours</div>
                   </div>
@@ -360,8 +360,8 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
 
                         return settings.invoiceMode ? (
                           <div key={entry.id || `${groupIndex}-${entryIndex}`} className={`grid grid-cols-12 gap-4 py-1 text-black items-center ${isFirst && groupIndex > 0 ? 'border-t border-gray-300' : ''}`} style={{ fontSize: '11px', lineHeight: '1.2' }}>
-                            <div className={`col-span-2 ${isFirst ? 'font-bold' : ''}`}>{cols.col1}</div>
-                            <div className="col-span-3 font-medium">{cols.col2}</div>
+                            <div className="col-span-3">{cols.col1}</div>
+                            <div className="col-span-2 font-medium">{cols.col2}</div>
                             <div className="col-span-3 -ml-[25px]">{cols.col3}</div>
                             <div className="col-span-1 text-left">{formatHours(entry.duration)}</div>
                             <div className="col-span-1 flex items-center justify-end pl-[75px]">
@@ -373,8 +373,8 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                           </div>
                         ) : (
                           <div key={entry.id || `${groupIndex}-${entryIndex}`} className={`grid grid-cols-8 gap-4 py-1 text-black items-center ${isFirst && groupIndex > 0 ? 'border-t border-gray-300' : ''}`} style={{ fontSize: '11px', lineHeight: '1.2' }}>
-                            <div className={`col-span-2 ${isFirst ? 'font-bold' : ''}`}>{cols.col1}</div>
-                            <div className="col-span-3 font-medium">{cols.col2}</div>
+                            <div className="col-span-3">{cols.col1}</div>
+                            <div className="col-span-2 font-medium">{cols.col2}</div>
                             <div className="col-span-2">{cols.col3}</div>
                             <div className="col-span-1 text-left">{formatHours(entry.duration)}</div>
                           </div>
