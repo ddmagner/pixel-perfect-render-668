@@ -333,7 +333,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                     <div className={sortOption === 'project' ? 'col-span-2' : 'col-span-3'}>{columnLabels.col2}</div>
                     <div className={`${sortOption === 'project' ? 'col-span-3' : 'col-span-3'}`}>{columnLabels.col3}</div>
                     <div className="col-span-1 text-left">Hours</div>
-                    <div className="col-span-1 text-left pl-2">Rate</div>
+                    <div className="col-span-1 text-right">Rate</div>
                     <div className="col-span-2 text-right">Amount</div>
                   </div>
                 ) : (
@@ -364,7 +364,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                             <div className="col-span-2 font-medium">{cols.col2}</div>
                             <div className="col-span-3">{cols.col3}</div>
                             <div className="col-span-1 text-left">{formatHours(entry.duration)}</div>
-                            <div className="col-span-1 text-left pl-2 whitespace-nowrap">
+                            <div className="col-span-1 text-right whitespace-nowrap">
                               {entry.noCharge ? <span className="italic text-gray-400">No-charge</span> : formatCurrency(rate)}
                             </div>
                             <div className="col-span-2 text-right font-medium whitespace-nowrap">
@@ -395,7 +395,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
                         <div className="col-span-3 font-medium">{cols.col2}</div>
                         <div className="col-span-3">{cols.col3}</div>
                         <div className="col-span-1 text-left">{formatHours(entry.duration)}</div>
-                        <div className="col-span-1 text-left pl-2 whitespace-nowrap">
+                        <div className="col-span-1 text-right whitespace-nowrap">
                           {entry.noCharge ? <span className="italic text-gray-400">No-charge</span> : formatCurrency(rate)}
                         </div>
                         <div className="col-span-2 text-right font-medium whitespace-nowrap">
