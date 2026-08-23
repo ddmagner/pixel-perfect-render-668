@@ -9,7 +9,7 @@ export const WatchMockup: React.FC = () => {
   const [currentView, setCurrentView] = useState<'timer' | 'recent'>('timer');
 
   useEffect(() => {
-    let interval: NodeJS.Timeout;
+    let interval: ReturnType<typeof setInterval>;
     if (isRunning) {
       interval = setInterval(() => {
         setElapsedTime(prev => prev + 1);
