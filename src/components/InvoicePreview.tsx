@@ -223,20 +223,22 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
   }
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100] flex items-start justify-center p-4 print:p-0 print:bg-transparent print:backdrop-blur-none" style={{ paddingTop: 'calc(64px + var(--safe-area-top, 0px))' }}>
-      <div className="bg-white w-full max-w-4xl h-full max-h-[90vh] overflow-auto rounded-lg shadow-2xl print:shadow-none print:rounded-none print:max-w-none print:max-h-none print:overflow-visible">
-        {/* Header Controls - Hidden when printing */}
-        <div className="sticky top-0 bg-white border-b border-gray-200 p-4 flex justify-start items-center w-[8.5in] max-w-[8.5in] mx-auto print:hidden">
-          <button 
-            onClick={onClose}
-            className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-gray-700 font-medium"
-          >
-            Close
-          </button>
-        </div>
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100] flex flex-col print:static print:h-auto print:p-0 print:bg-transparent print:backdrop-blur-none">
+      {/* Header Controls - Hidden when printing */}
+      <div className="bg-white border-b border-gray-200 p-4 flex justify-start items-center w-full print:hidden" style={{ paddingTop: 'var(--safe-area-top, 0px)' }}>
+        <button
+          onClick={onClose}
+          className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-gray-700 font-medium"
+        >
+          Close
+        </button>
+      </div>
 
+      {/* Scrollable document area */}
+      <div className="flex-1 overflow-auto p-4 flex justify-center print:block print:overflow-visible print:h-auto print:p-0">
         {/* Invoice Content - Letter Size (8.5" x 11") */}
-        <div id="document-preview" className="invoice-content mx-auto bg-white" style={{ width: '8.5in', maxWidth: '8.5in', padding: '1in 0.5in 1in 0.5in', boxSizing: 'border-box', fontSize: '12pt', lineHeight: 1.2 }}>
+        <div id="document-preview" className="invoice-content mx-auto bg-white shrink-0 rounded-lg shadow-2xl print:shadow-none print:rounded-none print:max-w-none print:max-h-none print:overflow-visible" style={{ width: '8.5in', maxWidth: '8.5in', padding: '1in 0.5in 1in 0.5in', boxSizing: 'border-box', fontSize: '12pt', lineHeight: 1.2 }}>
+
           {/* Header */}
           <div className="mb-6">
             <div className="space-y-[1px]">
