@@ -223,7 +223,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
   }
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100] flex flex-col print:p-0 print:bg-transparent print:backdrop-blur-none" style={{ paddingTop: 'calc(64px + var(--safe-area-top, 0px))' }}>
+    <div className="fixed inset-0 bg-white z-[100] flex flex-col print:p-0" style={{ paddingTop: 'calc(64px + var(--safe-area-top, 0px))' }}>
       {/* Header Controls - pinned at top, full screen width */}
       <div className="flex-shrink-0 bg-white border-b border-gray-200 p-4 flex justify-start items-center w-full print:hidden">
         <button 
@@ -236,7 +236,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
 
       {/* Invoice Content - Letter Size (8.5" x 11") */}
       <div className="bg-white w-full flex-1 overflow-auto print:rounded-none print:max-w-none print:overflow-visible">
-        <div id="document-preview" className="invoice-content w-full max-w-full bg-white print:w-[8.5in] print:max-w-[8.5in] print:mx-auto" style={{ padding: '1in 0.5in 1in 0.5in', boxSizing: 'border-box', fontSize: '12pt', lineHeight: 1.2 }}>
+        <div id="document-preview" className="invoice-content w-[8.5in] max-w-full mx-auto bg-white" style={{ padding: '1in 0.5in 1in 0.5in', boxSizing: 'border-box', fontSize: '12pt', lineHeight: 1.2 }}>
           {/* Header */}
           <div className="mb-6">
             <div className="space-y-[1px]">
