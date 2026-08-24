@@ -223,7 +223,7 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
   }
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100] flex flex-col print:p-0 print:bg-transparent print:backdrop-blur-none" style={{ paddingTop: 'calc(64px + var(--safe-area-top, 0px))' }}>
+    <div className="fixed inset-0 bg-white z-[100] flex flex-col print:p-0" style={{ paddingTop: 'calc(64px + var(--safe-area-top, 0px))' }}>
       {/* Header Controls - pinned at top, full screen width */}
       <div className="flex-shrink-0 bg-white border-b border-gray-200 p-4 flex justify-start items-center w-full print:hidden">
         <button 
