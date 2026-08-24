@@ -97,8 +97,6 @@ export const ExportDialog: React.FC<ExportDialogProps> = ({
         container.style.width = '816px';
         container.style.height = '1056px';
         container.style.zIndex = '-1';
-        // Transform creates a containing block so the inner fixed overlay is clipped to this container
-        container.style.transform = 'translate(0, 0)';
         document.body.appendChild(container);
 
         const root = createRoot(container);

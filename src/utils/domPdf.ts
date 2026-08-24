@@ -379,8 +379,6 @@ export async function createPdfFromPreview(
   container.style.top = '0';
   container.style.width = '816px';
   container.style.height = '1056px';
-  // Transform creates a containing block so the inner fixed overlay is clipped to this container
-  container.style.transform = 'translate(0, 0)';
   document.body.appendChild(container);
 
   // Ensure correct mode
