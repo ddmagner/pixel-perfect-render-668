@@ -223,19 +223,19 @@ export const InvoicePreview: React.FC<InvoicePreviewProps> = ({ selectedEntries,
   }
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100] flex items-start justify-center p-4 print:p-0 print:bg-transparent print:backdrop-blur-none" style={{ paddingTop: 'calc(64px + var(--safe-area-top, 0px))' }}>
-      <div className="bg-white w-full max-w-4xl h-full max-h-[90vh] overflow-auto rounded-lg shadow-2xl print:shadow-none print:rounded-none print:max-w-none print:max-h-none print:overflow-visible">
-        {/* Header Controls - Hidden when printing */}
-        <div className="sticky top-0 z-10 bg-white border-b border-gray-200 p-4 flex justify-start items-center w-full print:hidden">
-          <button 
-            onClick={onClose}
-            className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-gray-700 font-medium"
-          >
-            Close
-          </button>
-        </div>
+    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100] flex flex-col p-4 print:p-0 print:bg-transparent print:backdrop-blur-none" style={{ paddingTop: 'calc(64px + var(--safe-area-top, 0px))' }}>
+      {/* Header Controls - pinned at top, full screen width */}
+      <div className="flex-shrink-0 bg-white border-b border-gray-200 p-4 flex justify-start items-center w-full rounded-t-lg print:hidden">
+        <button 
+          onClick={onClose}
+          className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-gray-700 font-medium"
+        >
+          Close
+        </button>
+      </div>
 
-        {/* Invoice Content - Letter Size (8.5" x 11") */}
+      {/* Invoice Content - Letter Size (8.5" x 11") */}
+      <div className="bg-white w-full max-w-4xl flex-1 overflow-auto mx-auto rounded-b-lg shadow-2xl print:shadow-none print:rounded-none print:max-w-none print:overflow-visible">
         <div id="document-preview" className="invoice-content mx-auto bg-white" style={{ width: '8.5in', maxWidth: '8.5in', padding: '1in 0.5in 1in 0.5in', boxSizing: 'border-box', fontSize: '12pt', lineHeight: 1.2 }}>
           {/* Header */}
           <div className="mb-6">
